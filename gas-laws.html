@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gas Laws Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+/* equation view */
+.eqview{display:none;min-height:420px;padding:10px 6px;background:#f6f8fc;border-radius:14px}
+.eqrow{display:flex;align-items:center;justify-content:center;gap:18px;height:230px;font-family:Fredoka,sans-serif;font-weight:600}
+.big{display:inline-flex;flex-direction:column;align-items:center;transition:font-size .2s;line-height:1}
+.big small{font-size:15px;font-weight:500;color:var(--muted);margin-top:4px}
+.op{font-size:64px;color:#8d99b0}
+.k{font-size:80px;color:#8d99b0}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+.fr{display:flex;align-items:center;gap:6px;padding-left:46px}
+.frac hr{width:100%;min-width:120px;border:0;border-top:6px solid var(--ink);margin:2px 0;border-radius:3px}
+.arrowtag{font-size:40px;margin-left:4px}
+.up{color:var(--coral)}.down{color:var(--blue)}
+.nums{text-align:center;font-family:Fredoka,sans-serif;font-size:24px;margin:4px 0 10px}
+.pair{text-align:center;font-size:19px;margin:8px auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 14px;max-width:640px}
+.chip{display:block;width:max-content;max-width:100%;margin:10px auto 0;font-family:Fredoka,sans-serif;font-size:19px;padding:8px 16px;border-radius:999px;background:var(--accent);color:#fff}
+.bars2{display:grid;grid-template-columns:110px 1fr 90px;gap:8px 12px;align-items:center;max-width:560px;margin:8px auto 0;font-family:Fredoka,sans-serif}
+.bars2 .bar{height:20px;margin:0}
+/* combined strip */
+.cstrip{margin-top:12px;background:#f6f8fc;border-radius:14px;padding:12px}
+.ceq{display:flex;align-items:center;justify-content:center;gap:22px;font-family:Fredoka,sans-serif;font-weight:600;font-size:40px;flex-wrap:wrap}
+.cf{display:inline-flex;flex-direction:column;align-items:center}
+.cf hr{width:100%;min-width:110px;border:0;border-top:4px solid var(--ink);margin:2px 0}
+.v{position:relative;display:inline-block;padding:0 2px}
+.v.x{color:#b3bccb}
+.v.x::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;border-top:5px solid var(--red);transform:rotate(-20deg)}
+.lawname{text-align:center;font-family:Fredoka,sans-serif;font-size:21px;margin-top:8px;color:var(--accent);min-height:28px}
+.holds{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+sub{font-size:.6em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
+      <rect x="12" y="14" width="30" height="34" rx="5" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <rect x="13.5" y="22" width="27" height="5" fill="#0f8b8d"/>
+      <rect x="25" y="4" width="4" height="18" fill="#18233a"/>
+      <circle cx="20" cy="35" r="3" fill="#e2708a"/><circle cx="31" cy="40" r="3" fill="#2b59c3"/><circle cx="34" cy="32" r="3" fill="#e8962a"/><circle cx="23" cy="43" r="3" fill="#8a4fbf"/>
+    </svg>
+    <div><h1>Gas Laws Lab</h1><div class="sub">Pressure, volume and temperature of a fixed amount of gas</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="eqview" id="eqview"></div>
+      <div class="controls" id="controls"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+fit();
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function $(id){return document.getElementById(id);}
+var INK='#18233a',MUTED='#5a6780',TEAL='#0f8b8d',BLUE='#2b59c3',PLUM='#8a4fbf',AMBER='#e8962a',CORAL='#e2708a',RED='#d8434a',LINE='#c9d4e6';
+
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||16)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline=o.b||'middle';ctx.fillText(s,x,y);}
+function arrow(x1,y1,x2,y2,col,w){var a=Math.atan2(y2-y1,x2-x1),hl=Math.max(10,w*2.6);ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-Math.cos(a)*hl*.6,y2-Math.sin(a)*hl*.6);ctx.stroke();ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-hl*Math.cos(a-.45),y2-hl*Math.sin(a-.45));ctx.lineTo(x2-hl*Math.cos(a+.45),y2-hl*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+function tcol(T){var t=clamp((T-150)/400,0,1),a=[43,89,195],b=[222,72,58];return 'rgb('+Math.round(lerp(a[0],b[0],t))+','+Math.round(lerp(a[1],b[1],t))+','+Math.round(lerp(a[2],b[2],t))+')';}
+function fmt(v,d){return v.toFixed(d);}
+function spd(T){return 15+0.45*T;}
+
+/* ---------- gas particles ---------- */
+function Gas(n,box,kind){this.r=6;this.p=[];this.sparks=[];this.cnt=0;this.acc=0;this.rate=0;for(var i=0;i<n;i++)this.add(box,kind||0);}
+Gas.prototype.add=function(box,kind,x,y){var a=Math.random()*Math.PI*2,r=this.r;var p={x:x!=null?x:box.x+r+Math.random()*(box.w-2*r),y:y!=null?y:box.y+r+Math.random()*(box.h-2*r),vx:Math.cos(a),vy:Math.sin(a),f:.7+Math.random()*.6,kind:kind,free:false,al:1};this.p.push(p);return p;};
+Gas.prototype.spark=function(x,y){this.cnt++;if(this.sparks.length<70)this.sparks.push({x:x,y:y,t:.25});};
+Gas.prototype.tick=function(dt){this.acc+=dt;if(this.acc>=.5){this.rate=lerp(this.rate,this.cnt/this.acc,.5);this.cnt=0;this.acc=0;}for(var i=0;i<this.sparks.length;i++)this.sparks[i].t-=dt;this.sparks=this.sparks.filter(function(s){return s.t>0;});this.p=this.p.filter(function(p){return !p.free||p.al>0;});};
+Gas.prototype.step=function(dt,b,speed,onTop){var r=this.r;this.spd=speed;for(var i=0;i<this.p.length;i++){var p=this.p[i];
+  if(p.free){p.x+=p.vx*speed*dt;p.y+=p.vy*speed*dt;p.al-=dt*1.1;continue;}
+  p.x+=p.vx*speed*p.f*dt;p.y+=p.vy*speed*p.f*dt;var h=false;
+  if(p.x<b.x+r){p.x=b.x+r;p.vx=Math.abs(p.vx);h=true;}else if(p.x>b.x+b.w-r){p.x=b.x+b.w-r;p.vx=-Math.abs(p.vx);h=true;}
+  if(p.y<b.y+r){if(onTop&&onTop(p)){continue;}p.y=b.y+r;p.vy=Math.abs(p.vy);h=true;}else if(p.y>b.y+b.h-r){p.y=b.y+b.h-r;p.vy=-Math.abs(p.vy);h=true;}
+  if(h)this.spark(p.x,p.y);}
+  this.tick(dt);};
+Gas.prototype.draw=function(colFn){var r=this.r;for(var i=0;i<this.sparks.length;i++){var s=this.sparks[i];ctx.globalAlpha=.8*s.t/.25;ctx.strokeStyle=AMBER;ctx.lineWidth=2;ctx.beginPath();ctx.arc(s.x,s.y,r+1+3*(1-s.t/.25),0,Math.PI*2);ctx.stroke();}
+  var tl=(this.spd||0)*.13;for(i=0;i<this.p.length;i++){var p=this.p[i];if(tl>4&&!p.free){var c0=colFn(p);ctx.globalAlpha=.35;ctx.strokeStyle=c0;ctx.lineWidth=r*1.1;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*tl*p.f,p.y-p.vy*tl*p.f);ctx.stroke();}ctx.globalAlpha=p.free?Math.max(0,p.al):1;ctx.fillStyle=colFn(p);ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.arc(p.x-2,p.y-2,2,0,Math.PI*2);ctx.fill();}
+  ctx.globalAlpha=1;};
+
+/* ---------- graph ---------- */
+function graph(g){var X=function(v){return g.x+v/g.xmax*g.w;},Y=function(v){return g.y+g.h-v/g.ymax*g.h;};
+  ctx.fillStyle='#fff';rr(g.x-46,g.y-34,g.w+62,g.h+82,14);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+  txt(g.title,g.x+g.w/2-8,g.y-16,{s:15,c:g.col});
+  ctx.strokeStyle='#e8edf5';ctx.lineWidth=1;var i,v;
+  for(v=g.xt;v<=g.xmax+1e-9;v+=g.xt){ctx.beginPath();ctx.moveTo(X(v),g.y);ctx.lineTo(X(v),g.y+g.h);ctx.stroke();}
+  for(v=g.yt;v<=g.ymax+1e-9;v+=g.yt){ctx.beginPath();ctx.moveTo(g.x,Y(v));ctx.lineTo(g.x+g.w,Y(v));ctx.stroke();}
+  ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(g.x,g.y);ctx.lineTo(g.x,g.y+g.h);ctx.lineTo(g.x+g.w,g.y+g.h);ctx.stroke();
+  ctx.font='12px "Atkinson Hyperlegible", sans-serif';ctx.fillStyle=MUTED;ctx.textAlign='center';ctx.textBaseline='top';
+  for(v=0;v<=g.xmax+1e-9;v+=g.xl)ctx.fillText(+v.toFixed(2),X(v),g.y+g.h+5);
+  ctx.textAlign='right';ctx.textBaseline='middle';for(v=0;v<=g.ymax+1e-9;v+=g.yl)ctx.fillText(+v.toFixed(2),g.x-6,Y(v));
+  txt(g.xlab,g.x+g.w/2,g.y+g.h+34,{s:14,c:MUTED,w:500});
+  ctx.save();ctx.translate(g.x-38,g.y+g.h/2);ctx.rotate(-Math.PI/2);txt(g.ylab,0,0,{s:14,c:MUTED,w:500});ctx.restore();
+  ctx.save();ctx.beginPath();ctx.rect(g.x,g.y,g.w,g.h);ctx.clip();ctx.strokeStyle=g.col;ctx.lineWidth=3;
+  var started=false,dashed=null;for(i=0;i<=200;i++){var xv=g.x0+(g.xmax-g.x0)*i/200,yv=g.f(xv);var d=g.dashBelow!=null&&xv<g.dashBelow;if(d!==dashed){if(started)ctx.stroke();ctx.setLineDash(d?[7,6]:[]);ctx.beginPath();started=false;dashed=d;}if(!started){ctx.moveTo(X(xv),Y(yv));started=true;}else ctx.lineTo(X(xv),Y(yv));}
+  ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  if(g.dot){var dx=X(g.dot[0]),dy=Y(Math.min(g.dot[1],g.ymax));ctx.setLineDash([4,4]);ctx.strokeStyle=g.col;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(dx,g.y+g.h);ctx.lineTo(dx,dy);ctx.lineTo(g.x,dy);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=g.col;ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(dx,dy,8,0,Math.PI*2);ctx.fill();ctx.stroke();}
+}
+
+/* ---------- shared drawing ---------- */
+function flame(cx,y,size){if(size<=0.02)return;var h=8+20*size;ctx.fillStyle='#f4b13d';ctx.beginPath();ctx.moveTo(cx-14-6*size,y);ctx.quadraticCurveTo(cx-10,y-h*.6,cx,y-h);ctx.quadraticCurveTo(cx+10,y-h*.6,cx+14+6*size,y);ctx.closePath();ctx.fill();ctx.fillStyle='#e2544a';ctx.beginPath();ctx.moveTo(cx-7,y);ctx.quadraticCurveTo(cx-5,y-h*.4,cx,y-h*.62);ctx.quadraticCurveTo(cx+5,y-h*.4,cx+7,y);ctx.closePath();ctx.fill();}
+function burner(cx,y,size){ctx.fillStyle='#8d99b0';rr(cx-26,y,52,26,6);ctx.fill();var n=3;for(var i=0;i<n;i++)flame(cx-24+i*24,y,size*(0.8+0.2*Math.sin(Date.now()/120+i)));}
+function ice(cx,y,size){if(size<=0.02)return;ctx.globalAlpha=Math.min(1,size*1.5);for(var i=0;i<4;i++){ctx.fillStyle='#d6ecfb';ctx.strokeStyle='#8fc3ea';ctx.lineWidth=2;rr(cx-58+i*30,y+4,24,22,5);ctx.fill();ctx.stroke();}ctx.globalAlpha=1;}
+function weights(cx,top,n,col){for(var i=0;i<n;i++){ctx.fillStyle=col;rr(cx-34,top-(i+1)*16,68,13,4);ctx.fill();}}
+
+/* ================= SCENES ================= */
+var S={};
+
+/* ---- Boyle: syringe ---- */
+S.boyleDemo={title:"Lab demo: marshmallow in a sealed syringe",canvas:true,
+ q:"Why does the marshmallow shrink when you push the plunger in?",
+ rule:["Less space &rarr; particles hit the walls more often","More hits = higher pressure","Higher pressure squeezes the air pockets in the marshmallow","P &uarr; &rarr; V &darr; (temperature constant)"],
+ init:function(){this.V=30;this.tV=30;this.gas=new Gas(26,this.box());},
+ box:function(){var px=140+this.V*6.667;return {x:142,y:172,w:px-142,h:116};},
+ controls:function(){return '<div class="ctl">Pull out <input type="range" id="sl" min="15" max="55" step="1" value="40"> Push in</div><button class="btn fill" id="bin">Push in</button><button class="btn" id="bout">Pull out</button><button class="btn" id="brs">Reset</button>';},
+ bind:function(){var s=this;$('sl').oninput=function(){s.tV=70-this.value;};$('bin').onclick=function(){s.tV=15;$('sl').value=55;};$('bout').onclick=function(){s.tV=55;$('sl').value=15;};$('brs').onclick=function(){s.tV=30;$('sl').value=40;};},
+ reads:[['v','Volume of air'],['p','Pressure'],['h','Wall hits / second','wide']],
+ read:function(){var P=101*30/this.V;return {v:fmt(this.V,0)+' mL',p:fmt(P,0)+' kPa',h:fmt(this.gas.rate,0)};},
+ update:function(dt){this.V=lerp(this.V,this.tV,Math.min(1,dt*3));this.gas.step(dt,this.box(),130);},
+ draw:function(){var px=140+this.V*6.667,P=101*30/this.V;
+  // barrel
+  ctx.fillStyle='#eef5fb';rr(140,170,400,120,10);ctx.fill();
+  // particles
+  this.gas.draw(function(){return BLUE;});
+  // marshmallow
+  var s=Math.pow(this.V/30,.6),mw=70*s,mh=58*s,cx=140+Math.max(42,Math.min(95,(px-140)/2)),cy=230;
+  ctx.fillStyle='#fff8f3';ctx.strokeStyle='#e3c7b9';ctx.lineWidth=2.5;rr(cx-mw/2,cy-mh/2,mw,mh,14*s);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#f1ddd2';var holes=[[-.25,-.2],[.2,-.25],[.05,.1],[-.22,.22],[.28,.2]];for(var i=0;i<holes.length;i++){ctx.beginPath();ctx.arc(cx+holes[i][0]*mw,cy+holes[i][1]*mh,4.5*s,0,Math.PI*2);ctx.fill();}
+  // barrel outline and marks
+  ctx.strokeStyle=INK;ctx.lineWidth=3;rr(140,170,400,120,10);ctx.stroke();
+  ctx.lineWidth=2;for(var m=0;m<=60;m+=5){var x=140+m*6.667;ctx.beginPath();ctx.moveTo(x,170);ctx.lineTo(x,m%10?178:186);ctx.stroke();if(m%10===0&&m>0)txt(String(m),x,158,{s:13,c:MUTED,w:500});}
+  txt('mL',555,158,{s:13,c:MUTED,w:500});
+  // nozzle + cap
+  ctx.fillStyle='#eef5fb';ctx.fillRect(108,218,34,24);ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.strokeRect(108,218,34,24);
+  ctx.fillStyle=INK;rr(88,212,22,36,5);ctx.fill();txt('cap',99,268,{s:13,c:MUTED,w:500});
+  // plunger
+  ctx.fillStyle='#3b4760';rr(px-4,174,16,112,4);ctx.fill();ctx.fillStyle='#c9d4e6';ctx.fillRect(px+12,222,210,16);ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.strokeRect(px+12,222,210,16);
+  ctx.fillStyle='#3b4760';rr(px+222,180,18,100,5);ctx.fill();
+  // push arrow length ~ P
+  var al=20+P*0.45;arrow(px+300+al,230,px+250,230,CORAL,6);
+  txt('push',px+290+al/2,205,{s:14,c:CORAL});
+  // gauge
+  var gx=680,gy=95;ctx.fillStyle='#fff';ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.arc(gx,gy,52,0,Math.PI*2);ctx.fill();ctx.stroke();
+  for(var k=0;k<=8;k++){var a=Math.PI*.75+k*Math.PI*1.5/8;ctx.beginPath();ctx.moveTo(gx+Math.cos(a)*40,gy+Math.sin(a)*40);ctx.lineTo(gx+Math.cos(a)*48,gy+Math.sin(a)*48);ctx.lineWidth=2;ctx.stroke();}
+  var na=Math.PI*.75+clamp(P/220,0,1)*Math.PI*1.5;ctx.strokeStyle=RED;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+Math.cos(na)*38,gy+Math.sin(na)*38);ctx.stroke();ctx.fillStyle=INK;ctx.beginPath();ctx.arc(gx,gy,5,0,Math.PI*2);ctx.fill();
+  txt(fmt(P,0)+' kPa',gx,gy+72,{s:18});txt('pressure of the trapped air',gx,gy+94,{s:13,c:MUTED,w:500});
+  // legend
+  ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(160,360,6,0,Math.PI*2);ctx.fill();txt('air particle',172,360,{a:'left',s:14,c:MUTED,w:500});
+  ctx.strokeStyle=AMBER;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(300,360,9,0,Math.PI*2);ctx.stroke();txt('hit on the wall',316,360,{a:'left',s:14,c:MUTED,w:500});
+  ctx.fillStyle='#fff8f3';ctx.strokeStyle='#e3c7b9';rr(452,350,26,20,6);ctx.fill();ctx.stroke();txt('marshmallow (full of tiny air pockets)',486,360,{a:'left',s:14,c:MUTED,w:500});
+  txt('Temperature stays the same (25 °C)',400,420,{s:16,c:MUTED,w:500});
+ }};
+
+/* ---- Boyle: piston ---- */
+S.boyleSim={title:"Explore: squeeze a gas at constant temperature",canvas:true,
+ q:"When the pressure doubles, what happens to the volume?",
+ rule:["P &uarr; &rarr; V &darr;","Double the pressure &rarr; half the volume","P &times; V stays the same","Graph: a curve (inverse relationship)"],
+ init:function(){this.P=1;this.tP=1;this.gas=new Gas(30,this.box());},
+ box:function(){var V=10/this.P,h=V*15;return {x:162,y:440-h,w:196,h:h};},
+ controls:function(){return '<div class="ctl">Pressure <input type="range" id="sl" min="0.5" max="4" step="0.1" value="1"><output id="o">1.0 atm</output></div>';},
+ bind:function(){var s=this;$('sl').oninput=function(){s.tP=+this.value;$('o').textContent=fmt(s.tP,1)+' atm';};},
+ reads:[['p','Pressure'],['v','Volume'],['k','P × V','wide']],
+ read:function(){var V=10/this.P;return {p:fmt(this.P,1)+' atm',v:fmt(V,1)+' L',k:fmt(this.P,1)+' × '+fmt(V,1)+' = '+fmt(this.P*V,0)+' atm·L'};},
+ update:function(dt){this.P=lerp(this.P,this.tP,Math.min(1,dt*4));this.gas.step(dt,this.box(),130);},
+ draw:function(){var b=this.box(),top=b.y;
+  ctx.fillStyle='#eef5fb';ctx.fillRect(160,110,200,330);
+  this.gas.draw(function(){return BLUE;});
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(160,110);ctx.lineTo(160,442);ctx.lineTo(360,442);ctx.lineTo(360,110);ctx.stroke();
+  for(var L=0;L<=20;L+=5){var y=440-L*15;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(360,y);ctx.lineTo(372,y);ctx.stroke();txt(L+' L',392,y,{s:13,c:MUTED,w:500});}
+  ctx.fillStyle='#3b4760';rr(158,top-16,204,16,4);ctx.fill();
+  var n=Math.round(this.P*2);weights(260,top-16,n,TEAL);
+  arrow(260,top-26-n*16-50,260,top-22-n*16,CORAL,4+this.P*1.5);
+  txt(fmt(this.P,1)+' atm',190,top-38-n*16-30,{s:16,c:CORAL});
+  txt('25 °C',260,470,{s:15,c:MUTED,w:500});
+  var P=this.P;graph({x:510,y:90,w:250,h:300,xmax:4.5,ymax:22,xt:.5,yt:2,xl:1,yl:4,x0:.46,f:function(p){return 10/p;},dot:[P,10/P],col:TEAL,title:'Volume vs Pressure',xlab:'Pressure (atm)',ylab:'Volume (L)'});
+ }};
+
+/* ---- equation view helper ---- */
+function eqScene(o){return {title:o.title,canvas:false,q:o.q,rule:o.rule,reads:o.reads,
+ init:function(){this.x=o.x0;$('eqview').innerHTML=o.html;this.paint();},
+ controls:function(){return '<div class="ctl">'+o.sl.label+' <input type="range" id="sl" min="'+o.sl.min+'" max="'+o.sl.max+'" step="'+o.sl.step+'" value="'+o.x0+'"><output id="o"></output></div>';},
+ bind:function(){var s=this;$('sl').oninput=function(){s.x=+this.value;s.paint();};},
+ paint:function(){o.paint(this.x);$('o').textContent=o.sl.fmt(this.x);},
+ read:function(){return o.read(this.x);},update:function(){},draw:function(){}};}
+function arrowTag(r){return r>1.001?'<span class="arrowtag up">&uarr;</span>':(r<0.999?'<span class="arrowtag down">&darr;</span>':'<span class="arrowtag" style="visibility:hidden">&uarr;</span>');}
+function factor(r){return r>=1?'× '+fmt(r,1):'÷ '+fmt(1/r,1);}
+
+S.boyleEq=eqScene({title:"The equation: P × V = constant",
+ q:"Watch the letters: when P gets bigger, what happens to V?",
+ rule:["Inversely proportional","One goes up, the other goes down by the same factor","P<sub>1</sub>V<sub>1</sub> = P<sub>2</sub>V<sub>2</sub>"],
+ x0:2,sl:{label:'Pressure',min:.5,max:4,step:.1,fmt:function(v){return fmt(v,1)+' atm';}},
+ reads:[['p','P₂'],['v','V₂'],['k','P × V','wide']],
+ read:function(P){return {p:fmt(P,1)+' atm',v:fmt(10/P,1)+' L',k:'10 atm·L (always)'};},
+ html:'<div class="eqrow"><span class="big" id="eP" style="color:#d8434a">P<small>pressure</small></span><span id="aP"></span><span class="op">×</span><span class="big" id="eV" style="color:#2b59c3">V<small>volume</small></span><span id="aV"></span><span class="op">=</span><span class="k">k</span></div><div class="nums" id="nums"></div><div class="bars2"><span>Pressure</span><div class="bar"><i id="bP" style="background:#d8434a"></i></div><span id="tP"></span><span>Volume</span><div class="bar"><i id="bV" style="background:#2b59c3"></i></div><span id="tV"></span></div><div class="pair" id="pair"></div><span class="chip" id="chip"></span>',
+ paint:function(P){var V=10/P,r=P/1;$('eP').style.fontSize=(90*Math.sqrt(P))+'px';$('eV').style.fontSize=(90*Math.sqrt(V/10)*1)+'px';
+  $('aP').innerHTML=arrowTag(r);$('aV').innerHTML=arrowTag(1/r);
+  $('nums').innerHTML=fmt(P,1)+' atm × '+fmt(V,1)+' L = <b>10 atm·L</b>';
+  $('bP').style.width=(P/4*100)+'%';$('bV').style.width=(V/20*100)+'%';$('tP').textContent=fmt(P,1)+' atm';$('tV').textContent=fmt(V,1)+' L';
+  $('pair').innerHTML='P<sub>1</sub>V<sub>1</sub> = P<sub>2</sub>V<sub>2</sub> &nbsp;&rarr;&nbsp; (1.0 atm)(10 L) = ('+fmt(P,1)+' atm)('+fmt(V,1)+' L)';
+  $('chip').textContent='Pressure '+factor(r)+'  →  Volume '+factor(1/r);}});
+
+/* ---- Charles: balloon on bottle ---- */
+S.charlesDemo={title:"Lab demo: balloon on a bottle in hot and ice water",canvas:true,
+ q:"Why does the balloon grow in hot water and shrink in ice water?",
+ rule:["Hotter &rarr; particles move faster (longer speed trails)","Faster particles hit the walls harder and more often","The stretchy balloon expands &rarr; volume &uarr;","T &uarr; &rarr; V &uarr; (pressure constant)"],
+ init:function(){this.T=298;this.tT=298;this.body={x:342,y:240,w:116,h:196};this.sh={x:362,y:192,w:76,h:52};this.gas=new Gas(30,this.body);var B=this.bal();for(var i=0;i<4;i++)this.gas.add(this.body,0,B.x-6+Math.random()*12,B.y-6+Math.random()*12);},
+ inf:function(){return clamp((this.T-273)/70,0,1);},
+ bal:function(){var s=this.inf(),R=10+36*s,stem=8+10*s;return {x:400,y:128-stem-R*0.95,r:R,stem:stem,s:s};},
+ neck:function(){var B=this.bal();return {x:383,y:B.y,w:34,h:200-B.y};},
+ sp:function(){return 25+(this.T-263)*3.2;},
+ controls:function(){return '<button class="btn" id="b1">Ice water (0 °C)</button><button class="btn sel" id="b2">Room (25 °C)</button><button class="btn" id="b3">Hot water (70 °C)</button>';},
+ bind:function(){var s=this,ids=['b1','b2','b3'],T=[273,298,343];ids.forEach(function(id,i){$(id).onclick=function(){s.tT=T[i];ids.forEach(function(j){$(j).classList.toggle('sel',j===id);});};});},
+ reads:[['t','Temperature'],['k','Kelvin'],['v','Gas volume','wide']],
+ read:function(){return {t:fmt(this.T-273,0)+' °C',k:fmt(this.T,0)+' K',v:'≈ '+fmt(600*this.T/298,0)+' mL'};},
+ update:function(dt){this.T=lerp(this.T,this.tT,Math.min(1,dt*.9));var sp=this.sp(),r=this.gas.r,B=this.bal(),C={x:B.x,y:B.y,r:Math.max(r+2,B.r*0.9)},R=[this.body,this.sh,this.neck()],g=this.gas;g.spd=sp;
+  function inR(x,y,Q){return x>=Q.x+r&&x<=Q.x+Q.w-r&&y>=Q.y+r&&y<=Q.y+Q.h-r;}
+  function inC(x,y){return Math.hypot(x-C.x,y-C.y)<=C.r-r;}
+  function inside(x,y){for(var k=0;k<R.length;k++)if(inR(x,y,R[k]))return true;return inC(x,y);}
+  for(var i=0;i<g.p.length;i++){var p=g.p[i],ox=p.x,oy=p.y;p.x+=p.vx*sp*p.f*dt;p.y+=p.vy*sp*p.f*dt;if(inside(p.x,p.y))continue;
+   var done=false;for(var k=0;k<R.length&&!done;k++){var Q=R[k];if(inR(ox,oy,Q)){if(p.x<Q.x+r||p.x>Q.x+Q.w-r){p.vx=-p.vx;p.x=clamp(p.x,Q.x+r,Q.x+Q.w-r);}if(p.y<Q.y+r||p.y>Q.y+Q.h-r){p.vy=-p.vy;p.y=clamp(p.y,Q.y+r,Q.y+Q.h-r);}done=true;}}
+   if(!done&&inC(ox,oy)){var dx=p.x-C.x,dy=p.y-C.y,d=Math.hypot(dx,dy)||1,nx=dx/d,ny=dy/d,dot=p.vx*nx+p.vy*ny;p.vx-=2*dot*nx;p.vy-=2*dot*ny;p.x=C.x+nx*(C.r-r-.5);p.y=C.y+ny*(C.r-r-.5);done=true;}
+   if(!done){p.x=lerp(ox,400,.3);p.y=lerp(oy,330,.3);continue;}
+   if(!inside(p.x,p.y)){p.x=ox;p.y=oy;p.vx=-p.vx;p.vy=-p.vy;}
+   g.spark(p.x,p.y);}
+  g.tick(dt);},
+ balloonPath:function(B){var cx=B.x,cy=B.y,R=B.r,st=B.stem;ctx.beginPath();ctx.moveTo(384,128);
+  ctx.bezierCurveTo(384,128-st,cx-R*1.05,cy+R*0.95,cx-R,cy);ctx.bezierCurveTo(cx-R,cy-R*1.3,cx+R,cy-R*1.3,cx+R,cy);ctx.bezierCurveTo(cx+R*1.05,cy+R*0.95,416,128-st,416,128);ctx.closePath();},
+ bottlePath:function(){ctx.beginPath();ctx.moveTo(382,130);ctx.lineTo(382,168);ctx.bezierCurveTo(382,200,340,205,340,250);ctx.lineTo(340,418);ctx.arcTo(340,438,360,438,20);ctx.lineTo(440,438);ctx.arcTo(460,438,460,418,20);ctx.lineTo(460,250);ctx.bezierCurveTo(460,205,418,200,418,168);ctx.lineTo(418,130);},
+ draw:function(){var T=this.T,hot=clamp((T-298)/45,0,1),cold=clamp((298-T)/25,0,1),B=this.bal(),TT=150+(T-263)*5;
+  var wc=hot>0?'rgba(242,170,160,'+(0.25+hot*.25)+')':'rgba(150,200,240,'+(0.25+cold*.25)+')';
+  // balloon body
+  if(B.s>0.22){this.balloonPath(B);ctx.fillStyle='rgba(226,112,138,.28)';ctx.fill();}
+  // bottle glass
+  this.bottlePath();ctx.closePath();ctx.fillStyle='rgba(230,242,250,.92)';ctx.fill();
+  this.gas.draw(function(){return tcol(TT);});
+  this.bottlePath();ctx.strokeStyle='#5f7c9b';ctx.lineWidth=3.5;ctx.stroke();
+  if(B.s>0.22){this.balloonPath(B);ctx.strokeStyle='#c4506d';ctx.lineWidth=3.5;ctx.stroke();
+   ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(B.x-B.r*0.45,B.y-B.r*0.35,B.r*0.35,Math.PI*1.1,Math.PI*1.5);ctx.stroke();}
+  else{ // deflated, crumpled balloon flopping over the mouth
+   var k=(0.22-B.s)/0.22;ctx.fillStyle='rgba(226,112,138,.55)';ctx.strokeStyle='#c4506d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(384,128);ctx.lineTo(380,112);ctx.lineTo(374,104-6*k);ctx.lineTo(386,98-8*k);ctx.lineTo(392,104);ctx.lineTo(402,94-10*k);ctx.lineTo(412,100);ctx.lineTo(424,96-6*k);ctx.lineTo(426,108);ctx.lineTo(418,114);ctx.lineTo(416,128);ctx.closePath();ctx.fill();ctx.stroke();
+   ctx.beginPath();ctx.moveTo(388,110);ctx.lineTo(398,116);ctx.moveTo(404,104);ctx.lineTo(410,112);ctx.stroke();}
+  // rubber band at the mouth
+  ctx.fillStyle='#5b2a36';rr(376,124,48,14,5);ctx.fill();
+  // bowl
+  ctx.fillStyle=wc;ctx.beginPath();ctx.moveTo(210,330);ctx.lineTo(590,330);ctx.lineTo(560,470);ctx.lineTo(240,470);ctx.closePath();ctx.fill();
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(200,310);ctx.lineTo(240,472);ctx.lineTo(560,472);ctx.lineTo(600,310);ctx.stroke();
+  if(cold>.05){ctx.globalAlpha=cold;var cubes=[[250,334],[290,348],[500,336],[530,350],[470,352]];for(var i=0;i<cubes.length;i++){ctx.fillStyle='#eaf6ff';ctx.strokeStyle='#8fc3ea';ctx.lineWidth=2;rr(cubes[i][0],cubes[i][1],26,22,5);ctx.fill();ctx.stroke();}ctx.globalAlpha=1;}
+  if(hot>.05){ctx.globalAlpha=hot*.8;ctx.strokeStyle='#c9a7a7';ctx.lineWidth=3;var t=Date.now()/600;for(var j=0;j<4;j++){var x0=245+j*95;if(j===1||j===2)x0=j===1?300:500;ctx.beginPath();for(var y=320;y>250;y-=4){var xx=x0+Math.sin(y/12+t+j)*7;if(y===320)ctx.moveTo(xx,y);else ctx.lineTo(xx,y);}ctx.stroke();}ctx.globalAlpha=1;}
+  // thermometer
+  var tx=110,ty=150;ctx.fillStyle='#fff';ctx.strokeStyle=INK;ctx.lineWidth=3;rr(tx-12,ty,24,220,12);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(tx,ty+236,22,0,Math.PI*2);ctx.fill();ctx.stroke();
+  var lvl=clamp((T-263)/(353-263),0,1);ctx.fillStyle=tcol(TT);ctx.beginPath();ctx.arc(tx,ty+236,15,0,Math.PI*2);ctx.fill();ctx.fillRect(tx-5,ty+220-lvl*200,10,lvl*200+10);
+  txt(fmt(T-273,0)+' °C',tx,ty-22,{s:18,c:tcol(TT)});
+  // speed meter
+  var v=this.sp(),mx=630,my=150;txt('Particle speed',mx+60,my-20,{s:15});ctx.fillStyle='#e6ebf3';rr(mx,my,120,18,9);ctx.fill();ctx.fillStyle=tcol(TT);rr(mx,my,Math.max(18,120*clamp(v/290,0,1)),18,9);ctx.fill();
+  txt(v<90?'slow':v<200?'medium':'fast',mx+60,my+38,{s:16,c:tcol(TT)});
+  // legend
+  txt('Particles: blue = slow (cold)',20,24,{a:'left',s:15,c:MUTED,w:500});txt('red = fast (hot)',20,46,{a:'left',s:15,c:MUTED,w:500});
+  txt('Pressure stays the same',700,440,{s:14,c:MUTED,w:500});txt('(the balloon stretches)',700,460,{s:14,c:MUTED,w:500});
+ }};
+
+/* ---- Charles: piston ---- */
+S.charlesSim={title:"Explore: heat a gas at constant pressure",canvas:true,
+ q:"What happens to the volume when the kelvin temperature doubles?",
+ rule:["T &uarr; &rarr; V &uarr;","Double the kelvin temperature &rarr; double the volume","V &divide; T stays the same","Graph: a straight line through 0 K (absolute zero)"],
+ init:function(){this.T=300;this.tT=300;this.gas=new Gas(30,this.box());},
+ box:function(){var V=2*this.T,h=V*.25;return {x:162,y:440-h,w:196,h:h};},
+ controls:function(){return '<div class="ctl">Temperature <input type="range" id="sl" min="50" max="600" step="10" value="300"><output id="o">300 K</output></div>';},
+ bind:function(){var s=this;$('sl').oninput=function(){s.tT=+this.value;$('o').textContent=s.tT+' K';};},
+ reads:[['t','Temperature','wide'],['v','Volume','wide'],['k','V ÷ T','wide']],
+ read:function(){var V=2*this.T;return {t:fmt(this.T,0)+' K ('+fmt(this.T-273,0)+' °C)',v:fmt(V,0)+' mL',k:fmt(V,0)+' ÷ '+fmt(this.T,0)+' = 2 mL/K'};},
+ update:function(dt){this.T=lerp(this.T,this.tT,Math.min(1,dt*3));this.gas.step(dt,this.box(),spd(this.T));},
+ draw:function(){var b=this.box(),top=b.y,T=this.T;
+  ctx.fillStyle='#eef5fb';ctx.fillRect(160,120,200,320);
+  this.gas.draw(function(){return tcol(T);});
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(160,120);ctx.lineTo(160,442);ctx.lineTo(360,442);ctx.lineTo(360,120);ctx.stroke();
+  for(var v=0;v<=1200;v+=300){var y=440-v*.25;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(360,y);ctx.lineTo(372,y);ctx.stroke();txt(v+' mL',400,y,{s:13,c:MUTED,w:500});}
+  ctx.fillStyle='#3b4760';rr(158,top-16,204,16,4);ctx.fill();weights(260,top-16,2,TEAL);txt('constant pressure: 1 atm',260,top-62,{s:14,c:TEAL});
+  burner(260,470,clamp((T-300)/300,0,1));ice(260,446,clamp((300-T)/250,0,1));
+  graph({x:510,y:90,w:250,h:300,xmax:650,ymax:1300,xt:50,yt:100,xl:100,yl:200,x0:0,dashBelow:50,f:function(t){return 2*t;},dot:[T,2*T],col:CORAL,title:'Volume vs Kelvin temperature',xlab:'Temperature (K)',ylab:'Volume (mL)'});
+  txt('← 0 K = absolute zero',522,372,{a:'left',s:12,c:MUTED,w:500});
+ }};
+
+S.charlesEq=eqScene({title:"The equation: V ÷ T = constant",
+ q:"Watch the letters: when T gets bigger, what happens to V?",
+ rule:["Directly proportional","Both go up (or down) together by the same factor","V<sub>1</sub>/T<sub>1</sub> = V<sub>2</sub>/T<sub>2</sub>","Always use kelvin: T<sub>K</sub> = T<sub>°C</sub> + 273"],
+ x0:300,sl:{label:'Temperature',min:50,max:600,step:10,fmt:function(v){return v+' K';}},
+ reads:[['t','T₂'],['v','V₂'],['k','V ÷ T','wide']],
+ read:function(T){return {t:T+' K',v:fmt(2*T,0)+' mL',k:'2 mL/K (always)'};},
+ html:'<div class="eqrow"><span class="frac"><span class="fr"><span class="big" id="eV" style="color:#2b59c3">V<small>volume</small></span><span id="aV"></span></span><hr><span class="fr"><span class="big" id="eT" style="color:#d8434a">T<small>temperature (K)</small></span><span id="aT"></span></span></span><span class="op">=</span><span class="k">k</span></div><div class="nums" id="nums"></div><div class="bars2"><span>Temperature</span><div class="bar"><i id="bT" style="background:#d8434a"></i></div><span id="tT"></span><span>Volume</span><div class="bar"><i id="bV" style="background:#2b59c3"></i></div><span id="tV"></span></div><div class="pair" id="pair"></div><span class="chip" id="chip"></span>',
+ paint:function(T){var V=2*T,r=T/150;var s=Math.sqrt(r)*0.7;$('eV').style.fontSize=(70*s)+'px';$('eT').style.fontSize=(70*s)+'px';$('aV').innerHTML=arrowTag(r);$('aT').innerHTML=arrowTag(r);
+  $('nums').innerHTML=fmt(V,0)+' mL ÷ '+T+' K = <b>2 mL/K</b>';
+  $('bT').style.width=(T/600*100)+'%';$('bV').style.width=(V/1200*100)+'%';$('tT').textContent=T+' K';$('tV').textContent=fmt(V,0)+' mL';
+  $('pair').innerHTML='V<sub>1</sub>/T<sub>1</sub> = V<sub>2</sub>/T<sub>2</sub> &nbsp;&rarr;&nbsp; 300 mL / 150 K = '+fmt(V,0)+' mL / '+T+' K';
+  $('chip').textContent='Temperature '+factor(r)+'  →  Volume '+factor(r);}});
+
+/* ---- Gay-Lussac: can implosion ---- */
+S.glDemo={title:"Lab demo: the can implosion",canvas:true,
+ q:"Why is the can crushed only after it is flipped into the ice water?",
+ rule:["Cooling at constant volume &rarr; particles slow down","Fewer, weaker hits &rarr; pressure inside drops","Steam condenses &rarr; fewer gas particles &rarr; pressure drops even more","Outside pressure &gt; inside &rarr; the can is pushed in (implosion)"],
+ init:function(){this.phase='ready';this.T=298;this.water=1;this.t=0;this.crush=0;this.cx=250;this.cy=318;this.ang=0;this.drops=[];this.n0=1;this.Pin=101;this.spawn=0;this.gas=new Gas(22,this.box(),0);this.btns();},
+ box:function(){var ins=this.crush*30,wh=this.phase==='ready'||this.phase==='heating'||this.phase==='heated'?16*this.water:0;return {x:-52+ins,y:-82,w:104-2*ins,h:164-wh};},
+ controls:function(){return '<button class="btn fill" id="b1">1. Heat the can</button><button class="btn" id="b2">2. Flip it into ice water</button><button class="btn" id="b3">Reset</button>';},
+ btns:function(){if(!$('b1'))return;$('b1').disabled=this.phase!=='ready';$('b2').disabled=this.phase!=='heated';$('b2').classList.toggle('fill',this.phase==='heated');$('b1').classList.toggle('fill',this.phase==='ready');},
+ bind:function(){var s=this;$('b1').onclick=function(){s.phase='heating';s.t=0;s.btns();};$('b2').onclick=function(){s.phase='flipping';s.t=0;s.n0=Math.max(1,s.gas.p.filter(function(p){return !p.free;}).length);s.btns();};$('b3').onclick=function(){s.init();};this.btns();},
+ reads:[['t','Temperature inside'],['p','Pressure inside'],['o','Pressure outside','wide']],
+ read:function(){return {t:fmt(this.T-273,0)+' °C',p:fmt(this.Pin,0)+' kPa',o:'101 kPa (the air around us)'};},
+ update:function(dt){var s=this,g=this.gas;this.t+=dt;
+  if(this.phase==='heating'||this.phase==='heated'){this.T=lerp(this.T,373,Math.min(1,dt*.7));
+   if(this.T>345){this.water=Math.max(.35,this.water-dt*.06);this.spawn+=dt;var live=g.p.filter(function(p){return !p.free&&p.kind===1;}).length;if(this.spawn>.1&&live<30){this.spawn=0;g.add(this.box(),1,-40+Math.random()*80,82-16*this.water-8).vy=-1;}}
+   if(this.t>7){g.p.forEach(function(p){if(p.kind===0&&!p.free){p.free=true;p.vx=0;p.vy=-1;}});}
+   if(this.phase==='heating'&&this.t>4&&!g.p.some(function(p){return p.kind===0&&!p.free;})){this.phase='heated';this.btns();}}
+  if(this.phase==='flipping'){var e=clamp(this.t/1.4,0,1),q=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;this.cx=lerp(250,560,q);this.cy=318-130*Math.sin(Math.PI*q);this.ang=Math.PI*q;this.T=lerp(this.T,365,dt);if(e>=1){this.phase='cold';this.t=0;}}
+  if(this.phase==='cold'||this.phase==='crushed'){this.T=lerp(this.T,278,Math.min(1,dt*2.2));
+   var nn=g.p.filter(function(p){return !p.free;}).length;g.p.forEach(function(p){if(p.kind===1&&!p.free&&nn>s.n0*.3&&Math.random()<dt*1.5){nn--;p.dead=true;s.drops.push({x:p.x,y:p.y});}});g.p=g.p.filter(function(p){return !p.dead;});}
+  var n=g.p.filter(function(p){return !p.free;}).length;
+  if(this.phase==='cold'||this.phase==='crushed')this.Pin=101*(n/this.n0)*(this.T/365);else this.Pin=101;
+  if(this.phase==='cold'&&this.Pin<55){this.phase='crushed';this.t=0;}
+  if(this.phase==='crushed')this.crush=Math.min(1,this.crush+dt*4);
+  var op=this.phase==='heating'||this.phase==='heated';
+  g.step(dt,this.box(),30+Math.max(0,this.T-270)*2.4,function(p){if(op&&Math.abs(p.x)<20&&(p.kind===0?s.T>335:Math.random()<.3)){p.free=true;p.vx=(Math.random()-.5)*.3;p.vy=-1;return true;}return false;});},
+ drawCan:function(){var c=this.crush,b=this.box();
+  ctx.save();ctx.translate(this.cx,this.cy);ctx.rotate(this.ang);
+  // body shape (crumpled when c>0)
+  var pts=[],i,y;for(i=0;i<=8;i++){y=-80+i*20;var d=c*(20+12*Math.sin(i*1.7+.5));pts.push([-55+d,y]);}
+  var rpts=[];for(i=8;i>=0;i--){y=-80+i*20;var d2=c*(20+12*Math.sin(i*2.3+1.4));rpts.push([55-d2,y]);}
+  function body(){ctx.beginPath();ctx.moveTo(pts[0][0],-86);pts.forEach(function(p){ctx.lineTo(p[0],p[1]);});ctx.lineTo(pts[8][0],86);ctx.lineTo(rpts[0][0],86);rpts.forEach(function(p){ctx.lineTo(p[0],p[1]);});ctx.lineTo(rpts[8][0],-86);ctx.closePath();}
+  body();
+  var gr=ctx.createLinearGradient(-55,0,55,0);gr.addColorStop(0,'#c9d2de');gr.addColorStop(.35,'#f4f7fb');gr.addColorStop(1,'#aeb9c9');ctx.fillStyle=gr;ctx.fill();
+  ctx.save();ctx.clip();ctx.globalAlpha=.55;ctx.fillStyle='#fbfcfe';ctx.fillRect(-60,-90,120,180);ctx.globalAlpha=1;
+  if(this.phase==='ready'||this.phase==='heating'||this.phase==='heated'){ctx.fillStyle='rgba(120,180,235,.6)';ctx.fillRect(-55,82-16*this.water,110,16*this.water+4);}
+  this.gas.draw(function(p){return p.kind===1?'#5aa9e6':'#8a96ab';});
+  ctx.fillStyle='#4f9ad8';this.drops.forEach(function(d){ctx.beginPath();ctx.arc(clamp(d.x,b.x+3,b.x+b.w-3),d.y,3,0,Math.PI*2);ctx.fill();});
+  ctx.restore();
+  body();ctx.lineJoin='round';ctx.strokeStyle='#1f2a3c';ctx.lineWidth=9;ctx.stroke();ctx.strokeStyle='#c7d0dc';ctx.lineWidth=2.5;ctx.stroke();
+  // top with opening
+  ctx.fillStyle='#1f2a3c';ctx.fillRect(pts[0][0]-4,-92,(-20)-pts[0][0]+4,10);ctx.fillRect(20,-92,rpts[8][0]-16,10);
+  // inside pressure arrows
+  if(this.phase==='cold'||this.phase==='crushed'){var L=10+34*clamp(this.Pin/101,0,1);arrow(-8,0,-8-L,0,BLUE,4);arrow(8,0,8+L,0,BLUE,4);}
+  ctx.restore();},
+ draw:function(){var ph=this.phase;
+  // hot plate
+  ctx.fillStyle='#5b6b82';rr(170,405,160,40,8);ctx.fill();var heat=ph==='heating'||ph==='heated';ctx.fillStyle=heat?'#e2544a':'#8d99b0';rr(180,400,140,8,4);ctx.fill();txt('hot plate',250,465,{s:14,c:MUTED,w:500});
+  // bowl back
+  ctx.fillStyle='rgba(150,200,240,.35)';ctx.beginPath();ctx.moveTo(440,340);ctx.lineTo(680,340);ctx.lineTo(660,470);ctx.lineTo(460,470);ctx.closePath();ctx.fill();
+  this.drawCan();
+  // bowl water front
+  ctx.fillStyle='rgba(120,185,235,.45)';ctx.beginPath();ctx.moveTo(440,340);ctx.lineTo(680,340);ctx.lineTo(660,470);ctx.lineTo(460,470);ctx.closePath();ctx.fill();
+  var cubes=[[452,344],[640,346],[618,360]];cubes.forEach(function(c){ctx.fillStyle='#eaf6ff';ctx.strokeStyle='#8fc3ea';ctx.lineWidth=2;rr(c[0],c[1],24,20,5);ctx.fill();ctx.stroke();});
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(430,320);ctx.lineTo(460,472);ctx.lineTo(660,472);ctx.lineTo(690,320);ctx.stroke();txt('ice water',560,488,{s:14,c:MUTED,w:500});
+  // outside pressure arrows
+  if(ph==='cold'||ph==='crushed'){var x=this.cx,y=this.cy;[[x-125,y-40,x-62,y-40],[x-125,y+10,x-62,y+10],[x+125,y-40,x+62,y-40],[x+125,y+10,x+62,y+10]].forEach(function(a){arrow(a[0],a[1],a[2],a[3],AMBER,6);});
+   txt('outside air pushes in: 101 kPa',x,y-120,{s:16,c:AMBER});txt('inside: '+fmt(this.Pin,0)+' kPa',x,y-100,{s:15,c:BLUE});}
+  if(ph==='crushed'&&this.t<2.5){ctx.globalAlpha=clamp(2.5-this.t,0,1);txt('IMPLOSION!',560,128,{s:34,c:RED,w:700});ctx.globalAlpha=1;}
+  // legend + status
+  ctx.fillStyle='#8a96ab';ctx.beginPath();ctx.arc(40,30,6,0,Math.PI*2);ctx.fill();txt('air',52,30,{a:'left',s:14,c:MUTED,w:500});
+  ctx.fillStyle='#5aa9e6';ctx.beginPath();ctx.arc(100,30,6,0,Math.PI*2);ctx.fill();txt('water vapour (steam)',112,30,{a:'left',s:14,c:MUTED,w:500});
+  ctx.fillStyle='#4f9ad8';ctx.beginPath();ctx.arc(282,30,3,0,Math.PI*2);ctx.fill();txt('condensed water drop',292,30,{a:'left',s:14,c:MUTED,w:500});
+  var msg={ready:'A little water in the can, at room temperature',heating:'Steam pushes the air out of the can…',heated:'The can is full of hot steam. Now flip it!',flipping:'Flipping: the water seals the opening',cold:'Cooling: particles slow down, steam condenses…',crushed:'Outside pressure is much bigger, so the can is pushed in'}[ph];
+  txt(msg,400,72,{s:17,c:INK});if(ph==='ready'||ph==='heating'||ph==='heated')txt('cut-away view: you can see inside the can',this.cx,this.cy-112,{s:13,c:MUTED,w:500});
+ }};
+
+/* ---- Gay-Lussac: rigid container ---- */
+S.glSim={title:"Explore: heat a gas in a rigid container (constant volume)",canvas:true,
+ q:"What happens to the pressure when the kelvin temperature doubles?",
+ rule:["T &uarr; &rarr; P &uarr;","Double the kelvin temperature &rarr; double the pressure","P &divide; T stays the same","Example: a pressure cooker"],
+ init:function(){this.T=300;this.tT=300;this.gas=new Gas(30,{x:162,y:162,w:216,h:256});},
+ controls:function(){return '<div class="ctl">Temperature <input type="range" id="sl" min="100" max="600" step="10" value="300"><output id="o">300 K</output></div>';},
+ bind:function(){var s=this;$('sl').oninput=function(){s.tT=+this.value;$('o').textContent=s.tT+' K';};},
+ reads:[['t','Temperature'],['p','Pressure'],['k','P ÷ T','wide'],['h','Wall hits / second','wide']],
+ read:function(){var P=.01*this.T;return {t:fmt(this.T,0)+' K',p:fmt(P,2)+' atm',k:fmt(P,2)+' ÷ '+fmt(this.T,0)+' = 0.01 atm/K',h:fmt(this.gas.rate,0)};},
+ update:function(dt){this.T=lerp(this.T,this.tT,Math.min(1,dt*3));this.gas.step(dt,{x:162,y:162,w:216,h:256},spd(this.T));},
+ draw:function(){var T=this.T,P=.01*T;
+  ctx.fillStyle='#eef5fb';ctx.fillRect(160,160,220,260);this.gas.draw(function(){return tcol(T);});
+  ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.strokeRect(158,158,224,264);ctx.fillStyle='#3b4760';rr(146,140,248,20,5);ctx.fill();
+  for(var i=0;i<5;i++){ctx.fillStyle='#c9d4e6';ctx.beginPath();ctx.arc(166+i*52,150,4,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#3b4760';ctx.fillRect(265,96,10,46);
+  var gx=270,gy=72;ctx.fillStyle='#fff';ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.arc(gx,gy,40,0,Math.PI*2);ctx.fill();ctx.stroke();
+  for(var k=0;k<=6;k++){var a=Math.PI*.75+k*Math.PI*1.5/6;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(gx+Math.cos(a)*30,gy+Math.sin(a)*30);ctx.lineTo(gx+Math.cos(a)*37,gy+Math.sin(a)*37);ctx.stroke();}
+  var na=Math.PI*.75+clamp(P/6,0,1)*Math.PI*1.5;ctx.strokeStyle=RED;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+Math.cos(na)*30,gy+Math.sin(na)*30);ctx.stroke();
+  txt(fmt(P,2)+' atm',gx+90,gy,{s:18,c:RED});
+  txt('rigid container: volume fixed at 1.0 L',40,40,{a:'left',s:15,c:MUTED,w:500});
+  burner(270,450,clamp((T-300)/300,0,1));ice(270,426,clamp((300-T)/200,0,1));
+  graph({x:510,y:90,w:250,h:300,xmax:650,ymax:6.5,xt:50,yt:.5,xl:100,yl:1,x0:0,f:function(t){return .01*t;},dot:[T,P],col:BLUE,title:'Pressure vs Kelvin temperature',xlab:'Temperature (K)',ylab:'Pressure (atm)'});
+ }};
+
+S.glEq=eqScene({title:"The equation: P ÷ T = constant",
+ q:"Watch the letters: when T gets bigger, what happens to P?",
+ rule:["Directly proportional","Both go up (or down) together by the same factor","P<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>/T<sub>2</sub>","Always use kelvin"],
+ x0:300,sl:{label:'Temperature',min:100,max:600,step:10,fmt:function(v){return v+' K';}},
+ reads:[['t','T₂'],['p','P₂'],['k','P ÷ T','wide']],
+ read:function(T){return {t:T+' K',p:fmt(.01*T,2)+' atm',k:'0.01 atm/K (always)'};},
+ html:'<div class="eqrow"><span class="frac"><span class="fr"><span class="big" id="eP" style="color:#2b59c3">P<small>pressure</small></span><span id="aP"></span></span><hr><span class="fr"><span class="big" id="eT" style="color:#d8434a">T<small>temperature (K)</small></span><span id="aT"></span></span></span><span class="op">=</span><span class="k">k</span></div><div class="nums" id="nums"></div><div class="bars2"><span>Temperature</span><div class="bar"><i id="bT" style="background:#d8434a"></i></div><span id="tT"></span><span>Pressure</span><div class="bar"><i id="bP" style="background:#2b59c3"></i></div><span id="tP"></span></div><div class="pair" id="pair"></div><span class="chip" id="chip"></span>',
+ paint:function(T){var P=.01*T,r=T/150,s=Math.sqrt(r)*0.7;$('eP').style.fontSize=(70*s)+'px';$('eT').style.fontSize=(70*s)+'px';$('aP').innerHTML=arrowTag(r);$('aT').innerHTML=arrowTag(r);
+  $('nums').innerHTML=fmt(P,2)+' atm ÷ '+T+' K = <b>0.01 atm/K</b>';
+  $('bT').style.width=(T/600*100)+'%';$('bP').style.width=(P/6*100)+'%';$('tT').textContent=T+' K';$('tP').textContent=fmt(P,2)+' atm';
+  $('pair').innerHTML='P<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>/T<sub>2</sub> &nbsp;&rarr;&nbsp; 1.5 atm / 150 K = '+fmt(P,2)+' atm / '+T+' K';
+  $('chip').textContent='Temperature '+factor(r)+'  →  Pressure '+factor(r);}});
+
+/* ---- Combined ---- */
+S.combined={title:"The combined gas law: pressure, volume and temperature together",canvas:true,
+ q:"If the pressure and the kelvin temperature both double, what happens to the volume?",
+ rule:["You choose two variables, the third one is calculated","P<sub>1</sub>V<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>V<sub>2</sub>/T<sub>2</sub> always stays the same number","Hold one constant &rarr; it cancels &rarr; Boyle's, Charles's or Gay-Lussac's law","Temperatures in kelvin"],
+ K:10/300,
+ init:function(){this.P=1;this.T=300;this.V=10;this.tP=1;this.tT=300;this.tV=10;this.calc='V';this.hold='none';this.anim=null;this.gas=new Gas(30,this.box());},
+ box:function(){var h=clamp(this.V,1,40)*8;return {x:162,y:440-h,w:196,h:h};},
+ controls:function(){function sl(id,lab,min,max,st,val){return '<div class="ctl" style="min-width:300px"><span style="width:96px">'+lab+'</span><input type="range" id="s'+id+'" min="'+min+'" max="'+max+'" step="'+st+'" value="'+val+'"><output id="o'+id+'"></output></div>';}
+  return sl('P','Pressure',0.5,4,0.1,1)+sl('V','Volume',2,40,0.5,10)+sl('T','Temperature',150,600,10,300)+
+  '<div class="cstrip" style="flex-basis:100%"><div class="holds" style="margin:0 0 10px"><b style="font-family:Fredoka;align-self:center">Calculate:</b><button class="btn" data-c="V">Volume</button><button class="btn" data-c="P">Pressure</button><button class="btn" data-c="T">Temperature</button>'+
+  '<b style="font-family:Fredoka;align-self:center;margin-left:14px">Try it:</b><button class="btn fill" id="wb">Weather balloon rises</button></div>'+
+  '<div class="ceq"><span class="cf"><span><span class="v" id="p1">P<sub>1</sub></span><span class="v" id="v1">V<sub>1</sub></span></span><hr><span class="v" id="t1">T<sub>1</sub></span></span><span>=</span><span class="cf"><span><span class="v" id="p2">P<sub>2</sub></span><span class="v" id="v2">V<sub>2</sub></span></span><hr><span class="v" id="t2">T<sub>2</sub></span></span></div>'+
+  '<div class="nums" id="cnums" style="font-size:19px;margin-top:8px"></div><div class="lawname" id="lname"></div><div class="holds"><b style="font-family:Fredoka;align-self:center">Hold constant:</b><button class="btn" data-h="none">Nothing</button><button class="btn" data-h="T">T</button><button class="btn" data-h="P">P</button><button class="btn" data-h="V">V</button></div></div>';},
+ bind:function(){var s=this;['P','V','T'].forEach(function(k){$('s'+k).oninput=function(){s.anim=null;s['t'+k]=+this.value;s.sync();};});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-c]'),function(b){b.onclick=function(){s.anim=null;var c=b.getAttribute('data-c');if(c===s.hold)s.hold='none';s.calc=c;s.sync();};});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-h]'),function(b){b.onclick=function(){s.anim=null;var h=b.getAttribute('data-h');s.hold=h;if(h===s.calc)s.calc=h==='V'?'P':'V';s.sync();};});
+  $('wb').onclick=function(){s.hold='none';s.calc='V';s.tP=1;s.tT=300;s.tV=10;s.P=1;s.T=300;s.V=10;s.anim={t:0};s.sync();};
+  this.sync();},
+ sync:function(){var s=this,c=this.calc,h=this.hold,K=this.K;
+  if(c==='V')this.tV=K*this.tT/this.tP;else if(c==='P')this.tP=K*this.tT/this.tV;else this.tT=this.tP*this.tV/K;
+  ['P','V','T'].forEach(function(k){var e=$('s'+k);e.disabled=(k===c||k===h);if(k===c){e.value=s['t'+k];}});
+  $('oP').textContent=fmt(this.tP,2)+' atm';$('oV').textContent=fmt(this.tV,1)+' L';$('oT').textContent=fmt(this.tT,0)+' K';
+  ['P','V','T'].forEach(function(k){$('o'+k).style.color=k===c?'var(--amber)':'';});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-c]'),function(b){b.classList.toggle('sel',b.getAttribute('data-c')===c);});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-h]'),function(b){b.classList.toggle('sel',b.getAttribute('data-h')===h);});
+  var m={P:['p1','p2'],V:['v1','v2'],T:['t1','t2']};
+  ['P','V','T'].forEach(function(k){m[k].forEach(function(i){$(i).classList.toggle('x',h===k);$(i).style.color=(k===c&&i.slice(-1)==='2')?'var(--amber)':'';});});
+  var nm={P:'pressure',V:'volume',T:'temperature'};
+  if(this.anim)$('lname').innerHTML='Rising balloon: pressure &darr; and temperature &darr; at the same time, so the volume is calculated';
+  else if(h==='none'){var set=['P','V','T'].filter(function(k){return k!==c;});$('lname').innerHTML='You change the '+nm[set[0]]+' and the '+nm[set[1]]+'; the '+nm[c]+' is calculated (all three can change)';}
+  else $('lname').innerHTML={T:"T is held constant, it cancels &rarr; Boyle's law: P<sub>1</sub>V<sub>1</sub> = P<sub>2</sub>V<sub>2</sub>",P:"P is held constant, it cancels &rarr; Charles's law: V<sub>1</sub>/T<sub>1</sub> = V<sub>2</sub>/T<sub>2</sub>",V:"V is held constant, it cancels &rarr; Gay-Lussac's law: P<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>/T<sub>2</sub>"}[h];
+  $('cnums').innerHTML='(1.0 atm)(10 L) / 300 K &nbsp;=&nbsp; ('+fmt(this.tP,2)+' atm)('+fmt(this.tV,1)+' L) / '+fmt(this.tT,0)+' K &nbsp;=&nbsp; <b>'+fmt(K,3)+' atm·L/K</b>';},
+ reads:[['p','Pressure'],['t','Temperature'],['v','Volume','wide']],
+ read:function(){return {p:fmt(this.P,2)+' atm',t:fmt(this.T,0)+' K',v:fmt(this.V,1)+' L'};},
+ update:function(dt){if(this.anim){var a=this.anim;a.t+=dt;var e=clamp(a.t/5,0,1);this.tP=lerp(1,0.5,e);this.tT=lerp(300,220,e);$('sP').value=this.tP;$('sT').value=this.tT;this.sync();if(e>=1){this.anim=null;this.sync();$('lname').innerHTML='Pressure &divide; 2 (volume &times; 2) and temperature &times; 0.73 (volume &times; 0.73): the balloon ends up bigger, 14.7 L';}}
+  var k=Math.min(1,dt*4);this.P=lerp(this.P,this.tP,k);this.T=lerp(this.T,this.tT,k);this.V=lerp(this.V,this.tV,k);this.gas.step(dt,this.box(),spd(this.T));},
+ draw:function(){var b=this.box(),top=b.y,T=this.T,P=this.P,c=this.calc;
+  ctx.fillStyle='#eef5fb';ctx.fillRect(160,100,200,340);this.gas.draw(function(){return tcol(T);});
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(160,100);ctx.lineTo(160,442);ctx.lineTo(360,442);ctx.lineTo(360,100);ctx.stroke();
+  for(var L=0;L<=40;L+=10){var y=440-L*8;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(360,y);ctx.lineTo(372,y);ctx.stroke();txt(L+' L',394,y,{s:13,c:MUTED,w:500});}
+  ctx.fillStyle='#3b4760';rr(158,top-16,204,16,4);ctx.fill();
+  if(this.hold==='V'){ctx.fillStyle=RED;ctx.fillRect(150,top-22,220,6);txt('piston locked',260,top-36,{s:14,c:RED});}else{weights(260,top-16,clamp(Math.round(P*2),1,12),PLUM);}
+  burner(260,470,clamp((T-300)/300,0,1));ice(260,446,clamp((300-T)/150,0,1));
+  var rows=[['P','Pressure',P/4,fmt(P,2)+' atm',RED],['V','Volume',Math.min(this.V,40)/40,fmt(this.V,1)+' L',BLUE],['T','Temperature',T/600,fmt(T,0)+' K',AMBER]];
+  var self=this;rows.forEach(function(r,i){var y=150+i*90;txt(r[1]+(r[0]===c?'  (calculated)':r[0]===self.hold?'  (constant)':''),520,y,{a:'left',s:16,c:r[0]===c?AMBER:INK});ctx.fillStyle='#e6ebf3';rr(520,y+16,230,18,9);ctx.fill();ctx.fillStyle=r[4];rr(520,y+16,Math.max(18,230*clamp(r[2],0,1)),18,9);ctx.fill();txt(r[3],750,y+46,{a:'right',s:16,c:r[4]});});
+ }};
+
+/* ================= APP ================= */
+var LAWS=[
+ {id:'boyle',name:"Boyle's Law",c:'#0f8b8d',steps:[['Syringe & marshmallow','boyleDemo'],['Explore','boyleSim'],['The equation','boyleEq']]},
+ {id:'charles',name:"Charles's Law",c:'#e2708a',steps:[['Balloon on a bottle','charlesDemo'],['Explore','charlesSim'],['The equation','charlesEq']]},
+ {id:'gl',name:"Gay-Lussac's Law",c:'#2b59c3',steps:[['Can implosion','glDemo'],['Explore','glSim'],['The equation','glEq']]},
+ {id:'comb',name:'Combined Gas Law',c:'#8a4fbf',steps:[['All three together','combined']]}];
+var cur=null,li=0,si=0,lastRead=0;
+function renderTabs(){$('tabs').innerHTML=LAWS.map(function(l,i){return '<button class="tab'+(i===li?' on':'')+'" style="--c:'+l.c+'" data-i="'+i+'"><i></i>'+l.name+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'),0);};});
+ var L=LAWS[li];$('steps').innerHTML=L.steps.map(function(s,i){return '<button class="step'+(i===si?' on':'')+'" data-i="'+i+'"><b>'+(i+1)+'</b>'+s[0]+'</button>';}).join('');
+ Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(li,+b.getAttribute('data-i'));};});}
+function go(l,s){li=l;si=s;var L=LAWS[l];document.documentElement.style.setProperty('--accent',L.c);cur=S[L.steps[s][1]];renderTabs();
+ $('stitle').textContent=cur.title;cv.style.display=cur.canvas?'block':'none';$('eqview').style.display=cur.canvas?'none':'block';
+ $('controls').innerHTML=cur.controls();cur.init();cur.bind();
+ $('q').textContent=cur.q;$('rule').innerHTML=cur.rule.map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('reads').innerHTML=cur.reads.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0+1]+'</span><b id="r_'+r[0]+'">–</b></div>';}).join('');
+ lastRead=0;}
+var last=performance.now();
+function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;
+ if(cur){cur.update(dt);if(cur.canvas){ctx.clearRect(0,0,W,H);cur.draw();}
+  if(now-lastRead>120){lastRead=now;var v=cur.read();for(var k in v){var e=$('r_'+k);if(e)e.textContent=v[k];}}}
+ requestAnimationFrame(loop);}
+window.addEventListener('resize',fit);
+var hm={'#boyle':0,'#charles':1,'#gay-lussac':2,'#combined':3};go(hm[location.hash]||0,0);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
