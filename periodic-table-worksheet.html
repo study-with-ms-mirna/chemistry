@@ -27,7 +27,7 @@ body{margin:0;color:var(--ink);font-family:"Times New Roman",Times,"Liberation S
 .opt.sel .c{background:#111;color:#fff;border-color:#111}
 .opt img{display:block}
 .opt:focus-visible{outline:2.5px solid #e8962a;outline-offset:2px}
-.done .opt{cursor:default}
+.q.done .opt{cursor:default}
 .opt.right .c{background:var(--good);border-color:var(--good);color:#fff}
 .opt.right{background:var(--goodbg)}
 .opt.wrong .c{background:var(--bad);border-color:var(--bad);color:#fff}
@@ -68,40 +68,40 @@ const nm=document.getElementById('nm'); nm.value=store.get('ws-name')||''; nm.on
 const body=document.getElementById('body');
 function render(){
   if(pg>=pages) return summary();
-  const from=pg*PER, to=Math.min(Q.length,from+PER), done=!!checked[pg];
-  let h=`<div class="pageno">Page ${pg+1} of ${pages} · Questions ${from+1}–${to}</div><div class="cols ${done?'done':''}">`;
-  for(let k=from;k<to;k++){const q=Q[k];
-    h+=`<div class="q" data-k="${k}"><div class="qt"><b>${k+1}</b><span>${q.q}</span></div>`;
+  const from=pg*PER, to=Math.min(Q.length,from+PER), ks=[...Array(to-from).keys()].map(i=>from+i);
+  const nChecked=ks.filter(k=>checked[k]).length, pending=ks.filter(k=>ans[k]!==undefined&&!checked[k]).length, blank=ks.filter(k=>ans[k]===undefined).length;
+  let h=`<div class="pageno">Page ${pg+1} of ${pages} · Questions ${from+1}–${to}</div><div class="cols">`;
+  for(const k of ks){const q=Q[k], lock=!!checked[k];
+    h+=`<div class="q ${lock?'done':''}" data-k="${k}"><div class="qt"><b>${k+1}</b><span>${q.q}</span></div>`;
     if(q.fig) h+=`<img class="fig" src="${FIGS[q.fig]}" style="width:${q.fw}px" alt="">`;
     q.o.forEach((o,n)=>{let cls='opt'; if(ans[k]===n) cls+=' sel';
-      if(done && ans[k]!==undefined){ if(n===q.a) cls+=' right'; else if(ans[k]===n) cls+=' wrong'; }
+      if(lock){ if(n===q.a) cls+=' right'; else if(ans[k]===n) cls+=' wrong'; }
       const inner=o.img?`<img src="${FIGS[o.img]}" style="width:${o.w}px" alt="option ${'ABCD'[n]}">`:`<span>${o.t}</span>`;
-      h+=`<button class="${cls}" data-k="${k}" data-n="${n}" ${done?'disabled':''} aria-pressed="${ans[k]===n}"><span class="c">${'ABCD'[n]}</span>${inner}</button>`;});
-    if(done) h+= ans[k]===undefined?'<span class="mark na">not answered</span>':ans[k]===q.a?'<span class="mark ok">✓ correct</span>':'<span class="mark no">✗ the answer is '+'ABCD'[q.a]+'</span>';
+      h+=`<button class="${cls}" data-k="${k}" data-n="${n}" ${lock?'disabled':''} aria-pressed="${ans[k]===n}"><span class="c">${'ABCD'[n]}</span>${inner}</button>`;});
+    if(lock) h+= ans[k]===q.a?'<span class="mark ok">✓ correct</span>':'<span class="mark no">✗ the answer is '+'ABCD'[q.a]+'</span>';
+    else if(nChecked && ans[k]===undefined) h+='<span class="mark na">not answered yet</span>';
     h+='</div>';}
   h+='</div>';
-  const left=[...Array(to-from).keys()].filter(i=>ans[from+i]===undefined).length;
-  if(!done){
-    const n=to-from-left;
-    const msg=!n?'Choose your answers, or skip this page.':left?`${left} not answered. Only the questions you answered will be checked.`:'Ready to check!';
-    h+=`<div class="bar"><button class="btn" id="chk" ${n?'':'disabled'}>Check my answers</button><span class="msg" id="msg">${msg}</span><span class="nav">${pg>0?'<button class="btn ghost" id="back">← Previous page</button>':''}<button class="btn ghost" id="skip">${pg+1<pages?'Skip page →':'Skip to my total →'}</button></span></div>`;
-  } else {
-    const right=[...Array(to-from).keys()].filter(i=>ans[from+i]===Q[from+i].a).length, n=to-from-left;
-    h+=`<div class="bar"><span class="score ${right===n?'good':''}">${right} / ${n} correct on this page</span><button class="btn go" id="next">${pg+1<pages?'Next page →':'See my total →'}</button>${pg>0?'<button class="btn ghost" id="back">← Previous page</button>':''}</div>`;
-  }
+  const right=ks.filter(k=>checked[k]&&ans[k]===Q[k].a).length;
+  let msg;
+  if(pending) msg=blank?`${blank} not answered. Only the questions you answered will be checked.`:'Ready to check!';
+  else if(nChecked) msg=blank?`You can still answer the ${blank} question${blank>1?'s':''} left and check again.`:'';
+  else msg='Choose your answers, or skip this page.';
+  const last=pg+1>=pages;
+  const fwd=nChecked?`<button class="btn go" id="next">${last?'See my total →':'Next page →'}</button>`:`<button class="btn ghost" id="next">${last?'Skip to my total →':'Skip page →'}</button>`;
+  h+=`<div class="bar">${nChecked?`<span class="score ${right===nChecked?'good':''}">${right} / ${nChecked} correct on this page</span>`:''}${pending||!nChecked?`<button class="btn" id="chk" ${pending?'':'disabled'}>Check my answers</button>`:''}<span class="msg" id="msg">${msg}</span><span class="nav">${pg>0?'<button class="btn ghost" id="back">← Previous page</button>':''}${fwd}</span></div>`;
   body.innerHTML=h;
   body.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>{ans[+b.dataset.k]=+b.dataset.n;
     const y=window.scrollY; render(); window.scrollTo(0,y);});
-  const c=document.getElementById('chk'); if(c) c.onclick=()=>{checked[pg]=true; const y=window.scrollY; render(); window.scrollTo(0,y);};
-  const sk=document.getElementById('skip'); if(sk) sk.onclick=()=>{pg++; render(); window.scrollTo({top:0,behavior:'smooth'});};
+  const c=document.getElementById('chk'); if(c) c.onclick=()=>{ks.forEach(k=>{if(ans[k]!==undefined)checked[k]=true;}); const y=window.scrollY; render(); window.scrollTo(0,y);};
   const nx=document.getElementById('next'); if(nx) nx.onclick=()=>{pg++; render(); window.scrollTo({top:0,behavior:'smooth'});};
   const bk=document.getElementById('back'); if(bk) bk.onclick=()=>{pg--; render(); window.scrollTo({top:0,behavior:'smooth'});};
 }
 function summary(){
   let tot=0, att=0, rows='';
   for(let p=0;p<pages;p++){const from=p*PER,to=Math.min(Q.length,from+PER);let r=0,a=0;
-    if(checked[p]) for(let k=from;k<to;k++) if(ans[k]!==undefined){a++; if(ans[k]===Q[k].a) r++;}
-    tot+=r; att+=a; rows+=`<tr><td>Page ${p+1}</td><td>${checked[p]?`${r} / ${a}`:'skipped'}</td></tr>`;}
+    for(let k=from;k<to;k++) if(checked[k]){a++; if(ans[k]===Q[k].a) r++;}
+    tot+=r; att+=a; rows+=`<tr><td>Page ${p+1}</td><td>${a?`${r} / ${a}`:'skipped'}</td></tr>`;}
   body.innerHTML=`<div class="summary"><div class="pageno" style="text-align:center">Worksheet complete</div><div class="big">${tot} / ${att}</div><p>correct out of the ${att} question${att===1?'':'s'} you checked${att<Q.length?` (${Q.length} in total)`:''}</p><p>${nm.value?nm.value+' · ':''}${dt.value}</p><table><tr><th>Page</th><th>Correct</th></tr>${rows}</table>
     <div class="bar" style="justify-content:center;border:0"><button class="btn ghost" id="review">← Review the last page</button><button class="btn" id="again">Start again</button></div></div>`;
   document.getElementById('review').onclick=()=>{pg=pages-1;render();window.scrollTo({top:0,behavior:'smooth'});};
