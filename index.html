@@ -123,7 +123,7 @@ const ITEMS=[
   {group:'Simulations', title:'Activation Energy Lab', note:'Activation energy · 3 missions', file:'activation-energy-lab.html', icon:ICON.hill},
   {group:'Simulations', title:'Metal Lab', note:'Metallic bonding · 6 missions', file:'metal-lab.html', icon:ICON.metal},
   {group:'Simulations', title:'Atomic Mass Lab', note:'Isotopes & atomic mass · 4 stations', file:'atomic-mass-lab.html', icon:ICON.isotope},
-  {group:'Simulations', title:'Gas Laws Lab', note:'Boyle, Charles, Gay-Lussac · combined', file:'gas-laws.html', icon:ICON.gas},
+  {group:'Simulations', title:'Gas Laws Lab', note:'Boyle, Charles, Gay-Lussac · practice problems', file:'gas-laws.html', icon:ICON.gas},
   {group:'Simulations', title:'Reaction Rate Lab', note:'Reaction rates · 5 factors', file:'reaction-rates-lab.html', icon:ICON.rate},
   {group:'Simulations', title:'Radioactive Decay Lab', note:'Alpha, beta, gamma · nuclear equations', file:'radioactive-decay-lab.html', icon:ICON.nucleus},
   {group:'Simulations', title:'Covalent Bonding Lab', note:'Lewis structures · σ and π · bond energy', file:'covalent-bonding-lab.html', icon:ICON.covalent},
@@ -145,8 +145,8 @@ function drawNav(cur){
 function route(){
   const h=location.hash.slice(1); const it=ITEMS.find(i=>slug(i.file)===h);
   document.body.classList.remove('open'); drawNav(it);
-  if(it){ title.textContent=it.title; full.hidden=false; full.href=it.file;
-    view.innerHTML=`<iframe src="${it.file}" title="${it.title}" allow="fullscreen"></iframe>`; }
+  if(it){ const fresh=it.file+'?v='+Date.now(); title.textContent=it.title; full.hidden=false; full.href=fresh;
+    view.innerHTML=`<iframe src="${fresh}" title="${it.title}" allow="fullscreen"></iframe>`; }
   else{ title.textContent='Home'; full.hidden=true;
     view.innerHTML=`<div class="home"><div class="hero"><div class="pic">${CHEM}</div><div><h1>Study with <span>Ms. Mirna</span></h1><p>Chemistry revision for SAAT. Revise the notes, play a quest, explore a simulation or take an assessment.</p></div></div>
       ${[...new Set(ITEMS.map(i=>i.group))].map(g=>`<h2 class="sec">${g}</h2><div class="cards">${ITEMS.filter(i=>i.group===g).map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`).join('')}</div>`; }

@@ -86,6 +86,86 @@ input[type=range]:disabled{opacity:.4}
 .lawname{text-align:center;font-family:Fredoka,sans-serif;font-size:21px;margin-top:8px;color:var(--accent);min-height:28px}
 .holds{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
 sub{font-size:.6em}
+/* ===== practice problems ===== */
+#gpanel{display:none}
+.step.done b{background:#2e9e5b;color:#fff}
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.lvl{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;margin-right:6px;vertical-align:2px}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .why{font-size:16px;color:var(--muted)}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}.feedback li{margin:3px 0}
+/* equations */
+.geq{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin:8px 0;padding:8px;border-radius:12px;background:#f6f8fc}
+.geq .eqs{color:#8d99b0}
+.gt{display:inline-flex;align-items:baseline;padding:2px 9px;border-radius:9px;color:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;line-height:1.25;margin:1px}
+.gt sub{font-size:.62em}
+.t-P{background:#0f8b8d}.t-V{background:#2b59c3}.t-T{background:#d8434a}
+.gt.x{position:relative;opacity:.45}
+.gt.x::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;border-top:4px solid #18233a;transform:rotate(-18deg)}
+.gf{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle}
+.gf>span{display:flex;gap:2px;justify-content:center;padding:2px 4px}
+.gf>span+span{border-top:4px solid #18233a}
+.gop{display:inline-block;font-family:Fredoka,sans-serif;font-size:15px;color:#fff;background:#8a4fbf;border-radius:999px;padding:3px 12px;margin:4px 0}
+.gv{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;padding:0 3px;white-space:nowrap}
+.gv u{text-decoration:none}
+.gv u.x{text-decoration:line-through;text-decoration-color:#d8434a;text-decoration-thickness:3px;color:#8d99b0}
+.gknown{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px;margin-top:6px}
+.gk{white-space:nowrap;background:#f3f6fb;border-radius:12px;padding:6px 10px;font-family:Fredoka,sans-serif;font-size:18px}
+.gk.unk{background:#fff4e5;border:2px dashed #e8962a}
+.gk small{display:block;font-family:'Atkinson Hyperlegible',sans-serif;font-size:13px;color:var(--muted)}
+.ans{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;color:var(--accent)}
+/* my turn */
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;display:flex;align-items:center;gap:8px}
+.gsec h4 .n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:14px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:19px;margin:6px 0}
+.gin input{width:96px;font-family:Fredoka,sans-serif;font-size:19px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.gin input.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no{border-color:#d8434a;background:#fdeeee}
+.mk{font-weight:700;min-width:18px}
+.yn{display:inline-flex;gap:6px}
+.yn button{font-family:Fredoka,sans-serif;font-size:16px;border:2px solid var(--line);background:#fff;border-radius:10px;padding:4px 14px;cursor:pointer;color:var(--ink)}
+.yn button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.gbuild{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:12px;background:#f6f8fc;border-radius:14px}
+.gbuild .gx{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;display:flex;align-items:center;gap:8px}
+.gfrac{display:flex;flex-direction:column;align-items:stretch;min-width:240px}
+.gz{min-height:52px;border:3px dashed #b7c1d3;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;padding:4px 8px;background:#fff;position:relative}
+.gz:empty::before{content:attr(data-ph);font-family:'Atkinson Hyperlegible',sans-serif;font-size:14px;color:#8d99b0}
+.gz.hov{border-color:#8a4fbf;background:#f6efff}
+.gz.ok{border-color:#2e9e5b;border-style:solid}.gz.no{border-color:#d8434a;border-style:solid}
+.gbar{height:5px;background:#18233a;border-radius:3px;margin:6px 0}
+.gtray{margin-top:10px;min-height:52px;border:2px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:6px;background:#fff}
+.gtray:empty::before{content:"(all tiles used)";font-size:14px;color:#8d99b0}
+.gtray .gt,.gz .gt{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:24px;padding:4px 12px}
+.ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9;transform:translate(-50%,-50%) scale(1.1);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.facts{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.facts span{background:#f3f6fb;border-radius:999px;padding:3px 12px;font-family:Fredoka,sans-serif;font-size:15px}
+/* lesson cards */
+.calc{display:inline-block;background:#18233a;color:#7CFC9A;font-family:'Courier New',monospace;font-size:22px;padding:6px 14px;border-radius:10px;min-width:150px;text-align:right}
+.calc.err{color:#ff6b6b}
+.bad2{color:#d8434a;font-weight:700}.good2{color:#2e9e5b;font-weight:700}
+.vs{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.vs>div{flex:1 1 220px;border-radius:14px;padding:10px;text-align:center;background:#f6f8fc}
+.vs svg{display:block;margin:0 auto}
 </style>
 </head>
 <body>
@@ -106,6 +186,7 @@ sub{font-size:.6em}
       <h2 id="stitle"></h2>
       <canvas id="cv" width="800" height="500"></canvas>
       <div class="eqview" id="eqview"></div>
+      <div id="gpanel"></div>
       <div class="controls" id="controls"></div>
     </section>
     <aside class="side">
@@ -477,10 +558,10 @@ S.combined={title:"The combined gas law: pressure, volume and temperature togeth
  box:function(){var h=clamp(this.V,1,40)*8;return {x:162,y:440-h,w:196,h:h};},
  controls:function(){function sl(id,lab,min,max,st,val){return '<div class="ctl" style="min-width:300px"><span style="width:96px">'+lab+'</span><input type="range" id="s'+id+'" min="'+min+'" max="'+max+'" step="'+st+'" value="'+val+'"><output id="o'+id+'"></output></div>';}
   return sl('P','Pressure',0.5,4,0.1,1)+sl('V','Volume',2,40,0.5,10)+sl('T','Temperature',150,600,10,300)+
-  '<div class="cstrip" style="flex-basis:100%"><div class="holds" style="margin:0 0 10px"><b style="font-family:Fredoka;align-self:center">Calculate:</b><button class="btn" data-c="V">Volume</button><button class="btn" data-c="P">Pressure</button><button class="btn" data-c="T">Temperature</button>'+
-  '<b style="font-family:Fredoka;align-self:center;margin-left:14px">Try it:</b><button class="btn fill" id="wb">Weather balloon rises</button></div>'+
+  '<div class="cstrip" style="flex-basis:100%"><div class="holds" style="margin:0 0 10px"><b style="font-family:Fredoka,sans-serif;align-self:center">Calculate:</b><button class="btn" data-c="V">Volume</button><button class="btn" data-c="P">Pressure</button><button class="btn" data-c="T">Temperature</button>'+
+  '<b style="font-family:Fredoka,sans-serif;align-self:center;margin-left:14px">Try it:</b><button class="btn fill" id="wb">Weather balloon rises</button></div>'+
   '<div class="ceq"><span class="cf"><span><span class="v" id="p1">P<sub>1</sub></span><span class="v" id="v1">V<sub>1</sub></span></span><hr><span class="v" id="t1">T<sub>1</sub></span></span><span>=</span><span class="cf"><span><span class="v" id="p2">P<sub>2</sub></span><span class="v" id="v2">V<sub>2</sub></span></span><hr><span class="v" id="t2">T<sub>2</sub></span></span></div>'+
-  '<div class="nums" id="cnums" style="font-size:19px;margin-top:8px"></div><div class="lawname" id="lname"></div><div class="holds"><b style="font-family:Fredoka;align-self:center">Hold constant:</b><button class="btn" data-h="none">Nothing</button><button class="btn" data-h="T">T</button><button class="btn" data-h="P">P</button><button class="btn" data-h="V">V</button></div></div>';},
+  '<div class="nums" id="cnums" style="font-size:19px;margin-top:8px"></div><div class="lawname" id="lname"></div><div class="holds"><b style="font-family:Fredoka,sans-serif;align-self:center">Hold constant:</b><button class="btn" data-h="none">Nothing</button><button class="btn" data-h="T">T</button><button class="btn" data-h="P">P</button><button class="btn" data-h="V">V</button></div></div>';},
  bind:function(){var s=this;['P','V','T'].forEach(function(k){$('s'+k).oninput=function(){s.anim=null;s['t'+k]=+this.value;s.sync();};});
   Array.prototype.forEach.call(document.querySelectorAll('[data-c]'),function(b){b.onclick=function(){s.anim=null;var c=b.getAttribute('data-c');if(c===s.hold)s.hold='none';s.calc=c;s.sync();};});
   Array.prototype.forEach.call(document.querySelectorAll('[data-h]'),function(b){b.onclick=function(){s.anim=null;var h=b.getAttribute('data-h');s.hold=h;if(h===s.calc)s.calc=h==='V'?'P':'V';s.sync();};});
@@ -515,19 +596,219 @@ S.combined={title:"The combined gas law: pressure, volume and temperature togeth
   var self=this;rows.forEach(function(r,i){var y=150+i*90;txt(r[1]+(r[0]===c?'  (calculated)':r[0]===self.hold?'  (constant)':''),520,y,{a:'left',s:16,c:r[0]===c?AMBER:INK});ctx.fillStyle='#e6ebf3';rr(520,y+16,230,18,9);ctx.fill();ctx.fillStyle=r[4];rr(520,y+16,Math.max(18,230*clamp(r[2],0,1)),18,9);ctx.fill();txt(r[3],750,y+46,{a:'right',s:16,c:r[4]});});
  }};
 
+/* ================= PRACTICE PROBLEMS ================= */
+var GV={P1:['P',1],V1:['V',1],T1:['T',1],P2:['P',2],V2:['V',2],T2:['T',2]};
+function lbl(v){return GV[v][0]+(GV[v][1]===1?'₁':'₂');}
+function tl(v,cls){var g=GV[v];return '<span class="gt t-'+g[0]+(cls?' '+cls:'')+'" data-v="'+v+'">'+g[0]+'<sub>'+g[1]+'</sub></span>';}
+function tls(a,strike){return a.map(function(v){return tl(v,strike&&strike.indexOf(v)>=0?'x':'');}).join('');}
+function gfr(top,bot){if(!bot)return top;return '<span class="gf"><span>'+top+'</span><span>'+bot+'</span></span>';}
+function geq(l,r){return '<div class="geq">'+l+'<span class="eqs">=</span>'+r+'</div>';}
+function gop(s){return '<div style="text-align:center"><span class="gop">'+s+'</span></div>';}
+var GLW={boyle:{n:"Boyle's law",nl:['P1','V1'],dl:[],nr:['P2','V2'],dr:[],why:'P and V change, T stays the same'},
+ charles:{n:"Charles's law",nl:['V1'],dl:['T1'],nr:['V2'],dr:['T2'],why:'V and T change, P stays the same'},
+ gl:{n:"Gay-Lussac's law",nl:['P1'],dl:['T1'],nr:['P2'],dr:['T2'],why:'P and T change, V stays the same'},
+ comb:{n:'Combined gas law',nl:['P1','V1'],dl:['T1'],nr:['P2','V2'],dr:['T2'],why:'P, V and T all change'}};
+function without(a,x){var i=a.indexOf(x),b=a.slice();if(i>=0)b.splice(i,1);return b;}
+function solveFor(law,X){var L=GLW[law];
+ if(L.nr.indexOf(X)>=0)return {top:L.nl.concat(L.dr),bot:L.dl.concat(without(L.nr,X))};
+ if(L.nl.indexOf(X)>=0)return {top:L.nr.concat(L.dl),bot:L.dr.concat(without(L.nl,X))};
+ if(L.dr.indexOf(X)>=0)return {top:L.nr.concat(L.dl),bot:L.nl.slice()};
+ return {top:L.nl.concat(L.dr),bot:L.nr.slice()};}
+function lawHtml(law){var L=GLW[law];return geq(gfr(tls(L.nl),L.dl.length?tls(L.dl):''),gfr(tls(L.nr),L.dr.length?tls(L.dr):''));}
+function rearr(law,X){var L=GLW[law],out=[lawHtml(law)],left=L.nl,right=L.nr;
+ if(L.dl.length){left=L.nl.concat(L.dr);right=L.nr.concat(L.dl);
+  out.push(gop('Cross-multiply: (top left × bottom right) = (top right × bottom left)'));out.push(geq(tls(left),tls(right)));}
+ var xs=right.indexOf(X)>=0?right:left,os=xs===right?left:right,others=without(xs,X);
+ if(xs===left){out.push(gop('Flip the sides so '+lbl(X)+' is on the right (an equation reads the same both ways)'));out.push(geq(tls(os),tls(xs)));}
+ if(others.length){var o=others.map(lbl).join('');
+  out.push(gop(lbl(X)+' is multiplied by '+others.map(lbl).join(' and ')+' → divide BOTH sides by '+o));
+  out.push(geq(gfr(tls(os),tls(others)),gfr(tls(xs,others),tls(others,others))));
+  out.push(gop(o+' ÷ '+o+' = 1, so it cancels and '+lbl(X)+' is alone'));}
+ out.push(geq(tl(X),gfr(tls(os),others.length?tls(others):'')));
+ return out;}
+/* problems: k = known values [number, unit, text] */
+var GP=[
+ {law:'boyle',X:'V2',lvl:0,src:'Check Your Understanding',q:'The volume of a gas at 99.0 kPa is 300.0 mL. If the pressure is increased to 188 kPa, what will be the new volume?',
+  k:{P1:[99.0,'kPa','99.0'],V1:[300.0,'mL','300.0'],P2:[188,'kPa','188']},ans:'158',u:'mL',sense:'The pressure went <b>up</b> (99.0 → 188 kPa), so the volume must go <b>down</b>: 158 mL is less than 300.0 mL ✓'},
+ {law:'boyle',X:'V2',lvl:0,src:'Example Problem 1',tol:.03,q:'A diver blows a 0.75-L air bubble 10 m under water. As it rises to the surface, the pressure goes from 2.25 atm to 1.03 atm. What will be the volume of air in the bubble at the surface?',
+  k:{V1:[0.75,'L','0.75'],P1:[2.25,'atm','2.25'],P2:[1.03,'atm','1.03']},ans:'1.6',u:'L',sense:'The pressure went <b>down</b>, so the bubble gets <b>bigger</b>: 1.6 L is more than 0.75 L ✓'},
+ {law:'boyle',X:'P2',lvl:0,src:'Check Your Understanding',q:'The pressure of a sample of helium in a 1.00-L container is 0.988 atm. What is the new pressure if the sample is placed in a 2.00-L container?',
+  k:{V1:[1.00,'L','1.00'],P1:[0.988,'atm','0.988'],V2:[2.00,'L','2.00']},ans:'0.494',u:'atm',sense:'The volume <b>doubled</b>, so the pressure is <b>halved</b>: 0.494 atm is half of 0.988 atm ✓'},
+ {law:'charles',X:'V2',lvl:1,src:'Example Problem 2',q:'A helium balloon in a closed car occupies a volume of 2.32 L at 40.0 °C. If the temperature inside rises to 75.0 °C, what is the new volume of the balloon, assuming the pressure remains constant?',
+  k:{V1:[2.32,'L','2.32'],T1:[40.0,'°C','40.0'],T2:[75.0,'°C','75.0']},ans:'2.58',u:'L',sense:'The kelvin temperature went up a little (313 K → 348 K), so the volume goes up a little: 2.58 L ✓'},
+ {law:'charles',X:'V2',lvl:1,src:'Check Your Understanding',q:'The temperature of a 3.00-L sample of gas is lowered from 80.0 °C to 30.0 °C. What will be the resulting volume?',
+  k:{V1:[3.00,'L','3.00'],T1:[80.0,'°C','80.0'],T2:[30.0,'°C','30.0']},ans:'2.58',u:'L',sense:'The gas was cooled, so the volume goes <b>down</b>: 2.58 L is less than 3.00 L ✓'},
+ {law:'gl',X:'P2',lvl:1,src:'Example Problem 3',q:'The pressure of the oxygen gas inside a canister is 5.00 atm at 25.0 °C. On Mount Everest the temperature falls to −10.0 °C. What is the new pressure inside the canister?',
+  k:{P1:[5.00,'atm','5.00'],T1:[25.0,'°C','25.0'],T2:[-10.0,'°C','−10.0']},ans:'4.41',u:'atm',sense:'The gas got colder (298 K → 263 K), so the pressure goes <b>down</b>: 4.41 atm is less than 5.00 atm ✓'},
+ {law:'gl',X:'P2',lvl:1,src:'Check Your Understanding',q:'The pressure in an automobile tire is 1.88 atm at 25.0 °C. What will be the pressure if the temperature increases to 37.0 °C?',
+  k:{P1:[1.88,'atm','1.88'],T1:[25.0,'°C','25.0'],T2:[37.0,'°C','37.0']},ans:'1.96',u:'atm',sense:'The tire got warmer, so the pressure goes <b>up</b> a little: 1.96 atm ✓'},
+ {law:'comb',X:'V2',lvl:2,src:'Example Problem 4',q:'A gas at 110 kPa and 30.0 °C fills a flexible container with an initial volume of 2.00 L. If the temperature is raised to 80.0 °C and the pressure increases to 440 kPa, what is the new volume?',
+  k:{P1:[110,'kPa','110'],T1:[30.0,'°C','30.0'],V1:[2.00,'L','2.00'],T2:[80.0,'°C','80.0'],P2:[440,'kPa','440']},ans:'0.583',u:'L',sense:'The pressure became 4 times bigger but the kelvin temperature only rose a little, so the volume gets <b>smaller</b>: 0.583 L ✓'},
+ {law:'comb',X:'V2',lvl:2,src:'Check Your Understanding',q:'A balloon holds 146.0 mL of gas at 1.30 atm and 5.0 °C. The pressure doubles to 2.60 atm and the temperature falls to 2.0 °C. What is the new volume?',
+  k:{V1:[146.0,'mL','146.0'],P1:[1.30,'atm','1.30'],T1:[5.0,'°C','5.0'],P2:[2.60,'atm','2.60'],T2:[2.0,'°C','2.0']},ans:'72.2',u:'mL',sense:'The pressure doubled and the gas got a bit colder, so the volume is a bit <b>less than half</b>: 72.2 mL ✓'},
+ {law:'boyle',X:'V2',lvl:3,src:'Harder: mixed units',q:'A gas occupies 2.50 L at 101.3 kPa. It is compressed until the pressure is 1.50 atm. What is the new volume?',
+  k:{V1:[2.50,'L','2.50'],P1:[101.3,'kPa','101.3'],P2:[1.50,'atm','1.50']},cv:[{v:'P2',to:'kPa',f:101.3,op:'×',pair:'P1'}],ans:'1.67',u:'L',sense:'The gas was squeezed (1.00 atm → 1.50 atm), so it gets <b>smaller</b>: 1.67 L is less than 2.50 L ✓'},
+ {law:'charles',X:'T2',lvl:3,src:'Harder: Check Your Understanding',outC:true,q:'A gas at 89 °C occupies a volume of 0.67 L. At what Celsius temperature will the volume increase to 1120 mL?',
+  k:{T1:[89,'°C','89'],V1:[0.67,'L','0.67'],V2:[1120,'mL','1120']},cv:[{v:'V2',to:'L',f:1000,op:'÷',pair:'V1'}],ans:'332',u:'°C',sense:'The volume grew, so the gas must be <b>hotter</b>: 605 K (332 °C) is hotter than 362 K (89 °C) ✓'},
+ {law:'comb',X:'V1',lvl:3,src:'Hardest: Check Your Understanding',q:'A gas in a syringe is at 1.02 atm and 22.0 °C. It is heated to 100.0 °C and the pressure rises to 124.6 kPa. The new volume is 0.224 mL. What was the initial volume?',
+  k:{P1:[1.02,'atm','1.02'],T1:[22.0,'°C','22.0'],T2:[100.0,'°C','100.0'],P2:[124.6,'kPa','124.6'],V2:[0.224,'mL','0.224']},cv:[{v:'P2',to:'atm',f:101.3,op:'÷',pair:'P1'}],ans:'0.214',u:'mL',sense:'V₁ (0.214 mL) is close to V₂: heating made it bigger, the higher pressure made it smaller, and the two almost cancel out ✓'}];
+var LVL=[['Easy','#0f8b8d'],['Kelvin','#e8962a'],['Combined','#8a4fbf'],['Hard: check the units','#d8434a']];
+function sig3(x){return String(Number(x.toPrecision(3)));}
+function prep(p){var val={},txt2={},unit={},lines=[],naiveK={},naiveU={},kc=[];
+ Object.keys(p.k).forEach(function(v){var a=p.k[v];val[v]=a[0];txt2[v]=a[2];unit[v]=a[1];naiveK[v]=a[0];naiveU[v]=a[0];
+  if(a[1]==='°C'){var d=(a[2].split('.')[1]||'').length,K=a[0]+273;val[v]=K;naiveU[v]=K;txt2[v]=K.toFixed(d);unit[v]='K';kc.push(v);
+   lines.push({k:'T',v:v,html:lbl(v)+' = '+a[2]+' °C + 273 = <b>'+K.toFixed(d)+' K</b>',val:K,c:a[0]});}});
+ (p.cv||[]).forEach(function(c){var a=p.k[c.v],nv=c.op==='×'?a[0]*c.f:a[0]/c.f;val[c.v]=nv;naiveK[c.v]=nv;txt2[c.v]=sig3(nv);unit[c.v]=c.to;
+  lines.push({k:'U',v:c.v,c:c,html:lbl(c.v)+' = '+a[2]+' '+a[1]+' '+c.op+' '+c.f+' = <b>'+sig3(nv)+' '+c.to+'</b>',val:nv,from:a[1]});});
+ var s=solveFor(p.law,p.X);function calc(m){var t=1,b=1;s.top.forEach(function(v){t*=m[v];});s.bot.forEach(function(v){b*=m[v];});return b===0?NaN:t/b;}
+ var X=calc(val),Xc=p.outC?X-273:X;
+ return {val:val,txt:txt2,unit:unit,lines:lines,kc:kc,sol:s,X:X,Xc:Xc,nK:kc.length?calc(naiveK)-(p.outC?0:0):null,nU:(p.cv&&p.cv.length)?calc(naiveU):null,zero:kc.some(function(v){return p.k[v][0]===0;})};}
+function knownGrid(p){var h='<div class="gknown">';Object.keys(p.k).forEach(function(v){h+='<div class="gk">'+tl(v)+' = '+p.k[v][2]+' '+p.k[v][1]+'</div>';});
+ return h+'<div class="gk unk">'+tl(p.X)+' = ? '+(p.outC?'°C':p.u)+'</div></div><div class="ln">Which law? '+GLW[p.law].why+' → <b>'+GLW[p.law].n+'</b></div>';}
+function subHtml(p,P){var s=P.sol,cnt={};function cell(v,pos){var u=P.unit[v];return {v:v,u:u,pos:pos};}
+ var top=s.top.map(function(v){return cell(v,'t');}),bot=s.bot.map(function(v){return cell(v,'b');});
+ top.forEach(function(c){var m=bot.filter(function(d){return d.u===c.u&&!d.x;})[0];if(m){m.x=1;c.x=1;}});
+ function show(c){return '<span class="gv">('+P.txt[c.v]+' <u class="'+(c.x?'x':'')+'">'+c.u+'</u>)</span>';}
+ return geq(tl(p.X),gfr(top.map(show).join(''),bot.length?bot.map(show).join(''):''));}
+function ansStr(p){return p.ans+' '+p.u;}
+
+var PR={mode:'show',st:0};
+function gpPanel(i){var p=GP[i],P=prep(p),tryM=PR.mode==='try',st=PR.st;
+ var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small">'+(tryM?'Fill in each part, then check.':'Step by step. Press Next step.')+'</span><span class="small" style="margin-left:auto">'+p.src+'</span></div>';
+ h+='<div class="task"><span class="lvl" style="background:'+LVL[p.lvl][1]+'">'+LVL[p.lvl][0]+'</span>'+p.q+'</div>';
+ if(!tryM){
+  var conv;
+  if(!P.lines.length)conv='<div class="ln">No temperatures here, and '+(p.law==='boyle'?'both pressures have the same unit and both volumes have the same unit':'the units already match')+'. Nothing to convert ✓</div>';
+  else{conv='';var tl2=P.lines.filter(function(l){return l.k==='T';}),ul=P.lines.filter(function(l){return l.k==='U';});
+   ul.forEach(function(l){conv+='<div class="ln"><span class="bad2">⚠ '+lbl(l.c.pair)+' is in '+p.k[l.c.pair][1]+' but '+lbl(l.v)+' is in '+l.from+'.</span> They must have the <b>same unit</b>, so convert '+lbl(l.v)+':</div><div class="ln" style="font-family:Fredoka,sans-serif;font-size:20px">'+l.html+'</div>';});
+   if(tl2.length){conv+='<div class="ln">Temperatures must be in <b>kelvin</b>: K = °C + 273</div>'+tl2.map(function(l){return '<div class="ln" style="font-family:Fredoka,sans-serif;font-size:20px">'+l.html+'</div>';}).join('');}}
+  var sub=subHtml(p,P)+'<div class="ln" style="text-align:center">'+tl(p.X)+' = <span class="ans">'+(p.outC?Math.round(P.X)+' K':ansStr(p))+'</span></div>';
+  if(p.outC)sub+='<div class="ln" style="text-align:center;font-family:Fredoka,sans-serif;font-size:20px">The question asks for °C: '+Math.round(P.X)+' K − 273 = <span class="ans">'+ansStr(p)+'</span></div>';
+  sub+='<div class="ln why">Units that appear on the top and the bottom cancel (crossed out). Only the unit of the answer is left.</div>';
+  var cards=[['What do we know?',knownGrid(p)],['Get the units ready',conv],['Rearrange the equation for '+lbl(p.X),rearr(p.law,p.X).join('')],['Substitute and calculate',sub],['Does the answer make sense?','<div class="ln">'+p.sense+'</div>']];
+  h+='<div class="steps3">'+cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div>'+c[1]+'</div>';}).join('')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="nBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<5?'<button class="btn fill" id="nNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="nTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+[1,2,3,4,5].map(function(k){return '<i class="'+(k<=st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+ else{var n=0,done=p.solved;
+  h+='<div class="facts"><span>K = °C + 273</span><span>1 atm = 101.3 kPa</span><span>1 L = 1000 mL</span></div>';
+  h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>What do we know?</h4>'+knownGrid(p)+'</div>';
+  (p.cv||[]).forEach(function(c,ci){var a=p.k[c.v];h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Check the units</h4><div class="gin">Are '+lbl(c.pair)+' and '+lbl(c.v)+' in the same unit? <span class="yn" data-c="'+ci+'"><button data-a="y">Yes</button><button data-a="n">No</button></span><span class="mk" id="ynm'+ci+'"></span></div>'+
+   '<div class="gin" id="cvrow'+ci+'" style="display:none">Convert: '+lbl(c.v)+' = '+a[2]+' '+a[1]+' = <input id="cv'+ci+'" inputmode="decimal" autocomplete="off"> '+c.to+' <span class="mk" id="cv'+ci+'m"></span></div></div>';});
+  if(P.kc.length){h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Convert °C → K</h4>'+P.kc.map(function(v){return '<div class="gin">'+lbl(v)+' = '+p.k[v][2]+' °C → <input id="tk_'+v+'" inputmode="decimal" autocomplete="off"> K <span class="mk" id="tk_'+v+'m"></span></div>';}).join('')+'</div>';}
+  var L=GLW[p.law],vars=L.nl.concat(L.dl,L.nr,L.dr).filter(function(v){return v!==p.X;});
+  h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Rearrange: drag the tiles</h4><div class="small" style="margin-bottom:6px">Start from '+L.n+': </div>'+lawHtml(p.law)+
+   '<div class="small" style="margin:6px 0">Drag each tile to the <b>top</b> (multiply) or the <b>bottom</b> (divide). You can also tap a tile to move it: tray → top → bottom → tray.</div>'+
+   '<div class="gbuild"><span class="gx">'+tl(p.X)+' =</span><div class="gfrac"><div class="gz" data-z="top" data-ph="top: multiply"></div><div class="gbar"></div><div class="gz" data-z="bot" data-ph="bottom: divide"></div></div><span class="mk" id="rrm"></span></div>'+
+   '<div class="gtray" data-z="tray">'+vars.map(function(v){return tl(v);}).join('')+'</div></div>';
+  h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Substitute and calculate</h4><div class="gin">'+tl(p.X)+' = <input id="ansIn" inputmode="decimal" autocomplete="off"> '+(p.outC?'°C':p.u)+' <span class="mk" id="ansm"></span></div></div>';
+  h+='<div class="stepbar">'+(done?'':'<button class="btn fill" id="nCheck">Check my answers</button><button class="btn" id="nHint">Hint</button><button class="btn" id="nClear">Clear</button>')+'<button class="btn fill" id="nNextP"'+(done?'':' style="display:none"')+'>Next problem ▶</button></div>';
+  h+='<div class="hintbox" id="nHint2">'+(P.lines.length?'Convert first: '+P.lines.map(function(l){return l.html.replace(/<b>.*<\/b>/,'?');}).join(' · ')+'. ':'')+'To rearrange: cross-multiply, then divide by everything that is multiplied with '+lbl(p.X)+'. Answer: '+lbl(p.X)+' = '+P.sol.top.map(lbl).join(' × ')+(P.sol.bot.length?' ÷ ('+P.sol.bot.map(lbl).join(' × ')+')':'')+'.</div>';
+  h+='<div class="feedback" id="nFb">'+(done?'<span class="good">Solved! '+lbl(p.X)+' = '+ansStr(p)+'</span><div class="small">'+p.sense+'</div>':'')+'</div>';}
+ $('gpanel').innerHTML=h;
+ $('mShow').onclick=function(){PR.mode='show';PR.st=0;gpPanel(i);};$('mTry').onclick=function(){PR.mode='try';gpPanel(i);};
+ if(!tryM){$('nBack').onclick=function(){PR.st--;gpPanel(i);};var nx=$('nNext');if(nx)nx.onclick=function(){PR.st++;gpPanel(i);};var nt=$('nTry');if(nt)nt.onclick=function(){PR.mode='try';gpPanel(i);};}
+ else{$('nNextP').onclick=function(){var si2=3+((i+1)%GP.length);PR.st=0;go(li,si2);};
+  if(!p.solved){$('nCheck').onclick=function(){gpCheck(i);};$('nHint').onclick=function(){$('nHint2').classList.toggle('on');};$('nClear').onclick=function(){gpPanel(i);};
+   Array.prototype.forEach.call(document.querySelectorAll('.yn'),function(g){Array.prototype.forEach.call(g.children,function(b){b.onclick=function(){Array.prototype.forEach.call(g.children,function(x){x.classList.remove('on');});b.classList.add('on');var ci=g.getAttribute('data-c'),c=p.cv[ci];
+     if(b.getAttribute('data-a')==='n'){$('cvrow'+ci).style.display='flex';$('ynm'+ci).innerHTML='<span class="good2">✓ Right! Convert one of them.</span>';}
+     else{$('cvrow'+ci).style.display='none';$('ynm'+ci).innerHTML='<span class="bad2">Look again: '+lbl(c.pair)+' is in '+p.k[c.pair][1]+' but '+lbl(c.v)+' is in '+p.k[c.v][1]+'.</span>';}};});});
+   dragInit($('gpanel'));}
+  else{P.kc.forEach(function(v){var e=$('tk_'+v);e.value=P.val[v].toFixed((p.k[v][2].split('.')[1]||'').length);e.disabled=true;mark('tk_'+v,true,true);});
+   (p.cv||[]).forEach(function(c,ci){var y=document.querySelector('.yn[data-c="'+ci+'"] [data-a="n"]');y.classList.add('on');$('cvrow'+ci).style.display='flex';var e=$('cv'+ci);e.value=sig3(P.val[c.v]);e.disabled=true;mark('cv'+ci,true,true);});
+   P.sol.top.forEach(function(v){document.querySelector('[data-z="top"]').appendChild(document.querySelector('.gtray .gt[data-v="'+v+'"]'));});
+   P.sol.bot.forEach(function(v){document.querySelector('[data-z="bot"]').appendChild(document.querySelector('.gtray .gt[data-v="'+v+'"]'));});
+   document.querySelector('[data-z="top"]').classList.add('ok');document.querySelector('[data-z="bot"]').classList.add('ok');$('rrm').innerHTML='<span class="good2">✓</span>';
+   var ai=$('ansIn');ai.value=p.ans;ai.disabled=true;mark('ansIn',true,true);}}}
+function dragInit(root){Array.prototype.forEach.call(root.querySelectorAll('.gbuild .gt, .gtray .gt'),function(t){t.addEventListener('pointerdown',function(e){
+  e.preventDefault();var g=t.cloneNode(true),x0=e.clientX,y0=e.clientY,moved=false;g.classList.add('ghost');g.style.left=x0+'px';g.style.top=y0+'px';g.style.display='none';document.body.appendChild(g);
+  function zoneAt(ev){var el=document.elementFromPoint(ev.clientX,ev.clientY);return el&&el.closest?el.closest('[data-z]'):null;}
+  function mv(ev){if(Math.hypot(ev.clientX-x0,ev.clientY-y0)>5){moved=true;g.style.display='';t.style.opacity='.3';}g.style.left=ev.clientX+'px';g.style.top=ev.clientY+'px';
+   Array.prototype.forEach.call(root.querySelectorAll('.gz'),function(z){z.classList.remove('hov');});var z=moved&&zoneAt(ev);if(z&&z.classList.contains('gz'))z.classList.add('hov');}
+  function up(ev){document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);g.remove();t.style.opacity='';
+   Array.prototype.forEach.call(root.querySelectorAll('.gz'),function(z){z.classList.remove('hov');});var z;
+   if(!moved){var cur=t.parentNode.getAttribute('data-z'),nx=cur==='tray'?'top':cur==='top'?'bot':'tray';z=root.querySelector('[data-z="'+nx+'"]');}else z=zoneAt(ev);
+   if(z){z.appendChild(t);}Array.prototype.forEach.call(root.querySelectorAll('.gz'),function(zz){zz.classList.remove('ok','no');});$('rrm').innerHTML='';}
+  document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);});});}
+function near(x,y,tol){return isFinite(x)&&Math.abs(x-y)<=Math.abs(y)*tol;}
+function num(id){var e=$(id);if(!e)return null;var s=e.value.trim().replace('−','-').replace(',','.');return s===''?null:parseFloat(s);}
+function mark(id,ok,filled){var e=$(id);if(e){e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);}var m=$(id+'m');if(m){m.innerHTML=ok?'<span class="good2">✓</span>':(filled?'<span class="bad2">✗</span>':'');}}
+function gpCheck(i){var p=GP[i],P=prep(p),msgs=[],all=true;
+ (p.cv||[]).forEach(function(c,ci){var yn=document.querySelector('.yn[data-c="'+ci+'"] .on');if(!yn||yn.getAttribute('data-a')!=='n'){all=false;msgs.push('Check the units of '+lbl(c.pair)+' and '+lbl(c.v)+': are they really the same?');return;}
+  var x=num('cv'+ci),want=P.lines.filter(function(l){return l.k==='U'&&l.v===c.v;})[0].val,ok=x!==null&&near(x,want,.012);mark('cv'+ci,ok,x!==null);
+  if(!ok){all=false;msgs.push(c.op==='×'?'To change '+p.k[c.v][1]+' to '+c.to+', <b>multiply</b> by '+c.f+'.':'To change '+p.k[c.v][1]+' to '+c.to+', <b>divide</b> by '+c.f+'.');}});
+ P.kc.forEach(function(v){var x=num('tk_'+v),C=p.k[v][0],ok=x!==null&&Math.abs(x-(C+273))<=.6;mark('tk_'+v,ok,x!==null);
+  if(!ok){all=false;msgs.push(x===null?'Convert '+lbl(v)+' to kelvin.':(Math.abs(x-C)<.01?lbl(v)+': you still have the °C value. <b>Add 273</b> to get kelvin.':(Math.abs(x-(C-273))<.6?lbl(v)+': <b>add</b> 273, don\'t subtract.':lbl(v)+': K = °C + 273 = '+p.k[v][2]+' + 273')));}});
+ var top=[],bot=[];Array.prototype.forEach.call(document.querySelectorAll('[data-z="top"] .gt'),function(t){top.push(t.getAttribute('data-v'));});Array.prototype.forEach.call(document.querySelectorAll('[data-z="bot"] .gt'),function(t){bot.push(t.getAttribute('data-v'));});
+ function same(a,b){return a.slice().sort().join()===b.slice().sort().join();}
+ var okR=same(top,P.sol.top)&&same(bot,P.sol.bot);document.querySelector('[data-z="top"]').classList.toggle('ok',okR);document.querySelector('[data-z="bot"]').classList.toggle('ok',okR);
+ document.querySelector('[data-z="top"]').classList.toggle('no',!okR);document.querySelector('[data-z="bot"]').classList.toggle('no',!okR);$('rrm').innerHTML=okR?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+ if(!okR){all=false;if(!top.length&&!bot.length)msgs.push('Drag the tiles to build the equation for '+lbl(p.X)+'.');
+  else if(same(top,P.sol.bot)&&same(bot,P.sol.top))msgs.push('Your equation is <b>upside down</b>. Swap the top and the bottom.');
+  else if(document.querySelectorAll('.gtray .gt').length)msgs.push('Every tile is needed: drag the tiles left in the tray to the top or the bottom.');
+  else msgs.push('Rearranging: cross-multiply, then divide by everything that is multiplied with '+lbl(p.X)+'. Press Show me to see it step by step.');}
+ var a=num('ansIn'),want=p.outC?P.Xc:P.X,okA=a!==null&&(p.outC?Math.abs(a-want)<=3:near(a,want,p.tol||.015));mark('ansIn',okA,a!==null);
+ if(!okA){all=false;if(a===null)msgs.push('Type your final answer.');
+  else if(p.outC&&Math.abs(a-P.X)<=3)msgs.push('That answer is in <b>kelvin</b>. The question asks for °C: subtract 273.');
+  else if(P.nK!==null&&isFinite(P.nK)&&near(a,P.nK,.02))msgs.push('It looks like you used <b>°C instead of K</b>. Use the kelvin temperatures (see Why Kelvin?).');
+  else if(P.nU!==null&&near(a,P.nU,.02))msgs.push('It looks like you <b>mixed units</b>. Use the converted value so both have the same unit.');
+  else msgs.push('Check your calculation: put the numbers into your rearranged equation.');}
+ if(all){p.solved=true;renderTabs();gpPanel(i);return;}
+ $('nFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
+
+/* ---- lesson pages ---- */
+var LS2={};
+function lesson(key,cards){var st=LS2[key]||0,h='<div class="steps3">'+cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div>'+c[1]+'</div>';}).join('')+'</div>';
+ h+='<div class="stepbar"><button class="btn" id="lBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<cards.length?'<button class="btn fill" id="lNext">'+(st===0?'Start ▶':'Next ▶')+'</button>':'<button class="btn fill" id="lGo">Next lesson ▶</button>')+'<div class="stepdots">'+cards.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';
+ $('gpanel').innerHTML=h;$('lBack').onclick=function(){LS2[key]=st-1;lesson(key,cards);};var n=$('lNext');if(n)n.onclick=function(){LS2[key]=st+1;lesson(key,cards);};var g=$('lGo');if(g)g.onclick=function(){go(li,si+1);};}
+function plain(s,cls){return '<span class="gv'+(cls?' '+cls:'')+'" style="font-size:26px">'+s+'</span>';}
+var balanceSvg='<svg width="260" height="110" viewBox="0 0 260 110"><polygon points="130,60 115,100 145,100" fill="#8d99b0"/><rect x="20" y="52" width="220" height="8" rx="4" fill="#18233a"/><path d="M30 60 L10 85 H70 L50 60" fill="none" stroke="#18233a" stroke-width="2"/><path d="M210 60 L190 85 H250 L230 60" fill="none" stroke="#18233a" stroke-width="2"/><text x="40" y="45" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="18" fill="#18233a">3 × x</text><text x="220" y="45" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="18" fill="#18233a">12</text></svg>';
+var RCARDS=[
+ ['An equation is a balance','<div class="ln">Both sides are equal, like a balance. <b>Whatever you do to one side, you must do to the other side</b>, or it stops balancing.</div><div style="text-align:center">'+balanceSvg+'</div>'+
+  geq(plain('3 × x'),plain('12'))+gop('x is multiplied by 3 → divide BOTH sides by 3')+geq(gfr(plain('<s style="text-decoration-color:#d8434a;text-decoration-thickness:3px">3</s> × x'),plain('<s style="text-decoration-color:#d8434a;text-decoration-thickness:3px">3</s>')),gfr(plain('12'),plain('3')))+geq(plain('x'),plain('4'))],
+ ["Boyle's law: find V₂",rearr('boyle','V2').join('')],
+ ["Charles's law: find V₂",'<div class="ln why">This law has fractions, so first we <b>cross-multiply</b> to get rid of them.</div>'+rearr('charles','V2').join('')],
+ ["Gay-Lussac's law: find T₂",'<div class="ln why">T₂ is on the bottom this time. Cross-multiplying brings it up.</div>'+rearr('gl','T2').join('')],
+ ['Combined gas law: find V₂',rearr('comb','V2').join('')],
+ ['The shortcut','<div class="ln" style="font-size:19px"><b>1.</b> Cross-multiply to get rid of the fractions.<br><b>2.</b> Find what is multiplied with the unknown.<br><b>3.</b> Divide <b>both sides</b> by it. It cancels and the unknown is alone.</div><div class="ln why">Check: in your answer every letter appears exactly once, and the unknown is alone on its side.</div>']];
+function thermo(){return '<svg width="280" height="170" viewBox="0 0 280 170"><rect x="125" y="10" width="30" height="130" rx="15" fill="#fff" stroke="#18233a" stroke-width="2"/><circle cx="140" cy="148" r="18" fill="#d8434a"/><rect x="133" y="70" width="14" height="80" fill="#d8434a"/>'+
+ [['100 °C','373 K',22],['0 °C','273 K',70],['−273 °C','0 K',134]].map(function(r){return '<line x1="118" y1="'+r[2]+'" x2="162" y2="'+r[2]+'" stroke="#18233a" stroke-width="2"/><text x="112" y="'+(r[2]+5)+'" text-anchor="end" font-family="Fredoka, sans-serif" font-size="15" fill="#d8434a">'+r[0]+'</text><text x="168" y="'+(r[2]+5)+'" font-family="Fredoka, sans-serif" font-size="15" fill="#2b59c3">'+r[1]+'</text>';}).join('')+'</svg>';}
+function balloon(r,col,lab){return '<svg width="150" height="150" viewBox="0 0 150 150"><ellipse cx="75" cy="'+(70)+'" rx="'+r+'" ry="'+(r*1.15)+'" fill="'+col+'" fill-opacity=".75" stroke="#18233a" stroke-width="2"/><line x1="75" y1="'+(70+r*1.15)+'" x2="75" y2="148" stroke="#18233a"/></svg><div class="ln">'+lab+'</div>';}
+var KCARDS=[
+ ['0 °C is not "zero heat"','<div class="vs"><div>'+thermo()+'</div><div style="text-align:left"><div class="ln">0 °C is just where water <b>freezes</b>. Gas particles are still moving fast at 0 °C.</div><div class="ln">The <b>real zero</b>, where particles stop moving, is <b>0 K = −273 °C</b>.</div><div class="ln">Gas laws need a scale that starts at the real zero: <b>kelvin</b>.</div></div></div>'],
+ ['Problem 1: dividing by zero','<div class="ln">A gas has a volume of 1.00 L at <b>0 °C</b>. It is heated to 25 °C. Use V₂ = V₁ × T₂ ÷ T₁:</div><div class="vs"><div><b>Using °C</b><div class="ln">V₂ = 1.00 × 25 ÷ <span class="bad2">0</span></div><div class="calc err">Error</div><div class="ln bad2">You can never divide by zero. No answer!</div></div><div><b>Using K</b><div class="ln">V₂ = 1.00 × 298 ÷ 273</div><div class="calc">1.09</div><div class="ln good2">1.09 L ✓</div></div></div>'],
+ ['Problem 2: impossible negative answers','<div class="ln">Example Problem 3: 5.00 atm at 25.0 °C, cooled to <b>−10.0 °C</b>. P₂ = P₁ × T₂ ÷ T₁:</div><div class="vs"><div><b>Using °C</b><div class="ln">P₂ = 5.00 × (−10.0) ÷ 25.0</div><div class="calc err">-2.00</div><div class="ln bad2">A negative pressure? Impossible!</div></div><div><b>Using K</b><div class="ln">P₂ = 5.00 × 263 ÷ 298</div><div class="calc">4.41</div><div class="ln good2">4.41 atm ✓</div></div></div>'],
+ ['Problem 3: wrong sizes','<div class="ln">A balloon is warmed from 10 °C to 20 °C. Did the temperature really <b>double</b>?</div><div class="vs"><div><b>Using °C</b>'+balloon(60,'#e2708a','20 ÷ 10 = 2 → the balloon <span class="bad2">doubles</span>? No!')+'</div><div><b>Using K</b>'+balloon(39,'#0f8b8d','293 ÷ 283 = 1.04 → only <span class="good2">4% bigger</span> ✓')+'</div></div>'],
+ ['"Why can\'t I just cancel the 273?"','<div class="ln">With kelvin, Charles\'s law gives V₂ = V₁ × (75.0 + 273) ÷ (40.0 + 273). It is tempting to cross out the 273s:</div>'+
+  geq(gfr(plain('75.0 + <s style="text-decoration-color:#d8434a;text-decoration-thickness:3px">273</s>'),plain('40.0 + <s style="text-decoration-color:#d8434a;text-decoration-thickness:3px">273</s>')),plain('<span class="bad2">✗ NOT allowed</span>'))+
+  '<div class="ln">You can only cancel numbers that are <b>multiplied</b>, never numbers that are <b>added</b>. Try it with small numbers:</div>'+
+  '<div class="vs"><div><b>Added: can\'t cancel</b><div class="ln">(2 + 1) ÷ (3 + 1) = 3 ÷ 4 = <b>0.75</b></div><div class="ln bad2">Cancel the 1s → 2 ÷ 3 = 0.67 ✗ different!</div></div><div><b>Multiplied: can cancel</b><div class="ln">(2 × 5) ÷ (3 × 5) = 10 ÷ 15 = <b>0.67</b></div><div class="ln good2">Cancel the 5s → 2 ÷ 3 = 0.67 ✓ same!</div></div></div><div class="ln">So: 348 ÷ 313 = <b>1.11</b> (correct), but 75 ÷ 40 = 1.88 (wrong). <b>Always add 273 first.</b></div>']];
+var UCARDS=[
+ ['Same pressure, different numbers','<div class="ln">These are all the <b>same</b> pressure, just written in different units:</div><div class="geq">'+plain('1 atm')+'<span class="eqs">=</span>'+plain('101.3 kPa')+'<span class="eqs">=</span>'+plain('760 mm Hg')+'</div><div class="ln">Volumes too: <b>1 L = 1000 mL</b>.</div>'],
+ ['What goes wrong if we mix them?','<div class="ln">2.50 L of gas at 101.3 kPa is <b>squeezed</b> to 1.50 atm. Boyle: V₂ = V₁ × P₁ ÷ P₂</div><div class="vs"><div><b>Mixed units</b><div class="ln">2.50 × 101.3 ÷ 1.50</div><div class="calc err">168.8</div><div class="ln bad2">The gas was squeezed but became 68 times bigger? Impossible!</div></div><div><b>Same units</b><div class="ln">1.50 atm = 152 kPa<br>2.50 × 101.3 ÷ 152</div><div class="calc">1.67</div><div class="ln good2">1.67 L: smaller, as expected ✓</div></div></div>'],
+ ['How to convert','<div class="ln">Multiply or divide by the conversion number:</div><div class="ln" style="font-family:Fredoka,sans-serif;font-size:20px">atm → kPa: × 101.3 &nbsp;·&nbsp; kPa → atm: ÷ 101.3<br>L → mL: × 1000 &nbsp;·&nbsp; mL → L: ÷ 1000<br>°C → K: + 273</div><div class="ln why">It does not matter which one you convert, as long as P₁ and P₂ end up in the <b>same</b> unit, and V₁ and V₂ end up in the <b>same</b> unit.</div>'],
+ ['Units cancel too','<div class="ln">When the units match, they cancel just like numbers, and only the unit of the answer is left:</div>'+geq(tl('V2'),gfr('<span class="gv">(2.50 L)</span><span class="gv">(101.3 <u class="x">kPa</u>)</span>','<span class="gv">(152 <u class="x">kPa</u>)</span>'))+'<div class="ln" style="text-align:center">kPa ÷ kPa cancels → the answer is in <b>L</b> ✓</div>']];
+function panelScene(o){return {title:o.title,canvas:false,panel:true,q:o.q,rule:o.rule,reads:o.reads||[],controls:function(){return '';},init:o.init,bind:function(){},update:function(){},draw:function(){},read:o.read||function(){return {};}};}
+var GRULE=['Temperatures in <b>kelvin</b>: K = °C + 273','P₁ and P₂ in the <b>same unit</b>; V₁ and V₂ in the <b>same unit</b>','Rearrange first: cross-multiply, then divide','Check: does the answer make sense?'];
+S.gpR=panelScene({title:'How to rearrange a gas law equation',q:'What must you always do to BOTH sides of an equation?',rule:GRULE,init:function(){lesson('r',RCARDS);}});
+S.gpK=panelScene({title:'Why must temperature be in kelvin?',q:'What would happen if T₁ were 0 °C and we did not convert?',rule:GRULE,init:function(){lesson('k',KCARDS);}});
+S.gpU=panelScene({title:'Pressures and volumes must have the same units',q:'Is 1 atm bigger, smaller or the same as 101.3 kPa?',rule:GRULE,init:function(){lesson('u',UCARDS);}});
+GP.forEach(function(p,i){S['gp'+i]=panelScene({title:'Problem '+(i+1)+': '+GLW[p.law].n+' · find '+lbl(p.X),q:'Before you calculate: will '+lbl(p.X)+' be bigger or smaller than '+lbl(p.X.charAt(0)+(p.X.charAt(1)==='1'?'2':'1'))+'? Why?',rule:GRULE,
+ reads:[['l','Law'],['u','Unknown'],['s','Problems solved']],read:function(){return {l:GLW[p.law].n,u:lbl(p.X),s:GP.filter(function(x){return x.solved;}).length+' / '+GP.length};},
+ init:function(){PR.st=0;gpPanel(i);}});});
+
 /* ================= APP ================= */
 var LAWS=[
  {id:'boyle',name:"Boyle's Law",c:'#0f8b8d',steps:[['Syringe & marshmallow','boyleDemo'],['Explore','boyleSim'],['The equation','boyleEq']]},
  {id:'charles',name:"Charles's Law",c:'#e2708a',steps:[['Balloon on a bottle','charlesDemo'],['Explore','charlesSim'],['The equation','charlesEq']]},
  {id:'gl',name:"Gay-Lussac's Law",c:'#2b59c3',steps:[['Can implosion','glDemo'],['Explore','glSim'],['The equation','glEq']]},
- {id:'comb',name:'Combined Gas Law',c:'#8a4fbf',steps:[['All three together','combined']]}];
+ {id:'comb',name:'Combined Gas Law',c:'#8a4fbf',steps:[['All three together','combined']]},
+ {id:'prac',name:'Practice problems',c:'#e8962a',steps:[['How to rearrange','gpR','A'],['Why Kelvin?','gpK','B'],['Same units','gpU','C']].concat(GP.map(function(p,i){var nm=['Boyle','Boyle','Boyle','Charles','Charles','Gay-Lussac','Gay-Lussac','Combined','Combined','Units!','Units!','Units!'][i];return [nm,'gp'+i,function(){return p.solved?'✓':String(i+1);}];}))}];
 var cur=null,li=0,si=0,lastRead=0;
 function renderTabs(){$('tabs').innerHTML=LAWS.map(function(l,i){return '<button class="tab'+(i===li?' on':'')+'" style="--c:'+l.c+'" data-i="'+i+'"><i></i>'+l.name+'</button>';}).join('');
  Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'),0);};});
- var L=LAWS[li];$('steps').innerHTML=L.steps.map(function(s,i){return '<button class="step'+(i===si?' on':'')+'" data-i="'+i+'"><b>'+(i+1)+'</b>'+s[0]+'</button>';}).join('');
+ var L=LAWS[li];$('steps').innerHTML=L.steps.map(function(s,i){var mk=s[2]?(typeof s[2]==='function'?s[2]():s[2]):(i+1);return '<button class="step'+(i===si?' on':'')+(mk==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk+'</b>'+s[0]+'</button>';}).join('');
  Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(li,+b.getAttribute('data-i'));};});}
 function go(l,s){li=l;si=s;var L=LAWS[l];document.documentElement.style.setProperty('--accent',L.c);cur=S[L.steps[s][1]];renderTabs();
- $('stitle').textContent=cur.title;cv.style.display=cur.canvas?'block':'none';$('eqview').style.display=cur.canvas?'none':'block';
+ $('stitle').textContent=cur.title;cv.style.display=cur.canvas?'block':'none';$('eqview').style.display=(cur.canvas||cur.panel)?'none':'block';$('gpanel').style.display=cur.panel?'block':'none';
  $('controls').innerHTML=cur.controls();cur.init();cur.bind();
  $('q').textContent=cur.q;$('rule').innerHTML=cur.rule.map(function(r){return '<li>'+r+'</li>';}).join('');
  $('reads').innerHTML=cur.reads.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0+1]+'</span><b id="r_'+r[0]+'">–</b></div>';}).join('');
@@ -538,7 +819,7 @@ function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;
   if(now-lastRead>120){lastRead=now;var v=cur.read();for(var k in v){var e=$('r_'+k);if(e)e.textContent=v[k];}}}
  requestAnimationFrame(loop);}
 window.addEventListener('resize',fit);
-var hm={'#boyle':0,'#charles':1,'#gay-lussac':2,'#combined':3};go(hm[location.hash]||0,0);requestAnimationFrame(loop);
+var hm={'#boyle':0,'#charles':1,'#gay-lussac':2,'#combined':3,'#practice':4};go(hm[location.hash]||0,0);requestAnimationFrame(loop);
 })();
 </script>
 </body>
