@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radioactive Decay Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+/* equation view */
+.eqview{display:none;min-height:420px;padding:10px 6px;background:#f6f8fc;border-radius:14px}
+.eqrow{display:flex;align-items:center;justify-content:center;gap:18px;height:230px;font-family:Fredoka,sans-serif;font-weight:600}
+.big{display:inline-flex;flex-direction:column;align-items:center;transition:font-size .2s;line-height:1}
+.big small{font-size:15px;font-weight:500;color:var(--muted);margin-top:4px}
+.op{font-size:64px;color:#8d99b0}
+.k{font-size:80px;color:#8d99b0}
+.frac{display:inline-flex;flex-direction:column;align-items:center;gap:4px}
+.fr{display:flex;align-items:center;gap:6px;padding-left:46px}
+.frac hr{width:100%;min-width:120px;border:0;border-top:6px solid var(--ink);margin:2px 0;border-radius:3px}
+.arrowtag{font-size:40px;margin-left:4px}
+.up{color:var(--coral)}.down{color:var(--blue)}
+.nums{text-align:center;font-family:Fredoka,sans-serif;font-size:24px;margin:4px 0 10px}
+.pair{text-align:center;font-size:19px;margin:8px auto;background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 14px;max-width:640px}
+.chip{display:block;width:max-content;max-width:100%;margin:10px auto 0;font-family:Fredoka,sans-serif;font-size:19px;padding:8px 16px;border-radius:999px;background:var(--accent);color:#fff}
+.bars2{display:grid;grid-template-columns:110px 1fr 90px;gap:8px 12px;align-items:center;max-width:560px;margin:8px auto 0;font-family:Fredoka,sans-serif}
+.bars2 .bar{height:20px;margin:0}
+/* combined strip */
+.cstrip{margin-top:12px;background:#f6f8fc;border-radius:14px;padding:12px}
+.ceq{display:flex;align-items:center;justify-content:center;gap:22px;font-family:Fredoka,sans-serif;font-weight:600;font-size:40px;flex-wrap:wrap}
+.cf{display:inline-flex;flex-direction:column;align-items:center}
+.cf hr{width:100%;min-width:110px;border:0;border-top:4px solid var(--ink);margin:2px 0}
+.v{position:relative;display:inline-block;padding:0 2px}
+.v.x{color:#b3bccb}
+.v.x::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;border-top:5px solid var(--red);transform:rotate(-20deg)}
+.lawname{text-align:center;font-family:Fredoka,sans-serif;font-size:21px;margin-top:8px;color:var(--accent);min-height:28px}
+.holds{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+sub{font-size:.6em}
+
+.reads .rd b{font-size:19px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true">
+      <circle cx="27" cy="27" r="22" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <circle cx="22" cy="23" r="5" fill="#e2708a"/><circle cx="31" cy="22" r="5" fill="#8d99b0"/><circle cx="26" cy="31" r="5" fill="#8d99b0"/><circle cx="34" cy="31" r="5" fill="#e2708a"/><circle cx="19" cy="32" r="5" fill="#e2708a"/>
+      <path d="M44 9l4-4M47 15l5-1M40 5l1-4" stroke="#e8962a" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <div><h1>Radioactive Decay Lab</h1><div class="sub">Why some nuclei are unstable, and how they become stable</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){t=clamp(t,0,1);return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b';
+var PCOL='#e2708a',NCOL='#9aa6ba',ECOL='#2b8fd8',GCOL='#e8962a';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.fillText(s,x,y);return ctx.measureText(s).width;}
+function ball(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(24,35,58,.25)';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(x-r*.3,y-r*.3,r*.35,0,Math.PI*2);ctx.fill();}
+/* stacked nuclide symbol: mass number top-left, atomic number bottom-left */
+function nucW(A,Z,sym,s){ctx.font='600 '+(s*.55)+'px Fredoka, sans-serif';var wn=Math.max(ctx.measureText(String(A)).width,ctx.measureText(String(Z)).width);ctx.font='600 '+s+'px Fredoka, sans-serif';return wn+3+ctx.measureText(sym).width;}
+function nuc(x,y,A,Z,sym,s,c){c=c||INK;ctx.font='600 '+(s*.55)+'px Fredoka, sans-serif';var wn=Math.max(ctx.measureText(String(A)).width,ctx.measureText(String(Z)).width);
+ txt(String(A),x+wn,y-s*.36,{s:s*.55,c:c,a:'right'});txt(String(Z),x+wn,y+s*.38,{s:s*.55,c:c,a:'right'});txt(sym,x+wn+3,y,{s:s,c:c,a:'left'});return nucW(A,Z,sym,s);}
+function eqn(cx,y,terms,s){ // terms: ['n',A,Z,sym,label] or ['t',text]
+ var ws=terms.map(function(t){return t[0]==='n'?nucW(t[1],t[2],t[3],s):(ctx.font='600 '+s+'px Fredoka, sans-serif',ctx.measureText(t[1]).width);}),gap=22,tot=ws.reduce(function(a,b){return a+b;},0)+gap*(terms.length-1),x=cx-tot/2;
+ terms.forEach(function(t,i){if(t[0]==='n'){nuc(x,y,t[1],t[2],t[3],s,t[5]);if(t[4])txt(t[4],x+ws[i]/2,y+s*.95,{s:12,c:MUTED,w:500});}else txt(t[1],x+ws[i]/2,y,{s:s,c:t[2]||INK});x+=ws[i]+gap;});}
+
+/* ===== element and isotope data ===== */
+var EL={1:['H','hydrogen'],2:['He','helium'],6:['C','carbon'],7:['N','nitrogen'],19:['K','potassium'],20:['Ca','calcium'],27:['Co','cobalt'],28:['Ni','nickel'],56:['Ba','barium'],82:['Pb','lead'],84:['Po','polonium'],86:['Rn','radon'],88:['Ra','radium']};
+var STABLE={'1-1':1,'1-2':1,'2-3':1,'6-12':1,'6-13':1,'7-14':1,'19-39':1,'20-40':1,'28-60':1,'56-137':1,'82-206':1};
+var ISO={
+ H3:{Z:1,A:3,steps:['beta'],half:'12.3 years',ab:'about 1 in 10¹⁸ hydrogen atoms',abShort:'1 in 10¹⁸',use:'Glowing exit signs and watch dials'},
+ C14:{Z:6,A:14,steps:['beta'],half:'5,730 years',ab:'about 1 in 10¹² carbon atoms',abShort:'1 in 10¹²',use:'Dating old wood, bones and fossils'},
+ K40:{Z:19,A:40,steps:['beta'],half:'1.25 billion years',ab:'about 1 in 8,500 potassium atoms (0.012%)',abShort:'0.012%',use:'Found in bananas and in your body'},
+ Po210:{Z:84,A:210,steps:['alpha'],half:'138 days',ab:'trace: less than 0.1 mg in a tonne of uranium ore',abShort:'trace',use:'Forms naturally in uranium ores'},
+ Ra226:{Z:88,A:226,steps:['alpha'],half:'1,600 years',ab:'trace: about 1 g in 7 tonnes of uranium ore',abShort:'trace',use:'Studied by Marie Curie; textbook example'},
+ Ba137m:{Z:56,A:137,excited:true,steps:['gamma'],half:'2.6 minutes',ab:'not found in nature (made when cesium-137 decays)',abShort:'none',use:'Used in the school "half-life" lab'},
+ Co60:{Z:27,A:60,steps:['beta','gamma'],half:'5.3 years',ab:'not found in nature (made in nuclear reactors)',abShort:'none',use:'Kills cancer cells; sterilizes medical tools'}};
+function label(Z,A,ex){return EL[Z][1].charAt(0).toUpperCase()+EL[Z][1].slice(1)+'-'+A+(ex?'m':'');}
+function isStable(Z,A,ex){return !ex&&!!STABLE[Z+'-'+A];}
+
+/* ===== nucleus ===== */
+function rng(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};}
+function Nucleus(Z,A,seed){this.seed=seed||7;this.excited=false;this.set(Z,A);}
+Nucleus.prototype.set=function(Z,A){this.Z=Z;this.A=A;var N=A-Z,R=rng(this.seed+A),types=[],i;
+ for(i=0;i<Z;i++)types.push('p');for(i=0;i<N;i++)types.push('n');
+ for(i=types.length-1;i>0;i--){var j=Math.floor(R()*(i+1)),t=types[i];types[i]=types[j];types[j]=t;}
+ this.r=A<=4?16:A<=20?13:A<=70?8.5:5.4;var g=Math.PI*(3-Math.sqrt(5)),self=this;
+ this.n=types.map(function(t,k){var rad=self.r*1.9*Math.sqrt(k+.5)*0.62,a=k*g;return {t:t,x:Math.cos(a)*rad,y:Math.sin(a)*rad,col:t==='p'?PCOL:NCOL};});
+ this.R=this.r*1.9*Math.sqrt(A)*0.62+this.r;};
+Nucleus.prototype.unstable=function(){return !isStable(this.Z,this.A,this.excited);};
+Nucleus.prototype.draw=function(cx,cy,shake,t){var self=this;
+ if(this.excited){var gl=ctx.createRadialGradient(cx,cy,this.R*.4,cx,cy,this.R*1.8);gl.addColorStop(0,'rgba(232,150,42,.45)');gl.addColorStop(1,'rgba(232,150,42,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,this.R*1.8,0,Math.PI*2);ctx.fill();}
+ var ox=shake?(Math.random()-.5)*shake*2:0,oy=shake?(Math.random()-.5)*shake*2:0;
+ this.n.forEach(function(q){if(q.gone)return;var jx=shake?(Math.random()-.5)*shake:0,jy=shake?(Math.random()-.5)*shake:0;ball(cx+q.x+ox+jx,cy+q.y+oy+jy,self.r,q.col);});
+ if(shake){ctx.strokeStyle='rgba(216,67,74,.55)';ctx.lineWidth=2.5;ctx.setLineDash([6,6]);ctx.lineDashOffset=-t*40;ctx.beginPath();ctx.arc(cx,cy,this.R+10+Math.sin(t*25)*2,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(d,k){var a=Math.atan2(d[1],d[0]),r0=self.R+18;ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.beginPath();for(var i=0;i<3;i++){var rr2=r0+i*5;ctx.moveTo(cx+Math.cos(a-.12)*rr2,cy+Math.sin(a-.12)*rr2+(Math.sin(t*30+k)*1.5));ctx.lineTo(cx+Math.cos(a+.12)*rr2,cy+Math.sin(a+.12)*rr2);}ctx.stroke();});}
+ else{ctx.strokeStyle='rgba(46,158,91,.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,this.R+10,0,Math.PI*2);ctx.stroke();}};
+function badge(x,y,stable,txt2){var w=210;ctx.fillStyle=stable?'#e3f4ea':'#fde7e8';rr(x-w/2,y-20,w,40,20);ctx.fill();ctx.strokeStyle=stable?GREEN:RED;ctx.lineWidth=2;ctx.stroke();
+ var sx=stable?0:(Math.random()-.5)*3;txt(txt2||(stable?'STABLE ✓':'UNSTABLE: radioactive'),x+sx,y+1,{s:16,c:stable?GREEN:RED});}
+
+/* ===== scenes ===== */
+var S={},cur=null,T=0;
+
+S.compare={title:'Stable vs unstable nuclei of the same element',
+ pairs:{C:['Carbon',6,12,14,'98.9%','1 in 10¹² atoms'],H:['Hydrogen',1,1,3,'99.98%','1 in 10¹⁸ atoms'],K:['Potassium',19,39,40,'93.3%','0.012%']},sel:'C',
+ q:'Both nuclei are the same element. Why does one shiver and the other stay still?',
+ rule:['Same element, different number of <b>neutrons</b> = isotopes','Too many or too few neutrons &rarr; <b>unstable</b> nucleus','Unstable nuclei are <b>radioactive</b>'],
+ init:function(){var p=this.pairs[this.sel];this.a=new Nucleus(p[1],p[2],3);this.b=new Nucleus(p[1],p[3],3);},
+ controls:function(){var s=this;return '<div class="ctl"><b>Element:</b> '+Object.keys(this.pairs).map(function(k){return '<button class="btn'+(k===s.sel?' sel':'')+'" data-el="'+k+'">'+s.pairs[k][0]+'</button>';}).join(' ')+'</div>';},
+ bind:function(){var s=this;Array.prototype.forEach.call(document.querySelectorAll('[data-el]'),function(b){b.onclick=function(){s.sel=b.getAttribute('data-el');go(0,0);};});},
+ reads:[['a','Stable isotope: neutrons ÷ protons'],['b','Radioactive isotope: neutrons ÷ protons'],['c','Stable isotope in nature'],['d','Radioactive isotope in nature']],
+ read:function(){var p=this.pairs[this.sel],Z=p[1];function r(A){return (A-Z)+' ÷ '+Z+' = '+((A-Z)/Z).toFixed(2);}return {a:r(p[2]),b:r(p[3]),c:p[4],d:p[5]};},
+ update:function(){},
+ draw:function(t){var p=this.pairs[this.sel],self=this;
+  [[this.a,200,false,p[2]],[this.b,600,true,p[3]]].forEach(function(z){var n=z[0],x=z[1];
+   ctx.fillStyle='#fff';rr(x-180,40,360,420,18);ctx.fill();ctx.strokeStyle=z[2]?CORAL:TEAL;ctx.lineWidth=2.5;ctx.stroke();
+   txt(label(n.Z,n.A),x,70,{s:21,c:z[2]?CORAL:TEAL});n.draw(x,215,z[2]?2.6:0,t);
+   nuc(x-30,345,n.A,n.Z,EL[n.Z][0],28);
+   txt(n.Z+' protons  •  '+(n.A-n.Z)+' neutrons',x,388,{s:15,c:MUTED,w:500});badge(x,425,!z[2]);});
+  ball(30,485,7,PCOL);txt('proton',42,485,{a:'left',s:13,c:MUTED,w:500});ball(110,485,7,NCOL);txt('neutron',122,485,{a:'left',s:13,c:MUTED,w:500});}};
+
+S.decay={title:'Radioactive decay: unstable nuclei emit radiation',sel:'C14',
+ groups:[['Alpha (α)',['Po210','Ra226']],['Beta (β)',['C14','H3','K40']],['Gamma (γ)',['Ba137m','Co60']]],
+ q:'Watch the protons and neutrons. What changes in the nucleus after each type of radiation?',
+ rule:['<b>Alpha:</b> loses 2 protons + 2 neutrons &rarr; new element','<b>Beta:</b> a neutron becomes a proton &rarr; new element','<b>Gamma:</b> only energy leaves &rarr; same element','Decay continues until the nucleus is <b>stable</b>'],
+ init:function(){var d=ISO[this.sel];this.nuc=new Nucleus(d.Z,d.A,11);this.nuc.excited=!!d.excited;this.step=0;this.anim=null;this.parts=[];this.eqs=[];this.msg='This nucleus is unstable. Press "Decay!"';this.start={Z:d.Z,A:d.A,ex:!!d.excited};},
+ controls:function(){var s=this,h='';this.groups.forEach(function(g){h+='<div class="ctl"><b>'+g[0]+':</b> '+g[1].map(function(k){var d=ISO[k];return '<button class="btn'+(k===s.sel?' sel':'')+'" data-iso="'+k+'">'+label(d.Z,d.A,d.excited)+'</button>';}).join(' ')+'</div>';});
+  return h+'<button class="btn fill" id="dec">Decay!</button><button class="btn" id="rst">Reset</button>';},
+ bind:function(){var s=this;Array.prototype.forEach.call(document.querySelectorAll('[data-iso]'),function(b){b.onclick=function(){s.sel=b.getAttribute('data-iso');go(1,0);};});$('dec').onclick=function(){s.fire();};$('rst').onclick=function(){s.init();s.btn();};this.btn();},
+ btn:function(){var d=ISO[this.sel];$('dec').disabled=!!this.anim||this.step>=d.steps.length;},
+ fire:function(){var d=ISO[this.sel];if(this.anim||this.step>=d.steps.length)return;var kind=d.steps[this.step],n=this.nuc,cx=260,cy=215;
+  var pick=function(type,k){var c=n.n.filter(function(q){return q.t===type&&!q.gone;});c.sort(function(a,b){return (b.x*-.7+b.y*-.7)-(a.x*-.7+a.y*-.7);});return c.slice(0,k);};
+  var before={Z:n.Z,A:n.A,ex:n.excited};
+  if(kind==='alpha'){var chosen=pick('p',2).concat(pick('n',2));this.anim={kind:kind,t:0,chosen:chosen,before:before};}
+  if(kind==='beta'){var q=pick('n',1)[0];this.anim={kind:kind,t:0,q:q,before:before};}
+  if(kind==='gamma'){this.anim={kind:kind,t:0,before:before};}
+  this.msg={alpha:'Alpha decay: 2 protons + 2 neutrons leave as an alpha particle',beta:'Beta decay: a neutron turns into a proton and an electron is emitted',gamma:'Gamma decay: energy leaves as a gamma ray'}[kind];this.btn();},
+ finish:function(){var a=this.anim,n=this.nuc,b=a.before,Z=n.Z,A=n.A;
+  if(a.kind==='alpha'){Z-=2;A-=4;n.excited=false;}
+  if(a.kind==='beta'){Z+=1;n.excited=ISO[this.sel].steps.length>this.step+1;}
+  if(a.kind==='gamma'){n.excited=false;}
+  if(a.kind!=='gamma')n.set(Z,A);
+  var parent=['n',b.A,b.Z,EL[b.Z][0]+(b.ex?'*':''),label(b.Z,b.A,b.ex&&ISO[this.sel].excited)],daughter=['n',A,Z,EL[Z][0]+(n.excited?'*':''),label(Z,A,false)];
+  var emit={alpha:['n',4,2,'He','alpha particle'],beta:['n',0,-1,'β','beta particle'],gamma:['n',0,0,'γ','gamma ray']}[a.kind];
+  this.eqs.push([parent,['t','→'],daughter,['t','+'],emit]);this.step++;this.anim=null;
+  var st=isStable(Z,A,n.excited);this.msg=st?label(Z,A)+' is stable: no more radiation!':(n.excited?'The new nucleus still has extra energy…':label(Z,A)+' is still unstable: it will keep decaying until it becomes stable lead-206');this.btn();},
+ reads:[['p','Protons'],['n','Neutrons'],['r','Neutrons ÷ protons'],['h','Half-life'],['ab','In nature','wide'],['u','Real-life use','wide']],
+ read:function(){var n=this.nuc,d=ISO[this.sel];return {p:n.Z,n:n.A-n.Z,r:((n.A-n.Z)/n.Z).toFixed(2),h:this.step?'–':d.half,ab:d.ab,u:d.use};},
+ update:function(dt){var a=this.anim;if(!a)return;a.t+=dt;var n=this.nuc;
+  if(a.kind==='alpha'&&a.t>0.9&&!a.spawned){a.spawned=true;a.chosen.forEach(function(q){q.gone=true;});this.parts.push({kind:'alpha',x:260+Math.cos(-2.35)*n.R,y:215+Math.sin(-2.35)*n.R,t:0});}
+  if(a.kind==='beta'&&a.t>0.2){a.q.col=a.t>0.9?PCOL:(Math.floor(a.t*10)%2?PCOL:NCOL);if(a.t>0.9&&!a.spawned){a.spawned=true;a.q.t='p';this.parts.push({kind:'beta',x:260+a.q.x,y:215+a.q.y,t:0});}}
+  if(a.kind==='gamma'&&!a.spawned){a.spawned=true;this.parts.push({kind:'gamma',t:0});}
+  if(a.t>1.6)this.finish();
+  this.parts.forEach(function(p){p.t+=dt;});this.parts=this.parts.filter(function(p){return p.t<3;});},
+ draw:function(t){var n=this.nuc,a=this.anim,cx=260,cy=215,self=this;
+  ctx.fillStyle='#fff';rr(20,20,480,370,18);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+  var unst=n.unstable();
+  // grouping alpha nucleons before they leave
+  if(a&&a.kind==='alpha'&&!a.spawned){var k=ease(a.t/0.9);a.chosen.forEach(function(q,i){var tx=Math.cos(-2.35)*(n.R-6)+[-6,6,-6,6][i],ty=Math.sin(-2.35)*(n.R-6)+[-6,-6,6,6][i];q.x=lerp(q.ox!==undefined?q.ox:(q.ox=q.x),tx,k);q.y=lerp(q.oy!==undefined?q.oy:(q.oy=q.y),ty,k);});}
+  n.draw(cx,cy,unst?(n.A>100?2.2:2.8):0,t);
+  this.parts.forEach(function(p){var d=p.t*150;
+   if(p.kind==='alpha'){var x=p.x+Math.cos(-2.35)*d,y=p.y+Math.sin(-2.35)*d;ball(x-7,y-7,8,PCOL);ball(x+7,y-7,8,NCOL);ball(x-7,y+7,8,NCOL);ball(x+7,y+7,8,PCOL);txt('α',x+24,y-18,{s:20,c:PCOL});}
+   if(p.kind==='beta'){var x2=p.x+Math.cos(-2.35)*d*1.5,y2=p.y+Math.sin(-2.35)*d*1.5;ctx.strokeStyle='rgba(43,143,216,.35)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(x2,y2);ctx.stroke();ball(x2,y2,6,ECOL);txt('β (e⁻)',x2+30,y2-10,{s:17,c:ECOL});}
+   if(p.kind==='gamma'){for(var k=0;k<3;k++){var ang=-2.35+(k-1)*0.5,L=Math.min(d,300);ctx.strokeStyle=GCOL;ctx.lineWidth=3.5;ctx.beginPath();for(var s2=0;s2<=L;s2+=4){var r0=n.R+12+s2,w=Math.sin(s2/7-p.t*20)*6;ctx.lineTo(cx+Math.cos(ang)*r0-Math.sin(ang)*w,cy+Math.sin(ang)*r0+Math.cos(ang)*w);}ctx.stroke();}txt('γ',cx+Math.cos(-2.35)*(n.R+40+Math.min(d,200)),cy+Math.sin(-2.35)*(n.R+40+Math.min(d,200)),{s:24,c:GCOL});}});
+  txt(this.msg,260,362,{s:14,c:INK,w:500});
+  // info card
+  ctx.fillStyle='#fff';rr(520,20,260,370,18);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+  var lab2=label(n.Z,n.A,n.excited&&ISO[this.sel].excited&&this.step===0);
+  txt(lab2,650,55,{s:21,c:TEAL});ctx.font='600 46px Fredoka, sans-serif';var wN=nucW(n.A,n.Z,EL[n.Z][0]+(n.excited?'*':''),46);nuc(650-wN/2,120,n.A,n.Z,EL[n.Z][0]+(n.excited?'*':''),46);
+  txt(n.Z+' protons',650,180,{s:17,c:PCOL});txt((n.A-n.Z)+' neutrons',650,206,{s:17,c:'#6f7c92'});
+  if(n.excited)txt('* = extra energy (excited)',650,232,{s:13,c:AMBER,w:500});
+  badge(650,268,!unst,unst&&n.excited?'EXCITED: extra energy':null);
+  ball(560,320,8,PCOL);txt('proton',572,320,{a:'left',s:13,c:MUTED,w:500});ball(655,320,8,NCOL);txt('neutron',667,320,{a:'left',s:13,c:MUTED,w:500});
+  ball(560,348,5,ECOL);txt('electron (β)',572,348,{a:'left',s:13,c:MUTED,w:500});ctx.strokeStyle=GCOL;ctx.lineWidth=3;ctx.beginPath();for(var i=0;i<=20;i++)ctx.lineTo(650+i,348+Math.sin(i/2)*4);ctx.stroke();txt('gamma ray',676,348,{a:'left',s:13,c:MUTED,w:500});
+  // equations
+  ctx.fillStyle='#f3f6fb';rr(20,402,760,90,14);ctx.fill();
+  if(!this.eqs.length)txt('The nuclear equation will appear here',400,447,{s:15,c:MUTED,w:500});
+  this.eqs.forEach(function(e,i){var y=self.eqs.length===1?440:422+i*40;eqn(400,y,e,self.eqs.length===1?26:20);});}};
+
+S.rare={title:'How rare are radioactive isotopes?',
+ q:'Why are most radioactive isotopes so rare in nature?',
+ rule:['Most unstable nuclei have <b>already decayed</b> to stable forms','Stable isotopes make up almost all of each element','Some radioactive isotopes are only <b>made by people</b>'],
+ init:function(){this.t0=0;},controls:function(){return '<span class="ctl" style="font-family:Atkinson Hyperlegible;font-size:15px;color:#5a6780">The bars use a stretched (logarithmic) scale: each grid line is 100 times smaller than the one before.</span>';},bind:function(){},
+ reads:[['a','Carbon-14'],['b','Hydrogen-3'],['c','Potassium-40'],['d','Cobalt-60']],
+ read:function(){return {a:'1 in 10¹² atoms',b:'1 in 10¹⁸ atoms',c:'1 in 8,500 atoms',d:'not in nature'};},
+ update:function(dt){this.t0+=dt;},
+ draw:function(t){var k=ease(this.t0/1.5),gx=210,gw=540,y0=60;
+  ctx.fillStyle='#fff';rr(20,20,760,300,18);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+  txt('Natural abundance: what percent of each element’s atoms are this isotope?',400,42,{s:15,c:INK});
+  function X(pct){return gx+(Math.log10(pct)+16)/18*gw;}
+  for(var e=-16;e<=2;e+=2){var x=X(Math.pow(10,e));ctx.strokeStyle='#e8edf5';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y0+8);ctx.lineTo(x,300);ctx.stroke();txt(e===2?'100%':e===0?'1%':'10'+String(e).replace('-','⁻').replace(/\d/g,function(d){return '⁰¹²³⁴⁵⁶⁷⁸⁹'[d];})+'%',x,306,{s:11,c:MUTED,w:500});}
+  var rows=[['Carbon-12',98.9,0],['Carbon-14',1e-10,1],['Hydrogen-1',99.98,0],['Hydrogen-3',1e-16,1],['Potassium-39',93.3,0],['Potassium-40',0.0117,1]];
+  rows.forEach(function(r,i){var y=y0+22+i*36+(Math.floor(i/2))*8,len=(X(r[1])-gx)*k;txt(r[0],gx-12,y,{a:'right',s:15,c:r[2]?CORAL:TEAL});ctx.fillStyle=r[2]?CORAL:TEAL;rr(gx,y-11,Math.max(4,len),22,6);ctx.fill();
+   if(r[2]){var sh=(Math.random()-.5)*2;txt('radioactive',gx+Math.max(4,len)+10+sh,y,{a:'left',s:12,c:CORAL,w:500});}});
+  // not in nature cards
+  var cards=[['Polonium-210','trace','only in uranium ores'],['Radium-226','trace','1 g in 7 tonnes of ore'],['Cobalt-60','none','made in reactors'],['Barium-137m','none','made from cesium-137']];
+  cards.forEach(function(c,i){var x=20+i*192;ctx.fillStyle=c[1]==='none'?'#fde7e8':'#fff4e5';rr(x,335,180,150,14);ctx.fill();ctx.strokeStyle=c[1]==='none'?RED:AMBER;ctx.lineWidth=2;ctx.stroke();
+   txt(c[0],x+90,360,{s:16});txt(c[1]==='none'?'NOT IN NATURE':'TRACE AMOUNTS',x+90,395,{s:15,c:c[1]==='none'?RED:AMBER});txt(c[2],x+90,428,{s:13,c:MUTED,w:500});
+   ball(x+90+(Math.random()-.5)*2,462,7,PCOL);});}};
+
+var LAWS=[{name:'1. Stable or unstable?',c:'#0f8b8d',k:'compare'},{name:'2. Radioactive decay',c:'#e2708a',k:'decay'},{name:'3. How rare are they?',c:'#8a4fbf',k:'rare'}];
+var tabI=0,lastRead=0;
+function renderTabs(){$('tabs').innerHTML=LAWS.map(function(l,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+l.c+'" data-i="'+i+'"><i></i>'+l.name+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'));};});}
+function go(i){tabI=i;var L=LAWS[i];document.documentElement.style.setProperty('--accent',L.c);cur=S[L.k];renderTabs();$('steps').innerHTML='';
+ $('stitle').textContent=cur.title;$('controls').innerHTML=cur.controls();cur.init();cur.bind();
+ $('q').textContent=cur.q;$('rule').innerHTML=cur.rule.map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('reads').innerHTML=cur.reads.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[1]+'</span><b id="r_'+r[0]+'">–</b></div>';}).join('');lastRead=0;}
+var last=performance.now();
+function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;T+=dt;
+ if(cur){cur.update(dt);ctx.clearRect(0,0,W,H);cur.draw(T);
+  if(now-lastRead>150){lastRead=now;var v=cur.read();for(var k in v){var e=$('r_'+k);if(e)e.textContent=v[k];}}}
+ requestAnimationFrame(loop);}
+var hm={'#stable':0,'#decay':1,'#rare':2};go(hm[location.hash]||0);requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>
