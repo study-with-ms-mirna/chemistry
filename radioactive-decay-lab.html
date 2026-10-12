@@ -139,6 +139,10 @@ function eqn(cx,y,terms,s){ // terms: ['n',A,Z,sym,label] or ['t',text]
 
 /* ===== element and isotope data ===== */
 var EL={1:['H','hydrogen'],2:['He','helium'],6:['C','carbon'],7:['N','nitrogen'],19:['K','potassium'],20:['Ca','calcium'],27:['Co','cobalt'],28:['Ni','nickel'],56:['Ba','barium'],82:['Pb','lead'],84:['Po','polonium'],86:['Rn','radon'],88:['Ra','radium']};
+EL[83]=['Bi','bismuth'];
+var NEXT={'1-3':'beta','6-14':'beta','19-40':'beta','27-60':'beta','88-226':'alpha','86-222':'alpha','84-218':'alpha','82-214':'beta','83-214':'beta','84-214':'alpha','82-210':'beta','83-210':'beta','84-210':'alpha'};
+var HALF={'1-3':'12.3 years','6-14':'5,730 years','19-40':'1.25 billion years','27-60':'5.3 years','56-137':'2.6 minutes','88-226':'1,600 years','86-222':'3.8 days','84-218':'3.1 minutes','82-214':'27 minutes','83-214':'20 minutes','84-214':'0.0002 seconds','82-210':'22 years','83-210':'5 days','84-210':'138 days'};
+function nextDecay(n){if(n.excited)return 'gamma';if(isStable(n.Z,n.A,false))return null;return NEXT[n.Z+'-'+n.A]||null;}
 var STABLE={'1-1':1,'1-2':1,'2-3':1,'6-12':1,'6-13':1,'7-14':1,'19-39':1,'20-40':1,'28-60':1,'56-137':1,'82-206':1};
 var ISO={
  H3:{Z:1,A:3,steps:['beta'],half:'12.3 years',ab:'about 1 in 10¹⁸ hydrogen atoms',abShort:'1 in 10¹⁸',use:'Glowing exit signs and watch dials'},
@@ -200,8 +204,8 @@ S.decay={title:'Radioactive decay: unstable nuclei emit radiation',sel:'C14',
  controls:function(){var s=this,h='';this.groups.forEach(function(g){h+='<div class="ctl"><b>'+g[0]+':</b> '+g[1].map(function(k){var d=ISO[k];return '<button class="btn'+(k===s.sel?' sel':'')+'" data-iso="'+k+'">'+label(d.Z,d.A,d.excited)+'</button>';}).join(' ')+'</div>';});
   return h+'<button class="btn fill" id="dec">Decay!</button><button class="btn" id="rst">Reset</button>';},
  bind:function(){var s=this;Array.prototype.forEach.call(document.querySelectorAll('[data-iso]'),function(b){b.onclick=function(){s.sel=b.getAttribute('data-iso');go(1,0);};});$('dec').onclick=function(){s.fire();};$('rst').onclick=function(){s.init();s.btn();};this.btn();},
- btn:function(){var d=ISO[this.sel];$('dec').disabled=!!this.anim||this.step>=d.steps.length;},
- fire:function(){var d=ISO[this.sel];if(this.anim||this.step>=d.steps.length)return;var kind=d.steps[this.step],n=this.nuc,cx=260,cy=215;
+ btn:function(){$('dec').disabled=!!this.anim||!nextDecay(this.nuc);},
+ fire:function(){var n=this.nuc,kind=nextDecay(n);if(this.anim||!kind)return;
   var pick=function(type,k){var c=n.n.filter(function(q){return q.t===type&&!q.gone;});c.sort(function(a,b){return (b.x*-.7+b.y*-.7)-(a.x*-.7+a.y*-.7);});return c.slice(0,k);};
   var before={Z:n.Z,A:n.A,ex:n.excited};
   if(kind==='alpha'){var chosen=pick('p',2).concat(pick('n',2));this.anim={kind:kind,t:0,chosen:chosen,before:before};}
@@ -210,15 +214,15 @@ S.decay={title:'Radioactive decay: unstable nuclei emit radiation',sel:'C14',
   this.msg={alpha:'Alpha decay: 2 protons + 2 neutrons leave as an alpha particle',beta:'Beta decay: a neutron turns into a proton and an electron is emitted',gamma:'Gamma decay: energy leaves as a gamma ray'}[kind];this.btn();},
  finish:function(){var a=this.anim,n=this.nuc,b=a.before,Z=n.Z,A=n.A;
   if(a.kind==='alpha'){Z-=2;A-=4;n.excited=false;}
-  if(a.kind==='beta'){Z+=1;n.excited=ISO[this.sel].steps.length>this.step+1;}
+  if(a.kind==='beta'){var wasCo=(b.Z===27&&b.A===60);Z+=1;n.excited=wasCo;}
   if(a.kind==='gamma'){n.excited=false;}
-  if(a.kind!=='gamma')n.set(Z,A);
-  var parent=['n',b.A,b.Z,EL[b.Z][0]+(b.ex?'*':''),label(b.Z,b.A,b.ex&&ISO[this.sel].excited)],daughter=['n',A,Z,EL[Z][0]+(n.excited?'*':''),label(Z,A,false)];
+  if(a.kind==='alpha')n.set(Z,A);if(a.kind==='beta'){n.Z=Z;a.q.t='p';a.q.col=PCOL;}
+  var parent=['n',b.A,b.Z,EL[b.Z][0]+(b.ex?'*':''),label(b.Z,b.A,b.ex&&b.Z===56)],daughter=['n',A,Z,EL[Z][0]+(n.excited?'*':''),label(Z,A,false)];
   var emit={alpha:['n',4,2,'He','alpha particle'],beta:['n',0,-1,'β','beta particle'],gamma:['n',0,0,'γ','gamma ray']}[a.kind];
   this.eqs.push([parent,['t','→'],daughter,['t','+'],emit]);this.step++;this.anim=null;
-  var st=isStable(Z,A,n.excited);this.msg=st?label(Z,A)+' is stable: no more radiation!':(n.excited?'The new nucleus still has extra energy…':label(Z,A)+' is still unstable: it will keep decaying until it becomes stable lead-206');this.btn();},
+  var st=isStable(Z,A,n.excited);this.msg=st?label(Z,A)+' is stable: no more radiation!':(n.excited?'The new nucleus still has extra energy: press "Decay!" again':label(Z,A)+' is still unstable: press "Decay!" again');this.btn();},
  reads:[['p','Protons'],['n','Neutrons'],['r','Neutrons ÷ protons'],['h','Half-life'],['ab','In nature','wide'],['u','Real-life use','wide']],
- read:function(){var n=this.nuc,d=ISO[this.sel];return {p:n.Z,n:n.A-n.Z,r:((n.A-n.Z)/n.Z).toFixed(2),h:this.step?'–':d.half,ab:d.ab,u:d.use};},
+ read:function(){var n=this.nuc,d=ISO[this.sel];return {p:n.Z,n:n.A-n.Z,r:((n.A-n.Z)/n.Z).toFixed(2),h:isStable(n.Z,n.A,n.excited)?'stable':(HALF[n.Z+'-'+n.A]||d.half),ab:d.ab,u:d.use};},
  update:function(dt){var a=this.anim;if(!a)return;a.t+=dt;var n=this.nuc;
   if(a.kind==='alpha'&&a.t>0.9&&!a.spawned){a.spawned=true;a.chosen.forEach(function(q){q.gone=true;});this.parts.push({kind:'alpha',x:260+Math.cos(-2.35)*n.R,y:215+Math.sin(-2.35)*n.R,t:0});}
   if(a.kind==='beta'&&a.t>0.2){a.q.col=a.t>0.9?PCOL:(Math.floor(a.t*10)%2?PCOL:NCOL);if(a.t>0.9&&!a.spawned){a.spawned=true;a.q.t='p';this.parts.push({kind:'beta',x:260+a.q.x,y:215+a.q.y,t:0});}}
@@ -248,7 +252,7 @@ S.decay={title:'Radioactive decay: unstable nuclei emit radiation',sel:'C14',
   // equations
   ctx.fillStyle='#f3f6fb';rr(20,402,760,90,14);ctx.fill();
   if(!this.eqs.length)txt('The nuclear equation will appear here',400,447,{s:15,c:MUTED,w:500});
-  this.eqs.forEach(function(e,i){var y=self.eqs.length===1?440:422+i*40;eqn(400,y,e,self.eqs.length===1?26:20);});}};
+  var shown=this.eqs.slice(-2);if(this.eqs.length>2)txt('decay '+(this.eqs.length-1)+' and '+this.eqs.length,60,412,{s:11,c:MUTED,w:500,a:'left'});shown.forEach(function(e,i){var y=shown.length===1?440:422+i*40;eqn(400,y,e,shown.length===1?26:20);});}};
 
 S.rare={title:'How rare are radioactive isotopes?',
  q:'Why are most radioactive isotopes so rare in nature?',
