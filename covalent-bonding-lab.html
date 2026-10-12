@@ -72,6 +72,55 @@ input[type=range]:disabled{opacity:.4}
 .stp b{min-width:26px;text-align:center;font-size:22px}
 #cv.click{cursor:pointer}
 sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
 </style>
 </head>
 <body>
@@ -94,6 +143,7 @@ sub{font-size:.65em}
       <div class="controls" id="controls"></div>
       <div class="cnt" id="cnt"></div>
       <div class="fb" id="fb"></div>
+      <div id="panel"></div>
     </section>
     <aside class="side">
       <div class="card"><div class="lbl" id="qlbl">Think</div><div class="q" id="q"></div></div>
@@ -275,170 +325,388 @@ var T2={name:'Single, double, triple',c:BLUE,steps:['H₂','F₂','O₂','N₂',
 };
 
 /* =========================================================
-   TAB 3  Sigma and pi bonds (orbital overlap)
+   shared: SVG Lewis structures for HTML panels
    ========================================================= */
-function lobe(x,y,ang,L,w,col,al){ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(L*.25,-w*1.3,L*1.05,-w*1.25,L,0);ctx.bezierCurveTo(L*1.05,w*1.25,L*.25,w*1.3,0,0);
-  ctx.globalAlpha=al;ctx.fillStyle=col;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();ctx.restore();}
-function capsule(cx,cy,hw,hh,col,al){rr(cx-hw,cy-hh,hw*2,hh*2,hh);ctx.globalAlpha=al;ctx.fillStyle=col;ctx.fill();ctx.globalAlpha=Math.min(1,al*2);ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1;}
-var T3={name:'Sigma & pi bonds',c:PLUM,steps:['s + s (H₂)','p + p end to end (F₂)','p + p side by side','Double bond (O₂)','Triple bond (N₂)'],t:0,tgt:null,
- title:function(s){return ['Sigma (σ) bond from two s orbitals','Sigma (σ) bond from two p orbitals meeting end to end','Pi (π) bond from two parallel p orbitals','A double bond = 1 σ + 1 π','A triple bond = 1 σ + 2 π'][s];},
- enter:function(s){var me=this;this.s=s;this.t=0;this.tgt=1;fb('');
-  $('controls').innerHTML='<label class="ctl">Bring the atoms together <input type="range" id="osl" min="0" max="100" step="1" value="0"><output id="oout"></output></label><button class="btn fill" id="opb">Play</button>';
-  $('osl').oninput=function(){me.tgt=null;me.t=this.value/100;};$('opb').onclick=function(){me.t=0;me.tgt=1;};
-  setQ(['Where do the two s orbitals overlap: between the nuclei, or above and below them?',
-   'The p orbitals point straight at each other. Where is the overlap?',
-   'These p orbitals are parallel. Where do they overlap? Can this bond form on its own?',
-   'O=O: one pair is shared end to end and one side by side. Which is σ and which is π?',
-   'N≡N has three shared pairs. How many σ and how many π bonds? Look at the end view.'][s]);
-  setRule(['<b>σ bond</b>: orbitals overlap <b>end to end</b>; the shared pair sits <b>between</b> the nuclei.',
-   '<b>π bond</b>: parallel p orbitals overlap <b>side by side</b>; the shared pair sits <b>above and below</b> the bond axis.',
+function esc(s){return String(s);}
+function svgMol(m,o){o=o||{};var u=o.u||80,sz=o.sz||34,pad=o.pad||sz*1.3,lw=o.lw||3.5,sp=o.sp||8;
+ var A=m.atoms.map(function(a){return {s:a.s,x:a.x*u,y:a.y*u,lp:a.lp||0};});
+ var xs=A.map(function(a){return a.x;}),ys=A.map(function(a){return a.y;});
+ var x0=Math.min.apply(null,xs)-pad,x1=Math.max.apply(null,xs)+pad,y0=Math.min.apply(null,ys)-pad,y1=Math.max.apply(null,ys)+pad;
+ var mm={atoms:A,bonds:m.bonds},h='';
+ m.bonds.forEach(function(b,bi){var P=A[b[0]],Q=A[b[1]],dx=Q.x-P.x,dy=Q.y-P.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,px=-uy,py=ux,n=b[2];
+  var ga=sz*.5*(P.s.length>1?1.3:1),gb=sz*.5*(Q.s.length>1?1.3:1);
+  for(var k=0;k<n;k++){var off=(k-(n-1)/2)*sp,isS=(n%2===1)?k===(n-1)/2:k===0,col=INK;
+   if(o.sig&&isS)col=TEAL;if(o.pi&&!isS)col=CORAL;
+   h+='<line x1="'+(P.x+ux*ga+px*off).toFixed(1)+'" y1="'+(P.y+uy*ga+py*off).toFixed(1)+'" x2="'+(Q.x-ux*gb+px*off).toFixed(1)+'" y2="'+(Q.y-uy*gb+py*off).toFixed(1)+'" stroke="'+col+'" stroke-width="'+(col===INK?lw:lw+1.5)+'" stroke-linecap="round"/>';}});
+ A.forEach(function(a,i){h+='<text x="'+a.x+'" y="'+(a.y+sz*.36)+'" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600" font-size="'+sz+'" fill="'+INK+'">'+a.s+'</text>';
+  if(!a.lp||o.nolp)return;var dirs=lpDirs(mm,i,a.lp),R=sz*.68+(a.s.length>1?sz*.2:0),sd=sz*.15,r=sz*.085;
+  dirs.forEach(function(ang){var cx=a.x+Math.cos(ang)*R,cy=a.y+Math.sin(ang)*R*.92,qx=-Math.sin(ang),qy=Math.cos(ang);if(Math.abs(Math.sin(ang))>.9)cy=a.y+Math.sin(ang)*sz*.76;
+   h+='<circle cx="'+(cx+qx*sd).toFixed(1)+'" cy="'+(cy+qy*sd).toFixed(1)+'" r="'+r+'" fill="'+INK+'"/><circle cx="'+(cx-qx*sd).toFixed(1)+'" cy="'+(cy-qy*sd).toFixed(1)+'" r="'+r+'" fill="'+INK+'"/>';});});
+ var W2=x1-x0,H2=y1-y0;return '<svg viewBox="'+x0+' '+y0+' '+W2+' '+H2+'" width="'+Math.round(W2*(o.scale||1))+'" height="'+Math.round(H2*(o.scale||1))+'">'+h+'</svg>';}
+function hidePanel(){$('panel').innerHTML='';}
+
+/* =========================================================
+   TAB 4  Sigma & pi bonds in 3D
+   ========================================================= */
+var ACOL={H:'#e7ebf2',C:'#4a5568',O:'#e04b4b',N:'#3b6fd6',F:'#4caf6a',Cl:'#4caf6a'};
+var LIGHT={};LIGHT[TEAL]='#9fe0e0';LIGHT[CORAL]='#fbd0db';LIGHT[PLUM]='#dcc4f0';
+function vsub(a,b){return [a[0]-b[0],a[1]-b[1],a[2]-b[2]];}function vadd(a,b){return [a[0]+b[0],a[1]+b[1],a[2]+b[2]];}
+function vmul(a,k){return [a[0]*k,a[1]*k,a[2]*k];}function vlen(a){return Math.hypot(a[0],a[1],a[2]);}function vnorm(a){var l=vlen(a)||1;return vmul(a,1/l);}
+var M3=[
+ {f:'H₂',kind:'single',atoms:[['H',-.5,0,0],['H',.5,0,0]],bonds:[[0,1,1]]},
+ {f:'F₂',kind:'single',atoms:[['F',-.75,0,0],['F',.75,0,0]],bonds:[[0,1,1]]},
+ {f:'O₂',kind:'double',atoms:[['O',-.68,0,0],['O',.68,0,0]],bonds:[[0,1,2,[0,1,0]]]},
+ {f:'C₂H₄ (ethene)',kind:'double',view:[-.35,1.0],atoms:[['C',-.68,0,0],['C',.68,0,0],['H',-1.3,.95,0],['H',-1.3,-.95,0],['H',1.3,.95,0],['H',1.3,-.95,0]],bonds:[[0,1,2,[0,0,1]],[0,2,1],[0,3,1],[1,4,1],[1,5,1]]},
+ {f:'N₂',kind:'triple',atoms:[['N',-.62,0,0],['N',.62,0,0]],bonds:[[0,1,3,[0,1,0],[0,0,1]]]},
+ {f:'C₂H₂ (ethyne)',kind:'triple',atoms:[['H',-1.78,0,0],['C',-.62,0,0],['C',.62,0,0],['H',1.78,0,0]],bonds:[[0,1,1],[1,2,3,[0,1,0],[0,0,1]],[2,3,1]]}];
+var T3={name:'Sigma & pi in 3D',c:PLUM,steps:['H₂ (single)','F₂ (single)','O₂ (double)','C₂H₄ (double)','N₂ (triple)','C₂H₂ (triple)'],
+ yaw:-.55,pitch:.42,spin:false,showS:true,showP:true,ph:1,drag:null,
+ title:function(s){return ['H–H: one σ bond','F–F: one σ bond','O=O: 1 σ + 1 π','Ethene, C₂H₄: every bond in the molecule','N≡N: 1 σ + 2 π','Ethyne, C₂H₂: every bond in the molecule'][s];},
+ enter:function(s){var me=this;this.s=s;this.m=M3[s];this.ph=0;this.yaw=this.m.view?this.m.view[0]:-.55;this.pitch=this.m.view?this.m.view[1]:.42;
+  var ex=0,ey=0;this.m.atoms.forEach(function(a){ex=Math.max(ex,Math.abs(a[1])+.5);ey=Math.max(ey,Math.abs(a[2])+.65);});this.S=Math.min(190,330/ex,200/ey);
+  $('controls').innerHTML='<button class="btn fill" id="b3build">▶ Bring the atoms together</button><button class="btn sel" id="b3s">σ bonds</button><button class="btn sel" id="b3p">π bonds</button><button class="btn" id="b3spin">Spin</button><button class="btn" id="b3view">Reset view</button>';
+  $('b3build').onclick=function(){me.ph=0;};
+  $('b3s').onclick=function(){me.showS=!me.showS;this.classList.toggle('sel',me.showS);};$('b3s').classList.toggle('sel',this.showS);
+  $('b3p').onclick=function(){me.showP=!me.showP;this.classList.toggle('sel',me.showP);};$('b3p').classList.toggle('sel',this.showP);
+  $('b3spin').onclick=function(){me.spin=!me.spin;this.classList.toggle('sel',me.spin);};$('b3spin').classList.toggle('sel',this.spin);
+  $('b3view').onclick=function(){me.yaw=me.m.view?me.m.view[0]:-.55;me.pitch=me.m.view?me.m.view[1]:.42;};
+  setQ(['Two s orbitals meet head on. Where is the shared pair: between the nuclei, or above and below?',
+   'Two p orbitals point straight at each other. What kind of bond is this first bond?',
+   'O=O has 2 shared pairs. The first is σ. Turn the molecule: where is the second (π) bond?',
+   'Find every bond in ethene. How many σ bonds? How many π bonds? Where is the π bond compared to the flat molecule?',
+   'N≡N has 3 shared pairs. Turn the molecule end-on: how are the two π bonds arranged around the σ bond?',
+   'Count every σ and π bond in ethyne. Do the C–H bonds have any π?'][s]);
+  setRule(['The <b>first bond</b> between two atoms is <b>always σ</b>: end-to-end overlap, right <b>between</b> the nuclei.',
+   'Every extra bond is a <b>π bond</b>: side-by-side overlap, <b>above and below</b> the σ bond. A second π sits <b>in front and behind</b>.',
    'Single = <b>1σ</b> · Double = <b>1σ + 1π</b> · Triple = <b>1σ + 2π</b>',
-   'Every covalent bond has exactly <b>one σ</b>; π bonds are the extra ones and never form alone.']);},
- frame:function(dt){var s=this.s;if(this.tgt!==null){this.t=Math.min(1,this.t+dt*.45);if(this.t>=1)this.tgt=null;$('osl').value=Math.round(this.t*100);}
-  $('oout').textContent=Math.round(this.t*100)+'%';clear();
-  var t=this.t,cx=330,cy=225,o=clamp((t-.55)/.45,0,1),sep=s===0?lerp(320,96,t):lerp(340,140,t),x1=cx-sep/2,x2=cx+sep/2;
-  seg(30,cy,630,cy,'#b7c1d3',1.5,[6,6]);txt('bond axis',40,cy-12,{s:12,c:MUTED,a:'left'});
-  var hasS=true,nPi=s===2||s===3?1:s===4?2:0;if(s===2)hasS=false;
-  if(s===0){[x1,x2].forEach(function(x){var g=ctx.createRadialGradient(x,cy,2,x,cy,62);g.addColorStop(0,'rgba(15,139,141,.35)');g.addColorStop(1,'rgba(15,139,141,.08)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,cy,62,0,Math.PI*2);ctx.fill();ctx.strokeStyle=TEAL;ctx.lineWidth=2;ctx.stroke();});
-   if(o>0){ctx.globalAlpha=o;ctx.fillStyle='rgba(15,139,141,.55)';ctx.beginPath();ctx.ellipse(cx,cy,24+20*o,48*o+4,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
-  if(s===1||s===3||s===4){var L=78,w=30;lobe(x1,cy,Math.PI,L,w,TEAL,.12);lobe(x2,cy,0,L,w,TEAL,.12);lobe(x1,cy,0,L,w,TEAL,.28);lobe(x2,cy,Math.PI,L,w,TEAL,.28);
-   if(o>0){capsule(cx,cy,sep/2-6,22+8*o,TEAL,.45*o);}}
-  if(s>=2){var Lp=78,wp=26;[x1,x2].forEach(function(x){lobe(x,cy,-Math.PI/2,Lp,wp,CORAL,.22);lobe(x,cy,Math.PI/2,Lp,wp,CORAL,.22);});
-   if(o>0){capsule(cx,cy-58,sep/2+24,22,CORAL,.5*o);capsule(cx,cy+58,sep/2+24,22,CORAL,.5*o);}}
-  if(s===4){[x1,x2].forEach(function(x){lobe(x,cy,2.4,52,20,PLUM,.18*(1-o*.6));lobe(x,cy,-0.74,52,20,PLUM,.18*(1-o*.6));});}
-  ball(x1,cy,8,INK);ball(x2,cy,8,INK);
-  var sym=['H','F','C','O','N'][s];txt(sym,x1,cy+(s>=2?118:88),{s:20});txt(sym,x2,cy+(s>=2?118:88),{s:20});
-  if(o>.6){ctx.globalAlpha=(o-.6)/.4;
-   if(hasS)pill('σ  between the nuclei',cx,s>=2?cy+150:cy+120,TEAL,'#fff',15);
-   if(nPi)pill('π  above and below',cx,cy-112,CORAL,'#fff',15);
-   if(s===4)pill('2nd π  in front of and behind the page',cx,40,PLUM,'#fff',15);
-   ctx.globalAlpha=1;}
-  if(s===2&&o>.6)txt('(a π bond only forms together with a σ bond)',cx,cy+178,{s:14,c:MUTED,w:500});
-  /* end view inset */
-  var ix=715,iy=225;panel(648,80,134,250);txt('End view',ix,100,{s:15,c:PLUM});txt('looking along',ix,118,{s:12,c:MUTED,w:400});txt('the bond axis',ix,132,{s:12,c:MUTED,w:400});
-  var sh=o>.6?1:.35;ctx.globalAlpha=sh;
-  if(nPi>=1){lobe(ix,iy,-Math.PI/2,52,18,CORAL,.35);lobe(ix,iy,Math.PI/2,52,18,CORAL,.35);}
-  if(nPi>=2){lobe(ix,iy,Math.PI,52,18,PLUM,.35);lobe(ix,iy,0,52,18,PLUM,.35);}
-  if(hasS){ctx.fillStyle='rgba(15,139,141,.6)';ctx.beginPath();ctx.arc(ix,iy,15,0,Math.PI*2);ctx.fill();}
-  ctx.globalAlpha=1;ball(ix,iy,5,INK);
-  txt((hasS?'1σ':'0σ')+(nPi?' + '+nPi+'π':''),ix,iy+95,{s:20,c:INK});
-  var made=o>.6,names=['single','single','(π part only)','double','triple'],lbl=['end to end, between nuclei','end to end, between nuclei','side by side, above & below','σ between + π above & below','σ between + 2π around the axis'];
-  setReads([['σ bonds',made?(hasS?1:0):'—'],['π bonds',made?nPi:'—'],['Overlap',made?lbl[s]:'atoms still apart',1],['Bond',made?names[s]:'—',1]]);}
+   'A π bond never forms alone: it always comes <b>with</b> a σ bond.']);},
+ rot:function(p){var cy=Math.cos(this.yaw),sy=Math.sin(this.yaw),x=p[0]*cy+p[2]*sy,z=-p[0]*sy+p[2]*cy,cp=Math.cos(this.pitch),sp=Math.sin(this.pitch);return [x,p[1]*cp-z*sp,p[1]*sp+z*cp];},
+ proj:function(p){var r=this.rot(p),f=1/(1-r[2]*.09);return {x:400+r[0]*this.S*f,y:232-r[1]*this.S*f,z:r[2],f:f};},
+ spheroid:function(c,ax,L,R,col,al){var P=this.proj(c),a=this.rot(ax),S=this.S*P.f,px=a[0]*L*S,py=-a[1]*L*S,pl=Math.hypot(px,py),Rs=R*S,Ls=L*S,sn=Math.min(1,pl/Ls),maj=Math.max(Rs,Math.sqrt(pl*pl+Rs*Rs*(1-sn*sn))),ang=Math.atan2(py,px);
+  return {z:P.z,draw:function(){if(al<=0.01)return;ctx.save();ctx.globalAlpha=al;var g=ctx.createRadialGradient(P.x-Rs*.25,P.y-Rs*.35,Rs*.1,P.x,P.y,maj);g.addColorStop(0,LIGHT[col]||'#fff');g.addColorStop(1,col);ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(P.x,P.y,maj,Rs,ang,0,Math.PI*2);ctx.fill();ctx.globalAlpha=Math.min(1,al+.25);ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.stroke();ctx.restore();}};},
+ pdown:function(x,y){this.drag={x:x,y:y};},pmove:function(x,y){if(!this.drag)return;this.yaw+=(x-this.drag.x)*.012;this.pitch=clamp(this.pitch+(y-this.drag.y)*.012,-1.5,1.5);this.drag={x:x,y:y};},pup:function(){this.drag=null;},
+ frame:function(dt){var me=this,m=this.m;if(this.spin&&!this.drag)this.yaw+=dt*.6;if(this.ph<1)this.ph=Math.min(1,this.ph+dt*.45);
+  clear();var e=this.ph<.5?2*this.ph*this.ph:1-Math.pow(-2*this.ph+2,2)/2,sc=lerp(1.75,1,e),apart=clamp((.8-this.ph)/.25,0,1),bond=clamp((this.ph-.7)/.3,0,1);
+  var P=m.atoms.map(function(a){return [a[1]*sc,a[2]*sc,a[3]*sc];}),prims=[],labels=[],sH={};
+  m.bonds.forEach(function(b){var A=P[b[0]],B=P[b[1]],u=vnorm(vsub(B,A)),d=vlen(vsub(B,A)),mid=vmul(vadd(A,B),.5),ns=[b[3],b[4]].filter(Boolean);
+   /* atomic orbitals before bonding */
+   if(apart>0){[[b[0],A,u],[b[1],B,vmul(u,-1)]].forEach(function(z){var sym=m.atoms[z[0]][0];
+     if(sym==='H'){if(!sH[z[0]]){sH[z[0]]=1;if(me.showS)prims.push(me.spheroid(z[1],z[2],.36,.36,TEAL,.35*apart));}}
+     else if(me.showS)prims.push(me.spheroid(vadd(z[1],vmul(z[2],.36)),z[2],.36,.19,TEAL,.4*apart));
+     if(me.showP)ns.forEach(function(n,k){var col=k?PLUM:CORAL;prims.push(me.spheroid(vadd(z[1],vmul(n,.34)),n,.34,.16,col,.4*apart));prims.push(me.spheroid(vsub(z[1],vmul(n,.34)),n,.34,.16,col,.4*apart));});});}
+   /* bonds */
+   if(bond>0){var hh=m.atoms[b[0]][0]==='H'&&m.atoms[b[1]][0]==='H';
+    if(me.showS){prims.push(me.spheroid(mid,u,d/2*.95,hh?.3:.22,TEAL,.55*bond));labels.push(['σ',mid,[0,-1,0],TEAL,0]);}
+    if(me.showP)ns.forEach(function(n,k){var col=k?PLUM:CORAL;[1,-1].forEach(function(sg){var c=vadd(mid,vmul(n,.46*sg));prims.push(me.spheroid(c,u,d/2+.2,.17,col,.5*bond));});labels.push(['π',vadd(mid,vmul(n,.72)),n,col,1]);});}});
+  P.forEach(function(p,i){var sym=m.atoms[i][0],pr=me.proj(p),r=(sym==='H'?.15:.2)*me.S*pr.f;prims.push({z:pr.z+.001,draw:function(){ball(pr.x,pr.y,r,ACOL[sym]);txt(sym,pr.x,pr.y+1,{s:Math.max(12,r*1.1),c:sym==='H'?INK:'#fff'});}});});
+  prims.sort(function(a,b){return a.z-b.z;});prims.forEach(function(p){p.draw();});
+  if(bond>.6){ctx.globalAlpha=(bond-.6)/.4;labels.forEach(function(l){var pr=me.proj(l[1]);if(l[4]===0){pr.y+=0;}pill(l[0],pr.x+(l[4]?0:0),pr.y+(l[4]?0:-0),l[3],'#fff',14);});ctx.globalAlpha=1;}
+  txt('Drag to turn the molecule in 3D',20,22,{s:14,c:MUTED,w:500,a:'left'});
+  if(this.ph<1&&apart>0)txt('Atomic orbitals before bonding',400,470,{s:15,c:MUTED,w:500});
+  var nS=m.bonds.length,nP=0;m.bonds.forEach(function(b){nP+=b[2]-1;});
+  txt(m.f+':  '+nS+' σ'+(nP?' + '+nP+' π':''),780,22,{s:18,c:INK,a:'right'});
+  ctx.fillStyle=TEAL;ctx.beginPath();ctx.arc(30,480,7,0,7);ctx.fill();para('σ (end to end)',44,480,{s:14,c:MUTED});
+  ctx.fillStyle=CORAL;ctx.beginPath();ctx.arc(170,480,7,0,7);ctx.fill();para('π (side by side)',184,480,{s:14,c:MUTED});
+  if(nP>1){ctx.fillStyle=PLUM;ctx.beginPath();ctx.arc(320,480,7,0,7);ctx.fill();para('2nd π',334,480,{s:14,c:MUTED});}
+  var desc={};m.bonds.forEach(function(b){var k=m.atoms[b[0]][0]+['','–','=','≡'][b[2]]+m.atoms[b[1]][0];desc[k]=(desc[k]||0)+1;});
+  var parts=Object.keys(desc).map(function(k){var o=k.indexOf('≡')>0?3:k.indexOf('=')>0?2:1;return (desc[k]>1?desc[k]+' × ':'')+k+': '+(o===1?'1σ':'1σ + '+(o-1)+'π')+' each';});
+  setReads([['σ bonds',nS],['π bonds',nP],['Bonds',parts.join('<br>'),1]]);}
 };
 
 /* =========================================================
-   TAB 4  Worked example: HCN step by step
+   TAB 5  σ and π: summary + practice (show me / my turn)
    ========================================================= */
-var T4={name:'Example problem',c:AMBER,steps:['Count electrons','Bonds needed','Skeleton','Multiple bonds','Lone pairs','σ and π'],
- title:function(s){return 'Example: Draw the Lewis structure of HCN, then count σ and π bonds';},
- Q:['<b>Step 1. Count the valence electrons.</b><br>H (group 1) has 1, C (group 14) has 4, N (group 15) has 5.<br>Total = 1 + 4 + 5 = <b>10 electrons = 5 pairs</b>.',
-    '<b>Step 2. How many bonds does each atom need?</b><br>Bonds = 8 − valence electrons (H needs only 2 electrons).<br>H: 1 bond · C: 8 − 4 = <b>4</b> · N: 8 − 5 = <b>3</b>.<br>C needs the most bonds, so C is the <b>central atom</b>.',
-    '<b>Step 3. Connect the atoms with single bonds.</b><br>H–C–N uses 2 pairs. 3 pairs are left.<br>H is done, but C has only 2 bonds and N has only 1.',
-    '<b>Step 4. Use multiple bonds.</b><br>C needs 2 more bonds and N needs 2 more, so they share 2 more pairs: <b>C≡N triple bond</b>.<br>Now H = 1, C = 4, N = 3 bonds. 4 pairs used, 1 left.',
-    '<b>Step 5. Place the leftover pairs as lone pairs.</b><br>The last pair goes on N. Check: H has 2 e⁻, C has 8, N has 8, and all 10 electrons are used.',
-    '<b>Step 6. Count σ and π bonds.</b><br>Every bond has 1 σ. The extra lines are π.<br>H–C: 1σ · C≡N: 1σ + 2π<br>Answer: <b>2 σ bonds and 2 π bonds</b>.'],
- enter:function(s){var me=this;this.s=s;fb('');
-  $('controls').innerHTML='<button class="btn" id="bkb">◀ Back</button><button class="btn fill" id="nxb">Next step ▶</button><button class="btn" id="tryb" style="display:none">Try the practice problems ▶</button>';
-  $('bkb').disabled=s===0;$('nxb').style.display=s===5?'none':'';$('tryb').style.display=s===5?'':'none';
-  $('bkb').onclick=function(){go(3,Math.max(0,s-1));};$('nxb').onclick=function(){go(3,Math.min(5,s+1));};$('tryb').onclick=function(){go(4,0);};
-  setQ(this.Q[s],'Step '+(s+1)+' of 6');
-  setRule(['1. Count all valence electrons.','2. Bonds each atom needs = 8 − valence electrons (H: 1).','3. Put the atom that needs the most bonds in the centre; join with single bonds.','4. Turn bonds into double or triple bonds until every atom has its bonds.','5. Add the leftover electrons as lone pairs; check every octet.','6. Every bond = 1σ; each extra line = 1π.']);},
- frame:function(){clear();var s=this.s,y=180;
-  var used=[0,0,2,4,5,5][s];
-  if(s<2){var X=[210,400,590],S=['H','C','N'],V=[1,4,5];
-   S.forEach(function(sym,i){atomDots(sym,X[i],y,V[i],56,AMBER);});
-   if(s===0){S.forEach(function(sym,i){pill(V[i]+' valence e⁻',X[i],y+80,AMBER,'#fff',15);});txt('+',305,y,{s:30,c:MUTED});txt('+',495,y,{s:30,c:MUTED});}
-   else{var nb=['needs 1 bond','needs 4 bonds','needs 3 bonds'];S.forEach(function(sym,i){pill(nb[i],X[i],y+80,i===1?TEAL:BLUE,'#fff',15);});ring(400,y,62,true);txt('central atom',400,y-86,{s:15,c:TEAL});}}
-  else{var m={atoms:[{s:'H',x:250,y:y,lp:0},{s:'C',x:400,y:y,lp:0},{s:'N',x:550,y:y,lp:s>=4?1:0}],bonds:[[0,1,1],[1,2,s>=3?3:1]]};
-   drawMol(m,{sz:56,sp:11,lw:5,sigpi:s===5,lpCol:s===4?AMBER:INK});
-   if(s===2||s===3){var have=[1,s===3?4:2,s===3?3:1],nd=[1,4,3];m.atoms.forEach(function(a,i){var ok=have[i]===nd[i];pill(have[i]+' bond'+(have[i]>1?'s':'')+(ok?' ✓':' (needs '+nd[i]+')'),a.x,y+80,ok?GREEN:RED,'#fff',14);});}
-   if(s===4){ring(250,y,44,true,'2 e⁻ ✓');ring(400,y,58,true,'8 e⁻ ✓');ring(550,y,58,true,'8 e⁻ ✓');}
-   if(s===5){pill('1σ',325,y-52,TEAL,'#fff',16);pill('1σ + 2π',475,y-70,CORAL,'#fff',16);}}
-  /* work box */
-  panel(40,318,720,160);txt('Electron pairs used',70,346,{s:16,a:'left',c:MUTED});
-  for(var i=0;i<5;i++){var px=260+i*62;rr(px,332,50,28,14);ctx.fillStyle=i<used?AMBER:'#e6ebf3';ctx.fill();if(i<used){dot(px+17,346,'#fff',4.5);dot(px+33,346,'#fff',4.5);}}
-  txt(used+' of 5',590,346,{s:18,a:'left',c:used===5?GREEN:INK});
-  var L=[['Total valence electrons: 1 + 4 + 5 = 10 = 5 pairs'],['H: 2 − 1 = 1 bond   C: 8 − 4 = 4 bonds   N: 8 − 5 = 3 bonds','C needs the most bonds → H  C  N'],['H–C–N: 2 single bonds = 2 pairs used','C has 2 bonds (needs 4), N has 1 bond (needs 3)'],['Share 2 more pairs between C and N → C≡N','H: 1 ✓   C: 4 ✓   N: 3 ✓'],['Last pair → lone pair on N','H: 2 e⁻   C: 8 e⁻   N: 8 e⁻   ·   10 electrons used ✓'],['H–C = 1σ        C≡N = 1σ + 2π','Total: 2 σ bonds + 2 π bonds']][s];
-  L.forEach(function(l,i){para(l,70,392+i*34,{s:19,w:i===L.length-1&&s===5?600:400,c:i===L.length-1&&s===5?PLUM:INK});});
-  setReads([['Valence electrons','10'],['Pairs used',used+' / 5'],['Structure',s<2?'—':s<3?'H–C–N':'H–C≡N',1],['σ · π',s===5?'2 σ · 2 π':'?',1]]);}
+function M2(at,bonds){return {atoms:at.map(function(a){return {s:a[0],x:a[1],y:a[2],lp:a[3]||0};}),bonds:bonds};}
+var SP=[
+ {f:'CO₂',src:'Example 2 in our slides',m:M2([['O',0,0,2],['C',1,0],['O',2,0,2]],[[0,1,2],[1,2,2]])},
+ {f:'N₂',src:'Check Your Understanding',m:M2([['N',0,0,1],['N',1,0,1]],[[0,1,3]])},
+ {f:'C₂H₄',src:'Check Your Understanding',m:M2([['C',0,0],['C',1,0],['H',-.65,-.7],['H',-.65,.7],['H',1.65,-.7],['H',1.65,.7]],[[0,1,2],[0,2,1],[0,3,1],[1,4,1],[1,5,1]])},
+ {f:'HCN',src:'Check Your Understanding',m:M2([['H',0,0],['C',1,0],['N',2,0,1]],[[0,1,1],[1,2,3]])},
+ {f:'C₂H₂',src:'Check Your Understanding',m:M2([['H',0,0],['C',1,0],['C',2,0],['H',3,0]],[[0,1,1],[1,2,3],[2,3,1]])},
+ {f:'O₂',src:'Exit ticket',m:M2([['O',0,0,2],['O',1,0,2]],[[0,1,2]])},
+ {f:'H₂CO',src:'Formaldehyde',m:M2([['C',0,0],['O',0,-1,2],['H',-.85,.6],['H',.85,.6]],[[0,1,2],[0,2,1],[0,3,1]])},
+ {f:'CH₄',src:'Methane',m:M2([['C',0,0],['H',-1,0],['H',1,0],['H',0,-1],['H',0,1]],[[0,1,1],[0,2,1],[0,3,1],[0,4,1]])}];
+SP.forEach(function(p){var s=p.m.bonds.length,pi=0,lines=0;p.m.bonds.forEach(function(b){pi+=b[2]-1;lines+=b[2];});p.sg=s;p.pi=pi;p.lines=lines;p.solved=false;});
+function bname(m,b){return m.atoms[b[0]].s+['','–','=','≡'][b[2]]+m.atoms[b[1]].s;}
+function sumSvg(n){var h='<svg viewBox="0 0 300 160">';
+ h+='<g font-family="Fredoka, sans-serif" font-weight="600" font-size="26" fill="'+INK+'"><text x="80" y="36" text-anchor="middle">A</text><text x="220" y="36" text-anchor="middle">B</text></g>';
+ for(var k=0;k<n;k++){var off=(k-(n-1)/2)*8,isS=(n%2===1)?k===(n-1)/2:k===0;h+='<line x1="100" y1="'+(27+off)+'" x2="200" y2="'+(27+off)+'" stroke="'+(isS?TEAL:CORAL)+'" stroke-width="5" stroke-linecap="round"/>';}
+ var cy=108,cx=95;h+='<line x1="10" y1="'+cy+'" x2="180" y2="'+cy+'" stroke="#c9d4e6" stroke-dasharray="5 5"/>';
+ if(n>=2){h+='<ellipse cx="'+cx+'" cy="'+(cy-24)+'" rx="68" ry="11" fill="'+CORAL+'" fill-opacity=".45" stroke="'+CORAL+'" stroke-width="2"/><ellipse cx="'+cx+'" cy="'+(cy+24)+'" rx="68" ry="11" fill="'+CORAL+'" fill-opacity=".45" stroke="'+CORAL+'" stroke-width="2"/>';}
+ h+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="44" ry="13" fill="'+TEAL+'" fill-opacity=".6" stroke="'+TEAL+'" stroke-width="2"/>';
+ h+='<circle cx="'+(cx-46)+'" cy="'+cy+'" r="8" fill="'+INK+'"/><circle cx="'+(cx+46)+'" cy="'+cy+'" r="8" fill="'+INK+'"/>';
+ h+='<text x="'+cx+'" y="155" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" fill="'+MUTED+'">side view</text>';
+ var ex=245;h+='<circle cx="'+ex+'" cy="'+cy+'" r="44" fill="#f6f8fc" stroke="#c9d4e6"/>';
+ if(n>=3){h+='<ellipse cx="'+(ex-24)+'" cy="'+cy+'" rx="15" ry="10" fill="'+PLUM+'" fill-opacity=".5" stroke="'+PLUM+'" stroke-width="2"/><ellipse cx="'+(ex+24)+'" cy="'+cy+'" rx="15" ry="10" fill="'+PLUM+'" fill-opacity=".5" stroke="'+PLUM+'" stroke-width="2"/>';}
+ if(n>=2){h+='<ellipse cx="'+ex+'" cy="'+(cy-24)+'" rx="10" ry="15" fill="'+CORAL+'" fill-opacity=".5" stroke="'+CORAL+'" stroke-width="2"/><ellipse cx="'+ex+'" cy="'+(cy+24)+'" rx="10" ry="15" fill="'+CORAL+'" fill-opacity=".5" stroke="'+CORAL+'" stroke-width="2"/>';}
+ h+='<circle cx="'+ex+'" cy="'+cy+'" r="11" fill="'+TEAL+'" fill-opacity=".7" stroke="'+TEAL+'" stroke-width="2"/><circle cx="'+ex+'" cy="'+cy+'" r="4" fill="'+INK+'"/>';
+ h+='<text x="'+ex+'" y="155" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="13" fill="'+MUTED+'">end view</text></svg>';return h;}
+var TS={name:'σ & π practice',c:CORAL,steps:['Summary'].concat(SP.map(function(p){return p.f;})),mode:'show',st:0,
+ mark:function(i){return i>0&&SP[i-1].solved?'✓':i===0?'★':i;},
+ title:function(s){return s===0?'Summary: σ and π bonds':'How many σ and π bonds are in '+SP[s-1].f+'?';},
+ enter:function(s){var me=this;this.s=s;this.st=0;$('cv').style.display='none';$('controls').innerHTML='';
+  setRule(['Every bond (single, double or triple) has exactly <b>one σ</b>.','<b>σ bonds</b> = number of bonds between atoms.','<b>π bonds</b> = the extra lines: double → 1π, triple → 2π.','Check: σ + π = total number of lines.']);
+  setQ(s===0?'Why can a single bond never be a π bond?':'Count the bonds first, then the extra lines.');this.render();},
+ render:function(){var me=this,s=this.s;
+  if(s===0){$('panel').innerHTML='<div class="sumgrid">'+[['Single bond','A–B',1,'1 σ'],['Double bond','A=B',2,'1 σ + 1 π'],['Triple bond','A≡B',3,'1 σ + 2 π']].map(function(c){
+    return '<div class="sumc"><h3>'+c[0]+'</h3>'+sumSvg(c[2])+'<div class="res"><span class="sg">'+(c[3].indexOf('π')>0?c[3].split('+')[0]:c[3])+'</span>'+(c[3].indexOf('π')>0?' + <span class="pp">'+c[3].split('+')[1]+'</span>':'')+'</div><div class="small">'+['σ: the shared pair sits between the nuclei','σ between + π above and below','σ between + π above/below + 2nd π (purple) in front/behind'][c[2]-1]+'</div></div>';}).join('')+
+    '</div><div class="bigrule"><b>Our rule:</b> count the bonds → that many <span class="sg">σ</span>. Count the extra lines → that many <span class="pp">π</span>.</div><div class="stepbar"><button class="btn fill" id="spgo">Start the practice ▶</button></div>';
+   $('spgo').onclick=function(){go(tabI,1);};setReads([['Single','1σ'],['Double','1σ + 1π'],['Triple','1σ + 2π',1]]);return;}
+  var p=SP[s-1],tryM=this.mode==='try',st=this.st,done=tryM&&p.solved;
+  var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small">'+(tryM?'Type your answers, then check.':'Step by step. Press Next step.')+'</span><span class="small" style="margin-left:auto">'+p.src+'</span></div>';
+  h+='<div class="task">Find the number of <b>σ</b> and <b>π</b> bonds in <b>'+p.f+'</b>.</div>';
+  var colS=(!tryM&&st>=2)||done,colP=(!tryM&&st>=3)||done;
+  h+='<div class="molbox">'+svgMol(p.m,{u:85,sz:36,sig:colS,pi:colP})+'</div>';
+  var bl=p.m.bonds.map(function(b){return bname(p.m,b);}),cnt={};bl.forEach(function(b){cnt[b]=(cnt[b]||0)+1;});var blist=Object.keys(cnt).map(function(k){return (cnt[k]>1?cnt[k]+' × ':'')+'<b>'+k+'</b>';}).join(', ');
+  var mult=p.m.bonds.filter(function(b){return b[2]>1;}).map(function(b){return '<b>'+bname(p.m,b)+'</b> ('+(b[2]===2?'double → 1π':'triple → 2π')+')';});
+  if(!tryM){var cards=[['Look at the Lewis structure','<div class="ln">The bonds are: '+blist+'.</div><div class="ln why">A double or triple bond still counts as <b>one bond</b> between two atoms.</div>'],
+    ['Every bond has exactly one σ','<div class="ln mth"><span class="sg">'+p.sg+' bond'+(p.sg>1?'s':'')+' → '+p.sg+' σ</span></div><div class="ln why">The σ line is coloured teal: one for each pair of bonded atoms.</div>'],
+    ['The extra lines are π','<div class="ln mth"><span class="pp">'+(mult.length?p.pi+' π':'0 π')+'</span></div><div class="ln">'+(mult.length?mult.join(' + '):'All bonds are single, so there are no extra lines and <b>no π bonds</b>.')+'</div>'],
+    ['Answer and check','<div class="ln mth"><span class="sg">'+p.sg+' σ</span> + <span class="pp">'+p.pi+' π</span></div><div class="ln">Check: total lines = <b>'+p.lines+'</b> = '+p.sg+' + '+p.pi+' ✓</div>']];
+   h+='<div class="steps3">'+cards.map(function(c,i){return '<div class="st'+(st>=i+1?' on':'')+(st===i+1?' cur':'')+'"><div class="sh"><span class="n">'+(i+1)+'</span>'+c[0]+'</div>'+c[1]+'</div>';}).join('')+'</div>';
+   h+='<div class="stepbar"><button class="btn" id="nBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<4?'<button class="btn fill" id="nNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="nTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+[1,2,3,4].map(function(i){return '<i class="'+(i<=st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+  else{h+='<div class="ansrow"><label>σ bonds <input id="aS" inputmode="numeric" autocomplete="off"'+(done?' value="'+p.sg+'" class="ok" disabled':'')+'></label><label>π bonds <input id="aP" inputmode="numeric" autocomplete="off"'+(done?' value="'+p.pi+'" class="ok" disabled':'')+'></label></div>';
+   h+='<div class="stepbar">'+(done?'':'<button class="btn fill" id="nCheck">Check my answer</button><button class="btn" id="nHint">Hint</button><button class="btn" id="nClear">Clear</button>')+'<button class="btn fill" id="nNextP"'+(done?'':' style="display:none"')+'>Next problem ▶</button></div>';
+   h+='<div class="hintbox" id="nHint2">Count the bonds between pairs of atoms (a double or triple bond counts once): that is the number of <b>σ</b>. Then count the extra lines: double = 1π, triple = 2π.</div><div class="feedback" id="nFb">'+(done?'<span class="good">Correct! '+p.sg+' σ + '+p.pi+' π. σ lines in teal, π lines in coral.</span>':'')+'</div>';}
+  $('panel').innerHTML=h;
+  $('mShow').onclick=function(){me.mode='show';me.st=0;me.render();};$('mTry').onclick=function(){me.mode='try';me.render();};
+  if(!tryM){$('nBack').onclick=function(){me.st--;me.render();};var nx=$('nNext');if(nx)nx.onclick=function(){me.st++;me.render();};var nt=$('nTry');if(nt)nt.onclick=function(){me.mode='try';me.render();};}
+  else{$('nNextP').onclick=function(){go(tabI,s%SP.length+1);};if(!done){$('nCheck').onclick=function(){me.check();};$('nHint').onclick=function(){$('nHint2').classList.toggle('on');};$('nClear').onclick=function(){me.render();};
+   ['aS','aP'].forEach(function(id){$(id).addEventListener('keydown',function(e){if(e.key==='Enter')me.check();});});}}
+  setReads([['Molecule',p.f],['Bonds between atoms',(!tryM&&st>=1)||done?p.sg:'?'],['Total lines',(!tryM&&st>=1)||done?p.lines:'?'],['Problems solved',SP.filter(function(x){return x.solved;}).length+' / '+SP.length]]);},
+ check:function(){var p=SP[this.s-1],a=$('aS').value.trim(),b=$('aP').value.trim(),x=parseInt(a,10),y=parseInt(b,10),msgs=[];
+  var okS=x===p.sg,okP=y===p.pi;$('aS').className=a===''?'':okS?'ok':'no';$('aP').className=b===''?'':okP?'ok':'no';
+  if(a===''||b==='')msgs.push('Fill in both boxes.');
+  if(a!==''&&!okS){if(x===p.lines)msgs.push('You counted <b>every line</b> as σ. Each bond has only <b>one</b> σ; the extra lines are π.');
+   else if(x===p.m.bonds.filter(function(q){return q[2]===1;}).length&&x<p.sg)msgs.push('Double and triple bonds <b>also</b> have one σ each. Count every bond between two atoms.');
+   else msgs.push('σ: count the bonds between pairs of atoms (a double or triple bond counts once).');}
+  if(b!==''&&!okP){if(p.pi===0)msgs.push('All the bonds here are single, so there are <b>no</b> extra lines and no π bonds.');
+   else if(y>p.pi)msgs.push('The first line of every bond is σ, not π. Double = <b>1π</b>, triple = <b>2π</b>.');
+   else msgs.push('π: count the extra lines only. Double = 1π, triple = 2π.');}
+  if(okS&&okP){p.solved=true;renderSteps();this.render();return;}
+  $('nFb').innerHTML='<span class="bad">Not yet.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';},
+ frame:function(){}
+};
+/* =========================================================
+   TAB 3  Lewis structures (show me / my turn with dragging)
+   ========================================================= */
+var GRP={H:1,C:14,N:15,O:16,F:17,Cl:17};
+var LS=[
+ {f:'HF',g:'single',src:'Example 1 in our slides',at:['H','F'],di:true},
+ {f:'H₂O',g:'single',src:'Single bonds',at:['O','H','H'],sl:['L','R']},
+ {f:'NH₃',g:'single',src:'Single bonds',at:['N','H','H','H'],sl:['L','R','B']},
+ {f:'CH₄',g:'single',src:'Single bonds',at:['C','H','H','H','H'],sl:['L','R','T','B']},
+ {f:'CCl₄',g:'single',src:'Check Your Understanding',at:['C','Cl','Cl','Cl','Cl'],sl:['L','R','T','B']},
+ {f:'O₂',g:'double',src:'Double bonds',at:['O','O'],di:true},
+ {f:'CO₂',g:'double',src:'Example 2 in our slides',at:['C','O','O'],sl:['L','R']},
+ {f:'H₂CO',g:'double',src:'Double bonds (formaldehyde)',at:['C','O','H','H'],sl:['T','L','R']},
+ {f:'N₂',g:'triple',src:'Triple bonds',at:['N','N'],di:true},
+ {f:'HCN',g:'triple',src:'Triple bonds',at:['C','H','N'],sl:['L','R']}];
+LS.forEach(function(p){p.solved=false;p.val=0;p.at.forEach(function(s){p.val+=VAL[s];});
+ /* answer: central atom index 0 bonds outer atoms with USUAL[outer]; diatomic: USUAL */
+ p.ord=p.di?[USUAL[p.at[0]]]:p.at.slice(1).map(function(s){return USUAL[s];});
+ p.lp=p.at.map(function(s,i){if(s==='H')return 0;var b=p.di?p.ord[0]:(i===0?p.ord.reduce(function(a,c){return a+c;},0):p.ord[i-1]);return (VAL[s]-b)/2;});});
+var SLOT={C:[400,210],L:[262,210],R:[538,210],T:[400,88],B:[400,332],DL:[328,210],DR:[472,210]};
+var TL={name:'Lewis structures',c:AMBER,steps:LS.map(function(p){return p.f;}),mode:'show',st:0,
+ mark:function(i){return LS[i].solved?'✓':i+1;},
+ title:function(s){return 'Draw the Lewis structure of '+LS[s].f+(LS[s].g==='single'?'':LS[s].g==='double'?' (has a double bond)':' (has a triple bond)');},
+ enter:function(s){this.s=s;this.p=LS[s];this.st=0;this.won=false;this.reset();this.render();},
+ reset:function(){var p=this.p,me=this,n=p.at.length,order=[];for(var i=1;i<n;i++)order.push(i);order.splice(Math.min(1,order.length),0,0);
+  this.A=p.at.map(function(s,i){var k=order.indexOf(i),tx=400+(k-(n-1)/2)*96;return {s:s,i:i,x:tx,y:448,hx:tx,hy:448,slot:null,lp:0};});
+  this.ords={};this.drag=null;this.msg='';
+  /* show-mode targets */
+  this.T=p.at.map(function(s,i){if(p.di)return SLOT[i?'DR':'DL'];return i===0?SLOT.C:SLOT[p.sl[i-1]];});
+  this.S0=p.at.map(function(s,i){var k=order.indexOf(i);return [400+(k-(n-1)/2)*150,200];});
+  this.pos=this.S0.map(function(q){return [q[0],q[1]];});},
+ cards:function(){var p=this.p,c=[],nm=p.at,uniq=[];nm.forEach(function(s){if(uniq.indexOf(s)<0)uniq.push(s);});
+  var terms=uniq.map(function(s){var k=nm.filter(function(x){return x===s;}).length;return {s:s,k:k,v:k*VAL[s]};});
+  c.push(['Count the valence electrons','<div class="ln">'+terms.map(function(t){return '<b>'+(t.k>1?t.k+' ':'')+t.s+'</b> (group '+GRP[t.s]+'): '+(t.k>1?t.k+' × '+VAL[t.s]+' = ':'')+t.v;}).join('<br>')+'</div><div class="ln mth">Total = '+terms.map(function(t){return t.v;}).join(' + ')+' = '+p.val+' electrons = '+p.val/2+' pairs</div><div class="ln why">Bonds each atom needs = 8 − valence electrons (H needs only 1): '+uniq.map(function(s){return '<b>'+s+'</b> '+USUAL[s];}).join(' · ')+'</div>']);
+  if(p.di)c.push(['Place the atoms','<div class="ln">There are only two atoms, so place them <b>side by side</b>.</div>']);
+  else c.push(['Place the atoms: choose the central atom','<div class="ln"><b>'+nm[0]+'</b> needs the most bonds ('+USUAL[nm[0]]+'), so <b>'+nm[0]+' is the central atom</b>. The other atoms go around it.</div><div class="ln why">H can only form 1 bond, so H is never the central atom.</div>']);
+  var nb=p.di?1:nm.length-1;
+  c.push(['Join the atoms with single bonds','<div class="ln">Each line = 1 shared pair. <b>'+nb+' bond'+(nb>1?'s':'')+'</b> = '+nb+' pair'+(nb>1?'s':'')+' used, '+(p.val/2-nb)+' left.</div><div class="ln why">'+this.bondStatus(true)+'</div>']);
+  var multi=p.di?(p.ord[0]>1?['Each '+nm[0]+' needs '+USUAL[nm[0]]+' bonds, so the two atoms share '+p.ord[0]+' pairs: <b>'+nm[0]+['','–','=','≡'][p.ord[0]]+nm[1]+'</b>, a '+(p.ord[0]===2?'double':'triple')+' bond.']:[]):
+   (function(){var seenM={},out=[];p.ord.forEach(function(o,k){if(o<2)return;var s=nm[k+1],cnt=p.ord.filter(function(x,j){return x===o&&nm[j+1]===s;}).length;if(seenM[s])return;seenM[s]=1;out.push((cnt>1?'each ':'')+'<b>'+s+'</b> needs '+USUAL[s]+' bonds → '+(cnt>1?cnt+' ':'')+'<b>'+nm[0]+['','–','=','≡'][o]+s+'</b> '+(o===2?'double':'triple')+' bond'+(cnt>1?'s':''));});return out;})();
+  c.push(['Give every atom its bonds',multi.length?'<div class="ln">'+multi.join('<br>')+'</div><div class="ln why">'+this.bondStatus(false)+'</div>':'<div class="ln">Every atom already has the bonds it needs, so all bonds stay <b>single</b> ✓</div>']);
+  var lps=[];uniq.forEach(function(s){var idx=[];nm.forEach(function(x,i){if(x===s)idx.push(i);});var v=p.lp[idx[0]];if(s==='H')return;if(v>0)lps.push('each <b>'+s+'</b> gets '+v+' lone pair'+(v>1?'s':''));else lps.push('<b>'+s+'</b> gets no lone pairs (it already has 8)');});
+  c.push(['Add the lone pairs (unshared pairs)','<div class="ln">'+lps.join(' · ')+'</div><div class="ln why">Add pairs until every atom has 8 electrons around it. H never gets lone pairs (2 is full for H).</div>']);
+  var used=0;p.ord.forEach(function(o){used+=o;});p.lp.forEach(function(l){used+=l;});
+  c.push(['Check','<div class="ln">Every atom has an octet (H has 2) ✓</div><div class="ln mth">Pairs used: '+used+' = '+p.val/2+' ✓</div>']);
+  return c;},
+ bondStatus:function(single){var p=this.p,nm=p.at,have=nm.map(function(){return 0;});
+  if(p.di){have[0]=have[1]=single?1:p.ord[0];}else p.ord.forEach(function(o,k){var v=single?1:o;have[0]+=v;have[k+1]+=v;});
+  var seen={},out=[];nm.forEach(function(s,i){var key=s+have[i];if(seen[key])return;seen[key]=1;out.push(s+': '+have[i]+' bond'+(have[i]>1?'s':'')+(have[i]===USUAL[s]?' ✓':' (needs '+USUAL[s]+')'));});return out.join(' · ');},
+ render:function(){var me=this,p=this.p,tryM=this.mode==='try',st=this.st;
+  $('controls').innerHTML='';
+  var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small">'+(tryM?'Drag the atoms into the spots, then click bonds and atoms.':'Step by step, like our slides.')+'</span><span class="small" style="margin-left:auto">'+p.src+'</span></div>';
+  if(!tryM){var cs=this.cards();h+='<div class="steps3">'+cs.map(function(c,i){return '<div class="st'+(st>=i+1?' on':'')+(st===i+1?' cur':'')+'"><div class="sh"><span class="n">'+(i+1)+'</span>'+c[0]+'</div>'+c[1]+'</div>';}).join('')+'</div>';
+   h+='<div class="stepbar"><button class="btn" id="nBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<cs.length?'<button class="btn fill" id="nNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="nTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+cs.map(function(c,i){return '<i class="'+(i<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+  else{h+='<div class="stepbar">'+(p.solved&&this.won?'':'<button class="btn fill" id="nCheck">Check my structure</button><button class="btn" id="nHint">Hint</button>')+'<button class="btn" id="nClear">Start over</button><button class="btn fill" id="nNextP"'+(this.won?'':' style="display:none"')+'>Next problem ▶</button></div>'+
+   '<div class="hintbox" id="nHint2">'+this.hint()+'</div><div class="feedback" id="nFb">'+(this.won?'<span class="good">Correct! Every atom has an octet (H: 2) and all '+p.val+' electrons are used.</span>':'')+'</div>';}
+  $('panel').innerHTML=h;
+  $('mShow').onclick=function(){me.mode='show';me.st=0;me.won=false;me.reset();me.render();};$('mTry').onclick=function(){me.mode='try';me.won=false;me.reset();me.render();};
+  if(!tryM){$('nBack').onclick=function(){me.st--;me.render();};var nx=$('nNext');if(nx)nx.onclick=function(){me.st++;me.render();};var nt=$('nTry');if(nt)nt.onclick=function(){me.mode='try';me.won=false;me.reset();me.render();};}
+  else{$('nClear').onclick=function(){me.won=false;me.reset();me.render();};$('nNextP').onclick=function(){go(tabI,(me.s+1)%LS.length);};
+   var c=$('nCheck');if(c){c.onclick=function(){me.check();};$('nHint').onclick=function(){$('nHint2').classList.toggle('on');};}}
+  setQ(tryM?'Drag the atoms into the spots. Which atom belongs in the <b>centre</b>? Then click a bond to make it double or triple, and click an atom to add lone pairs.':['Read the problem. What is the first thing we count?','Why do we count valence electrons first?','Why does the atom that needs the most bonds go in the centre?','How many shared pairs have we used so far?','Does any atom still need more bonds?','Why does H never get lone pairs?','How can you be sure your structure is right?'][Math.min(st,6)],tryM?'Your task':'Step '+Math.max(st,1));
+  setRule(['1. Count all the <b>valence electrons</b>.','2. Bonds each atom needs = <b>8 − valence electrons</b> (H: 1).','3. The atom that needs the <b>most bonds</b> is the <b>central atom</b>.','4. Join with single bonds, then make <b>double/triple</b> bonds if an atom still needs bonds.','5. Fill octets with <b>lone pairs</b> (H: 2 electrons).']);},
+ hint:function(){var p=this.p,uniq=[];p.at.forEach(function(s){if(uniq.indexOf(s)<0)uniq.push(s);});
+  return 'Total valence electrons: <b>'+p.val+'</b>. Bonds needed: '+uniq.map(function(s){return s+' '+USUAL[s];}).join(', ')+'. '+(p.di?'Two atoms only: put them side by side.':'Put the atom that needs the most bonds in the <b>centre</b> spot.');},
+ /* ---- my-turn model ---- */
+ slotsList:function(){return this.p.di?['DL','DR']:['C','L','R','T','B'];},
+ atAt:function(sl){for(var i=0;i<this.A.length;i++)if(this.A[i].slot===sl)return this.A[i];return null;},
+ bondsNow:function(){var me=this,out=[];if(this.p.di){var a=this.atAt('DL'),b=this.atAt('DR');if(a&&b)out.push([a,b]);}else{var c=this.atAt('C');if(c)['L','R','T','B'].forEach(function(sl){var o=me.atAt(sl);if(o)out.push([c,o]);});}
+  return out.map(function(pr){var key=Math.min(pr[0].i,pr[1].i)+'-'+Math.max(pr[0].i,pr[1].i);return {a:pr[0],b:pr[1],key:key,o:me.ords[key]||1};});},
+ counts:function(){var bs=this.bondsNow(),cnt={};this.A.forEach(function(a){cnt[a.i]=2*a.lp;});bs.forEach(function(b){cnt[b.a.i]+=2*b.o;cnt[b.b.i]+=2*b.o;});var used=0;this.A.forEach(function(a){used+=2*a.lp;});bs.forEach(function(b){used+=2*b.o;});return {bs:bs,cnt:cnt,used:used};},
+ hitAtom:function(x,y){for(var i=this.A.length-1;i>=0;i--){var a=this.A[i];if(Math.hypot(x-a.x,y-a.y)<30)return a;}return null;},
+ pdown:function(x,y){if(this.mode!=='try'||this.won)return;var a=this.hitAtom(x,y);
+  if(a){this.drag={a:a,x0:x,y0:y,dx:a.x-x,dy:a.y-y,moved:false};return;}
+  var bs=this.bondsNow();for(var j=0;j<bs.length;j++){var b=bs[j],P1=b.a,P2=b.b,dx=P2.x-P1.x,dy=P2.y-P1.y,L2=dx*dx+dy*dy,t=clamp(((x-P1.x)*dx+(y-P1.y)*dy)/L2,0,1);
+   if(t>.18&&t<.82&&Math.hypot(x-(P1.x+t*dx),y-(P1.y+t*dy))<16){this.ords[b.key]=b.o%3+1;$('nFb').innerHTML='';return;}}},
+ pmove:function(x,y){var d=this.drag;if(!d)return;if(Math.hypot(x-d.x0,y-d.y0)>6)d.moved=true;if(d.moved){d.a.x=x+d.dx;d.a.y=y+d.dy;}},
+ pup:function(x,y){var d=this.drag,me=this;if(!d)return;this.drag=null;var a=d.a;
+  if(!d.moved){if(a.slot&&a.s!=='H'){a.lp=(a.lp+1)%4;}else if(a.slot&&a.s==='H'){$('nFb').innerHTML='<span class="bad">H never gets lone pairs: 2 electrons is full for hydrogen.</span>';}$('nFb').innerHTML=$('nFb').innerHTML;return;}
+  var best=null,bd=60;this.slotsList().forEach(function(sl){var q=SLOT[sl],dd=Math.hypot(a.x-q[0],a.y-q[1]);if(dd<bd){bd=dd;best=sl;}});
+  var prev=a.slot;
+  if(best){var other=this.atAt(best);if(other&&other!==a){other.slot=prev;if(!prev){other.lp=0;}}a.slot=best;}else{a.slot=null;a.lp=0;}
+  this.A.forEach(function(z){if(z.slot){z.x=SLOT[z.slot][0];z.y=SLOT[z.slot][1];}else{z.x=z.hx;z.y=z.hy;}});this.ords={};$('nFb').innerHTML='';},
+ check:function(){var p=this.p,me=this,C=this.counts(),msgs=[];
+  if(this.A.some(function(a){return !a.slot;})){$('nFb').innerHTML='<span class="bad">Not yet.</span><ul><li>Drag <b>every</b> atom into a spot first.</li></ul>';return;}
+  if(!p.di){var c=this.atAt('C'),mx=0;p.at.forEach(function(s){mx=Math.max(mx,USUAL[s]);});
+   if(USUAL[c.s]<mx){var best=p.at.filter(function(s){return USUAL[s]===mx;})[0];$('nFb').innerHTML='<span class="bad">Check the central atom.</span><ul><li><b>'+c.s+'</b> only needs '+USUAL[c.s]+' bond'+(USUAL[c.s]>1?'s':'')+'. The central atom is the one that needs the <b>most bonds</b>: <b>'+best+'</b> needs '+mx+'. Drag it to the centre.</li></ul>';return;}}
+  var bc={};this.A.forEach(function(a){bc[a.i]=0;});C.bs.forEach(function(b){bc[b.a.i]+=b.o;bc[b.b.i]+=b.o;});
+  var seen={};this.A.forEach(function(a){if(bc[a.i]!==USUAL[a.s]&&!seen['b'+a.s]){seen['b'+a.s]=1;msgs.push('<b>'+a.s+'</b> has '+bc[a.i]+' bond'+(bc[a.i]===1?'':'s')+', but '+a.s+' needs <b>'+USUAL[a.s]+'</b>. Click a bond to make it double or triple.');}});
+  this.A.forEach(function(a){var nd=need(a.s);if(C.cnt[a.i]!==nd&&!seen['o'+a.s]){seen['o'+a.s]=1;msgs.push(C.cnt[a.i]<nd?'<b>'+a.s+'</b> has only '+C.cnt[a.i]+' electrons around it; it needs '+nd+'. Click it to add a lone pair.':'<b>'+a.s+'</b> has '+C.cnt[a.i]+' electrons around it: more than '+nd+'.');}});
+  if(C.used!==p.val)msgs.push('You drew <b>'+C.used+'</b> electrons, but '+p.f+' has <b>'+p.val+'</b> valence electrons.');
+  if(msgs.length){$('nFb').innerHTML='<span class="bad">Not yet.</span><ul>'+msgs.slice(0,3).map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';return;}
+  p.solved=true;this.won=true;renderSteps();this.render();},
+ frame:function(dt){var me=this,p=this.p;clear();
+  if(this.mode==='show')return this.drawShow(dt);
+  /* my turn */
+  this.slotsList().forEach(function(sl){var q=SLOT[sl],cen=sl==='C';if(me.atAt(sl))return;ctx.strokeStyle=cen?AMBER:'#b7c1d3';ctx.lineWidth=2.5;ctx.setLineDash([7,6]);ctx.beginPath();ctx.arc(q[0],q[1],cen?36:30,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);if(cen)txt('central atom',q[0],q[1]+52,{s:13,c:AMBER,w:500});});
+  var C=this.counts(),placed=this.A.filter(function(a){return a.slot&&a!==(me.drag&&me.drag.moved?me.drag.a:null);});
+  var m={atoms:placed.map(function(a){return {s:a.s,x:a.x,y:a.y,lp:a.lp,i:a.i};}),bonds:[]};
+  C.bs.forEach(function(b){var ia=placed.indexOf(b.a),ib=placed.indexOf(b.b);if(ia>=0&&ib>=0)m.bonds.push([ia,ib,b.o]);});
+  placed.forEach(function(a){var ok=C.cnt[a.i]===need(a.s);ctx.fillStyle=ok?'rgba(46,158,91,.12)':'rgba(201,212,230,.3)';ctx.beginPath();ctx.arc(a.x,a.y,30,0,Math.PI*2);ctx.fill();});
+  drawMol(m,{sz:46,sp:10,lw:4.5,atomCol:placed.map(function(a){return C.cnt[a.i]===need(a.s)?GREEN:INK;})});
+  ctx.fillStyle='#eef2f8';rr(30,405,740,86,16);ctx.fill();txt('Drag the atoms into the spots',400,420,{s:13,c:MUTED,w:500});
+  this.A.forEach(function(a){if(a.slot&&!(me.drag&&me.drag.a===a&&me.drag.moved))return;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(a.x,a.y,27,0,Math.PI*2);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();txt(a.s,a.x,a.y+1,{s:30});});
+  txt('Electrons drawn: '+C.used+' / '+p.val,780,22,{s:16,a:'right',c:C.used===p.val?GREEN:C.used>p.val?RED:INK});
+  txt(this.won?'Solved!':'Click a bond: single → double → triple · Click an atom: add a lone pair',20,22,{s:13,a:'left',c:this.won?GREEN:MUTED,w:500});
+  var r=[['Valence electrons',p.val],['Electrons drawn',C.used]];var seen={};this.A.forEach(function(a){if(!a.slot)return;var k=a.s+C.cnt[a.i];if(seen[k])return;seen[k]=1;r.push([a.s+' (needs '+need(a.s)+')',C.cnt[a.i]+(C.cnt[a.i]===need(a.s)?' ✓':'')]);});
+  r.push(['Problems solved',LS.filter(function(x){return x.solved;}).length+' / '+LS.length,1]);setReads(r);},
+ drawShow:function(dt){var me=this,p=this.p,st=this.st,n=p.at.length;
+  var tgt=st>=2?this.T:this.S0;this.pos.forEach(function(q,i){q[0]+=(tgt[i][0]-q[0])*Math.min(1,dt*5);q[1]+=(tgt[i][1]-q[1])*Math.min(1,dt*5);});
+  if(st<3){p.at.forEach(function(s,i){atomDots(s,me.pos[i][0],me.pos[i][1],VAL[s],46,AMBER);
+    if(st===1)pill('needs '+USUAL[s]+' bond'+(USUAL[s]>1?'s':''),me.pos[i][0],me.pos[i][1]+62,USUAL[s]===Math.max.apply(null,p.at.map(function(z){return USUAL[z];}))&&!p.di?TEAL:BLUE,'#fff',13);});
+   if(st===2&&!p.di){ring(this.pos[0][0],this.pos[0][1],44,true);txt('central atom',this.pos[0][0],this.pos[0][1]-62,{s:14,c:TEAL});}
+   if(st===0)txt('Press Start to see the steps',400,330,{s:16,c:MUTED,w:500});}
+  else{var m={atoms:p.at.map(function(s,i){return {s:s,x:me.pos[i][0],y:me.pos[i][1],lp:st>=5?p.lp[i]:0};}),bonds:[]};
+   if(p.di)m.bonds.push([0,1,st>=4?p.ord[0]:1]);else p.ord.forEach(function(o,k){m.bonds.push([0,k+1,st>=4?o:1]);});
+   var bc=p.at.map(function(){return 0;});m.bonds.forEach(function(b){bc[b[0]]+=b[2];bc[b[1]]+=b[2];});
+   drawMol(m,{sz:48,sp:10,lw:4.5,lpCol:st===5?AMBER:INK,atomCol:p.at.map(function(s,i){return st>=6?GREEN:bc[i]===USUAL[s]?GREEN:RED;})});
+   if(st===3||st===4)txt('green = has all its bonds · red = needs more bonds',400,392,{s:13,c:MUTED,w:500});}
+  /* pairs meter */
+  var used=0;if(st>=3){used=p.di?1:p.ord.length;if(st>=4){used=0;p.ord.forEach(function(o){used+=o;});}if(st>=5)p.lp.forEach(function(l){used+=l;});}
+  var np=p.val/2;ctx.fillStyle='#fff';rr(30,410,740,76,16);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+  txt('Electron pairs used',50,430,{s:14,a:'left',c:MUTED,w:500});txt(used+' of '+np,750,430,{s:16,a:'right',c:used===np?GREEN:INK});
+  var bw=Math.min(52,680/np);for(var i=0;i<np;i++){var px=50+i*(bw+4);rr(px,446,bw,26,12);ctx.fillStyle=i<used?AMBER:'#e6ebf3';ctx.fill();if(i<used&&bw>26){dot(px+bw/2-6,459,'#fff',3.5);dot(px+bw/2+6,459,'#fff',3.5);}}
+  setReads([['Valence electrons',st>=1?p.val:'?'],['Pairs used',used+' / '+np],['Central atom',p.di?'none (2 atoms)':(st>=2?p.at[0]:'?'),1]]);}
 };
 
 /* =========================================================
-   TAB 5  Practice: build Lewis structures, count σ and π
+   TAB 6  Bond dissociation energy
    ========================================================= */
-function A(s,x,y){return {s:s,x:x,y:y,lp:0};}
-var P=[
- {f:'H₂O',atoms:[A('O',400,200),A('H',290,290),A('H',510,290)],bonds:[[0,1],[0,2]]},
- {f:'O₂',atoms:[A('O',330,230),A('O',470,230)],bonds:[[0,1]]},
- {f:'N₂',atoms:[A('N',330,230),A('N',470,230)],bonds:[[0,1]]},
- {f:'CO₂',atoms:[A('O',250,230),A('C',400,230),A('O',550,230)],bonds:[[0,1],[1,2]]},
- {f:'H₂CO (formaldehyde)',atoms:[A('C',400,260),A('O',400,135),A('H',285,335),A('H',515,335)],bonds:[[0,1],[0,2],[0,3]]},
- {f:'C₂H₄ (ethene)',atoms:[A('C',335,230),A('C',465,230),A('H',245,145),A('H',245,315),A('H',555,145),A('H',555,315)],bonds:[[0,1],[0,2],[0,3],[1,4],[1,5]]},
- {f:'C₂H₂ (ethyne)',atoms:[A('H',200,230),A('C',333,230),A('C',467,230),A('H',600,230)],bonds:[[0,1],[1,2],[2,3]]}
-];
-P.forEach(function(p){p.solved=false;});
-var T5={name:'Practice',c:CORAL,steps:P.map(function(p){return p.f.split(' ')[0];}),
- mark:function(i){return P[i].solved?'✓':i+1;},
- title:function(s){return 'Problem '+(s+1)+': Draw the Lewis structure of '+P[s].f;},
- enter:function(s){var me=this;this.s=s;this.reset();
-  $('controls').innerHTML='<button class="btn fill" id="ckb">Check structure</button><button class="btn" id="hnb">Hint</button><button class="btn" id="rsb">Start over</button><button class="btn" id="nxb" style="display:none">Next problem ▶</button>';
-  $('ckb').onclick=function(){me.check();};$('hnb').onclick=function(){me.hint();};$('rsb').onclick=function(){me.reset();};
-  $('nxb').onclick=function(){go(4,(s+1)%P.length);};
-  setQ('Draw <b>'+P[s].f+'</b>.<br><span style="font-weight:400">Click a <b>bond</b> to make it single → double → triple.<br>Click an <b>atom</b> to add lone pairs (0 → 1 → 2 → 3).</span>','Your task');
-  setRule(['1. Count all valence electrons.','2. Bonds needed: H 1, C 4, N 3, O 2.','3. Make double or triple bonds where an atom still needs bonds.','4. Fill octets with lone pairs (H: 2 electrons).','5. σ = number of bonds; π = extra lines.']);},
- reset:function(){var p=P[this.s];this.m={atoms:p.atoms.map(function(a){return {s:a.s,x:a.x,y:a.y,lp:0};}),bonds:p.bonds.map(function(b){return [b[0],b[1],1];})};
-  this.phase='draw';this.sg=0;this.pi=0;fb('');$('cnt').className='cnt';var n=$('nxb');if(n)n.style.display='none';var c=$('ckb');if(c)c.disabled=false;},
- info:function(){var m=this.m,bc=m.atoms.map(function(){return 0;});m.bonds.forEach(function(b){bc[b[0]]+=b[2];bc[b[1]]+=b[2];});
-  var cnt=m.atoms.map(function(a,i){return 2*bc[i]+2*a.lp;}),avail=0,used=0;m.atoms.forEach(function(a){avail+=VAL[a.s];used+=2*a.lp;});m.bonds.forEach(function(b){used+=2*b[2];});
-  return {bc:bc,cnt:cnt,avail:avail,used:used};},
- atName:function(i){var m=this.m,s=m.atoms[i].s,same=m.atoms.filter(function(a){return a.s===s;}).length;if(same<2)return s;var k=0;for(var j=0;j<=i;j++)if(m.atoms[j].s===s)k++;return s+k;},
- hint:function(){var I=this.info(),seen={},parts=[];this.m.atoms.forEach(function(a){if(!seen[a.s]){seen[a.s]=1;parts.push(a.s+' forms '+USUAL[a.s]+' bond'+(USUAL[a.s]>1?'s':''));}});
-  fb('<b>Hint:</b> this molecule has <b>'+I.avail+' valence electrons</b> ('+I.avail/2+' pairs). '+parts.join(', ')+'.','hint');},
- check:function(){var me=this,m=this.m,I=this.info(),msgs=[];
-  m.atoms.forEach(function(a,i){if(I.bc[i]!==USUAL[a.s])msgs.push('<b>'+me.atName(i)+'</b> has '+I.bc[i]+' bond'+(I.bc[i]===1?'':'s')+', but '+a.s+' forms <b>'+USUAL[a.s]+'</b>.');});
-  m.atoms.forEach(function(a,i){var nd=need(a.s);if(I.cnt[i]<nd)msgs.push('<b>'+me.atName(i)+'</b> has only '+I.cnt[i]+' electrons around it; it needs '+nd+'.');else if(I.cnt[i]>nd)msgs.push('<b>'+me.atName(i)+'</b> has '+I.cnt[i]+' electrons around it; that is more than '+nd+'.');});
-  if(I.used!==I.avail)msgs.push('You drew <b>'+I.used+'</b> electrons, but '+P[this.s].f.split(' ')[0]+' has <b>'+I.avail+'</b> valence electrons.');
-  if(msgs.length){fb('<b>Not yet.</b> '+msgs.slice(0,2).join(' '),'bad');return;}
-  this.phase='count';$('ckb').disabled=true;
-  fb('<b>Correct Lewis structure!</b> Every atom is stable and all '+I.avail+' electrons are used. Now count the σ and π bonds.','ok');
-  $('cnt').className='cnt show';
-  $('cnt').innerHTML='<span class="stp">σ bonds <button data-k="sg" data-d="-1">−</button><b id="sgv">0</b><button data-k="sg" data-d="1">+</button></span><span class="stp">π bonds <button data-k="pi" data-d="-1">−</button><b id="piv">0</b><button data-k="pi" data-d="1">+</button></span><button class="btn fill" id="ccb">Check count</button>';
-  Array.prototype.forEach.call($('cnt').querySelectorAll('.stp button'),function(b){b.onclick=function(){var k=b.dataset.k;me[k]=clamp(me[k]+(+b.dataset.d),0,9);$('sgv').textContent=me.sg;$('piv').textContent=me.pi;};});
-  $('ccb').onclick=function(){me.checkCount();};},
- checkCount:function(){var m=this.m,sg=m.bonds.length,pi=0;m.bonds.forEach(function(b){pi+=b[2]-1;});
-  if(this.sg===sg&&this.pi===pi){this.phase='done';P[this.s].solved=true;renderSteps();$('ccb').disabled=true;$('nxb').style.display='';
-   fb('<b>Well done!</b> '+P[this.s].f.split(' ')[0]+' has <b>'+sg+' σ</b> and <b>'+pi+' π</b> bond'+(pi===1?'':'s')+'. Each bond has one σ (teal); the extra lines are π (coral).','ok');}
-  else{var tip=this.sg!==sg?'Count the bonds between atoms: each bond, single, double or triple, has exactly <b>one σ</b>.':'A double bond has 1 π and a triple bond has 2 π.';fb('<b>Not quite.</b> '+tip,'bad');}},
- click:function(x,y){if(this.phase!=='draw')return;var m=this.m;
-  for(var i=0;i<m.atoms.length;i++){var a=m.atoms[i];if(Math.hypot(x-a.x,y-a.y)<30){a.lp=(a.lp+1)%4;fb('');return;}}
-  for(var j=0;j<m.bonds.length;j++){var b=m.bonds[j],P1=m.atoms[b[0]],P2=m.atoms[b[1]],dx=P2.x-P1.x,dy=P2.y-P1.y,L2=dx*dx+dy*dy,t=clamp(((x-P1.x)*dx+(y-P1.y)*dy)/L2,0,1);
-   if(Math.hypot(x-(P1.x+t*dx),y-(P1.y+t*dy))<18&&t>.15&&t<.85){b[2]=b[2]%3+1;fb('');return;}}},
- frame:function(){clear();var me=this,m=this.m,I=this.info(),done=this.phase==='done';
-  txt(this.phase==='draw'?'Click a bond: single → double → triple   ·   Click an atom: add a lone pair':this.phase==='count'?'Now count the σ and π bonds below':'Solved!  σ bonds in teal, π bonds in coral',400,34,{s:16,c:MUTED,w:500});
-  m.atoms.forEach(function(a,i){var ok=I.cnt[i]===need(a.s);ctx.fillStyle=ok?'rgba(46,158,91,.10)':'rgba(201,212,230,.25)';ctx.beginPath();ctx.arc(a.x,a.y,32,0,Math.PI*2);ctx.fill();});
-  drawMol(m,{sz:52,sp:10,lw:4.5,sigpi:done,atomCol:m.atoms.map(function(a,i){return I.cnt[i]===need(a.s)?GREEN:INK;})});
-  m.atoms.forEach(function(a,i){if(me.atName(i)!==a.s)txt(me.atName(i).slice(a.s.length),a.x+21,a.y+21,{s:12,c:MUTED});});
-  /* electron meter */
-  panel(150,420,500,58);para('Electrons drawn',172,449,{s:16,c:MUTED});
-  var bw=230,fr=clamp(I.used/I.avail,0,1.3);rr(310,440,bw,18,9);ctx.fillStyle='#e6ebf3';ctx.fill();rr(310,440,Math.max(18,bw*Math.min(fr,1)),18,9);ctx.fillStyle=I.used===I.avail?GREEN:I.used>I.avail?RED:AMBER;ctx.fill();
-  txt(I.used+' / '+I.avail,556,449,{s:17,a:'left',c:I.used===I.avail?GREEN:I.used>I.avail?RED:INK});
-  var r=[['Valence electrons',I.avail],['Electrons drawn',I.used]];
-  m.atoms.forEach(function(a,i){r.push([me.atName(i)+' (needs '+need(a.s)+')',I.cnt[i]+(I.cnt[i]===need(a.s)?' ✓':'')]);});
-  r.push(['Problems solved',P.filter(function(p){return p.solved;}).length+' / '+P.length,1]);setReads(r);}
+var BD=[[['F–F','F','F',1,143,159],['O=O','O','O',2,121,498],['N≡N','N','N',3,110,945]],[['C–C','C','C',1,154,347],['C=C','C','C',2,134,614],['C≡C','C','C',3,120,839]]];
+var BQ=[
+ {q:'Which bond needs MORE energy to break?',o:[['C','C',1,'154 pm'],['C','C',3,'120 pm']],a:1,v:['347 kJ/mol','839 kJ/mol'],why:'C≡C shares 3 pairs, so it is shorter (120 pm) and stronger: 839 kJ/mol vs 347 kJ/mol.'},
+ {q:'Which molecule has the greater bond dissociation energy?',o:[['O','O',2,'O₂'],['N','N',3,'N₂']],a:1,v:['498 kJ/mol','945 kJ/mol'],why:'N≡N is a triple bond (1σ + 2π): the shortest and strongest, 945 kJ/mol.'},
+ {q:'Bond A is 110 pm long. Bond B is 143 pm long. Which has the greater bond dissociation energy?',o:[['A','',0,'110 pm'],['B','',0,'143 pm']],a:0,v:['shorter','longer'],why:'The shorter the bond, the more energy is needed to break it, like the short stick.'},
+ {q:'Which bond is stronger?',o:[['C','O',1,'143 pm'],['C','O',2,'120 pm']],a:1,v:['358 kJ/mol','745 kJ/mol'],why:'C=O shares 2 pairs, so it is shorter and needs more energy to break.'},
+ {q:'Which bond is the EASIEST to break?',o:[['F','F',1,''],['O','O',2,''],['N','N',3,'']],a:0,v:['159 kJ/mol','498 kJ/mol','945 kJ/mol'],why:'F–F is a single bond: the longest (143 pm) and weakest of the three.'},
+ {q:'Which bond needs the MOST energy to break?',o:[['C','N',1,''],['C','N',2,''],['C','N',3,'']],a:2,v:['305 kJ/mol','615 kJ/mol','891 kJ/mol'],why:'More shared pairs → shorter bond → greater bond dissociation energy.'},
+ {q:'H–F is 92 pm long and H–Cl is 127 pm long. Which has the greater bond dissociation energy?',o:[['H','F',1,'92 pm'],['H','Cl',1,'127 pm']],a:0,v:['570 kJ/mol','432 kJ/mol'],why:'Both are single bonds, so compare the lengths: the shorter H–F bond is stronger.'},
+ {q:'When a bond is broken, energy is…',o:[['absorbed','',-1,'taken in'],['released','',-1,'given out']],a:0,v:['✓ endothermic','✗'],why:'Breaking a bond always <b>needs</b> energy, so bond dissociation energy is always positive. Forming a bond releases the same amount.'}];
+BQ.forEach(function(q){q.got=null;});
+function bondSvg(o){if(o[2]===-1)return '<svg width="150" height="54" viewBox="0 0 150 54"><text x="75" y="36" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600" font-size="26" fill="'+INK+'">'+o[0]+'</text></svg>';
+ if(o[2]===0){var L=o[0]==='A'?90:118;return '<svg width="160" height="54" viewBox="0 0 160 54"><circle cx="'+(80-L/2)+'" cy="27" r="13" fill="#9aa6ba"/><circle cx="'+(80+L/2)+'" cy="27" r="13" fill="#9aa6ba"/><line x1="'+(80-L/2+13)+'" y1="27" x2="'+(80+L/2-13)+'" y2="27" stroke="'+INK+'" stroke-width="4"/><text x="80" y="18" text-anchor="middle" font-family="Fredoka" font-size="16" fill="'+INK+'">Bond '+o[0]+'</text></svg>';}
+ var n=o[2],h='<svg width="150" height="54" viewBox="0 0 150 54"><g font-family="Fredoka, sans-serif" font-weight="600" font-size="28" fill="'+INK+'"><text x="28" y="37" text-anchor="middle">'+o[0]+'</text><text x="122" y="37" text-anchor="middle">'+o[1]+'</text></g>';
+ for(var k=0;k<n;k++){var off=(k-(n-1)/2)*8;h+='<line x1="'+(o[0].length>1?52:46)+'" y1="'+(27+off)+'" x2="'+(o[1].length>1?98:104)+'" y2="'+(27+off)+'" stroke="'+INK+'" stroke-width="4" stroke-linecap="round"/>';}return h+'</svg>';}
+var TB={name:'Bond energy',c:BLUE,steps:['Which stick breaks?','F₂ · O₂ · N₂','C–C · C=C · C≡C','Practice'],qi:0,
+ title:function(s){return ['Demo: which stick is harder to break?','Break the bonds: add energy','Break the carbon–carbon bonds','Which has more bond dissociation energy?'][s];},
+ enter:function(s){var me=this;this.s=s;this.E=0;this.F=0;this.br=[0,0];this.anim=[0,0,0];
+  if(s===0){$('controls').innerHTML='<label class="ctl">Push down on the middle <input type="range" id="fsl" min="0" max="100" step="1" value="0"><output id="fout"></output></label><button class="btn" id="frs">New sticks</button>';
+   $('fsl').oninput=function(){me.F=+this.value;};$('frs').onclick=function(){me.F=0;me.br=[0,0];$('fsl').value=0;};
+   setQ('Both sticks are made of the same wood. Which one breaks first? Which one needs <b>more</b> force?');}
+  else if(s<3){$('controls').innerHTML='<button class="btn fill" id="addE">Add 100 kJ/mol of energy</button><button class="btn" id="rsE">Reset</button>';
+   $('addE').onclick=function(){me.E=Math.min(1000,me.E+100);};$('rsE').onclick=function(){me.E=0;me.anim=[0,0,0];};
+   setQ(s===1?'Add energy little by little. Which bond breaks first? Which one holds on the longest? Look at how much the orbitals overlap.':'Carbon can also form single, double and triple bonds. Predict the order they break in before you add energy.');}
+  else{$('cv').style.display='none';$('controls').innerHTML='';this.renderQ();setQ('Use the rule: shorter bond and more shared pairs → more energy to break.');}
+  setRule(['<b>Bond dissociation energy</b> = the energy needed to <b>break</b> one bond.','A <b>shorter</b> bond is <b>stronger</b> and needs <b>more</b> energy to break, like the short stick.','More shared pairs (more overlap) → shorter bond: <b>single &lt; double &lt; triple</b>.','Breaking a bond always <b>absorbs</b> energy (endothermic).']);},
+ renderQ:function(){var me=this,q=BQ[this.qi],ans=q.got!==null;
+  var h='<div class="small" style="margin:6px 0 8px">Question '+(this.qi+1)+' of '+BQ.length+'</div><div class="qcard">'+q.q+'</div><div class="opts">'+q.o.map(function(o,i){var cls=ans?(i===q.a?' right':(i===q.got?' wrong':'')):'';
+   return '<button class="opt'+cls+'" data-o="'+i+'"'+(ans?' disabled':'')+'>'+bondSvg(o)+(o[3]&&o[2]>0?'<span>'+o[3]+'</span>':'')+'<span class="val">'+(ans?q.v[i]:'')+'</span></button>';}).join('')+'</div>';
+  h+='<div class="feedback" id="qFb">'+(ans?(q.got===q.a?'<span class="good">Correct! </span>':'<span class="bad">Not quite. </span>')+q.why:'')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="qPrev"'+(this.qi===0?' disabled':'')+'>◀ Previous</button><button class="btn fill" id="qNext"'+(this.qi===BQ.length-1?' disabled':'')+'>Next question ▶</button><div class="stepdots">'+BQ.map(function(x,i){return '<i class="'+(x.got!==null?'on':'')+'"'+(x.got!==null&&x.got!==x.a?' style="background:#d8434a"':'')+'></i>';}).join('')+'</div></div>';
+  $('panel').innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){b.onclick=function(){q.got=+b.getAttribute('data-o');me.renderQ();};});
+  $('qPrev').onclick=function(){me.qi--;me.renderQ();};$('qNext').onclick=function(){me.qi++;me.renderQ();};
+  var right=BQ.filter(function(x){return x.got===x.a;}).length,done=BQ.filter(function(x){return x.got!==null;}).length;
+  setReads([['Answered',done+' / '+BQ.length],['Correct',right]]);},
+ frame:function(dt){if(this.s===3)return;clear();if(this.s===0)return this.sticks(dt);this.bonds(dt);},
+ sticks:function(dt){var me=this,F=this.F,TH=[34,80];$('fout').textContent=F+' N';
+  [0,1].forEach(function(k){if(F>=TH[k])me.br[k]=1;});
+  [[0,'Long stick (30 cm)',300,200],[1,'Short stick (12 cm)',120,600]].forEach(function(z){var k=z[0],L=z[2],cx=z[3],y=190,broken=me.br[k];
+   panel(cx-180,40,360,300);txt(z[1],cx,70,{s:20,c:k?TEAL:CORAL});
+   var x1=cx-L/2,x2=cx+L/2;ctx.fillStyle='#8d99b0';rr(x1-26,y+6,32,86,6);ctx.fill();rr(x2-6,y+6,32,86,6);ctx.fill();
+   var sag=broken?0:Math.min(F,TH[k])*L*L/30000*(k?1:1.15);
+   ctx.lineCap='round';
+   if(!broken){ctx.strokeStyle='#a8692f';ctx.lineWidth=16;ctx.beginPath();ctx.moveTo(x1,y);ctx.quadraticCurveTo(cx,y+sag*2,x2,y);ctx.stroke();ctx.strokeStyle='#d39a5c';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(x1,y-2);ctx.quadraticCurveTo(cx,y+sag*2-2,x2,y-2);ctx.stroke();
+    if(F>0)arrow(cx,y-70-F*.3,cx,y+sag-14,RED,5);}
+   else{[[x1,1],[x2,-1]].forEach(function(e){ctx.save();ctx.translate(e[0],y);ctx.rotate(e[1]*.55);ctx.strokeStyle='#a8692f';ctx.lineWidth=16;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(e[1]*L/2-e[1]*6,0);ctx.stroke();ctx.restore();});
+    txt('SNAP!',cx,y-40,{s:30,c:RED});}
+   txt(broken?'Broke at '+TH[k]+' N':'Holding…',cx,y+124,{s:18,c:broken?RED:GREEN});});
+  var msg=!this.br[0]?'Slowly push harder. Which stick breaks first?':!this.br[1]?'The long stick broke first! Keep pushing on the short stick…':'The short stick needed more than twice the force!';
+  panel(20,356,760,130);txt(msg,400,384,{s:18,c:INK});
+  if(this.br[1]){txt('Short stick  →  harder to break  →  needs MORE energy',400,420,{s:17,c:TEAL});txt('Short bond   →  stronger bond   →  greater bond dissociation energy',400,454,{s:17,c:BLUE});}
+  setReads([['Force',F+' N'],['Long stick (30 cm)',this.br[0]?'broke at 34 N':'holding',1],['Short stick (12 cm)',this.br[1]?'broke at 80 N':'holding',1]]);},
+ bonds:function(dt){var me=this,rows=BD[this.s-1],E=this.E;
+  rows.forEach(function(r,k){var y=95+k*140,broke=E>=r[5];me.anim[k]=broke?Math.min(1,me.anim[k]+dt*1.2):0;var a=me.anim[k];
+   panel(16,y-62,768,128);
+   var d=r[4]*1.25,cx=272,sep=d+a*80,x1=cx-sep/2,x2=cx+sep/2,al=1-a;
+   ctx.globalAlpha=al;
+   if(r[3]>=3){ctx.fillStyle='rgba(138,79,191,.12)';ctx.strokeStyle=PLUM;ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.beginPath();ctx.ellipse(cx,y,d/2+30,40,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.setLineDash([]);}
+   if(r[3]>=2){[-1,1].forEach(function(sg){ctx.fillStyle='rgba(226,112,138,.45)';ctx.strokeStyle=CORAL;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(cx,y+sg*24,d/2+22,11,0,0,Math.PI*2);ctx.fill();ctx.stroke();});}
+   ctx.fillStyle='rgba(15,139,141,.55)';ctx.strokeStyle=TEAL;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(cx,y,d/2*.8,13,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+   ctx.globalAlpha=1;
+   ball(x1,y,15,ACOL[r[1]]);txt(r[1],x1,y+1,{s:15,c:'#fff'});ball(x2,y,15,ACOL[r[2]]);txt(r[2],x2,y+1,{s:15,c:'#fff'});
+   if(!broke){seg(cx-d/2,y+48,cx+d/2,y+48,MUTED,1.5);seg(cx-d/2,y+42,cx-d/2,y+54,MUTED,1.5);seg(cx+d/2,y+42,cx+d/2,y+54,MUTED,1.5);txt(r[4]+' pm',cx,y+38+20,{s:13,c:MUTED,w:500});}
+   txt(r[0],36,y-34,{s:22,a:'left'});txt(['single: 1σ','double: 1σ + 1π','triple: 1σ + 2π'][r[3]-1],36,y-8,{s:13,a:'left',c:MUTED,w:500});
+   var bx=440,bw=310;rr(bx,y-12,bw,24,12);ctx.fillStyle='#e6ebf3';ctx.fill();rr(bx,y-12,Math.max(24,bw*Math.min(E,r[5])/1000),24,12);ctx.fillStyle=broke?GREEN:AMBER;ctx.fill();
+   var mx=bx+bw*r[5]/1000;seg(mx,y-20,mx,y+20,INK,2.5);txt(r[5]+' kJ/mol',mx,y-32,{s:14});
+   txt(broke?'BROKEN: needed '+r[5]+' kJ/mol':'holding',bx,y+34,{s:15,a:'left',c:broke?GREEN:MUTED});});
+  txt('Energy added: '+E+' kJ/mol',780,22,{s:17,a:'right',c:BLUE});
+  ctx.fillStyle=TEAL;ctx.beginPath();ctx.arc(30,22,7,0,7);ctx.fill();para('σ overlap',42,22,{s:13,c:MUTED});ctx.fillStyle=CORAL;ctx.beginPath();ctx.arc(130,22,7,0,7);ctx.fill();para('π overlap',142,22,{s:13,c:MUTED});ctx.fillStyle=PLUM;ctx.beginPath();ctx.arc(230,22,7,0,7);ctx.fill();para('2nd π (front & back)',242,22,{s:13,c:MUTED});
+  var r2=[['Energy added',E+' kJ/mol',1]];rows.forEach(function(r){r2.push([r[0]+' ('+r[4]+' pm)',E>=r[5]?'broken':'needs '+r[5]]);});setReads(r2);}
 };
 
 /* ---------- shell ---------- */
-var TAB=[T1,T2,T3,T4,T5],tabI=0,stepI=0;
+var TAB=[T1,T2,TL,T3,TS,TB],tabI=0,stepI=0;
 function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. '+t.name+'</button>';}).join('');
   Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
 function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk+'</b>'+l+'</button>';}).join('');
   Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
-function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cnt').className='cnt';fb('');
-  renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);cv.className=t===4?'click':'';
-  try{history.replaceState(null,'','#'+['sharing','multiple-bonds','sigma-pi','example','practice'][t]);}catch(e){}}
-cv.addEventListener('click',function(e){var r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(TAB[tabI].click)TAB[tabI].click(x,y);});
-var hm={'#sharing':0,'#multiple-bonds':1,'#sigma-pi':2,'#example':3,'#practice':4};
-go(hm[location.hash]||0,0);
+var HASH=['sharing','multiple-bonds','lewis','sigma-pi','sigma-pi-practice','bond-energy'];
+function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cnt').className='cnt';fb('');$('cv').style.display='';hidePanel();
+  renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);
+  cv.className=(t===2||t===3)?'click':'';cv.style.touchAction=(t===2||t===3)?'none':'';
+  try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
+function cpos(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height];}
+cv.addEventListener('pointerdown',function(e){var p=cpos(e),T=TAB[tabI];if(T.pdown){T.pdown(p[0],p[1]);try{cv.setPointerCapture(e.pointerId);}catch(err){}}});
+cv.addEventListener('pointermove',function(e){var p=cpos(e),T=TAB[tabI];if(T.pmove)T.pmove(p[0],p[1]);});
+cv.addEventListener('pointerup',function(e){var p=cpos(e),T=TAB[tabI];if(T.pup)T.pup(p[0],p[1]);});
+cv.addEventListener('pointercancel',function(e){var T=TAB[tabI];if(T.pup)T.pup(-999,-999);});
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
 var last=performance.now();
 function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
