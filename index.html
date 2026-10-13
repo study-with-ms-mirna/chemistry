@@ -50,6 +50,15 @@ iframe{flex:1;width:100%;border:0;background:var(--bg)}
   #menu{display:inline-block}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.grp{display:flex;align-items:center;gap:6px;width:100%;background:none;border:none;cursor:pointer;font-family:var(--disp);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin:10px 0 2px;padding:6px 8px;border-radius:10px;text-align:left}
+.grp:hover{background:var(--bg)}
+.grp .n{margin-left:auto;font-size:11px;letter-spacing:0;background:var(--bg);border-radius:999px;padding:1px 8px}
+.chev{display:inline-block;transition:transform .2s;font-size:12px}
+.closed .chev{transform:rotate(-90deg)}
+.gitems.hide,.cards.hide{display:none}
+.home .sec{display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--disp);font-size:20px;font-weight:700;color:var(--ink);margin:22px 0 10px;padding:4px 0}
+.home .sec .chev{font-size:16px;color:var(--teal)}
+.home .sec .n{font-size:13px;font-weight:600;color:var(--soft);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:1px 10px}
 </style>
 </head>
 <body>
@@ -120,15 +129,15 @@ const ITEMS=[
   {group:'Game Quests', title:'Periodic Table Quest',   note:'Chapter 6 · 30 questions',  file:'periodic-table-quest.html',   icon:ICON.periodic},
   {group:'Game Quests', title:'Hydrocarbon Quest',      note:'Chapter 21 · 30 questions', file:'hydrocarbon-quest.html',      icon:ICON.hydrocarbon},
   {group:'Game Quests', title:'Functional Group Quest', note:'Chapter 22 · 30 questions', file:'functional-group-quest.html', icon:ICON.functional},
-  {group:'Simulations', title:'Collision Lab', note:'Collision theory · 4 missions', file:'collision-lab.html', icon:ICON.sim},
-  {group:'Simulations', title:'Activation Energy Lab', note:'Activation energy · 3 missions', file:'activation-energy-lab.html', icon:ICON.hill},
-  {group:'Simulations', title:'Metal Lab', note:'Metallic bonding · 6 missions', file:'metal-lab.html', icon:ICON.metal},
-  {group:'Simulations', title:'Atomic Mass Lab', note:'Isotopes & atomic mass · 4 stations', file:'atomic-mass-lab.html', icon:ICON.isotope},
-  {group:'Simulations', title:'Gas Laws Lab', note:'Boyle, Charles, Gay-Lussac · practice problems', file:'gas-laws.html', icon:ICON.gas},
-  {group:'Simulations', title:'Reaction Rate Lab', note:'Reaction rates · 5 factors', file:'reaction-rates-lab.html', icon:ICON.rate},
-  {group:'Simulations', title:'Rate Laws Lab', note:'Reaction orders · method of initial rates', file:'rate-laws-lab.html', icon:ICON.ratelaw},
-  {group:'Simulations', title:'Radioactive Decay Lab', note:'Alpha, beta, gamma · nuclear equations', file:'radioactive-decay-lab.html', icon:ICON.nucleus},
-  {group:'Simulations', title:'Covalent Bonding Lab', note:'Lewis structures · σ and π · bond energy', file:'covalent-bonding-lab.html', icon:ICON.covalent},
+  {group:'Simulations', title:'Atomic Mass Lab', note:'Chapter 4 · Isotopes & atomic mass', file:'atomic-mass-lab.html', icon:ICON.isotope},
+  {group:'Simulations', title:'Radioactive Decay Lab', note:'Chapter 4 · Alpha, beta, gamma · nuclear equations', file:'radioactive-decay-lab.html', icon:ICON.nucleus},
+  {group:'Simulations', title:'Metal Lab', note:'Chapter 7 · Metallic bonding', file:'metal-lab.html', icon:ICON.metal},
+  {group:'Simulations', title:'Covalent Bonding Lab', note:'Chapter 8 · Lewis structures · σ and π', file:'covalent-bonding-lab.html', icon:ICON.covalent},
+  {group:'Simulations', title:'Gas Laws Lab', note:'Chapter 12 · Gas laws · practice problems', file:'gas-laws.html', icon:ICON.gas},
+  {group:'Simulations', title:'Collision Lab', note:'Chapter 16 · Collision theory', file:'collision-lab.html', icon:ICON.sim},
+  {group:'Simulations', title:'Activation Energy Lab', note:'Chapter 16 · Activation energy', file:'activation-energy-lab.html', icon:ICON.hill},
+  {group:'Simulations', title:'Reaction Rate Lab', note:'Chapter 16 · Factors affecting rate', file:'reaction-rates-lab.html', icon:ICON.rate},
+  {group:'Simulations', title:'Rate Laws Lab', note:'Chapter 16 · Reaction orders · rate laws', file:'rate-laws-lab.html', icon:ICON.ratelaw},
   {group:'Assessments', title:'Atomic Theory', note:'End-of-topic assessment', file:'atomic-theory-assessment.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'Electrons in Atoms', note:'Chapter 5 · 84 questions', file:'electrons-in-atoms-worksheet.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'The Periodic Table', note:'Chapter 6 · 77 questions', file:'periodic-table-worksheet.html', icon:ICON.assess},
@@ -139,11 +148,16 @@ const ITEMS=[
 const CHEM=document.querySelector('.bico').innerHTML;
 const nav=document.getElementById('nav'), view=document.getElementById('view'), title=document.getElementById('title'), full=document.getElementById('full');
 const slug=f=>f.replace(/\.html$/,'');
+const OPEN=(()=>{try{return JSON.parse(localStorage.getItem('mm_open')||'{}');}catch(e){return {};}})();
+function saveOpen(){try{localStorage.setItem('mm_open',JSON.stringify(OPEN));}catch(e){}}
+function isOpen(where,g,cur){const k=where+':'+g;if(where==='nav'&&cur&&cur.group===g)return true;if(k in OPEN)return OPEN[k];return where==='home'?true:(cur?cur.group===g:false);}
 function drawNav(cur){
   const groups=[...new Set(ITEMS.map(i=>i.group))];
   nav.innerHTML=`<a href="#" class="${cur?'':'on'}"><span class="ico">${ICON.home}</span><span>Home</span></a>`+
-    groups.map(g=>`<h2>${g}</h2>`+ITEMS.filter(i=>i.group===g).map(i=>`<a href="#${slug(i.file)}" class="${cur===i?'on':''}"><span class="ico">${i.icon}</span><span>${i.title}<small>${i.note}</small></span></a>`).join('')).join('');
+    groups.map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('nav',g,cur);return `<button class="grp${op?'':' closed'}" data-w="nav" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${g}<span class="n">${its.length}</span></button><div class="gitems${op?'':' hide'}">`+its.map(i=>`<a href="#${slug(i.file)}" class="${cur===i?'on':''}"><span class="ico">${i.icon}</span><span>${i.title}<small>${i.note}</small></span></a>`).join('')+'</div>';}).join('');
 }
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-g]');if(!b)return;const k=b.dataset.w+':'+b.dataset.g,op=!(b.getAttribute('aria-expanded')==='true');OPEN[k]=op;saveOpen();
+  b.setAttribute('aria-expanded',op);b.classList.toggle('closed',!op);const box=b.nextElementSibling;if(box)box.classList.toggle('hide',!op);});
 function route(){
   const h=location.hash.slice(1); const it=ITEMS.find(i=>slug(i.file)===h);
   document.body.classList.remove('open'); drawNav(it);
@@ -151,7 +165,7 @@ function route(){
     view.innerHTML=`<iframe src="${fresh}" title="${it.title}" allow="fullscreen"></iframe>`; }
   else{ title.textContent='Home'; full.hidden=true;
     view.innerHTML=`<div class="home"><div class="hero"><div class="pic">${CHEM}</div><div><h1>Study with <span>Ms. Mirna</span></h1><p>Chemistry revision for SAAT. Revise the notes, play a quest, explore a simulation or take an assessment.</p></div></div>
-      ${[...new Set(ITEMS.map(i=>i.group))].map(g=>`<h2 class="sec">${g}</h2><div class="cards">${ITEMS.filter(i=>i.group===g).map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`).join('')}</div>`; }
+      ${[...new Set(ITEMS.map(i=>i.group))].map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('home',g);return `<button class="sec${op?'':' closed'}" data-w="home" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${g}<span class="n">${its.length}</span></button><div class="cards${op?'':' hide'}">${its.map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`;}).join('')}</div>`; }
 }
 addEventListener('hashchange',route);
 document.getElementById('menu').onclick=()=>document.body.classList.toggle('open');
