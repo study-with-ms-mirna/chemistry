@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rate Laws Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+.reads .rd b{font-size:19px}
+.step.done b{background:#2e9e5b;color:#fff}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.cnt{display:none;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;padding:10px 14px;border-radius:14px;background:#f6f8fc}
+.cnt.show{display:flex}
+.stp{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:17px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:26px;text-align:center;font-size:22px}
+#cv.click{cursor:pointer}
+sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+.dt tr[data-r]{cursor:pointer}
+.dt tr.sel td{background:#fff1cc!important;font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cmp{display:inline-flex;align-items:center;gap:8px;border:2px solid;border-radius:999px;padding:4px 6px 4px 12px;font-family:Fredoka,sans-serif;font-size:17px;background:#fff}
+.cmp i{font-style:normal;color:#fff;border-radius:999px;padding:2px 10px;font-weight:600}
+.solve{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;margin:6px 0}
+.ladder{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.rung{font-family:Fredoka,sans-serif;font-size:16px;padding:4px 10px;border-radius:10px;background:#eef2f8;color:var(--ink)}
+.rung.hit{color:#fff;font-weight:600;transform:scale(1.08)}
+.solverow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.big2{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin-top:6px}
+.lawbig{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;text-align:center;margin:10px 0;padding:8px;background:#f6f8fc;border-radius:14px}
+.lawsm{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.center{text-align:center;font-size:18px}
+.mysteq{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;text-align:center;padding:10px;background:#f6f8fc;border-radius:14px;margin-bottom:10px}
+.mysteq sup.q{color:var(--accent);font-size:.7em}
+.runbar,.ansrow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.runbar .lab,.ansrow2 .lab{font-family:Fredoka,sans-serif;font-size:16px;margin-left:6px}
+.ansrow2{font-family:Fredoka,sans-serif;font-size:20px;border-top:2px solid var(--line);padding-top:10px;margin-top:10px}
+.cmpbox{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-family:Fredoka,sans-serif;font-size:16px}
+.cmpbox .cmp{margin:6px 6px 0 0}
+.warn{margin-top:8px;color:#d8434a;font-weight:600}
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;margin:6px 0}
+.gin input,.gin select{width:80px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.gin select{width:64px}
+.gin input.ok,.gin select.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no,.gin select.no{border-color:#d8434a;background:#fdeeee}
+.good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
+.mk{min-width:18px}
+.hintbox .ladder{display:inline-flex}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <path d="M10 42 H50 M10 42 V8" stroke="#18233a" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M10 30 H48" stroke="#2b59c3" stroke-width="3" stroke-linecap="round"/>
+      <path d="M10 42 L46 12" stroke="#0f8b8d" stroke-width="3" stroke-linecap="round"/>
+      <path d="M10 42 Q34 40 44 10" stroke="#e2708a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div><h1>Rate Laws Lab</h1><div class="sub">How the rate depends on concentration · reaction orders · method of initial rates</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div class="cnt" id="cnt"></div>
+      <div class="fb" id="fb"></div>
+      <div id="panel"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl" id="qlbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b';
+var OCOL=[BLUE,TEAL,CORAL,PLUM];
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.fillText(s,x,y);return ctx.measureText(s).width;}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=txt(s,0,-999,{s:size});rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function panel(x,y,w,h){rr(x,y,w,h,14);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}
+function dotc(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function brace(x1,y1,x2,y2,lab,col,side){/* bracket with label: horizontal if y1==y2 */
+ ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();
+ if(Math.abs(y1-y2)<1){ctx.moveTo(x1,y1-6);ctx.lineTo(x1,y1);ctx.lineTo(x2,y1);ctx.lineTo(x2,y1-6);ctx.stroke();pill(lab,(x1+x2)/2,y1+(side||18),col,'#fff',15);}
+ else{ctx.moveTo(x1+6,y1);ctx.lineTo(x1,y1);ctx.lineTo(x1,y2);ctx.lineTo(x1+6,y2);ctx.stroke();pill(lab,x1-(side||30),(y1+y2)/2,col,'#fff',15);}}
+var SUP={'0':'⁰','1':'¹','2':'²','3':'³','-':'⁻'};function sup(n){return String(n).split('').map(function(c){return SUP[c]||c;}).join('');}
+function fx(v){if(v===0)return '0';var r=Math.abs(v)>=10?v.toFixed(0):Math.abs(v)>=1?v.toFixed(2).replace(/\.?0+$/,''):v.toFixed(2);return r;}
+function fac(f){if(Math.abs(f-1)<1e-6)return '×1';if(Math.abs(f-.5)<1e-6)return '×½';if(Math.abs(f-.25)<1e-6)return '×¼';return '×'+(Math.round(f*100)/100);}
+
+/* side panel */
+var lastReads='';
+function setQ(h,lbl){$('q').innerHTML=h;$('qlbl').textContent=lbl||'Think';}
+function setRule(a){$('rule').innerHTML=a.map(function(s){return '<li>'+s+'</li>';}).join('');}
+function setReads(a){var h=a.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+
+/* =========================================================
+   TAB 1  Orders as graphs: y = c, y = ax, y = ax²
+   ========================================================= */
+var ORD=[{n:'Zero order',math:'y = c',chem:'rate = k[A]⁰ = k',k:2,f:function(x){return 2;},desc:'a flat line'},
+ {n:'First order',math:'y = ax',chem:'rate = k[A]¹',k:1,f:function(x){return x;},desc:'a straight line through 0'},
+ {n:'Second order',math:'y = ax²',chem:'rate = k[A]²',k:.25,f:function(x){return .25*x*x;},desc:'a curve that gets steeper'}];
+var T1={name:'Orders as graphs',c:TEAL,steps:['Zero order: y = c','First order: y = ax','Second order: y = ax²','Compare all three'],x1:1,mult:2,anim:1,
+ title:function(s){return ['Zero order looks like y = c','First order looks like y = ax','Second order looks like y = ax²','Compare: same change in [A], different change in rate'][s];},
+ enter:function(s){var me=this;this.s=s;this.anim=0;if(s===2&&this.x1<1.5)this.x1=1.5;
+  $('controls').innerHTML='<label class="ctl">Starting [A] <input type="range" id="xsl" min="0.4" max="2" step="0.1"><output id="xo"></output></label><span class="ctl">Change [A]:</span>'+
+   [[2,'×2'],[3,'×3'],[.5,'×½']].map(function(m){return '<button class="btn'+(m[0]===me.mult?' sel':'')+'" data-m="'+m[0]+'">'+m[1]+'</button>';}).join('')+'<button class="btn fill" id="go1">▶ Show the change</button>';
+  $('xsl').value=this.x1;$('xsl').oninput=function(){me.x1=+this.value;me.fixX();me.anim=0;};
+  Array.prototype.forEach.call(document.querySelectorAll('[data-m]'),function(b){b.onclick=function(){me.mult=+b.getAttribute('data-m');me.fixX();me.anim=0;Array.prototype.forEach.call(document.querySelectorAll('[data-m]'),function(x){x.classList.toggle('sel',x===b);});};});
+  $('go1').onclick=function(){me.anim=0.001;};this.fixX();this.anim=0.001;
+  setQ(['Zero order: change [A]. Does the rate change at all?','First order: double [A]. What happens to the rate?','Second order: double [A]. Why does the rate become 4 times bigger?','Same ×2 for [A]. Which order gives the biggest change in rate?'][s]);
+  setRule(['rate change = (change in [A])<sup>order</sup>','Zero order (y = c): rate does not change','First order (y = ax): rate changes by the same factor','Second order (y = ax²): rate changes by the factor squared']);},
+ fixX:function(){var mx=this.mult>1?4/this.mult:2;if(this.x1>mx){this.x1=mx;}if(this.mult<1&&this.x1<.8)this.x1=.8;var e=$('xsl');if(e)e.value=this.x1;},
+ G:{x0:80,x1:500,y0:430,y1:50,xm:4,ym:5},
+ X:function(v){return this.G.x0+v/this.G.xm*(this.G.x1-this.G.x0);},Y:function(v){return this.G.y0-v/this.G.ym*(this.G.y0-this.G.y1);},
+ axes:function(){var G=this.G,me=this;panel(20,20,520,470);
+  for(var v=1;v<=4;v++){seg(this.X(v),G.y0,this.X(v),G.y1,'#eef2f8',1);txt(String(v),this.X(v),G.y0+16,{s:13,c:MUTED,w:500});}
+  for(v=1;v<=5;v++){seg(G.x0,this.Y(v),G.x1,this.Y(v),'#eef2f8',1);txt(String(v),G.x0-14,this.Y(v),{s:13,c:MUTED,w:500});}
+  seg(G.x0,G.y0,G.x1+10,G.y0,INK,2.5);seg(G.x0,G.y0,G.x0,G.y1-10,INK,2.5);txt('0',G.x0-12,G.y0+12,{s:13,c:MUTED,w:500});
+  txt('[A] (mol/L) → x',G.x1+12,G.y0+46,{s:14,c:INK,a:'right'});
+  ctx.save();ctx.translate(36,(G.y0+G.y1)/2);ctx.rotate(-Math.PI/2);txt('rate (×10⁻³ mol/(L·s))   →   y',0,0,{s:15});ctx.restore();},
+ curve:function(o,col,lw,al){var me=this;ctx.globalAlpha=al||1;ctx.strokeStyle=col;ctx.lineWidth=lw||4;ctx.beginPath();for(var i=0;i<=200;i++){var x=4*i/200,y=ORD[o].f(x);if(y>5.2)break;var X=me.X(x),Y=me.Y(y);if(i)ctx.lineTo(X,Y);else ctx.moveTo(X,Y);}ctx.stroke();ctx.globalAlpha=1;},
+ marker:function(x,y,col,lab,side){var X=this.X(x),Y=this.Y(y),G=this.G;seg(X,Y,X,G.y0,col,2,[6,5]);seg(X,Y,G.x0,Y,col,2,[6,5]);dotc(X,Y,8,col);
+  rr(X-24,G.y0-30,48,22,8);ctx.fillStyle=col;ctx.fill();txt(fx(x),X,G.y0-19,{s:13,c:'#fff'});
+  rr(G.x0+4,Y-11-(side||0),48,22,8);ctx.fillStyle=col;ctx.fill();txt(fx(y),G.x0+28,Y-(side||0),{s:13,c:'#fff'});
+  if(lab)txt(lab,X+16,Y-18,{s:14,c:col,a:'left'});},
+ frame:function(dt){var me=this,s=this.s;clear();if(this.anim>0&&this.anim<1)this.anim=Math.min(1,this.anim+dt*.8);
+  this.axes();$('xo').textContent=fx(this.x1)+' M';
+  var x1=this.x1,x2=x1*this.mult,t=this.anim,xa=lerp(x1,x2,t);
+  if(s<3){var o=s,col=OCOL[o],y1=ORD[o].f(x1),y2=ORD[o].f(x2),ya=ORD[o].f(xa);this.curve(o,col,4);
+   this.marker(x1,y1,col,'1');if(t>0)this.marker(xa,ya,col,t>=1?'2':'',Math.abs(ya-y1)<.15?24:0);
+   if(t>=1){brace(this.X(Math.min(x1,x2)),this.G.y0+30,this.X(Math.max(x1,x2)),this.G.y0+30,'[A] '+fac(this.mult),AMBER,18);if(Math.abs(y2-y1)>.15)brace(this.G.x0+66,this.Y(Math.max(y1,y2)),this.G.x0+66,this.Y(Math.min(y1,y2)),'rate '+fac(y2/y1),col,-40);}
+   /* right card */
+   panel(555,20,225,470);txt(ORD[o].n,667,48,{s:20,c:col});
+   txt('Math',667,86,{s:13,c:MUTED,w:500});txt(ORD[o].math,667,114,{s:30,c:INK});
+   txt('Chemistry',667,154,{s:13,c:MUTED,w:500});txt(ORD[o].chem,667,182,{s:22,c:col});
+   txt('looks like '+ORD[o].desc,667,214,{s:13,c:MUTED,w:500});
+   seg(575,236,760,236,LINE,2);
+   txt('[A] changes',667,262,{s:14,c:MUTED,w:500});pill(fac(this.mult),667,292,AMBER,'#fff',22);
+   txt('so the rate changes',667,330,{s:14,c:MUTED,w:500});
+   if(t>=1){var rf=y2/y1;txt('('+fac(this.mult).replace('×','×')+')'+sup(o)+' = '+fac(rf),667,368,{s:22,c:col});pill(fac(rf),667,412,col,'#fff',26);}
+   else txt('?',667,380,{s:40,c:LINE});
+   setReads([['[A] before',fx(x1)+' M'],['[A] after',t>=1?fx(x2)+' M':'…'],['rate before',fx(y1)],['rate after',t>=1?fx(y2):'…'],['[A] change',fac(this.mult)],['rate change',t>=1?fac(y2/y1):'?']]);}
+  else{var res=[];[0,1,2].forEach(function(o){me.curve(o,OCOL[o],3.5);var y1=ORD[o].f(x1),y2=ORD[o].f(x2),ya=ORD[o].f(xa);
+    var X1=me.X(x1),Y1=me.Y(y1);dotc(X1,Y1,7,OCOL[o]);if(t>0){var XA=me.X(xa),YA=me.Y(ya);seg(X1,Y1,X1,me.G.y0,OCOL[o],1.5,[5,5]);seg(XA,YA,XA,me.G.y0,OCOL[o],1.5,[5,5]);seg(XA,YA,me.G.x0,YA,OCOL[o],1.5,[5,5]);seg(X1,Y1,me.G.x0,Y1,OCOL[o],1.5,[5,5]);dotc(XA,YA,7,OCOL[o]);}
+    res.push(y2/y1);});
+   panel(555,20,225,470);txt('Same change in [A]:',667,48,{s:15,c:MUTED,w:500});pill('[A] '+fac(this.mult),667,82,AMBER,'#fff',20);
+   [0,1,2].forEach(function(o,i){var y=140+i*110;rr(570,y-30,195,92,14);ctx.fillStyle='#f6f8fc';ctx.fill();txt(ORD[o].n,667,y-12,{s:16,c:OCOL[o]});txt(ORD[o].math,667,y+14,{s:18,c:INK});
+    txt(t>=1?'rate '+fac(res[o]):'rate ?',667,y+42,{s:18,c:OCOL[o]});});
+   setReads([['[A] change',fac(this.mult),1],['Zero order',t>=1?'rate '+fac(res[0]):'?'],['First order',t>=1?'rate '+fac(res[1]):'?'],['Second order',t>=1?'rate '+fac(res[2]):'?',1]]);}
+ }};
+
+/* =========================================================
+   TAB 2  Two reactants: two beakers, same reaction, count products
+   ========================================================= */
+var RX=[{m:1,n:1,lab:'rate = k[A][B]'},{m:2,n:1,lab:'rate = k[A]²[B]'},{m:0,n:1,lab:'rate = k[B]'},{m:1,n:2,lab:'rate = k[A][B]²'}];
+var T2={name:'Two reactants',c:CORAL,steps:RX.map(function(r){return r.lab;}),fa:2,fb:1,DUR:10,BASE:0.8,
+ title:function(s){return 'Same reaction, two beakers: which one makes products faster?';},
+ enter:function(s){var me=this;this.s=s;this.R=RX[s];
+  $('controls').innerHTML='<span class="ctl">After beaker:</span><span class="ctl" style="color:#e2708a">[A]</span>'+[1,2,3].map(function(k){return '<button class="btn'+(k===me.fa?' sel':'')+'" data-fa="'+k+'">×'+k+'</button>';}).join('')+
+   '<span class="ctl" style="color:#2b59c3;margin-left:8px">[B]</span>'+[1,2,3].map(function(k){return '<button class="btn'+(k===me.fb?' sel':'')+'" data-fb="'+k+'">×'+k+'</button>';}).join('')+
+   '<button class="btn fill" id="run2" style="margin-left:8px">▶ Run for 10 s</button>';
+  ['fa','fb'].forEach(function(key){Array.prototype.forEach.call(document.querySelectorAll('[data-'+key+']'),function(b){b.onclick=function(){me[key]=+b.getAttribute('data-'+key);Array.prototype.forEach.call(document.querySelectorAll('[data-'+key+']'),function(x){x.classList.toggle('sel',x===b);});me.reset();};});});
+  $('run2').onclick=function(){me.reset();me.running=true;};
+  this.reset();
+  setQ(['Double [A], then run. Then try doubling [B] instead. Is it the same?','This reaction is second order in A. Predict: double [A], how many times more products?','Zero order in A: double or triple [A]. Why does the After beaker not speed up?','Which has the bigger effect here: doubling [A] or doubling [B]?'][s]);
+  setRule(['The <b>order</b> belongs to the reaction: it is found by experiment','The beaker only changes the <b>concentration</b>','rate change = (A change)<sup>m</sup> × (B change)<sup>n</sup>']);},
+ mk:function(x0,fa,fb){var p=[];for(var i=0;i<3*fa+3*fb;i++){var a=Math.random()*Math.PI*2;p.push({x:x0+25+Math.random()*270,y:105+Math.random()*165,vx:Math.cos(a)*60,vy:Math.sin(a)*60,A:i<3*fa});}return p;},
+ reset:function(){this.t=0;this.running=false;this.B=[{x0:30,fa:1,fb:1,p:this.mk(30,1,1),n:0,acc:0,fl:[]},{x0:420,fa:this.fa,fb:this.fb,p:this.mk(420,this.fa,this.fb),n:0,acc:0,fl:[]}];},
+ frame:function(dt){var me=this,R=this.R;clear();
+  var f=Math.pow(this.fa,R.m)*Math.pow(this.fb,R.n);
+  if(this.running){this.t=Math.min(this.DUR,this.t+dt);if(this.t>=this.DUR)this.running=false;}
+  this.B.forEach(function(b,k){var rate=me.BASE*(k?f:1),x0=b.x0;
+   panel(x0-10,20,350,330);txt(k?'After':'Before',x0+165,44,{s:18,c:k?GREEN:MUTED});
+   txt('[A] ×'+b.fa+'   [B] ×'+b.fb,x0+165,68,{s:15,c:INK,w:500});
+   ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0+12,88);ctx.lineTo(x0+12,272);ctx.quadraticCurveTo(x0+12,285,x0+25,285);ctx.lineTo(x0+305,285);ctx.quadraticCurveTo(x0+318,285,x0+318,272);ctx.lineTo(x0+318,88);ctx.stroke();
+   ctx.fillStyle='rgba(43,89,195,.06)';ctx.fillRect(x0+14,98,302,185);
+   b.p.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<x0+25||p.x>x0+305)p.vx*=-1;if(p.y<108||p.y>272)p.vy*=-1;p.x=clamp(p.x,x0+25,x0+305);p.y=clamp(p.y,108,272);dotc(p.x,p.y,9,p.A?CORAL:BLUE);});
+   if(me.t>0){var target=Math.floor(rate*me.t+1e-9);while(b.n<target){b.n++;var A=b.p.filter(function(q){return q.A;}),Bq=b.p.filter(function(q){return !q.A;}),pa=A[Math.floor(Math.random()*A.length)],pb=Bq[Math.floor(Math.random()*Bq.length)];b.fl.push({x:(pa.x+pb.x)/2,y:(pa.y+pb.y)/2,t:0});}}
+   b.fl.forEach(function(q){q.t+=dt;var a=1-q.t/.6;if(a>0){ctx.globalAlpha=a;ctx.strokeStyle=GREEN;ctx.lineWidth=3;ctx.beginPath();ctx.arc(q.x,q.y,10+q.t*30,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}});b.fl=b.fl.filter(function(q){return q.t<.6;});
+   /* product tray */
+   txt('Products made',x0+80,310,{s:14,c:MUTED,w:500});
+   var shown=Math.min(b.n,40);for(var i=0;i<shown;i++){dotc(x0+150+(i%20)*8.5,302+Math.floor(i/20)*12,4.5,GREEN);}
+   pill(String(b.n),x0+318,312,GREEN,'#fff',18);});
+  /* timer bar */
+  rr(30,365,740,14,7);ctx.fillStyle='#e6ebf3';ctx.fill();rr(30,365,Math.max(14,740*this.t/this.DUR),14,7);ctx.fillStyle=AMBER;ctx.fill();txt(this.t.toFixed(1)+' s',780,372,{s:13,c:MUTED,a:'right',w:500});
+  /* prediction vs measurement */
+  panel(20,392,760,98);
+  txt(R.lab.replace('rate = k','rate = k'),130,420,{s:24});txt('this reaction (from experiment)',130,450,{s:13,c:MUTED,w:500});
+  txt('Prediction:  ('+this.fa+')'+sup(R.m)+' × ('+this.fb+')'+sup(R.n)+'  =  ×'+f,470,420,{s:22,c:CORAL});
+  var b0=this.B[0].n,b1=this.B[1].n;
+  txt(this.t>=this.DUR?'Measured:  '+b1+' ÷ '+b0+'  =  ×'+(b0?Math.round(b1/b0*10)/10:'?'):(this.running?'Measuring…':'Press Run to measure'),470,456,{s:20,c:GREEN});
+  setReads([['Reaction',R.lab,1],['After: [A]','×'+this.fa],['After: [B]','×'+this.fb],['Products before',b0],['Products after',b1],['Predicted change','×'+f,1]]);}
+};
+/* ---------- shared helpers for HTML panels ---------- */
+function sci(v){if(v===0)return '0';var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(2)+' × 10<sup>'+String(e).replace('-','−')+'</sup>';}
+function supH(n){return '<sup>'+n+'</sup>';}
+function rfmt(x){return (Math.round(x*100)/100).toString();}
+/* mini graph: rate vs [X] for an order, with two points and dashed lines */
+function miniGraph(order,c,col){var w=200,h=150,x0=30,y0=125,x1=190,y1=12;function f(x){return order===0?.5:order===1?x/3:x*x/9*1;}
+ function X(v){return x0+v/3*(x1-x0);}function Y(v){return y0-v*(y0-y1);}
+ var p='';for(var i=0;i<=60;i++){var x=3*i/60,y=f(x);if(y>1.02)break;p+=(i?'L':'M')+X(x).toFixed(1)+' '+Y(y).toFixed(1);}
+ var a=1,b=a*c;if(b>3){a=3/c;b=3;}
+ function pt(x,lab){var Xp=X(x),Yp=Y(f(x));return '<line x1="'+Xp+'" y1="'+Yp+'" x2="'+Xp+'" y2="'+y0+'" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="4 4"/><line x1="'+Xp+'" y1="'+Yp+'" x2="'+x0+'" y2="'+Yp+'" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="4 4"/><circle cx="'+Xp+'" cy="'+Yp+'" r="5" fill="'+col+'" stroke="#fff" stroke-width="2"/>';}
+ return '<svg width="'+w+'" height="'+(h+10)+'" viewBox="0 0 '+w+' '+(h+10)+'"><line x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y0+'" stroke="#18233a" stroke-width="2"/><line x1="'+x0+'" y1="'+y0+'" x2="'+x0+'" y2="'+y1+'" stroke="#18233a" stroke-width="2"/>'+
+  '<path d="'+p+'" fill="none" stroke="'+col+'" stroke-width="3.5"/>'+pt(a)+pt(b)+'<text x="'+(x1-2)+'" y="'+(y0+18)+'" text-anchor="end" font-family="Fredoka, sans-serif" font-size="13" fill="#5a6780">concentration</text><text x="10" y="'+(y1+6)+'" font-family="Fredoka, sans-serif" font-size="13" fill="#5a6780" transform="rotate(-90 10 '+(y1+40)+')">rate</text></svg>';}
+function ladder(c,hit){var h='<div class="ladder">';for(var k=0;k<=3;k++){var v=Math.pow(c,k);h+='<span class="rung'+(k===hit?' hit':'')+'" style="'+(k===hit?'background:'+OCOL[Math.min(k,3)]:'')+'">('+rfmt(c)+')'+supH(k)+' = '+rfmt(v)+'</span>';}return h+'</div>';}
+function chip(lab,from,to,f,col){return '<span class="cmp" style="border-color:'+col+'"><b style="color:'+col+'">'+lab+'</b> '+from+' → '+to+' <i style="background:'+col+'">'+f+'</i></span>';}
+function mk(id,ok,filled){var e=$(id);if(e){e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);}}
+
+/* =========================================================
+   TAB 3  Mystery reaction (method of initial rates)
+   ========================================================= */
+var MYS=[{m:1,n:2},{m:2,n:0},{m:0,n:1},null];
+var T3={name:'Mystery reaction',c:PLUM,steps:['Mystery 1','Mystery 2','Mystery 3','Random mystery'],
+ title:function(s){return 'Be the scientist: find the rate law by running experiments';},
+ enter:function(s){this.s=s;var M=MYS[s]||{m:Math.floor(Math.random()*3),n:Math.floor(Math.random()*3)};this.M=M;this.trials=[];this.sel=[];this.cA=0.10;this.cB=0.10;this.gm=null;this.gn=null;this.done=false;
+  $('cv').style.display='none';$('controls').innerHTML='';this.render();
+  setQ('Run a trial, then change <b>only one</b> concentration and run another. Click two rows to compare them.');
+  setRule(['Change <b>one</b> concentration at a time','(change in concentration)<sup>order</sup> = change in rate','Any number to the power 0 is 1: no change in rate']);},
+ rate:function(a,b){return 2.0e-3*Math.pow(a/0.1,this.M.m)*Math.pow(b/0.1,this.M.n);},
+ render:function(){var me=this,h='';
+  h+='<div class="mysteq">A + B ⟶ products &nbsp;&nbsp; rate = k[A]<sup class="q">'+(this.done?this.M.m:'?')+'</sup>[B]<sup class="q">'+(this.done?this.M.n:'?')+'</sup></div>';
+  h+='<div class="runbar"><span class="lab">[A] (M)</span>'+[0.10,0.20,0.30].map(function(v){return '<button class="btn'+(v===me.cA?' sel':'')+'" data-ca="'+v+'">'+v.toFixed(2)+'</button>';}).join('')+
+   '<span class="lab">[B] (M)</span>'+[0.10,0.20,0.30].map(function(v){return '<button class="btn'+(v===me.cB?' sel':'')+'" data-cb="'+v+'">'+v.toFixed(2)+'</button>';}).join('')+
+   '<button class="btn fill" id="run"'+(this.trials.length>=6?' disabled':'')+'>▶ Run trial</button></div>';
+  h+='<table class="dt"><tr><th>Trial</th><th>[A] (M)</th><th>[B] (M)</th><th>Initial rate (mol/(L·s))</th></tr>'+(this.trials.length?this.trials.map(function(t,i){return '<tr data-r="'+i+'" class="'+(me.sel.indexOf(i)>=0?'sel':'')+'"><td>'+(i+1)+'</td><td>'+t[0].toFixed(2)+'</td><td>'+t[1].toFixed(2)+'</td><td>'+sci(t[2])+'</td></tr>';}).join(''):'<tr><td colspan="4" class="small">No trials yet. Choose concentrations and press Run trial.</td></tr>')+'</table>';
+  h+='<div class="small" style="margin:4px 0 8px">Click two rows to compare them.</div>';
+  if(this.sel.length===2){var a=this.trials[this.sel[0]],b=this.trials[this.sel[1]],fa=b[0]/a[0],fb=b[1]/a[1],fr=b[2]/a[2];
+   h+='<div class="cmpbox"><div><b>Trial '+(this.sel[0]+1)+' → Trial '+(this.sel[1]+1)+'</b></div>'+chip('[A]',a[0].toFixed(2),b[0].toFixed(2),fa===1?'same':'×'+rfmt(fa),CORAL)+chip('[B]',a[1].toFixed(2),b[1].toFixed(2),fb===1?'same':'×'+rfmt(fb),BLUE)+chip('rate','','', '×'+rfmt(fr),GREEN).replace(' → ','');
+   if(fa!==1&&fb!==1)h+='<div class="warn">⚠ Both concentrations changed: you can\'t tell which one caused the change. Pick trials where only one changes.</div>';
+   else if(fa===1&&fb===1)h+='<div class="warn">Nothing changed in these two trials.</div>';
+   else{var c=fa!==1?fa:fb,X=fa!==1?'A':'B',o=Math.round(Math.log(fr)/Math.log(c));h+='<div class="solve">('+rfmt(c)+')<sup>'+(X==='A'?'m':'n')+'</sup> = '+rfmt(fr)+'</div>'+ladder(c,-1);}
+   h+='</div>';}
+  h+='<div class="ansrow2"><span class="lab">My answer:</span> m = '+[0,1,2].map(function(k){return '<button class="btn'+(me.gm===k?' sel':'')+'" data-gm="'+k+'">'+k+'</button>';}).join('')+
+   '<span style="width:16px"></span> n = '+[0,1,2].map(function(k){return '<button class="btn'+(me.gn===k?' sel':'')+'" data-gn="'+k+'">'+k+'</button>';}).join('')+
+   '<button class="btn fill" id="chk3">Check</button><button class="btn" id="new3">New experiment</button></div><div class="feedback" id="fb3"></div>';
+  $('panel').innerHTML=h;
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ca]'),function(b){b.onclick=function(){me.cA=+b.getAttribute('data-ca');me.render();};});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cb]'),function(b){b.onclick=function(){me.cB=+b.getAttribute('data-cb');me.render();};});
+  $('run').onclick=function(){me.trials.push([me.cA,me.cB,me.rate(me.cA,me.cB)]);me.render();};
+  Array.prototype.forEach.call(document.querySelectorAll('tr[data-r]'),function(r){r.onclick=function(){var i=+r.getAttribute('data-r'),k=me.sel.indexOf(i);if(k>=0)me.sel.splice(k,1);else{me.sel.push(i);if(me.sel.length>2)me.sel.shift();}me.sel.sort(function(a,b){return a-b;});me.render();};});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-gm]'),function(b){b.onclick=function(){me.gm=+b.getAttribute('data-gm');me.render();};});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-gn]'),function(b){b.onclick=function(){me.gn=+b.getAttribute('data-gn');me.render();};});
+  $('new3').onclick=function(){go(tabI,stepI);};
+  $('chk3').onclick=function(){var f=$('fb3');if(me.gm===null||me.gn===null){f.innerHTML='<span class="bad">Choose m and n first.</span>';return;}
+   if(me.gm===me.M.m&&me.gn===me.M.n){me.done=true;me.render();$('fb3').innerHTML='<span class="good">Correct! rate = k[A]'+supH(me.M.m)+'[B]'+supH(me.M.n)+', overall order '+(me.M.m+me.M.n)+'. You used '+me.trials.length+' trials.</span>';return;}
+   var msg=[];if(me.gm!==me.M.m)msg.push('m is not right yet: compare two trials where only [A] changes.');if(me.gn!==me.M.n)msg.push('n is not right yet: compare two trials where only [B] changes.');
+   f.innerHTML='<span class="bad">Not yet.</span><ul>'+msg.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';};
+  setReads([['Trials run',this.trials.length+' / 6'],['Compared',this.sel.length===2?'trials '+(this.sel[0]+1)+' & '+(this.sel[1]+1):'–'],['Your m',this.gm===null?'?':this.gm],['Your n',this.gn===null?'?':this.gn]]);},
+ frame:function(){}
+};
+
+/* =========================================================
+   TAB 4  Practice: find the order (show me / my turn)
+   ========================================================= */
+var PP=[
+ {t:'A ⟶ products',re:['A'],rows:[[0.100,1.50e-3],[0.200,3.00e-3]],src:'Warm-up: one reactant'},
+ {t:'A ⟶ products',re:['A'],rows:[[0.100,2.00e-3],[0.200,8.00e-3]],src:'One reactant'},
+ {t:'A ⟶ products',re:['A'],rows:[[0.100,5.00e-3],[0.200,5.00e-3]],src:'One reactant'},
+ {t:'A ⟶ products',re:['A'],rows:[[0.100,1.20e-3],[0.300,1.08e-2]],src:'Tripling!'},
+ {t:'aA + bB ⟶ products',re:['A','B'],rows:[[0.100,0.100,2.00e-3],[0.200,0.100,4.00e-3],[0.200,0.200,1.60e-2]],src:'Example 2 (Table 2)'},
+ {t:'aA + bB ⟶ products',re:['A','B'],rows:[[0.100,0.100,2.00e-3],[0.200,0.100,2.00e-3],[0.200,0.200,4.00e-3]],src:'Practice problem 21'},
+ {t:'2NO + 2H₂ ⟶ N₂ + 2H₂O',re:['NO','H₂'],rows:[[0.0050,0.0020,1.25e-5],[0.0100,0.0020,5.00e-5],[0.0100,0.0040,1.00e-4]],src:'Example 3'},
+ {t:'aA + bB ⟶ products',re:['A','B'],rows:[[0.10,0.10,1.00e-3],[0.30,0.10,3.00e-3],[0.30,0.20,3.00e-3]],src:'Challenge'}];
+PP.forEach(function(p){var nr=p.re.length;p.solved=false;p.an=p.re.map(function(r,j){
+  for(var i=0;i<p.rows.length;i++)for(var k=i+1;k<p.rows.length;k++){var ok=true;for(var q=0;q<nr;q++){if(q===j&&p.rows[i][q]===p.rows[k][q])ok=false;if(q!==j&&p.rows[i][q]!==p.rows[k][q])ok=false;}
+   if(ok){var c=p.rows[k][j]/p.rows[i][j],f=p.rows[k][nr]/p.rows[i][nr];return {i:i,k:k,c:c,f:f,o:Math.round(Math.log(f)/Math.log(c))};}}return null;});});
+function cfmt(v){return v<0.01?v.toFixed(4):v<1?v.toFixed(v<0.1&&String(v).length>4?3:3):String(v);}
+function rateLaw(p,ords,html){return 'rate = k'+p.re.map(function(r,j){var o=ords[j];if(o===null||o===undefined)return '['+r+']<sup>?</sup>';if(o===0)return '';return '['+r+']'+(o===1?'':'<sup>'+o+'</sup>');}).join('');}
+function ptable(p,hi){var nr=p.re.length;return '<table class="dt"><tr><th>Trial</th>'+p.re.map(function(r){return '<th>['+r+'] (M)</th>';}).join('')+'<th>Initial rate (mol/(L·s))</th></tr>'+
+ p.rows.map(function(r,i){return '<tr class="'+(hi&&hi.indexOf(i)>=0?'sel':'')+'"><td>'+(i+1)+'</td>'+r.slice(0,nr).map(function(v){return '<td>'+cfmt(v)+'</td>';}).join('')+'<td>'+sci(r[nr])+'</td></tr>';}).join('')+'</table>';}
+var RCOL=[CORAL,BLUE];
+var T4={name:'Practice: find the order',c:AMBER,steps:PP.map(function(p,i){return p.re.length===1?'1 reactant':'2 reactants';}),mode:'show',st:0,
+ mark:function(i){return PP[i].solved?'✓':i+1;},
+ title:function(s){return 'Problem '+(s+1)+': find the rate law for '+PP[s].t;},
+ enter:function(s){this.s=s;this.st=0;$('cv').style.display='none';$('controls').innerHTML='';this.render();
+  setQ('Which two trials will you compare? Only <b>one</b> concentration may change between them.');
+  setRule(['Pick two trials where only <b>one</b> concentration changes','(concentration change)<sup>order</sup> = rate change','×2 → rate ×1, ×2, ×4 means order 0, 1, 2','Overall order = sum of the orders']);},
+ cards:function(p){var nr=p.re.length,c=[];
+  p.re.forEach(function(r,j){var a=p.an[j],A=p.rows[a.i],B=p.rows[a.k],col=RCOL[j],L=nr>1?(j?'n':'m'):'m';
+   var chips=chip('['+r+']',cfmt(A[j]),cfmt(B[j]),'×'+rfmt(a.c),col);if(nr>1){var q=1-j;chips+=chip('['+p.re[q]+']',cfmt(A[q]),cfmt(B[q]),'same',MUTED);}
+   chips+='<span class="cmp" style="border-color:'+GREEN+'"><b style="color:'+GREEN+'">rate</b> ×'+rfmt(a.f)+'</span>';
+   c.push(['Compare trials '+(a.i+1)+' and '+(a.k+1)+' for ['+r+']',ptable(p,[a.i,a.k])+'<div class="chips">'+chips+'</div>']);
+   c.push(['Solve for the order of '+r,'<div class="solverow"><div><div class="solve">('+rfmt(a.c)+')<sup>'+L+'</sup> = '+rfmt(a.f)+'</div>'+ladder(a.c,a.o)+'<div class="big2" style="color:'+OCOL[a.o]+'">'+L+' = '+a.o+' → '+['zero','first','second','third'][a.o]+' order in '+r+'</div></div><div>'+miniGraph(a.o,a.c,OCOL[a.o])+'</div></div>']);});
+  var ords=p.an.map(function(a){return a.o;}),tot=ords.reduce(function(x,y){return x+y;},0);
+  c.push(['Write the rate law','<div class="lawbig">'+rateLaw(p,ords)+'</div>'+(nr>1?'<div class="center">overall order = '+ords.join(' + ')+' = <b>'+tot+'</b></div>':'<div class="center">'+['zero','first','second'][tot]+' order overall</div>')+(ords.indexOf(0)>=0?'<div class="center small">An order of 0 means that reactant is left out: [X]<sup>0</sup> = 1.</div>':'')]);
+  return c;},
+ render:function(){var me=this,p=PP[this.s],tryM=this.mode==='try',st=this.st,nr=p.re.length;
+  var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small" style="margin-left:auto">'+p.src+'</span></div>';
+  h+='<div class="task"><b>'+p.t+'</b> &nbsp; Find the rate law: &nbsp; <span class="lawsm">'+rateLaw(p,p.re.map(function(){return null;}))+'</span></div>';
+  if(!tryM){var cs=this.cards(p);if(st===0)h+=ptable(p,[]);
+   h+='<div class="steps3">'+cs.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div>'+c[1]+'</div>';}).join('')+'</div>';
+   h+='<div class="stepbar"><button class="btn" id="nBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<cs.length?'<button class="btn fill" id="nNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="nTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+cs.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+  else{var done=p.solved;h+=ptable(p,[]);
+   p.re.forEach(function(r,j){var a=p.an[j],L=nr>1?(j?'n':'m'):'m',opts=p.rows.map(function(x,i){return '<option value="'+i+'">'+(i+1)+'</option>';}).join('');
+    h+='<div class="gsec" style="border-color:'+RCOL[j]+'"><h4 style="color:'+RCOL[j]+'">Order of '+r+' ('+L+')</h4>'+
+     '<div class="gin">Compare trial <select id="ta'+j+'"><option value="">–</option>'+opts+'</select> and trial <select id="tb'+j+'"><option value="">–</option>'+opts+'</select><span class="mk" id="tm'+j+'"></span></div>'+
+     '<div class="gin">['+r+'] changes × <input id="cf'+j+'" inputmode="decimal" autocomplete="off"> &nbsp; rate changes × <input id="rf'+j+'" inputmode="decimal" autocomplete="off"></div>'+
+     '<div class="gin">'+L+' = '+[0,1,2,3].map(function(k){return '<button class="btn ob" data-j="'+j+'" data-o="'+k+'">'+k+'</button>';}).join('')+'<span class="mk" id="om'+j+'"></span></div></div>';});
+   h+='<div class="lawbig" id="lawLive">'+rateLaw(p,p.re.map(function(){return null;}))+'</div>';
+   h+='<div class="stepbar">'+(done?'':'<button class="btn fill" id="nCheck">Check my answers</button><button class="btn" id="nHint">Hint</button><button class="btn" id="nClear">Clear</button>')+'<button class="btn fill" id="nNextP"'+(done?'':' style="display:none"')+'>Next problem ▶</button></div>';
+   h+='<div class="hintbox" id="nHint2">1. Find two trials where only that concentration changes.<br>2. Divide: new ÷ old, for the concentration and for the rate.<br>3. Find the power: '+ladder(2,-1)+'</div><div class="feedback" id="nFb"></div>';}
+  $('panel').innerHTML=h;
+  $('mShow').onclick=function(){me.mode='show';me.st=0;me.render();};$('mTry').onclick=function(){me.mode='try';me.render();};
+  if(!tryM){$('nBack').onclick=function(){me.st--;me.render();};var nx=$('nNext');if(nx)nx.onclick=function(){me.st++;me.render();};var nt=$('nTry');if(nt)nt.onclick=function(){me.mode='try';me.render();};}
+  else{this.ords=p.re.map(function(){return null;});
+   $('nNextP').onclick=function(){go(tabI,(me.s+1)%PP.length);};
+   Array.prototype.forEach.call(document.querySelectorAll('.ob'),function(b){b.onclick=function(){var j=+b.getAttribute('data-j');me.ords[j]=+b.getAttribute('data-o');Array.prototype.forEach.call(document.querySelectorAll('.ob[data-j="'+j+'"]'),function(x){x.classList.toggle('sel',x===b);});$('lawLive').innerHTML=rateLaw(p,me.ords);};});
+   if(p.solved)this.fillSolved(p);
+   else{$('nCheck').onclick=function(){me.check();};$('nHint').onclick=function(){$('nHint2').classList.toggle('on');};$('nClear').onclick=function(){me.render();};}}
+  setReads([['Reactants',p.re.join(', ')],['Trials',p.rows.length],['Problems solved',PP.filter(function(x){return x.solved;}).length+' / '+PP.length,1]]);},
+ fillSolved:function(p){var me=this;p.re.forEach(function(r,j){var a=p.an[j];$('ta'+j).value=a.i;$('tb'+j).value=a.k;$('cf'+j).value=rfmt(a.c);$('rf'+j).value=rfmt(a.f);['ta'+j,'tb'+j,'cf'+j,'rf'+j].forEach(function(id){$(id).disabled=true;mk(id,true,true);});
+   var b=document.querySelector('.ob[data-j="'+j+'"][data-o="'+a.o+'"]');b.classList.add('sel');me.ords[j]=a.o;});$('lawLive').innerHTML=rateLaw(p,me.ords);
+  $('nFb').innerHTML='<span class="good">Solved! '+rateLaw(p,me.ords)+'</span>';},
+ check:function(){var me=this,p=PP[this.s],nr=p.re.length,msgs=[],all=true;
+  p.re.forEach(function(r,j){var ia=$('ta'+j).value,ib=$('tb'+j).value,a=p.an[j];
+   if(ia===''||ib===''||ia===ib){all=false;mk('ta'+j,false,true);mk('tb'+j,false,true);msgs.push(r+': choose two different trials.');return;}
+   var i=Math.min(+ia,+ib),k=Math.max(+ia,+ib),A=p.rows[i],B=p.rows[k],okT=A[j]!==B[j];for(var q=0;q<nr;q++)if(q!==j&&A[q]!==B[q])okT=false;
+   mk('ta'+j,okT,true);mk('tb'+j,okT,true);
+   if(!okT){all=false;msgs.push(A[j]===B[j]?'['+r+'] is the <b>same</b> in trials '+(i+1)+' and '+(k+1)+'. Pick trials where ['+r+'] changes.':'In trials '+(i+1)+' and '+(k+1)+' <b>both</b> concentrations change. Pick trials where only ['+r+'] changes.');}
+   var c=B[j]/A[j],f=B[nr]/A[nr],cf=parseFloat($('cf'+j).value),rf=parseFloat($('rf'+j).value);
+   var okC=okT&&isFinite(cf)&&Math.abs(cf-c)<=c*.03,okR=okT&&isFinite(rf)&&Math.abs(rf-f)<=f*.03;mk('cf'+j,okC,$('cf'+j).value!=='');mk('rf'+j,okR,$('rf'+j).value!=='');
+   if(okT&&!okC){all=false;msgs.push('['+r+']: new ÷ old = '+cfmt(B[j])+' ÷ '+cfmt(A[j])+'.');}
+   if(okT&&!okR){all=false;msgs.push('Rate: new ÷ old. Divide the two rates (the powers of 10 matter too!).');}
+   var okO=me.ords[j]===a.o;$('om'+j).innerHTML=me.ords[j]===null?'':okO?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+   if(!okO){all=false;msgs.push(me.ords[j]===null?'Choose the order for '+r+'.':'Order of '+r+': ('+rfmt(a.c)+')<sup>?</sup> = '+rfmt(a.f)+'. Look at the power ladder in the hint.');}});
+  if(all){p.solved=true;renderSteps();this.render();return;}
+  $('nFb').innerHTML='<span class="bad">Not yet. Fix the parts marked in red.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';},
+ frame:function(){}
+};
+
+/* ---------- shell ---------- */
+var TAB=[T1,T2,T3,T4],tabI=0,stepI=0;
+function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. '+t.name+'</button>';}).join('');
+  Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
+function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk2=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk2==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk2+'</b>'+l+'</button>';}).join('');
+  Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
+var HASH=['orders','two-reactants','mystery','practice'];
+function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('panel').innerHTML='';$('cnt').className='cnt';$('fb').className='fb';
+  renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);
+  try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+var last=performance.now();
+function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
