@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ideal Gas Law Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+.reads .rd b{font-size:19px}
+.step.done b{background:#2e9e5b;color:#fff}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.cnt{display:none;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;padding:10px 14px;border-radius:14px;background:#f6f8fc}
+.cnt.show{display:flex}
+.stp{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:17px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:26px;text-align:center;font-size:22px}
+#cv.click{cursor:pointer}
+sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+.dt tr[data-r]{cursor:pointer}
+.dt tr.sel td{background:#fff1cc!important;font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cmp{display:inline-flex;align-items:center;gap:8px;border:2px solid;border-radius:999px;padding:4px 6px 4px 12px;font-family:Fredoka,sans-serif;font-size:17px;background:#fff}
+.cmp i{font-style:normal;color:#fff;border-radius:999px;padding:2px 10px;font-weight:600}
+.solve{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;margin:6px 0}
+.ladder{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.rung{font-family:Fredoka,sans-serif;font-size:16px;padding:4px 10px;border-radius:10px;background:#eef2f8;color:var(--ink)}
+.rung.hit{color:#fff;font-weight:600;transform:scale(1.08)}
+.solverow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.big2{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin-top:6px}
+.lawbig{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;text-align:center;margin:10px 0;padding:8px;background:#f6f8fc;border-radius:14px}
+.lawsm{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.center{text-align:center;font-size:18px}
+.mysteq{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;text-align:center;padding:10px;background:#f6f8fc;border-radius:14px;margin-bottom:10px}
+.mysteq sup.q{color:var(--accent);font-size:.7em}
+.runbar,.ansrow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.runbar .lab,.ansrow2 .lab{font-family:Fredoka,sans-serif;font-size:16px;margin-left:6px}
+.ansrow2{font-family:Fredoka,sans-serif;font-size:20px;border-top:2px solid var(--line);padding-top:10px;margin-top:10px}
+.cmpbox{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-family:Fredoka,sans-serif;font-size:16px}
+.cmpbox .cmp{margin:6px 6px 0 0}
+.warn{margin-top:8px;color:#d8434a;font-weight:600}
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;margin:6px 0}
+.gin input,.gin select{width:80px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.gin select{width:64px}
+.gin input.ok,.gin select.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no,.gin select.no{border-color:#d8434a;background:#fdeeee}
+.good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
+.mk{min-width:18px}
+.hintbox .ladder{display:inline-flex}
+
+/* ===== ideal gas law lab ===== */
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.5}
+.task .src{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--accent);margin-right:8px;vertical-align:2px}
+.frow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.frow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.frow .fb2{flex:1;min-width:0}
+.frow .fl{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;margin-bottom:6px}
+.chs{display:flex;flex-wrap:wrap;gap:8px}
+.chs button{font-family:Fredoka,sans-serif;font-size:17px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px 14px;cursor:pointer;color:var(--ink)}
+.chs button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.chs button.ok{border-color:#2e9e5b;background:#2e9e5b;color:#fff}
+.chs button.no{border-color:#d8434a;background:#d8434a;color:#fff}
+.nin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:19px}
+.nin input{width:120px;font-family:Fredoka,sans-serif;font-size:20px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.nin input.ok{border-color:#2e9e5b;background:#e8f6ee}.nin input.no{border-color:#d8434a;background:#fdeeee}
+.fmark{font-weight:700;font-size:20px;min-width:22px;margin-top:2px}
+.mathl{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;margin:6px 0;line-height:1.5}
+.mathl b{font-weight:600}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;color:var(--accent)}
+.tip{font-size:14px;color:var(--muted);margin-top:6px}
+.dtab{border-collapse:separate;border-spacing:0;width:100%;margin-top:6px;font-family:Fredoka,sans-serif;font-size:18px}
+.dtab th{background:var(--accent);color:#fff;font-weight:600;padding:6px 8px}
+.dtab th:first-child{border-radius:10px 0 0 0}.dtab th:last-child{border-radius:0 10px 0 0}
+.dtab td{padding:6px 8px;text-align:center;border-bottom:2px solid #eef1f6}
+.dtab td input{width:90px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:3px}
+.dtab td input.ok{border-color:#2e9e5b;background:#e8f6ee}.dtab td input.no{border-color:#d8434a;background:#fdeeee}
+.mapflow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:17px;margin:8px 0}
+.mapflow .bx{border:2px solid var(--line);border-radius:12px;padding:6px 12px;background:#fff;font-weight:600}
+.mapflow .bx.hi{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mapflow .ar{color:var(--accent);font-weight:600;text-align:center;line-height:1.1}
+.mapflow .ar small{display:block;font-size:13px}
+.excards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exc{border:2px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.exc .eh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.exc .eh svg{flex:none}
+.exc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px;margin:0}
+.exc .tag{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:6px}
+.exc p{margin:4px 0;font-size:16px}
+.rv{border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;background:#fff}
+.rv .rq{font-size:18px;font-weight:700}
+.rv .ra{display:none;margin-top:8px;background:#e8f6ee;border-radius:12px;padding:8px 12px;font-size:17px}
+.rv.open .ra{display:block}
+.rv .btn{margin-top:8px}
+.bigeq{font-family:Fredoka,sans-serif;font-weight:600;font-size:34px;text-align:center;color:var(--accent);background:#f6f8fc;border-radius:14px;padding:10px;margin:8px 0}
+.ltab{border-collapse:collapse;width:100%;font-size:17px;margin-top:6px}
+.ltab td,.ltab th{border:2px solid #eef1f6;padding:6px 8px;text-align:center}
+.ltab th{background:#f3f6fb;font-family:Fredoka,sans-serif;font-weight:600}
+.subbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.subbar .btn.sel{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <rect x="12" y="10" width="34" height="8" rx="2" fill="#8d99b0"/>
+      <rect x="12" y="18" width="34" height="26" rx="3" fill="#eaf0f8" stroke="#18233a" stroke-width="2"/>
+      <circle cx="20" cy="28" r="3.5" fill="#0f8b8d"/><circle cx="31" cy="36" r="3.5" fill="#e67e22"/><circle cx="38" cy="25" r="3.5" fill="#2b59c3"/><circle cx="24" cy="38" r="3.5" fill="#8a4fbf"/>
+    </svg>
+    <div><h1>Ideal Gas Law Lab</h1><div class="sub">Avogadro's principle · PV = nRT · molar mass and density · real vs ideal gases</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.globalAlpha=o.al==null?1:o.al;ctx.fillText(s,x,y);var w=ctx.measureText(s).width;ctx.globalAlpha=1;return w;}
+function tw(s,size,w){ctx.font=(w||600)+' '+size+'px Fredoka, sans-serif';return ctx.measureText(s).width;}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function card(x,y,w,h,fill,stroke){rr(x,y,w,h,14);ctx.fillStyle=fill||'#fff';ctx.fill();ctx.strokeStyle=stroke||LINE;ctx.lineWidth=2;ctx.stroke();}
+function ball(x,y,r,c,edge){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();if(r>2.5){ctx.strokeStyle=edge||'rgba(24,35,58,.45)';ctx.lineWidth=r>6?2:1.2;ctx.stroke();}
+ if(r>5){ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(x-r*.35,y-r*.35,r*.3,0,Math.PI*2);ctx.fill();}}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),s=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+var rnd=Math.random;
+function gauss(){var u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(6.283185*v);}
+
+/* ================= particle engine ================= */
+/* box: {x0,y0,x1,y1}; particle {x,y,vx,vy,r,a,w,k} */
+function mkParts(n,r,box,v,kind){var P=[],tries=0;while(P.length<n&&tries<6000){tries++;var x=lerp(box.x0+r,box.x1-r,rnd()),y=lerp(box.y0+r,box.y1-r,rnd());
+  if(P.every(function(q){return (x-q.x)*(x-q.x)+(y-q.y)*(y-q.y)>(r+q.r+3)*(r+q.r+3);})){var a=rnd()*6.283;P.push({x:x,y:y,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:rnd()*6.283,w:(rnd()-.5)*3,k:kind||0});}}
+ return P;}
+function addPart(P,r,box,v,kind){var p=mkParts(1,r,box,v,kind)[0];if(!p){var a=rnd()*6.283;p={x:lerp(box.x0+r,box.x1-r,rnd()),y:box.y0+r+2,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:0,w:(rnd()-.5)*3,k:kind||0};}P.push(p);return p;}
+/* o: e (restitution), att (attraction accel), rng (range factor), g (gravity), vt (target rms speed), kT (thermostat rate), coll (bool), hit(fn) */
+function stepParts(P,box,dt,o){o=o||{};var e=o.e==null?1:o.e,n=P.length,coll=o.coll!==false,sub=Math.max(1,Math.ceil(dt/0.008)),h=dt/sub;
+ for(var s=0;s<sub;s++){
+  if(o.att){for(var i=0;i<n;i++)for(var j=i+1;j<n;j++){var a=P[i],b=P[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),lim=a.r+b.r;
+    if(d>lim&&d<lim*(o.rng||2)){var f=o.att*h/d;a.vx+=f*dx;a.vy+=f*dy;b.vx-=f*dx;b.vy-=f*dy;}}}
+  for(i=0;i<n;i++){var p=P[i],gg=p.g!=null?p.g:o.g;if(gg)p.vy+=gg*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;var r=p.r,ew=o.ew==null?1:o.ew;
+   if(p.x<box.x0+r){p.x=box.x0+r;p.vx=Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'l');}
+   if(p.x>box.x1-r){p.x=box.x1-r;p.vx=-Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'r');}
+   if(p.y<box.y0+r){p.y=box.y0+r;p.vy=Math.abs(p.vy)*ew+(box.vy0||0);if(o.hit)o.hit(p,'t');}
+   if(p.y>box.y1-r){p.y=box.y1-r;p.vy=-Math.abs(p.vy)*(gg?ew*.8:ew);if(o.hit)o.hit(p,'b');}}
+  if(coll){for(i=0;i<n;i++)for(j=i+1;j<n;j++){a=P[i];b=P[j];dx=b.x-a.x;dy=b.y-a.y;d=Math.sqrt(dx*dx+dy*dy);lim=a.r+b.r;
+    if(d>0&&d<lim){var nx=dx/d,ny=dy/d,ma=a.m||1,mb=b.m||1,rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+     if(rv<0){var J=-(1+e)*rv/(1/ma+1/mb);a.vx-=J*nx/ma;a.vy-=J*ny/ma;b.vx+=J*nx/mb;b.vy+=J*ny/mb;if(o.bump)o.bump(a,b);}
+     var ov=(lim-d)/2;a.x-=ov*nx;a.y-=ov*ny;b.x+=ov*nx;b.y+=ov*ny;}}}}
+ if(o.lang&&o.vt!=null){var gm=o.lang,sg=Math.sqrt(gm*o.vt*o.vt*dt);P.forEach(function(p){p.vx+=-gm*p.vx*dt+sg*gauss();p.vy+=-gm*p.vy*dt+sg*gauss();});return;}
+ if(o.vt!=null&&n){var ke=0;P.forEach(function(p){ke+=p.vx*p.vx+p.vy*p.vy;});ke=Math.sqrt(ke/n);var sc=1+(o.kT||2)*dt*(o.vt/Math.max(ke,1)-1);sc=clamp(sc,.9,1.1);P.forEach(function(p){p.vx*=sc;p.vy*=sc;});}}
+function near(P,f){var out=[];for(var i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j];if(Math.hypot(b.x-a.x,b.y-a.y)<(a.r+b.r)*f)out.push([a,b]);}return out;}
+/* molecule drawings */
+var GASC={H2:['#eef2f7','#9aa6b8'],He:['#b48be0','#7a52a8'],N2:['#4a78d6','#2b4f99'],O2:['#e25a4f','#a33027'],CO2:['#3a3f4b','#1e2129'],Kr:['#56b6a6','#2f7d71']};
+function drawMol(type,x,y,a,s){s=s||1;var c=Math.cos(a),si=Math.sin(a);
+ if(type==='He'||type==='Kr'){ball(x,y,(type==='He'?4.5:7)*s,GASC[type][0],GASC[type][1]);return;}
+ if(type==='CO2'){var d=10*s;ball(x-d*c,y-d*si,6.2*s,GASC.O2[0],GASC.O2[1]);ball(x+d*c,y+d*si,6.2*s,GASC.O2[0],GASC.O2[1]);ball(x,y,5.6*s,GASC.CO2[0],GASC.CO2[1]);return;}
+ var rr2=(type==='H2'?3.6:6.2)*s,dd=(type==='H2'?3.2:5.2)*s,col=GASC[type];ball(x-dd*c,y-dd*si,rr2,col[0],col[1]);ball(x+dd*c,y+dd*si,rr2,col[0],col[1]);}
+function molR(type){return {H2:7,He:5,N2:11.5,O2:11.5,CO2:16.5,Kr:7}[type];}
+
+/* ================= number helpers ================= */
+var SUPS={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-'};
+function parseNum(s){if(s==null)return null;s=String(s).trim();if(s==='')return null;s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,function(c){return SUPS[c];}).replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');
+ s=s.replace(/[×xX*]10\^?(-?\d+)/,'e$1');var v=Number(s);if(isNaN(v))v=parseFloat(s);return isNaN(v)?null:v;}
+function okNum(x,f){if(x===null)return false;if(f.tolA!=null)return Math.abs(x-f.want)<=f.tolA;return Math.abs(x-f.want)<=Math.abs(f.want)*(f.tol||.012);}
+function nearV(x,v,tol){return x!==null&&Math.abs(x-v)<=Math.abs(v)*(tol||.02);}
+
+/* ================= practice engine ================= */
+/* problem: {src,q,show:[[title,html]],fields:[{t:'c',lab,opts,ok,why,bad:{i:msg}} | {t:'n',lab,pre,unit,want,tol,tolA,alt:[[v,msg]],why}],ans,sense,mode,hint} */
+function fieldHtml(f,k){var h='<div class="frow" id="fr'+k+'"><span class="fn">'+(k+1)+'</span><div class="fb2"><div class="fl">'+f.lab+'</div>';
+ if(f.t==='c')h+='<div class="chs" data-k="'+k+'">'+f.opts.map(function(o,i){return '<button data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
+ else h+='<div class="nin">'+(f.pre||'')+'<input id="fi'+k+'" inputmode="decimal" autocomplete="off" placeholder="?"> '+(f.unit||'')+'</div>';
+ return h+'</div><span class="fmark" id="fm'+k+'"></span></div>';}
+function probUI(P){var mode=P.mode||'show',st=P.st||0,h='';
+ h+='<div class="modebar"><div class="seg"><button id="mShow"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mTry"'+(mode==='try'?' class="on"':'')+'>My turn</button></div><span class="small">'+(mode==='show'?'Step by step. Press Next step.':'Answer each part, then press Check.')+'</span></div>';
+ h+='<div class="task"><span class="src">'+P.src+'</span>'+P.q+'</div>';
+ if(mode==='show'){var N=P.show.length;
+  h+='<div class="steps3">'+P.show.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="sBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="sNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="sTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+P.show.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+ else{h+='<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>'+P.fields.map(fieldHtml).join('');
+  h+='<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk">Check</button><button class="btn" id="pHint">Hint</button><button class="btn" id="pClr">Clear</button>')+(P.next?'<button class="btn fill" id="pNext"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div>';
+  h+='<div class="hintbox" id="pHint2">'+(P.hint||P.fields.map(function(f){return f.why;}).filter(Boolean).join(' · '))+'</div><div class="feedback" id="pFb">'+(P.solved?solvedMsg(P):'')+'</div>';}
+ $('panel').innerHTML=h;
+ $('mShow').onclick=function(){P.mode='show';P.st=0;probUI(P);};$('mTry').onclick=function(){P.mode='try';probUI(P);};
+ if(mode==='show'){$('sBack').onclick=function(){P.st=st-1;probUI(P);};var n=$('sNext');if(n)n.onclick=function(){P.st=st+1;probUI(P);if(P.onShow)P.onShow(P.st);};var t=$('sTry');if(t)t.onclick=function(){P.mode='try';probUI(P);};}
+ else{if(P.solved){P.fields.forEach(function(f,k){fill(P,f,k);});}
+  Array.prototype.forEach.call(document.querySelectorAll('.chs'),function(g){Array.prototype.forEach.call(g.children,function(b){b.onclick=function(){if(P.solved)return;Array.prototype.forEach.call(g.children,function(x){x.classList.remove('on','ok','no');});b.classList.add('on');};});});
+  var c=$('pChk');if(c){c.onclick=function(){probCheck(P);};$('pHint').onclick=function(){$('pHint2').classList.toggle('on');};$('pClr').onclick=function(){probUI(P);};}
+  var nx=$('pNext');if(nx)nx.onclick=function(){P.next();};}}
+function fill(P,f,k){if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] button[data-i="'+f.ok+'"]');if(b)b.classList.add('ok');}else{var e=$('fi'+k);e.value=f.show||String(f.want);e.classList.add('ok');e.disabled=true;}$('fm'+k).innerHTML='<span class="good2">✓</span>';}
+function solvedMsg(P){return '<span class="good">Well done! '+P.ans+'</span>'+(P.sense?'<div class="small" style="font-size:16px;margin-top:4px">'+P.sense+'</div>':'');}
+function probCheck(P){var msgs=[],all=true;
+ P.fields.forEach(function(f,k){var ok,msg=null,filled=true;
+  if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] .on, .chs[data-k="'+k+'"] .ok, .chs[data-k="'+k+'"] .no'),i=b?+b.getAttribute('data-i'):-1;filled=i>=0;ok=i===f.ok;
+   if(b){b.classList.remove('on','ok','no');b.classList.add(ok?'ok':'no');}
+   if(!ok)msg=!filled?'Part '+(k+1)+': choose an answer.':((f.bad&&f.bad[i])||f.why);}
+  else{var e=$('fi'+k),x=parseNum(e.value);filled=x!==null;ok=okNum(x,f);e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);
+   if(!ok){if(!filled)msg='Part '+(k+1)+': type a number.';else{(f.alt||[]).forEach(function(a){if(!msg&&nearV(x,a[0],a[2]||.02))msg=a[1];});if(!msg)msg=f.why;}}}
+  $('fm'+k).innerHTML=ok?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+  if(!ok){all=false;if(msg)msgs.push('<b>Part '+(k+1)+':</b> '+msg.replace(/^Part \d+: /,''));}});
+ if(all){P.solved=true;if(P.onSolve)P.onSolve();renderSteps();probUI(P);return;}
+ $('pFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
+
+/* ================= lesson cards ================= */
+function cardsUI(L){var st=L.st||0,N=L.cards.length,h='<div class="steps3">'+L.cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+ h+='<div class="stepbar"><button class="btn" id="cBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="cNext">'+(st===0?'Start ▶':'Next ▶')+'</button>':(L.next?'<button class="btn fill" id="cGo">Next ▶</button>':''))+'<div class="stepdots">'+L.cards.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';
+ $('panel').innerHTML=h;$('cBack').onclick=function(){L.st=st-1;cardsUI(L);if(L.on)L.on(L.st);};var n=$('cNext');if(n)n.onclick=function(){L.st=st+1;cardsUI(L);if(L.on)L.on(L.st);};var g=$('cGo');if(g)g.onclick=function(){L.next();};
+ if(L.bind)L.bind();}
+function revealUI(items){$('panel').innerHTML=items.map(function(it,k){return '<div class="rv" id="rv'+k+'"><div class="rq">'+it[0]+'</div><div class="ra">'+it[1]+'</div><button class="btn" data-k="'+k+'">Show answer</button></div>';}).join('');
+ Array.prototype.forEach.call(document.querySelectorAll('.rv .btn'),function(b){b.onclick=function(){var r=$('rv'+b.dataset.k);r.classList.toggle('open');b.textContent=r.classList.contains('open')?'Hide answer':'Show answer';};});}
+
+/* ================= controls helpers ================= */
+function ctlButtons(list){$('controls').innerHTML=list.map(function(b,i){return '<button class="btn'+(b.fill?' fill':'')+(b.sel?' sel':'')+'" id="cb'+i+'">'+b.t+'</button>';}).join('');list.forEach(function(b,i){$('cb'+i).onclick=b.f;});}
+function ctlSlider(id,lab,min,max,step,val,fmt,on){return {html:'<label class="ctl">'+lab+' <input type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'"><output id="'+id+'o">'+fmt(val)+'</output></label>',bind:function(){var e=$(id);e.oninput=function(){var v=+e.value;$(id+'o').textContent=fmt(v);on(v);};}};}
+
+/* ================= TAB 1: AVOGADRO ================= */
+var A1={gases:[['H2','H₂',2.02],['He','He',4.00],['N2','N₂',28.0],['O2','O₂',32.0],['CO2','CO₂',44.0]],true:false,boxes:null};
+function a1Init(){A1.boxes=A1.gases.map(function(g,i){var x0=18+i*156,b={x0:x0+6,y0:66,x1:x0+144,y1:226};var s=A1.true?.3:.8;return {b:b,P:mkParts(12,molR(g[0])*s,b,70,0)};});}
+var discover={src:"Let's Discover!",mode:'try',q:'Each box holds <b>22.4 L</b> of gas at <b>STP</b> (0.00 °C, 1.00 atm). Find the number of moles in each box: <b>n = mass ÷ molar mass</b>.',
+ fields:A1.gases.map(function(g){return {t:'n',lab:g[1]+': '+g[2].toFixed(g[2]<10?2:1)+' g ÷ '+g[2].toFixed(g[2]<10?2:1)+' g/mol =',unit:'mol',want:1,tol:.01,why:'Divide the mass by the molar mass.'};}).concat([{t:'c',lab:'What do you notice?',opts:['Every 22.4 L box holds 1.00 mol','Heavier gases have more moles','Bigger particles have fewer moles'],ok:0,why:'Look at your answers: they are all the same.'}]),
+ show:[['Divide each mass by its molar mass','H₂: 2.02 ÷ 2.02 = <b>1.00 mol</b> · He: 4.00 ÷ 4.00 = <b>1.00 mol</b> · N₂: 28.0 ÷ 28.0 = <b>1.00 mol</b> · O₂: 32.0 ÷ 32.0 = <b>1.00 mol</b> · CO₂: 44.0 ÷ 44.0 = <b>1.00 mol</b>'],
+  ['What do we notice?','Different gases, different masses, different particle sizes… but <b>every box holds 1.00 mol</b>, the same number of particles (6.02 × 10²³).'],
+  ['Why does size not matter?','Gas particles are <b>very far apart</b>. Their own size is tiny compared with the empty space between them. Press <b>True size</b> under the picture to see it.'],
+  ["Avogadro's principle",'<b>Equal volumes</b> of gases at the same temperature and pressure contain <b>equal numbers of particles</b>.<br>At STP, <b>1 mol of any gas = 22.4 L</b>. This is the <b>molar volume</b>.']],
+ ans:'Every 22.4 L box at STP holds 1.00 mol of gas.',sense:"That is Avogadro's principle: equal volumes, same T and P → equal numbers of particles."};
+var SC_A1={title:"Avogadro's principle: one mole of different gases",q:'CO₂ molecules are much bigger than He atoms. Why do they still fit into the same 22.4 L?',canvas:true,prob:discover,
+ enter:function(){a1Init();ctlButtons([{t:'True size',f:function(){A1.true=!A1.true;a1Init();this.classList.toggle('sel',A1.true);this.textContent=A1.true?'Bigger particles':'True size';}}]);},
+ frame:function(dt){clear();txt('Five boxes of 22.4 L at STP (0.00 °C, 1.00 atm)',400,30,{s:20});
+  A1.boxes.forEach(function(B,i){var g=A1.gases[i],s=A1.true?.3:.8;stepParts(B.P,B.b,dt,{coll:!A1.true});
+   card(B.b.x0-6,B.b.y0-6,150,172,'#fff');ctx.save();rr(B.b.x0-6,B.b.y0-6,150,172,14);ctx.clip();B.P.forEach(function(p){drawMol(g[0],p.x,p.y,p.a,s);});ctx.restore();
+   txt('22.4 L',B.b.x0+69,B.b.y1+20,{s:14,c:MUTED});
+   var cx=B.b.x0+69;txt(g[1],cx,282,{s:28});txt(g[2].toFixed(g[2]<10?2:1)+' g',cx,316,{s:18,c:INK,w:500});
+   if(discover.solved)pill('1.00 mol',cx,352,TEAL,'#fff',16);else pill('? mol',cx,352,'#dfe6f2',INK,16);});
+  card(30,388,740,96,'#fff');txt('Same volume · same T · same P  →  same number of particles',400,416,{s:19,c:TEAL});
+  txt('Each drawn particle stands for 5.0 × 10²² real particles: 12 drawn = 6.02 × 10²³ = 1 mol',400,446,{s:15,c:MUTED,w:500});
+  txt(A1.true?'True size: the particles are tiny compared with the space around them':'Particles drawn bigger than real so you can see them',400,470,{s:14,c:A1.true?GREEN:MUTED,w:500});},
+ reads:function(){return [['Volume of each box','22.4 L'],['Conditions','STP'],['Moles in each box',discover.solved?'1.00 mol':'?']];}};
+
+/* --- conversion map --- */
+var MAP={from:0,to:2,t:0};
+var MAPX=[115,400,685],HW=78,MAPN=['mass (g)','moles (mol)','volume (L)'];
+function mapOps(f,t){var ops=[];if(f<t){for(var i=f;i<t;i++)ops.push(i===0?['÷ molar mass',i,i+1]:['× 22.4 L/mol',i,i+1]);}else{for(i=f;i>t;i--)ops.push(i===2?['÷ 22.4 L/mol',i,i-1]:['× molar mass',i,i-1]);}return ops;}
+var MAPEX={'0-1':'2.00 × 10³ g CH₄ ÷ 16.05 g/mol = 125 mol','1-2':'125 mol × 22.4 L/mol = 2.80 × 10³ L','2-1':'3.72 L ÷ 22.4 L/mol = 0.166 mol','1-0':'0.0446 mol CO₂ × 44.01 g/mol = 1.96 g','0-2':'2.00 × 10³ g ÷ 16.05 g/mol × 22.4 L/mol = 2.80 × 10³ L','2-0':'1.0 L ÷ 22.4 L/mol × 44.01 g/mol = 2.0 g CO₂'};
+var quickMap={src:'Quick check',mode:'try',q:'Going <b>toward liters</b> you multiply by 22.4 L/mol. Going <b>away from liters</b> you divide. Choose for each:',
+ fields:[{t:'c',lab:'0.50 mol → liters',opts:['× 22.4 L/mol','÷ 22.4 L/mol'],ok:0,why:'Moles → liters: toward liters, so multiply.'},{t:'c',lab:'44.8 L → moles',opts:['× 22.4 L/mol','÷ 22.4 L/mol'],ok:1,why:'Liters → moles: away from liters, so divide.'},
+  {t:'n',lab:'So 44.8 L at STP =',unit:'mol',want:2,tol:.01,alt:[[44.8*22.4,'You multiplied. From liters to moles you divide.']],why:'44.8 ÷ 22.4'},{t:'c',lab:'3.72 L → moles',opts:['× 22.4 L/mol','÷ 22.4 L/mol'],ok:1,why:'Liters → moles: divide.'},{t:'n',lab:'So 3.72 L at STP =',unit:'mol',want:.166,tol:.01,alt:[[3.72*22.4,'You multiplied. From liters to moles you divide.']],why:'3.72 ÷ 22.4'}],
+ show:[['Look at the units','22.4 L/mol means <b>22.4 L in every 1 mol</b>.'],['Toward liters: multiply','0.50 mol × 22.4 L/mol = <b>11.2 L</b> (mol cancels, L is left)'],['Away from liters: divide','44.8 L ÷ 22.4 L/mol = <b>2.00 mol</b> (L cancels, mol is left)'],['Check with the units','If the units do not cancel to the unit you want, you chose the wrong one.']],
+ ans:'Toward liters × 22.4 · away from liters ÷ 22.4.'};
+var SC_A2={title:'The conversion map: multiply or divide by 22.4 L/mol?',q:'You have a volume in liters and want moles. Do you multiply or divide by 22.4 L/mol? How do the units tell you?',canvas:true,prob:quickMap,
+ enter:function(){var h='<span class="ctl">From:</span>'+MAPN.map(function(n,i){return '<button class="btn'+(MAP.from===i?' sel':'')+'" data-f="'+i+'">'+n.split(' ')[0]+'</button>';}).join('')+'<span class="ctl" style="margin-left:10px">To:</span>'+MAPN.map(function(n,i){return '<button class="btn'+(MAP.to===i?' sel':'')+'" data-t="'+i+'">'+n.split(' ')[0]+'</button>';}).join('');
+  $('controls').innerHTML=h;Array.prototype.forEach.call($('controls').querySelectorAll('button'),function(b){b.onclick=function(){if(b.dataset.f!=null)MAP.from=+b.dataset.f;else MAP.to=+b.dataset.t;if(MAP.from===MAP.to){if(b.dataset.f!=null)MAP.to=MAP.from===2?0:2;else MAP.from=MAP.to===0?2:0;}MAP.t=0;SC_A2.enter();};});},
+ frame:function(dt){MAP.t+=dt;clear();var ops=MAP.from===MAP.to?[]:mapOps(MAP.from,MAP.to);
+  txt('The conversion map (at STP only)',400,34,{s:20});
+  for(var i=0;i<2;i++){var a=MAPX[i]+HW,b=MAPX[i+1]-HW,fwd=ops.some(function(o){return o[1]===i&&o[2]===i+1;}),bk=ops.some(function(o){return o[1]===i+1&&o[2]===i;});
+   arrow(a+6,120,b-6,120,fwd?ORANGE:'#b7c1d3',fwd?5:3);txt(i===0?'÷ molar mass':'× 22.4 L/mol',(a+b)/2,96,{s:17,c:fwd?ORANGE:MUTED});
+   arrow(b-6,214,a+6,214,bk?ORANGE:'#b7c1d3',bk?5:3);txt(i===0?'× molar mass':'÷ 22.4 L/mol',(a+b)/2,240,{s:17,c:bk?ORANGE:MUTED});}
+  MAPN.forEach(function(n,i){var on=i===MAP.from||i===MAP.to;rr(MAPX[i]-HW,132,2*HW,70,16);ctx.fillStyle=i===MAP.from?TEAL:(i===MAP.to?ORANGE:'#fff');ctx.fill();ctx.strokeStyle=on?'transparent':LINE;ctx.lineWidth=2;ctx.stroke();txt(n,MAPX[i],167,{s:21,c:on?'#fff':INK});});
+  if(ops.length){var L=ops.length,u=(MAP.t*.6)%(L+.4),k=Math.min(L-1,Math.floor(u)),f=clamp(u-k,0,1),o=ops[k],y=o[2]>o[1]?120:214,x=lerp(MAPX[o[1]]+(o[2]>o[1]?HW:-HW),MAPX[o[2]]+(o[2]>o[1]?-HW:HW),ease(f));ball(x,y,9,ORANGE,'#fff');
+   card(60,280,680,190,'#fff');txt(MAPN[MAP.from]+'  →  '+MAPN[MAP.to],400,310,{s:20,c:TEAL});
+   txt(ops.map(function(o){return o[0];}).join('   then   '),400,350,{s:22,c:ORANGE});
+   txt('Example: '+MAPEX[MAP.from+'-'+MAP.to],400,395,{s:18,w:500});
+   var tl=ops.some(function(o){return o[0].indexOf('× 22.4')===0;}),aw=ops.some(function(o){return o[0].indexOf('÷ 22.4')===0;});
+   txt(tl?'Going toward liters → multiply by 22.4 L/mol':(aw?'Going away from liters → divide by 22.4 L/mol':'Mass ⇄ moles uses the molar mass from the periodic table'),400,440,{s:17,c:MUTED,w:500});}},
+ reads:function(){return [['From',MAPN[MAP.from]],['To',MAPN[MAP.to]]];}};
+
+/* --- Avogadro practice problems --- */
+var MULDIV=['× 22.4 L/mol','÷ 22.4 L/mol'];
+var PA=[
+ {chip:'Problem 1',name:'Volume of methane at STP',src:'Problem 1',q:'The main component of natural gas used for home heating and cooking is methane (CH₄). Calculate the <b>volume</b> that <b>2.00 kg</b> of methane gas will occupy at <b>STP</b>.',
+  show:[['What do we know?','Given: m = 2.00 kg CH₄ at STP · Unknown: V = ? L<div class="mapflow"><span class="bx hi">mass</span><span class="ar">→<small>÷ molar mass</small></span><span class="bx">moles</span><span class="ar">→<small>× 22.4</small></span><span class="bx hi">volume</span></div>'],
+   ['Change kg to g','2.00 kg × 1000 g/kg = <b>2.00 × 10³ g</b>'],['Molar mass of CH₄','12.01 + 4(1.01) = <b>16.05 g/mol</b>'],['Mass → moles: divide by the molar mass','n = 2.00 × 10³ g ÷ 16.05 g/mol = <b>125 mol</b>'],
+   ['Moles → liters: multiply or divide?','Toward liters → <b>multiply</b>: V = 125 mol × 22.4 L/mol = <span class="ansb">2.80 × 10³ L</span>'],['Does it make sense?','125 mol is a lot of gas and each mole fills 22.4 L, so a big volume makes sense ✓']],
+  fields:[{t:'c',lab:'You are given the mass. Which path do you need?',opts:['mass → moles → volume','mass → volume directly','volume → moles → mass'],ok:0,why:'There is no direct way from mass to volume: always go through moles.'},
+   {t:'n',lab:'Change kg to g: 2.00 kg =',unit:'g',want:2000,tol:.002,alt:[[.002,'To change kg to g, <b>multiply</b> by 1000.']],why:'1 kg = 1000 g.'},
+   {t:'n',lab:'Molar mass of CH₄ =',unit:'g/mol',want:16.05,tol:.004,why:'C 12.01 + 4 × H 1.01.'},
+   {t:'n',lab:'Moles: n =',unit:'mol',want:124.6,tol:.01,alt:[[2000*16.05,'Mass → moles: <b>divide</b> by the molar mass.'],[2/16.05,'Use the mass in grams (2000 g), not kg.']],why:'n = mass ÷ molar mass.'},
+   {t:'c',lab:'Moles → liters: do you multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:0,why:'Toward liters you multiply.'},
+   {t:'n',lab:'Volume: V =',unit:'L',want:2800,tol:.008,alt:[[124.6/22.4,'You divided. Toward liters you <b>multiply</b> by 22.4.']],why:'V = n × 22.4 L/mol.'}],ans:'V = 2.80 × 10³ L',sense:'125 mol × 22.4 L/mol: lots of moles → a big volume ✓'},
+ {chip:'Problem 2',name:'Container for nitrogen gas',src:'Problem 2',q:'What size container do you need to hold <b>0.0459 mol</b> of N₂ gas at STP?',
+  show:[['What do we know?','Given: n = 0.0459 mol N₂ at STP · Unknown: V = ? L'],['Do we need the molar mass?','No: we already have <b>moles</b>. Only moles → liters.'],['Multiply or divide?','Toward liters → <b>multiply</b>: V = 0.0459 mol × 22.4 L/mol = <span class="ansb">1.03 L</span>'],['Does it make sense?','Less than 1 mol → less than 22.4 L ✓']],
+  fields:[{t:'c',lab:'Do you need the molar mass?',opts:['No: I already have moles','Yes'],ok:0,why:'The question gives moles, so only moles → liters is needed.'},{t:'c',lab:'Moles → liters: multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:0,why:'Toward liters you multiply.'},
+   {t:'n',lab:'V =',unit:'L',want:1.03,tol:.01,alt:[[.0459/22.4,'You divided. Toward liters you <b>multiply</b>.']],why:'V = 0.0459 × 22.4'}],ans:'V = 1.03 L',sense:'Less than 1 mol → less than 22.4 L ✓'},
+ {chip:'Problem 3',name:'Mass of CO₂ in a balloon',src:'Problem 3',q:'How much carbon dioxide gas, in <b>grams</b>, is in a <b>1.0-L</b> balloon at STP?',
+  show:[['What do we know?','Given: V = 1.0 L CO₂ at STP · Unknown: m = ? g<div class="mapflow"><span class="bx hi">volume</span><span class="ar">→<small>÷ 22.4</small></span><span class="bx">moles</span><span class="ar">→<small>× molar mass</small></span><span class="bx hi">mass</span></div>'],
+   ['Liters → moles: divide','Away from liters → <b>divide</b>: n = 1.0 L ÷ 22.4 L/mol = <b>0.0446 mol</b>'],['Molar mass of CO₂','12.01 + 2(16.00) = <b>44.01 g/mol</b>'],['Moles → grams: multiply','m = 0.0446 mol × 44.01 g/mol = 1.96 g = <span class="ansb">2.0 g</span> (2 significant figures)'],['Does it make sense?','Much less than 1 mol (44 g) → about 2 g ✓']],
+  fields:[{t:'c',lab:'Liters → moles: multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:1,why:'Away from liters you divide.'},{t:'n',lab:'n =',unit:'mol',want:.0446,tol:.015,alt:[[22.4,'You multiplied. From liters to moles you <b>divide</b>.']],why:'n = 1.0 ÷ 22.4'},
+   {t:'n',lab:'Molar mass of CO₂ =',unit:'g/mol',want:44.01,tol:.003,why:'C 12.01 + 2 × O 16.00'},{t:'c',lab:'Moles → grams: multiply or divide by the molar mass?',opts:['× molar mass','÷ molar mass'],ok:0,why:'g/mol × mol = g: multiply.'},
+   {t:'n',lab:'m =',unit:'g',want:1.96,tol:.03,show:'2.0',alt:[[.0446/44.01,'You divided by the molar mass. Moles → grams: <b>multiply</b>.']],why:'m = 0.0446 × 44.01'}],ans:'m = 2.0 g CO₂',sense:'0.0446 mol is a small amount, so the mass is small ✓'},
+ {chip:'Problem 4',name:'Volume of hydrogen in mL',src:'Problem 4',q:'What volume, in <b>milliliters</b>, will <b>0.00922 g</b> of H₂ gas occupy at STP?',
+  show:[['What do we know?','Given: m = 0.00922 g H₂ · Unknown: V = ? mL'],['Molar mass of H₂','2(1.01) = <b>2.02 g/mol</b>'],['Mass → moles','n = 0.00922 g ÷ 2.02 g/mol = <b>0.00456 mol</b>'],['Moles → liters: multiply','V = 0.00456 mol × 22.4 L/mol = <b>0.102 L</b>'],['Liters → milliliters','0.102 L × 1000 = <span class="ansb">102 mL</span>']],
+  fields:[{t:'n',lab:'Molar mass of H₂ =',unit:'g/mol',want:2.02,tol:.005,alt:[[1.01,'Hydrogen gas is <b>H₂</b>: two atoms.']],why:'2 × 1.01'},{t:'n',lab:'n =',unit:'mol',want:.004564,tol:.015,alt:[[.00922*2.02,'Mass → moles: <b>divide</b> by the molar mass.']],why:'n = 0.00922 ÷ 2.02'},
+   {t:'c',lab:'Moles → liters: multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:0,why:'Toward liters you multiply.'},{t:'n',lab:'V =',unit:'L',want:.1022,tol:.015,alt:[[.004564/22.4,'You divided. Toward liters you <b>multiply</b>.']],why:'V = n × 22.4'},
+   {t:'n',lab:'V in milliliters =',unit:'mL',want:102.2,tol:.015,alt:[[.1022,'The question asks for <b>mL</b>: multiply liters by 1000.'],[.0001022,'L → mL: <b>multiply</b> by 1000.']],why:'1 L = 1000 mL'}],ans:'V = 102 mL',sense:'A tiny mass of the lightest gas → a small volume ✓'},
+ {chip:'Problem 5',name:'Volume of krypton at STP',src:'Problem 5',q:'What volume will <b>0.416 g</b> of krypton gas occupy at STP?',
+  show:[['What do we know?','Given: m = 0.416 g Kr · Unknown: V = ? L'],['Molar mass of Kr','From the periodic table: <b>83.80 g/mol</b> (krypton is a single atom)'],['Mass → moles','n = 0.416 g ÷ 83.80 g/mol = <b>0.00496 mol</b>'],['Moles → liters: multiply','V = 0.00496 mol × 22.4 L/mol = <span class="ansb">0.111 L</span>']],
+  fields:[{t:'n',lab:'Molar mass of Kr =',unit:'g/mol',want:83.8,tol:.002,alt:[[167.6,'Krypton is a noble gas: single atoms, not Kr₂.']],why:'Look up Kr on the periodic table.'},{t:'n',lab:'n =',unit:'mol',want:.004964,tol:.015,alt:[[.416*83.8,'Mass → moles: <b>divide</b>.']],why:'n = 0.416 ÷ 83.80'},
+   {t:'c',lab:'Moles → liters: multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:0,why:'Toward liters you multiply.'},{t:'n',lab:'V =',unit:'L',want:.1112,tol:.015,alt:[[.004964/22.4,'You divided. Toward liters you <b>multiply</b>.']],why:'V = n × 22.4'}],ans:'V = 0.111 L',sense:'A small amount of gas → a small volume ✓'},
+ {chip:'Challenge 1 ★',name:'Volume of ethylene at STP',src:'Challenge 1',q:'Calculate the volume that <b>4.5 kg</b> of ethylene gas (C₂H₄) will occupy at STP.',
+  show:[['kg → g','4.5 kg × 1000 = <b>4500 g</b>'],['Molar mass of C₂H₄','2(12.01) + 4(1.01) = <b>28.06 g/mol</b>'],['Mass → moles','n = 4500 g ÷ 28.06 g/mol = <b>160 mol</b>'],['Moles → liters: multiply','V = 160 mol × 22.4 L/mol = <span class="ansb">3.6 × 10³ L</span>']],
+  fields:[{t:'n',lab:'4.5 kg =',unit:'g',want:4500,tol:.002,why:'× 1000'},{t:'n',lab:'Molar mass of C₂H₄ =',unit:'g/mol',want:28.06,tol:.004,why:'2 × 12.01 + 4 × 1.01'},{t:'n',lab:'n =',unit:'mol',want:160.4,tol:.01,why:'n = mass ÷ molar mass'},
+   {t:'c',lab:'Moles → liters: multiply or divide by 22.4 L/mol?',opts:MULDIV,ok:0,why:'Toward liters you multiply.'},{t:'n',lab:'V =',unit:'L',want:3593,tol:.01,show:'3.6e3',alt:[[160.4/22.4,'You divided. Toward liters you <b>multiply</b>.']],why:'V = n × 22.4'}],ans:'V = 3.6 × 10³ L'},
+ {chip:'Challenge 2 ★',name:'Removing helium from a container',src:'Challenge 2',q:'A container holds <b>0.860 g</b> of helium gas in a <b>19.2-L</b> space. If <b>0.205 g</b> of helium is removed (same pressure and temperature), what is the new volume?',
+  show:[['Molar mass of He','From the periodic table: <b>4.00 g/mol</b>'],['Moles at the start','n₁ = 0.860 g ÷ 4.00 g/mol = <b>0.215 mol</b>'],
+   ['Can we use 22.4 L/mol?','At STP, 0.215 mol would fill 0.215 × 22.4 = 4.82 L, but this gas fills <b>19.2 L</b>. So it is <b>not at STP</b> and we <b>cannot</b> use 22.4 L/mol here.'],
+   ['Moles left','Mass left = 0.860 − 0.205 = 0.655 g → n₂ = 0.655 g ÷ 4.00 g/mol = <b>0.164 mol</b>'],
+   ["Use Avogadro: V ∝ n",'Same T and P → volume is <b>directly proportional</b> to moles. Less gas → smaller volume, so multiply by the <b>smaller ÷ bigger</b> ratio:<br>V₂ = V₁ × (n₂ ÷ n₁) = 19.2 L × (0.164 ÷ 0.215) = <span class="ansb">14.6 L</span>'],
+   ['Does it make sense?','Less gas → smaller volume: 14.6 L < 19.2 L ✓']],
+  fields:[{t:'n',lab:'Molar mass of He =',unit:'g/mol',want:4,tol:.003,alt:[[8,'Helium is a noble gas: single atoms, not He₂.']],why:'Look up He on the periodic table.'},
+   {t:'n',lab:'Moles at the start: n₁ =',unit:'mol',want:.215,tol:.01,alt:[[.86*4,'Mass → moles: <b>divide</b> by the molar mass.']],why:'n₁ = 0.860 ÷ 4.00'},
+   {t:'c',lab:'At STP, n₁ would fill n₁ × 22.4 L = 4.82 L, but the gas fills 19.2 L. Can you use 22.4 L/mol here?',opts:['No: the gas is not at STP','Yes: it is always 22.4 L/mol'],ok:0,why:'22.4 L/mol is only true at STP.'},
+   {t:'n',lab:'Mass of helium left =',unit:'g',want:.655,tol:.003,alt:[[.205,'That is the mass removed. Subtract it from 0.860 g.']],why:'0.860 − 0.205'},
+   {t:'n',lab:'Moles left: n₂ =',unit:'mol',want:.16375,tol:.012,alt:[[.205/4,'Use the mass that is <b>left</b> (0.655 g).']],why:'n₂ = 0.655 ÷ 4.00'},
+   {t:'c',lab:'Less gas → smaller volume. Which ratio do you multiply V₁ by?',opts:['V₂ = V₁ × (n₂ ÷ n₁)','V₂ = V₁ × (n₁ ÷ n₂)'],ok:0,why:'n₂ ÷ n₁ is less than 1, so it makes the volume smaller.'},
+   {t:'n',lab:'V₂ =',unit:'L',want:14.62,tol:.01,alt:[[19.2*.86/.655,'Upside down: less gas must give a <b>smaller</b> volume.']],why:'V₂ = 19.2 × (n₂ ÷ n₁)'}],ans:'V₂ = 14.6 L',sense:'Less gas → smaller volume ✓'}];
+
+/* ================= TAB 2: PV = nRT ================= */
+var G2={P:[],N:10,box:{x0:50,y0:60,x1:470,y1:460},hits:[],rate:0,cnt:0,acc:0,pts:{},mode:'P',top:60};
+var V0=170;
+function g2Reset(mode){G2.mode=mode;G2.N=10;G2.pts={};G2.top=mode==='V'?460-22.4/67.2*400:60;G2.box={x0:50,y0:G2.top,x1:470,y1:460};
+ G2.P=mkParts(G2.N,7,G2.box,g2Speed(),0);G2.hits=[];G2.rate=0;G2.cnt=0;G2.acc=0;g2Rec();}
+function g2T(){return G2.mode==='T'?2730/G2.N:273;}
+function g2Speed(){return V0*Math.sqrt(g2T()/273);}
+function g2Val(){var n=G2.N/10;return G2.mode==='P'?n:(G2.mode==='V'?n*22.4:2730/G2.N);}
+function g2Rec(){G2.pts[G2.N]=g2Val();}
+function g2Change(d){var lim=G2.mode==='V'?[4,30]:(G2.mode==='T'?[6,30]:[4,40]);var nN=clamp(G2.N+d,lim[0],lim[1]);if(nN===G2.N)return;
+ if(nN>G2.N){for(var i=G2.N;i<nN;i++){var p=addPart(G2.P,7,{x0:G2.box.x0,y0:G2.box.y0,x1:G2.box.x1,y1:G2.box.y0+60},g2Speed(),1);p.fresh=1.2;}}else G2.P.splice(nN);G2.N=nN;g2Rec();}
+function plot(x,y,w,h,xmax,ymax,pts,xl,yl,col,fmt){card(x,y,w,h,'#fff');var px=x+44,py=y+h-34,pw=w-60,ph=h-58;
+ seg(px,py,px+pw,py,INK,2);seg(px,py,px,py-ph,INK,2);txt(xl,px+pw/2,y+h-12,{s:13,c:MUTED});ctx.save();ctx.translate(x+14,py-ph/2);ctx.rotate(-Math.PI/2);txt(yl,0,0,{s:13,c:MUTED});ctx.restore();
+ var ks=Object.keys(pts).map(Number).sort(function(a,b){return a-b;});
+ if(ks.length>1){ctx.strokeStyle=col;ctx.globalAlpha=.4;ctx.lineWidth=2;ctx.beginPath();ks.forEach(function(k,i){var X=px+k/10/xmax*pw,Y=py-pts[k]/ymax*ph;if(i)ctx.lineTo(X,Y);else ctx.moveTo(X,Y);});ctx.stroke();ctx.globalAlpha=1;}
+ ks.forEach(function(k){ball(px+k/10/xmax*pw,py-pts[k]/ymax*ph,k===G2.N?6:4.5,k===G2.N?col:'#fff',col);});
+ for(var i=0;i<=xmax;i++){txt(String(i),px+i/xmax*pw,py+11,{s:11,c:MUTED,w:500});}
+ txt(fmt(ymax),px-14,py-ph,{s:11,c:MUTED,w:500,a:'right'});txt('0',px-8,py,{s:11,c:MUTED,w:500,a:'right'});}
+function g2Frame(dt){var b=G2.box;
+ if(G2.mode==='V'){var tgt=460-g2Val()/67.2*400;G2.top=lerp(G2.top,tgt,Math.min(1,dt*2.2));b.y0=G2.top;}
+ stepParts(G2.P,b,dt,{vt:g2Speed(),kT:3,hit:function(p,w){G2.cnt++;if(G2.mode==='P'&&G2.hits.length<80)G2.hits.push({x:p.x+(w==='l'?-p.r:w==='r'?p.r:0),y:p.y+(w==='t'?-p.r:w==='b'?p.r:0),t:.35,w:w});}});
+ G2.acc+=dt;if(G2.acc>=.5){G2.rate=lerp(G2.rate,G2.cnt/G2.acc,.5);G2.cnt=0;G2.acc=0;}
+ clear();
+ /* container */
+ card(b.x0-8,(G2.mode==='V'?40:b.y0-8),b.x1-b.x0+16,b.y1-(G2.mode==='V'?40:b.y0)+16,'#fff','#8d99b0');
+ if(G2.mode==='V'){ctx.fillStyle='#dfe6f2';ctx.fillRect(b.x0,44,b.x1-b.x0,b.y0-44);ctx.fillStyle='#8d99b0';ctx.fillRect(b.x0,b.y0-14,b.x1-b.x0,14);ctx.fillStyle='#5a6780';ctx.fillRect((b.x0+b.x1)/2-80,b.y0-50,160,36);txt('weight → P = 1.00 atm',(b.x0+b.x1)/2,b.y0-32,{s:14,c:'#fff'});}
+ G2.P.forEach(function(p){if(p.fresh){p.fresh-=dt;ctx.fillStyle='rgba(232,150,42,'+clamp(p.fresh,0,1)*.35+')';ctx.beginPath();ctx.arc(p.x,p.y,p.r+8,0,6.283);ctx.fill();}ball(p.x,p.y,p.r,G2.mode==='T'?tCol(g2T()):ORANGE);});
+ G2.hits=G2.hits.filter(function(h){h.t-=dt;var a=clamp(h.t/.35,0,1);ctx.strokeStyle='rgba(216,67,74,'+a+')';ctx.lineWidth=4;ctx.beginPath();if(h.w==='l'||h.w==='r')ctx.arc(h.x,h.y,10*(1.4-a),-1.2+(h.w==='r'?0:Math.PI),1.2+(h.w==='r'?0:Math.PI));else ctx.arc(h.x,h.y,10*(1.4-a),(h.w==='b'?0:Math.PI)+.4,(h.w==='b'?Math.PI:2*Math.PI)-.4);ctx.stroke();return h.t>0;});
+ /* right side */
+ var n=G2.N/10;
+ if(G2.mode==='P'){gauge(640,150,92,n,4,'P (atm)');txt('V = 22.4 L · T = 273 K (fixed)',640,262,{s:14,c:MUTED,w:500});plot(505,280,280,190,4,4,G2.pts,'n (mol)','P (atm)',TEAL,function(v){return v.toFixed(0);});}
+ else if(G2.mode==='V'){card(505,40,280,200,'#fff');txt('V = '+g2Val().toFixed(1)+' L',645,90,{s:30,c:BLUE});txt('P = 1.00 atm · T = 273 K',645,135,{s:15,c:MUTED,w:500});txt('(fixed)',645,158,{s:14,c:MUTED,w:500});txt('n = '+n.toFixed(1)+' mol',645,200,{s:22});plot(505,265,280,205,3,67.2,G2.pts,'n (mol)','V (L)',BLUE,function(v){return v.toFixed(0);});}
+ else{thermo(560,70,g2T());card(615,40,170,200,'#fff');txt('T = '+Math.round(g2T())+' K',700,90,{s:25,c:RED});txt('n = '+n.toFixed(1)+' mol',700,135,{s:20});txt('P = 1.00 atm',700,175,{s:15,c:MUTED,w:500});txt('V = 22.4 L (fixed)',700,198,{s:15,c:MUTED,w:500});plot(505,265,280,205,3,500,G2.pts,'n (mol)','T (K)',RED,function(v){return v.toFixed(0);});}}
+function tCol(T){var f=clamp((T-90)/360,0,1),A=[[43,89,195],[138,79,191],[230,126,34]],k=f<.5?0:1,u=f<.5?f*2:(f-.5)*2;return 'rgb('+[0,1,2].map(function(c){return Math.round(lerp(A[k][c],A[k+1][c],u));}).join(',')+')';}
+function gauge(cx,cy,r,v,max,lab){card(cx-r-30,cy-r-30,2*r+60,r+92,'#fff');ctx.lineWidth=14;ctx.strokeStyle='#e6ebf3';ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI);ctx.stroke();
+ var f=clamp(v/max,0,1);ctx.strokeStyle=TEAL;ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+f*Math.PI);ctx.stroke();
+ for(var i=0;i<=max;i++){var a=Math.PI+i/max*Math.PI;txt(String(i),cx+(r-26)*Math.cos(a),cy+(r-26)*Math.sin(a),{s:13,c:MUTED});}
+ var a2=Math.PI+f*Math.PI;seg(cx,cy,cx+(r-12)*Math.cos(a2),cy+(r-12)*Math.sin(a2),INK,4);ball(cx,cy,7,INK);txt(v.toFixed(2)+' atm',cx,cy+30,{s:24,c:TEAL});txt(lab,cx,cy+54,{s:13,c:MUTED,w:500});}
+function thermo(x,y,T){rr(x-11,y,22,190,11);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2;ctx.stroke();var f=clamp(T/500,0,1),c=tCol(T);ctx.fillStyle=c;ctx.fillRect(x-6,y+180-f*165,12,f*165+8);ctx.beginPath();ctx.arc(x,y+200,18,0,6.283);ctx.fill();ctx.stroke();}
+var B_RULE_P='More particles → more hits on the walls → <b>higher pressure</b>. P ∝ n (V, T fixed)';
+var SC_B1={title:'Add particles to a rigid container',q:'You add more gas to a container that cannot stretch (like a tire that is already full). What happens to the number of hits on the walls, and to the pressure?',canvas:true,
+ enter:function(){g2Reset('P');g2Buttons();},frame:g2Frame,reads:function(){return [['Amount, n',(G2.N/10).toFixed(1)+' mol'],['Wall hits per second',Math.round(G2.rate)],['Pressure',(G2.N/10).toFixed(2)+' atm'],['V and T','fixed']];}};
+var SC_B2={title:'Add particles at constant pressure',q:'This time the lid (piston) can move, and the weight keeps the pressure at 1.00 atm. What must happen to the volume when you add particles?',canvas:true,
+ enter:function(){g2Reset('V');g2Buttons();},frame:g2Frame,reads:function(){return [['Amount, n',(G2.N/10).toFixed(1)+' mol'],['Volume',g2Val().toFixed(1)+' L'],['V ÷ n',(22.4).toFixed(1)+' L/mol'],['P and T','fixed']];}};
+var SC_B3={title:'Add particles, but keep P and V the same',q:'The container cannot stretch, and the pressure must stay at 1.00 atm. More particles hit the walls more often, so how must each particle hit to keep the same pressure?',canvas:true,
+ enter:function(){g2Reset('T');g2Buttons();},frame:g2Frame,reads:function(){return [['Amount, n',(G2.N/10).toFixed(1)+' mol'],['Temperature',Math.round(g2T())+' K'],['n × T',Math.round(G2.N/10*g2T())+' mol·K'],['P and V','fixed']];}};
+function g2Buttons(){ctlButtons([{t:'− Remove gas',f:function(){g2Change(-2);}},{t:'+ Add gas',fill:true,f:function(){g2Change(2);}},{t:'Reset',f:function(){g2Reset(G2.mode);}}]);}
+
+/* --- deriving PV = nRT --- */
+var CARDS_B4={cards:[
+ ['What we found','<table class="ltab"><tr><th>Kept the same</th><th>Add particles (n ↑)</th><th>So…</th></tr><tr><td>V and T</td><td>P ↑ (more hits)</td><td><b>P ∝ n</b></td></tr><tr><td>P and T</td><td>V ↑ (piston rises)</td><td><b>V ∝ n</b> (Avogadro)</td></tr><tr><td>P and V</td><td>T ↓ (gentler hits)</td><td><b>T ∝ 1/n</b></td></tr></table>'],
+ ['Start from the combined gas law','For a <b>fixed amount</b> of gas: <div class="bigeq">PV / T = constant</div>But the constant is <b>not</b> the same for every amount: double the particles → double the P (or the V) → double the constant. So the constant is <b>proportional to n</b>.'],
+ ['Put n in','PV / T is proportional to n, so divide by n: <div class="bigeq">PV / (nT) = constant</div>Now the constant is the <b>same for every ideal gas</b>, any amount, any gas. We call it <b>R</b>, the ideal gas constant.'],
+ ['The ideal gas law','<div class="bigeq">PV / (nT) = R  →  PV = nRT</div>P = pressure · V = volume (L) · n = moles · R = ideal gas constant · T = temperature (K)<br>If you know <b>three</b> of P, V, n and T, you can find the <b>fourth</b>.'],
+ ['All the gas laws are inside PV = nRT','<table class="ltab"><tr><th>Keep constant</th><th>PV = nRT becomes</th><th>Law</th></tr><tr><td>n, T</td><td>PV = constant</td><td>Boyle</td></tr><tr><td>n, P</td><td>V / T = constant</td><td>Charles</td></tr><tr><td>n, V</td><td>P / T = constant</td><td>Gay-Lussac</td></tr><tr><td>P, T</td><td>V / n = constant</td><td>Avogadro</td></tr></table>']]};
+var SC_B4={title:'Putting it together: PV = nRT',q:'Why can we not use the combined gas law when the amount of gas changes?',canvas:false,cards:CARDS_B4};
+
+/* --- finding R --- */
+var findR={src:'Find R yourself',mode:'show',q:'At STP, <b>1.00 mol</b> of any gas fills <b>22.4 L</b> at <b>273 K</b>. Put these into <b>R = PV ÷ (nT)</b>. The pressure at STP can be written in three units: 1.00 atm = 101.3 kPa = 760 mm Hg.',
+ show:[['Rearrange PV = nRT for R','Divide both sides by nT: <b>R = PV ÷ (nT)</b>'],['Pressure in atm','R = (1.00 atm)(22.4 L) ÷ (1.00 mol)(273 K) = <span class="ansb">0.0821 L·atm/(mol·K)</span>'],['Pressure in kPa','R = (101.3 kPa)(22.4 L) ÷ (1.00 mol)(273 K) = <span class="ansb">8.314 L·kPa/(mol·K)</span>'],['Pressure in mm Hg','R = (760 mm Hg)(22.4 L) ÷ (1.00 mol)(273 K) = <span class="ansb">62.4 L·mm Hg/(mol·K)</span>'],
+  ['So which R do I use?','Same gas, same R: only the <b>units</b> are different. <b>Pick R by the pressure unit</b> in the problem. Always use V in L, n in mol and T in K.<table class="ltab"><tr><th>Pressure unit</th><th>R</th></tr><tr><td>atm</td><td>0.0821 L·atm/(mol·K)</td></tr><tr><td>kPa</td><td>8.314 L·kPa/(mol·K)</td></tr><tr><td>mm Hg</td><td>62.4 L·mm Hg/(mol·K)</td></tr></table>']],
+ fields:[{t:'c',lab:'Rearrange PV = nRT for R',opts:['R = PV ÷ (nT)','R = nT ÷ PV','R = PVnT'],ok:0,why:'R is multiplied by n and T: divide both sides by nT.'},
+  {t:'n',lab:'Pressure in atm (1.00 atm): R =',unit:'L·atm/(mol·K)',want:.08205,tol:.01,alt:[[12.19,'Upside down: R = PV ÷ nT.']],why:'1.00 × 22.4 ÷ 273'},
+  {t:'n',lab:'Pressure in kPa (101.3 kPa): R =',unit:'L·kPa/(mol·K)',want:8.312,tol:.01,why:'101.3 × 22.4 ÷ 273'},
+  {t:'n',lab:'Pressure in mm Hg (760 mm Hg): R =',unit:'L·mm Hg/(mol·K)',want:62.36,tol:.01,why:'760 × 22.4 ÷ 273'},
+  {t:'c',lab:'A problem gives the pressure in kPa. Which R?',opts:['0.0821','8.314','62.4'],ok:1,why:'Pick the R whose units contain kPa.'}],ans:'R = 0.0821 L·atm/(mol·K) = 8.314 L·kPa/(mol·K) = 62.4 L·mm Hg/(mol·K)',sense:'Pick R by the pressure unit in the problem.'};
+var SC_B5={title:'Finding R from STP',q:'The three values of R look very different. Are they really the same constant?',canvas:false,prob:findR};
+
+/* --- PV = nRT practice --- */
+var RCH=['0.0821 L·atm/(mol·K)','8.314 L·kPa/(mol·K)','62.4 L·mm Hg/(mol·K)'];
+var PB=[
+ {chip:'Problem 1',name:'Moles of ammonia in a vessel',src:'Problem 1',q:'Calculate the <b>number of moles</b> of ammonia gas (NH₃) contained in a <b>3.0-L</b> vessel at <b>3.00 × 10² K</b> with a pressure of <b>1.50 atm</b>.',
+  show:[['What do we know?','V = 3.0 L · T = 3.00 × 10² K · P = 1.50 atm · Unknown: n = ? mol'],['Which R?','P is in <b>atm</b> → R = <b>0.0821 L·atm/(mol·K)</b>'],['Rearrange PV = nRT for n','n is multiplied by RT → divide both sides by RT: <b>n = PV ÷ RT</b>'],
+   ['Substitute','n = (1.50 atm)(3.0 L) ÷ (0.0821 L·atm/(mol·K))(3.00 × 10² K) = <span class="ansb">0.18 mol</span>'],['Does it make sense?','3.0 L is much less than 22.4 L, so n is much less than 1 mol ✓']],
+  fields:[{t:'c',lab:'Which R? (look at the pressure unit)',opts:RCH,ok:0,why:'P is in atm.'},{t:'c',lab:'Rearrange PV = nRT for n',opts:['n = PV ÷ RT','n = RT ÷ PV','n = PVRT'],ok:0,why:'Divide both sides by RT.'},
+   {t:'n',lab:'n =',unit:'mol',want:.1827,tol:.04,show:'0.18',alt:[[1.5*3/(8.314*300),'Wrong R: P is in atm, so R = 0.0821.'],[.0821*300/(1.5*3),'Upside down: n = PV ÷ RT.']],why:'n = (1.50)(3.0) ÷ (0.0821)(300)'}],ans:'n = 0.18 mol',sense:'3.0 L ≪ 22.4 L → n ≪ 1 mol ✓'},
+ {chip:'Problem 2',name:'Celsius temperature of a gas',src:'Problem 2',q:'Determine the <b>Celsius</b> temperature of <b>2.49 mol</b> of a gas contained in a <b>1.00-L</b> vessel at a pressure of <b>143 kPa</b>.',
+  show:[['What do we know?','n = 2.49 mol · V = 1.00 L · P = 143 kPa · Unknown: T in °C'],['Which R?','P is in <b>kPa</b> → R = <b>8.314 L·kPa/(mol·K)</b>'],['Rearrange for T','T = PV ÷ nR'],['Substitute','T = (143)(1.00) ÷ (2.49)(8.314) = <b>6.91 K</b>'],['Kelvin → Celsius','6.91 K − 273 = <span class="ansb">−266 °C</span>'],['Does it make sense?','A lot of gas squeezed into 1 L at a low pressure: it must be very cold ✓']],
+  fields:[{t:'c',lab:'Which R?',opts:RCH,ok:1,why:'P is in kPa.'},{t:'c',lab:'Rearrange PV = nRT for T',opts:['T = PV ÷ nR','T = nR ÷ PV','T = PVnR'],ok:0,why:'Divide both sides by nR.'},
+   {t:'n',lab:'T in kelvin =',unit:'K',want:6.907,tol:.01,alt:[[143/(2.49*.0821),'Wrong R: P is in kPa, so R = 8.314.'],[2.49*8.314/143,'Upside down: T = PV ÷ nR.']],why:'T = (143)(1.00) ÷ (2.49)(8.314)'},
+   {t:'n',lab:'T in Celsius =',unit:'°C',want:-266.1,tolA:1,alt:[[279.9,'K → °C: <b>subtract</b> 273.']],why:'°C = K − 273'}],ans:'T = −266 °C',sense:'6.91 K is very cold: −266 °C ✓'},
+ {chip:'Problem 3',name:'Volume of a gas sample',src:'Problem 3',q:'Calculate the <b>volume</b> of a <b>0.323-mol</b> sample of a gas at <b>265 K</b> and <b>0.900 atm</b>.',
+  show:[['What do we know?','n = 0.323 mol · T = 265 K · P = 0.900 atm · Unknown: V'],['Which R?','atm → <b>0.0821</b>'],['Rearrange for V','V = nRT ÷ P'],['Substitute','V = (0.323)(0.0821)(265) ÷ 0.900 = <span class="ansb">7.81 L</span>']],
+  fields:[{t:'c',lab:'Which R?',opts:RCH,ok:0,why:'P is in atm.'},{t:'c',lab:'Rearrange PV = nRT for V',opts:['V = nRT ÷ P','V = P ÷ nRT','V = PnRT'],ok:0,why:'Divide both sides by P.'},
+   {t:'n',lab:'V =',unit:'L',want:7.808,tol:.01,alt:[[.323*8.314*265/.9,'Wrong R: P is in atm.']],why:'V = (0.323)(0.0821)(265) ÷ 0.900'}],ans:'V = 7.81 L'},
+ {chip:'Problem 4',name:'Pressure of helium',src:'Problem 4',q:'What is the pressure, in <b>atmospheres</b>, of a <b>0.108-mol</b> sample of helium gas at a temperature of <b>20.0 °C</b> if its volume is <b>0.505 L</b>?',
+  show:[['What do we know?','n = 0.108 mol · T = 20.0 °C · V = 0.505 L · Unknown: P in atm'],['Temperature in kelvin','T = 20.0 + 273 = <b>293 K</b>'],['Which R?','The answer must be in atm → <b>0.0821</b>'],['Rearrange for P','P = nRT ÷ V'],['Substitute','P = (0.108)(0.0821)(293) ÷ 0.505 = <span class="ansb">5.14 atm</span>']],
+  fields:[{t:'n',lab:'T in kelvin =',unit:'K',want:293,tolA:.6,alt:[[20,'Add 273 to change °C to K.']],why:'K = °C + 273'},{t:'c',lab:'Which R? (the answer must be in atm)',opts:RCH,ok:0,why:'Pressure in atm → 0.0821.'},
+   {t:'c',lab:'Rearrange for P',opts:['P = nRT ÷ V','P = V ÷ nRT','P = nRTV'],ok:0,why:'Divide both sides by V.'},
+   {t:'n',lab:'P =',unit:'atm',want:5.144,tol:.01,alt:[[.108*.0821*20/.505,'You used °C. Use T = 293 K.']],why:'P = (0.108)(0.0821)(293) ÷ 0.505'}],ans:'P = 5.14 atm'},
+ {chip:'Problem 5',name:'Moles of gas present',src:'Problem 5',q:'If the pressure exerted by a gas at <b>25 °C</b> in a volume of <b>0.044 L</b> is <b>3.81 atm</b>, how many moles of gas are present?',
+  show:[['What do we know?','T = 25 °C · V = 0.044 L · P = 3.81 atm · Unknown: n'],['Temperature in kelvin','T = 25 + 273 = <b>298 K</b>'],['Which R?','atm → <b>0.0821</b>'],['Rearrange for n','n = PV ÷ RT'],['Substitute','n = (3.81)(0.044) ÷ (0.0821)(298) = <span class="ansb">6.9 × 10⁻³ mol</span>']],
+  fields:[{t:'n',lab:'T in kelvin =',unit:'K',want:298,tolA:.6,alt:[[25,'Add 273.']],why:'K = °C + 273'},{t:'c',lab:'Which R?',opts:RCH,ok:0,why:'P is in atm.'},
+   {t:'n',lab:'n =',unit:'mol',want:.006852,tol:.02,show:'6.9e-3',alt:[[3.81*.044/(.0821*25),'You used °C. Use 298 K.']],why:'n = (3.81)(0.044) ÷ (0.0821)(298)'}],ans:'n = 6.9 × 10⁻³ mol'},
+ {chip:'Challenge ★',name:'Doubling n and T',src:'Challenge',q:'An ideal gas has a volume of <b>3.0 L</b>. If the number of moles of gas and the temperature are <b>both doubled</b>, while the pressure remains constant, what is the new volume?',
+  show:[['Write V = nRT ÷ P','P and R stay the same, so V is proportional to <b>n × T</b>.'],['Double n','V × 2'],['Double T as well','V × 2 again → V × 4 in total'],['New volume','V = 3.0 L × 4 = <span class="ansb">12 L</span>']],
+  fields:[{t:'c',lab:'V = nRT ÷ P. Doubling n makes V…',opts:['× 2','÷ 2','stay the same'],ok:0,why:'V is directly proportional to n.'},{t:'c',lab:'Doubling T as well makes V, in total…',opts:['× 4','× 2','stay the same'],ok:0,why:'× 2 for n and × 2 for T.'},{t:'n',lab:'New V =',unit:'L',want:12,tol:.01,alt:[[6,'Both n and T double: × 2 × 2 = × 4.'],[3,'More gas and hotter → bigger.']],why:'3.0 × 4'}],ans:'V = 12 L'}];
+
+/* ================= TAB 3: MOLAR MASS & DENSITY ================= */
+var TOK={k:['k',MUTED],p1:['1.00 atm',TEAL],p2:['101.3 kPa',TEAL],p3:['760 mm Hg',TEAL],vv:['22.4 L',BLUE],nv:['1.00 mol',AMBER],tv:['273 K',RED],x1:['×',MUTED],x2:['×',MUTED],r1:['0.0821',INK],r2:['8.31',INK],r3:['62.4',INK],u1:['L·atm',TEAL],u2:['L·kPa',TEAL],u3:['L·mm Hg',TEAL],ub:['mol·K',AMBER],P:['P',TEAL],V:['V',BLUE],eq:['=',MUTED],n:['n',AMBER],R:['R','#5a6780'],T:['T',RED],m:['m',PLUM],M:['M',CORAL],D:['D',GREEN],x:['×',MUTED]};
+function eqLayout(row,y,size){var items=[],gap=16;function w(id){return tw(TOK[id][0],size)+gap;}
+ row.forEach(function(it){if(typeof it==='string')items.push({id:it,w:w(it)});else{var wt=it.top.reduce(function(a,b){return a+w(b);},0),wb=it.bot.reduce(function(a,b){return a+w(b);},0);items.push({f:it,w:Math.max(wt,wb)+20,wt:wt,wb:wb});}});
+ var tot=items.reduce(function(a,b){return a+b.w;},0),x=400-tot/2,pos={},bars={};
+ items.forEach(function(it){if(it.id){pos[it.id]={x:x+it.w/2,y:y};}else{var cx=x+it.w/2,xt=cx-it.wt/2,xb=cx-it.wb/2;it.f.top.forEach(function(id){pos[id]={x:xt+w(id)/2,y:y-size*.62};xt+=w(id);});it.f.bot.forEach(function(id){pos[id]={x:xb+w(id)/2,y:y+size*.62};xb+=w(id);});bars[it.f.f]={x:x+6,w:it.w-12,y:y};}x+=it.w;});
+ return {pos:pos,bars:bars};}
+function EqAnim(states,title){this.S=states;this.i=0;this.u=1;this.title=title;}
+EqAnim.prototype.draw=function(dt){this.u=Math.min(1,this.u+dt*1.1);var u=ease(this.u),cur=this.S[this.i],prev=this.S[Math.max(0,Math.min(this.S.length-1,this.i-(this.dir||1)))]||cur,y=190;
+ if(this.u>=1)prev=cur;var sA=prev.size||this.size||60,sB=cur.size||this.size||60,A=eqLayout(prev.row,y,sA),B=eqLayout(cur.row,y,sB);clear();
+ txt(this.title,400,40,{s:20});card(40,80,720,220,'#fff');
+ (cur.hl||[]).forEach(function(id){var p=B.pos[id];if(!p)return;var w=tw(TOK[id][0],sB)+18,h=sB*1.1;ctx.globalAlpha=u*.9;rr(p.x-w/2,p.y-h/2,w,h,14);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=1;});
+ var ids={};Object.keys(A.pos).concat(Object.keys(B.pos)).forEach(function(k){ids[k]=1;});
+ Object.keys(ids).forEach(function(id){var a=A.pos[id],b=B.pos[id],x,yy,al,sz;if(a&&b){x=lerp(a.x,b.x,u);yy=lerp(a.y,b.y,u)-Math.sin(u*Math.PI)*(Math.abs(a.x-b.x)>40?40:0);al=1;sz=lerp(sA,sB,u);}else if(b){x=b.x;yy=b.y-30*(1-u);al=u;sz=sB;}else{x=a.x;yy=a.y+30*u;al=1-u;sz=sA;}
+  txt(TOK[id][0],x,yy,{s:sz,c:TOK[id][1],al:al,w:600});
+  if((cur.strike||[]).indexOf(id)>=0&&b){var w2=tw(TOK[id][0],sz);ctx.globalAlpha=u;seg(x-w2/2-4,yy+sz*.25,x+w2/2+4,yy-sz*.25,RED,4);ctx.globalAlpha=1;}});
+ var bk={};Object.keys(A.bars).concat(Object.keys(B.bars)).forEach(function(k){bk[k]=1;});
+ Object.keys(bk).forEach(function(k){var a=A.bars[k],b=B.bars[k],x,w,al;if(a&&b){x=lerp(a.x,b.x,u);w=lerp(a.w,b.w,u);al=1;}else if(b){x=b.x;w=b.w;al=u;}else{x=a.x;w=a.w;al=1-u;}ctx.globalAlpha=al;ctx.fillStyle=INK;ctx.fillRect(x,(b||a).y-2.5,w,5);ctx.globalAlpha=1;});
+ (cur.ann||[]).forEach(function(n){var p=B.pos[n.id];if(!p)return;var al=clamp(u*1.4-.4,0,1),lx=p.x+n.dx,ly=p.y+n.dy,w=tw(n.t,15)+22;ctx.globalAlpha=al;
+  arrow(lx+(n.dx>0?-w/2:n.dx<0?w/2:0)*.8,ly+(n.dy<0?13:-13),p.x+(n.dx>0?8:n.dx<0?-8:0),p.y+(n.dy<0?-sB*.42:sB*.42),n.c||ORANGE,3);
+  rr(lx-w/2,ly-14,w,28,14);ctx.fillStyle=n.c||ORANGE;ctx.fill();txt(n.t,lx,ly,{s:15,c:'#fff'});ctx.globalAlpha=1;});
+ card(40,320,720,150,'#fff');txt('Step '+(this.i+1)+' of '+this.S.length,400,346,{s:14,c:MUTED,w:500});txt(cur.note,400,386,{s:22,c:INK});if(cur.note2)txt(cur.note2,400,430,{s:18,c:cur.c2||MUTED,w:500});};
+EqAnim.prototype.go=function(d){var j=clamp(this.i+d,0,this.S.length-1);if(j===this.i)return;this.dir=d;this.i=j;this.u=0;};
+var EQ_M=new EqAnim([
+ {row:['P','V','eq','n','R','T'],note:'Start from the ideal gas law',note2:'PV = nRT'},
+ {row:['P','V','eq','n','R','T'],hl:['n'],note:'n = number of moles = mass ÷ molar mass',note2:'n = m / M   (m in g, M in g/mol)',c2:AMBER},
+ {row:['P','V','eq',{f:'f1',top:['m','R','T'],bot:['M']}],hl:['m','M'],note:'Replace n with m/M',note2:'PV = mRT / M'},
+ {row:['M','P','V','eq','m','R','T'],hl:['M'],note:'Multiply both sides by M',note2:'MPV = mRT'},
+ {row:['M','eq',{f:'f2',top:['m','R','T'],bot:['P','V']}],hl:['M'],note:'Divide both sides by PV',note2:'Molar mass: M = mRT / (PV)',c2:CORAL}],'Molar mass from the ideal gas law');
+var EQ_D=new EqAnim([
+ {row:['M','eq',{f:'f2',top:['m','R','T'],bot:['P','V']}],note:'Start from M = mRT / (PV)',note2:'We want density: D = m / V'},
+ {row:['M','eq',{f:'f2',top:['m','R','T'],bot:['P','V']}],hl:['m','V'],note:'Find the mass m and the volume V',note2:'m is on top and V is on the bottom',c2:AMBER},
+ {row:['M','eq',{f:'fa',top:['m'],bot:['V']},'x',{f:'fb',top:['R','T'],bot:['P']}],hl:['m','V'],note:'Split the fraction',note2:'M = (m/V) × (RT/P)'},
+ {row:['M','eq','D','x',{f:'fb',top:['R','T'],bot:['P']}],hl:['D'],note:'Replace m/V with D',note2:'M = D × RT / P',c2:GREEN},
+ {row:['M','P','eq','D','R','T'],hl:['P'],note:'Multiply both sides by P',note2:'MP = DRT'},
+ {row:['D','eq',{f:'fc',top:['M','P'],bot:['R','T']}],hl:['D'],note:'Divide both sides by RT',note2:'Density: D = MP / (RT)   (D in g/L)',c2:GREEN}],'Density from the ideal gas law');
+function eqScene(E,title,q,rule){return {title:title,q:q,canvas:true,rule:rule,enter:function(){E.i=0;E.u=1;ctlButtons([{t:'◀ Back',f:function(){E.go(-1);}},{t:'Next ▶',fill:true,f:function(){E.go(1);}},{t:'Start again',f:function(){E.i=0;E.u=1;}}]);},frame:function(dt){E.draw(dt);},reads:function(){return [['Step',(E.i+1)+' / '+E.S.length]];}};}
+var SC_C1=eqScene(EQ_M,'Molar mass: replace n with m/M','Why can we replace n with m/M? What are the units of m/M?');
+var SC_C2=eqScene(EQ_D,'Density: replace m/V with D','In D = MP/(RT), which gas has a bigger density at the same P and T: one with a large or a small molar mass?');
+
+/* --- fire extinguisher --- */
+var FX={P:[],fl:1,box:{x0:110,y0:70,x1:470,y1:450}};
+function fxReset(){FX.P=mkParts(18,molR('O2'),{x0:120,y0:80,x1:460,y1:440},150,0);FX.P.forEach(function(p){p.k='O2';});FX.fl=1;}
+function fxPour(){for(var i=0;i<7;i++){var p=addPart(FX.P,molR('CO2'),{x0:140,y0:72,x1:440,y1:120},60,0);p.k='CO2';p.g=420;p.vy=120;p.m=1.4;}}
+var densityP={src:"Let's Discover!",mode:'try',q:'A fire needs oxygen. A fire extinguisher covers the fire with CO₂. Use <b>D = MP/(RT)</b> at STP (1.00 atm, 273 K, R = 0.0821) to compare the two gases.',
+ fields:[{t:'n',lab:'Molar mass of O₂ =',unit:'g/mol',want:32,tol:.002,alt:[[16,'Oxygen gas is O₂: two atoms.']],why:'2 × 16.00'},{t:'n',lab:'Density of O₂: D =',unit:'g/L',want:1.428,tol:.01,why:'D = MP ÷ RT'},
+  {t:'n',lab:'Molar mass of CO₂ =',unit:'g/mol',want:44.01,tol:.002,why:'12.01 + 2 × 16.00'},{t:'n',lab:'Density of CO₂: D =',unit:'g/L',want:1.964,tol:.01,why:'D = (44.01)(1.00) ÷ (0.0821)(273)'},
+  {t:'c',lab:'Will CO₂ rise above the fire or sink onto it?',opts:['Sink: CO₂ is denser than O₂','Rise: CO₂ is lighter than O₂'],ok:0,why:'Compare your two densities.'}],
+ show:[['Molar masses','O₂: 2(16.00) = <b>32.00 g/mol</b> · CO₂: 12.01 + 2(16.00) = <b>44.01 g/mol</b>'],['Density of O₂','D = (32.00 g/mol)(1.00 atm) ÷ (0.0821)(273 K) = <span class="ansb">1.43 g/L</span>'],['Density of CO₂','D = (44.01)(1.00) ÷ (0.0821)(273) = <span class="ansb">1.96 g/L</span>'],
+  ['Predict','CO₂ is <b>denser</b> than O₂ (1.96 > 1.43 g/L), so it <b>sinks</b> onto the fire and pushes the oxygen away. CO₂ does not burn. Press <b>Pour CO₂</b> to watch.'],['Our rule','At the same P and T, a gas with a <b>larger molar mass</b> has a <b>greater density</b>.']],
+ ans:'O₂ 1.43 g/L · CO₂ 1.96 g/L: CO₂ sinks.',sense:'Larger molar mass → greater density.'};
+var SC_C3={title:"Let's discover: why does CO₂ put out a fire?",q:'Will CO₂ rise above the flame or sink onto it? Use D = MP/(RT) to predict, then pour it in.',canvas:true,prob:densityP,
+ enter:function(){fxReset();ctlButtons([{t:'Pour CO₂',fill:true,f:fxPour},{t:'Reset',f:fxReset}]);},
+ frame:function(dt){var b=FX.box;stepParts(FX.P,b,dt,{e:1,ew:1});
+  FX.P.forEach(function(p){if(p.k==='O2'){var s=Math.hypot(p.vx,p.vy);if(s<120){p.vx*=1.02;p.vy*=1.02;}}});
+  var near=FX.P.filter(function(p){return p.k==='CO2'&&p.y>350&&Math.abs(p.x-290)<120;}).length;if(near>=9)FX.fl=Math.max(0,FX.fl-dt*.6);else FX.fl=Math.min(1,FX.fl+dt*.2);
+  clear();card(b.x0-8,b.y0-8,b.x1-b.x0+16,b.y1-b.y0+16,'#fff','#8d99b0');
+  ctx.fillStyle='#f4ead9';ctx.fillRect(272,392,36,58);ctx.strokeStyle='#c7b48f';ctx.strokeRect(272,392,36,58);seg(290,392,290,380,INK,2);
+  if(FX.fl>.02){var t=performance.now()/120,h=46*FX.fl*(1+.08*Math.sin(t)),w=16*FX.fl;ctx.fillStyle='rgba(255,170,40,.9)';ctx.beginPath();ctx.moveTo(290,380-h);ctx.quadraticCurveTo(290+w*1.4,380-h*.35,290,382);ctx.quadraticCurveTo(290-w*1.4,380-h*.35,290,380-h);ctx.fill();ctx.fillStyle='rgba(255,236,150,.95)';ctx.beginPath();ctx.ellipse(290,372-h*.15,w*.45,h*.28,0,0,6.283);ctx.fill();}
+  else txt('flame out!',290,350,{s:18,c:RED});
+  FX.P.forEach(function(p){drawMol(p.k,p.x,p.y,p.a,1);});
+  card(500,70,280,380,'#fff');txt('Density at STP',640,100,{s:19});
+  [['O₂','32.00 g/mol',1.43,GASC.O2[0]],['CO₂','44.01 g/mol',1.96,GASC.CO2[0]]].forEach(function(g,i){var x=575+i*130,hh=g[2]/2*220;ctx.fillStyle=g[3];rr(x-32,380-hh,64,hh,8);ctx.fill();txt(g[0],x,400,{s:20});txt(g[1],x,424,{s:13,c:MUTED,w:500});txt(densityP.solved?g[2].toFixed(2)+' g/L':'? g/L',x,370-hh,{s:17,c:INK});});
+  txt(densityP.solved?'CO₂ is denser: it sinks':'Solve below to fill in the bars',640,136,{s:15,c:densityP.solved?GREEN:MUTED,w:500});},
+ reads:function(){return [['O₂ molecules',FX.P.filter(function(p){return p.k==='O2';}).length],['CO₂ molecules',FX.P.filter(function(p){return p.k==='CO2';}).length],['Flame',FX.fl>.02?'burning':'out']];}};
+
+var PC=[{chip:'Problem 1',name:'Mass of propane in a flask',src:'Problem 1',q:'A <b>2.00-L</b> flask is filled with propane gas (C₃H₈) at a pressure of <b>1.00 atm</b> and a temperature of <b>−15.0 °C</b>. What is the <b>mass</b> of the propane in the flask?',
+ show:[['What do we know?','V = 2.00 L · P = 1.00 atm · T = −15.0 °C · Unknown: m = ? g'],['Convert to kelvin','T = −15.0 + 273 = <b>258 K</b>'],['Find the moles: n = PV ÷ RT','n = (1.00)(2.00) ÷ (0.0821)(258) = <b>0.0944 mol</b>'],['Molar mass of C₃H₈','3(12.01) + 8(1.01) = <b>44.11 g/mol</b>'],['Moles → mass','m = n × M = 0.0944 mol × 44.11 g/mol = <span class="ansb">4.16 g</span>'],
+  ['Another way','Rearrange M = mRT/(PV) for m: m = MPV ÷ RT = (44.11)(1.00)(2.00) ÷ (0.0821)(258) = 4.16 g. Same answer ✓']],
+ fields:[{t:'n',lab:'T in kelvin =',unit:'K',want:258,tolA:.6,alt:[[288,'−15.0 + 273 = 258, not 288.'],[-15,'Add 273.']],why:'K = °C + 273'},{t:'c',lab:'Which R?',opts:RCH,ok:0,why:'P is in atm.'},
+  {t:'n',lab:'Moles: n = PV ÷ RT =',unit:'mol',want:.09442,tol:.01,why:'n = (1.00)(2.00) ÷ (0.0821)(258)'},{t:'n',lab:'Molar mass of C₃H₈ =',unit:'g/mol',want:44.11,tol:.003,why:'3 × 12.01 + 8 × 1.01'},
+  {t:'n',lab:'Mass: m =',unit:'g',want:4.165,tol:.01,alt:[[.09442/44.11,'Moles → grams: <b>multiply</b> by the molar mass.']],why:'m = n × M'}],ans:'m = 4.16 g',sense:'Less than 0.1 mol of a 44 g/mol gas → about 4 g ✓'}];
+
+/* ================= TAB 2 animations: deriving, rearranging, finding R ================= */
+var BASE=['P','V','eq','n','R','T'];
+var EQ_DER=new EqAnim([
+ {row:[{f:'d1',top:['P','V'],bot:['T']},'eq','k'],note:'For a fixed amount of gas: PV / T = constant',note2:'k = a constant (the combined gas law)'},
+ {row:[{f:'d1',top:['P','V'],bot:['T']},'eq','k'],hl:['k'],note:'Add more particles → P or V grows → k grows',note2:'Double n → double k: k is proportional to n',c2:AMBER},
+ {row:[{f:'d1',top:['P','V'],bot:['n','T']},'eq','k'],hl:['n'],note:'Divide by n to take the amount into account',note2:'Now PV / (nT) is the same for every ideal gas'},
+ {row:[{f:'d1',top:['P','V'],bot:['n','T']},'eq','R'],hl:['R'],note:'This constant is R, the ideal gas constant',note2:'PV / (nT) = R'},
+ {row:['P','V','eq','R','n','T'],hl:['n','T'],note:'Multiply both sides by nT',note2:'nT moves from the bottom of the left side to the right side'},
+ {row:BASE,note:'The ideal gas law: PV = nRT',note2:'Know three of P, V, n and T → find the fourth',c2:TEAL}],'Deriving the ideal gas law');
+function reAnim(X,others,swap){var st=[{row:BASE,note:'Find '+X+': start from PV = nRT'},{row:BASE,hl:others,note:X+' is multiplied by '+others.join(''),note2:'Move '+others.join('')+' to the other side'}],
+  rest=BASE.filter(function(t){return t!=='eq'&&t!==X&&others.indexOf(t)<0;}),fr={f:'re'+X,top:rest,bot:others};
+ if(!swap)st.push({row:[X,'eq',fr],hl:[X],note:'Divide both sides by '+others.join('')+': it goes to the bottom of the other side',note2:X+' = '+rest.join('')+' / '+others.join(''),c2:TEAL});
+ else{st.push({row:[fr,'eq',X],hl:others,note:'Divide both sides by '+others.join('')+': it goes to the bottom of the other side',note2:rest.join('')+' / '+others.join('')+' = '+X});
+  st.push({row:[X,'eq',fr],hl:[X],note:'Switch the sides so '+X+' is on the left',note2:X+' = '+rest.join('')+' / '+others.join(''),c2:TEAL});}
+ return new EqAnim(st,'Rearranging PV = nRT: find '+X);}
+var RE={V:reAnim('V',['P'],false),P:reAnim('P',['V'],false),n:reAnim('n',['R','T'],true),T:reAnim('T',['n','R'],true)},RE_K='V';
+var SC_RE={title:'Rearranging PV = nRT for any variable',q:'To find n, why do we divide both sides by RT and not by PV?',canvas:true,
+ html:function(){return '<table class="ltab"><tr><th>Find</th><th>Divide both sides by</th><th>Result</th></tr><tr><td>V</td><td>P</td><td><b>V = nRT / P</b></td></tr><tr><td>P</td><td>V</td><td><b>P = nRT / V</b></td></tr><tr><td>n</td><td>RT</td><td><b>n = PV / RT</b></td></tr><tr><td>T</td><td>nR</td><td><b>T = PV / nR</b></td></tr></table>';},
+ enter:function(){var E=RE[RE_K];E.i=0;E.u=1;var h='<div class="subbar" style="margin:0">'+['V','P','n','T'].map(function(k){return '<button class="btn'+(RE_K===k?' sel':'')+'" data-k="'+k+'">Find '+k+'</button>';}).join('')+'</div><button class="btn" id="eB">◀ Back</button><button class="btn fill" id="eN">Next ▶</button><button class="btn" id="eS">Start again</button>';
+  $('controls').innerHTML=h;Array.prototype.forEach.call($('controls').querySelectorAll('[data-k]'),function(b){b.onclick=function(){RE_K=b.dataset.k;SC_RE.enter();};});
+  $('eB').onclick=function(){RE[RE_K].go(-1);};$('eN').onclick=function(){RE[RE_K].go(1);};$('eS').onclick=function(){RE[RE_K].i=0;RE[RE_K].u=1;};},
+ frame:function(dt){RE[RE_K].draw(dt);},reads:function(){var E=RE[RE_K];return [['Finding',RE_K],['Step',(E.i+1)+' / '+E.S.length]];}};
+/* --- finding R --- */
+var FR={f:'fr',top:['P','V'],bot:['n','T']},ANN=[{id:'P',t:'1.00 atm (standard pressure)',dx:-175,dy:-62,c:TEAL},{id:'V',t:'22.4 L (1 mol at STP)',dx:170,dy:-62,c:BLUE},{id:'n',t:'1.00 mol',dx:-150,dy:62,c:AMBER},{id:'T',t:'273 K = 0 °C (standard temp.)',dx:175,dy:62,c:RED}];
+function valRow(p){return ['R','eq',{f:'fv',top:[p,'x1','vv'],bot:['nv','x2','tv']}];}
+var EQ_R1=new EqAnim([
+ {row:BASE,note:'Find R: start from PV = nRT'},
+ {row:BASE,hl:['n','T'],note:'R is multiplied by n and T',note2:'Move nT to the other side'},
+ {row:[FR,'eq','R'],hl:['n','T'],note:'Divide both sides by nT',note2:'PV / (nT) = R'},
+ {row:['R','eq',FR],hl:['R'],note:'Switch the sides: R = PV / (nT)',note2:'Now put in the values for 1 mol of gas at STP'},
+ {row:['R','eq',FR],ann:ANN,note:'At STP, 1.00 mol of any gas fills 22.4 L',note2:'STP = standard temperature (273 K = 0 °C) and standard pressure (1.00 atm)'},
+ {row:valRow('p1'),size:40,note:'Substitute each value with its unit',note2:'R = (1.00 atm × 22.4 L) / (1.00 mol × 273 K)'},
+ {row:['R','eq','r1',{f:'fu',top:['u1'],bot:['ub']}],size:52,note:'R = 0.0821 L·atm/(mol·K)',note2:'The units of R are the units we put in: L·atm on top, mol·K on the bottom',c2:TEAL}],'Finding R with the pressure in atm');
+function rNext(p,old,r,u,lab,calc){return new EqAnim([
+ {row:valRow('p1'),size:40,note:'Same 1.00 mol of gas at STP, same 22.4 L and 273 K',note2:'But now write the pressure in '+lab},
+ {row:valRow('p1'),size:40,hl:['p1'],strike:['p1'],note:'1.00 atm = '+TOK[p][0],note2:'Same pressure, different unit'},
+ {row:valRow(p),size:40,hl:[p],note:'Substitute '+TOK[p][0],note2:'R = ('+TOK[p][0]+' × 22.4 L) / (1.00 mol × 273 K)'},
+ {row:['R','eq',r,{f:'fu',top:[u],bot:['ub']}],size:52,note:'R = '+TOK[r][0]+' '+TOK[u][0]+'/(mol·K)',note2:calc,c2:TEAL}],'Finding R with the pressure in '+lab);}
+var EQ_R2=rNext('p2','p1','r2','u2','kPa','101.3 × 22.4 ÷ 273 = 8.31 (the accepted value is 8.314)');
+var EQ_R3=rNext('p3','p1','r3','u3','mm Hg','760 × 22.4 ÷ 273 = 62.4');
+var SC_R1=eqScene(EQ_R1,'Finding R: pressure in atm','At STP, what are the values of P, V, n and T for 1.00 mol of gas?');
+var SC_R2=eqScene(EQ_R2,'Finding R: pressure in kPa','Is 8.314 a different constant from 0.0821, or the same constant in different units?');
+var SC_R3=eqScene(EQ_R3,'Finding R: pressure in mm Hg','Which value of R would you use if the pressure were given in mm Hg?');
+var pickR={src:'Quick check',mode:'try',q:'Pick R by the <b>pressure unit</b> in the problem.',
+ fields:[{t:'c',lab:'A gas at <b>143 kPa</b>',opts:RCH,ok:1,why:'kPa → 8.314'},{t:'c',lab:'A gas at <b>0.900 atm</b>',opts:RCH,ok:0,why:'atm → 0.0821'},{t:'c',lab:'A gas at <b>745 mm Hg</b>',opts:RCH,ok:2,why:'mm Hg → 62.4'}],
+ show:[['Look at the pressure unit','The unit of P decides which R to use.'],['Match the unit','atm → 0.0821 · kPa → 8.314 · mm Hg → 62.4'],['Then check the other units','V in L, n in mol, T in K for every value of R.']],ans:'Pick R by the pressure unit.'};
+var SC_RS={title:'Summary: one constant, three units',q:'Why does R have three different numbers but only one meaning?',canvas:true,prob:pickR,
+ frame:function(){clear();txt('The ideal gas constant R',400,40,{s:22});
+  [['atm','1.00 atm','0.0821','L·atm/(mol·K)'],['kPa','101.3 kPa','8.314','L·kPa/(mol·K)'],['mm Hg','760 mm Hg','62.4','L·mm Hg/(mol·K)']].forEach(function(r,i){var y=80+i*100;card(60,y,680,84,i===0?'#e6f4f4':(i===1?'#eaf0fb':'#f3edf9'));
+   txt('Pressure in '+r[0],180,y+30,{s:20,c:TEAL});txt('STP: P = '+r[1],180,y+58,{s:14,c:MUTED,w:500});txt('R = '+r[2],470,y+42,{s:30});txt(r[3],650,y+42,{s:17,c:MUTED});});
+  card(60,390,680,88,'#fff',RED);txt('Pick R by the pressure unit in the problem.',400,420,{s:20,c:RED});txt('V in L · n in mol · T in K  (for every value of R)',400,454,{s:16,c:MUTED,w:500});},
+ reads:function(){return [['Same constant','3 units']];}};
+var SC_B4N=eqScene(EQ_DER,'Putting it together: PV = nRT','Why can we not use the combined gas law when the amount of gas changes?');
+SC_B4N.html=function(){return '<div class="gsec"><h4>All the gas laws are inside PV = nRT</h4><table class="ltab"><tr><th>Keep constant</th><th>PV = nRT becomes</th><th>Law</th></tr><tr><td>n, T</td><td>PV = constant</td><td>Boyle</td></tr><tr><td>n, P</td><td>V / T = constant</td><td>Charles</td></tr><tr><td>n, V</td><td>P / T = constant</td><td>Gay-Lussac</td></tr><tr><td>P, T</td><td>V / n = constant</td><td>Avogadro</td></tr></table></div>';};
+var ATT_LT=230,ATT_W=300;
+
+/* ================= TAB 4: REAL vs IDEAL ================= */
+var D1={pt:0,I:[],R:[],fl:[],bi:{x0:24,y0:86,x1:386,y1:420},br:{x0:414,y0:86,x1:776,y1:420}};
+var POINTS=[['Particle volume','Ideal: particles are points with no volume.','Real: particles take up space.'],['Attractions','Ideal: no attraction or repulsion.','Real: particles attract each other (red lines).'],['Collisions','Ideal: perfectly elastic: no energy is lost.','Real: not perfectly elastic: some energy is lost.'],['Following the gas laws','Ideal: follows PV = nRT at all T and P.','Real: only at most T and P (not at high P or low T).']];
+function d1Reset(){D1.I=mkParts(18,3,D1.bi,170,0);D1.R=mkParts(14,15,D1.br,150,0);D1.fl=[];}
+function frac(P,b){var a=0;P.forEach(function(p){a+=Math.PI*p.r*p.r;});return a/((b.x1-b.x0)*(b.y1-b.y0));}
+var SC_D1={title:'Ideal vs real gas: point by point',q:'Which of the four differences explains why a real gas can turn into a liquid?',canvas:true,
+ enter:function(){d1Reset();var h=POINTS.map(function(p,i){return '<button class="btn'+(D1.pt===i?' sel':'')+'" data-p="'+i+'">'+(i+1)+'. '+p[0]+'</button>';}).join('');$('controls').innerHTML=h;
+  Array.prototype.forEach.call($('controls').querySelectorAll('button'),function(b){b.onclick=function(){D1.pt=+b.dataset.p;SC_D1.enter();};});},
+ frame:function(dt){var pt=D1.pt;
+  stepParts(D1.I,D1.bi,dt,{e:1,vt:170,kT:1,bump:function(a,b){if(pt===2&&D1.fl.filter(function(f){return f.ok;}).length<2&&D1.fl.every(function(f){return Math.hypot(f.x-(a.x+b.x)/2,f.y-(a.y+b.y)/2)>80;}))D1.fl.push({x:(a.x+b.x)/2,y:(a.y+b.y)/2,t:.8,ok:1});}});
+  stepParts(D1.R,D1.br,dt,{e:.9,att:200,rng:2.1,vt:165,lang:2.5,bump:function(a,b){var rv=Math.hypot(a.vx-b.vx,a.vy-b.vy);if(pt===2&&rv>60&&D1.fl.filter(function(f){return !f.ok;}).length<3&&D1.fl.every(function(f){return Math.hypot(f.x-(a.x+b.x)/2,f.y-(a.y+b.y)/2)>60;}))D1.fl.push({x:(a.x+b.x)/2,y:(a.y+b.y)/2,t:.8,ok:0});}});
+  clear();[['Ideal gas',D1.bi,TEAL],['Real gas',D1.br,ORANGE]].forEach(function(s){pill(s[0],(s[1].x0+s[1].x1)/2,40,s[2],'#fff',18);card(s[1].x0-6,s[1].y0-6,s[1].x1-s[1].x0+12,s[1].y1-s[1].y0+12,'#fff');});
+  if(pt===1)near(D1.R,1.7).forEach(function(q){seg(q[0].x,q[0].y,q[1].x,q[1].y,RED,4);});
+  D1.I.forEach(function(p){if(pt===1){seg(p.x,p.y,p.x-p.vx*.12,p.y-p.vy*.12,'rgba(15,139,141,.3)',3);}ball(p.x,p.y,p.r,TEAL);});
+  D1.R.forEach(function(p){if(pt===0){ctx.fillStyle='rgba(230,126,34,.18)';ctx.beginPath();ctx.arc(p.x,p.y,p.r+5,0,6.283);ctx.fill();}ball(p.x,p.y,p.r,ORANGE);});
+  D1.fl=D1.fl.filter(function(f){f.t-=dt;var a=clamp(f.t/.8,0,1),c=f.ok?GREEN:RED;ctx.globalAlpha=a;for(var k=0;k<8;k++){var an=k*.785,r1=8+(1-a)*10,r2=r1+7;seg(f.x+r1*Math.cos(an),f.y+r1*Math.sin(an),f.x+r2*Math.cos(an),f.y+r2*Math.sin(an),c,2.5);}ctx.globalAlpha=1;txt(f.ok?'no energy lost':'energy lost',f.x,f.y-30-(1-a)*10,{s:14,c:c,al:a});return f.t>0;});
+  if(pt===0){pill('particles fill '+(frac(D1.I,D1.bi)*100).toFixed(1)+'% of the box',205,400,TEAL,'#fff',14);pill('particles fill '+Math.round(frac(D1.R,D1.br)*100)+'% of the box',595,400,ORANGE,'#fff',14);}
+  if(pt===3){[[D1.bi,0],[D1.br,1]].forEach(function(s){var b=s[0],x=b.x0+20,y=b.y0+20,w=b.x1-b.x0-40,h=b.y1-b.y0-40;ctx.globalAlpha=.94;card(x,y,w,h,'#fff');ctx.globalAlpha=1;
+    var px=x+50,py=y+h-40,pw=w-70,ph=h-80;seg(px,py,px+pw,py,INK,2);seg(px,py,px,py-ph,INK,2);txt('pressure →',px+pw/2,py+22,{s:13,c:MUTED});ctx.save();ctx.translate(x+18,py-ph/2);ctx.rotate(-Math.PI/2);txt('PV ÷ nRT',0,0,{s:13,c:MUTED});ctx.restore();
+    var y1=py-ph*.5;seg(px,y1,px+pw,y1,'#b7c1d3',2,[6,5]);txt('1 = ideal',px+pw-30,y1-12,{s:12,c:MUTED});
+    ctx.strokeStyle=s[1]?ORANGE:TEAL;ctx.lineWidth=4;ctx.beginPath();for(var k=0;k<=60;k++){var u=k/60,v=s[1]?1-.55*u*Math.exp(-3*u)*3+.9*u*u*u:1;var X=px+u*pw,Y=py-ph*.5*v;if(k)ctx.lineTo(X,Y);else ctx.moveTo(X,Y);}ctx.stroke();
+    txt(s[1]?'far from 1 at high P':'always 1',px+pw/2,y+26,{s:15,c:s[1]?ORANGE:TEAL});});}
+  card(24,438,752,54,'#fff');txt((pt+1)+'. '+POINTS[pt][0]+':',40,453,{s:15,a:'left',c:INK});txt(POINTS[pt][1],40,476,{s:14,a:'left',c:TEAL,w:500});txt(POINTS[pt][2],410,476,{s:14,a:'left',c:ORANGE,w:500});},
+ reads:function(){return [['Point',(D1.pt+1)+' of 4'],['Ideal particles fill',(frac(D1.I,D1.bi)*100).toFixed(1)+'%'],['Real particles fill',Math.round(frac(D1.R,D1.br)*100)+'%']];}};
+
+/* --- when do real gases deviate --- */
+var D2={c:0,P:[],Pv:1,T:300,top:60,He:[],Bu:[]};
+var DEV=[['High pressure','Squeeze the gas with the piston. When the space gets small, the particles themselves fill a big part of it, so their volume is no longer "almost zero".'],
+ ['Low temperature','Cool the gas. The particles slow down, the attractions win, and the gas condenses into a liquid (like nitrogen at −196 °C).'],
+ ['Polar molecules','Water molecules have a + end (H) and a − end (O). Opposite ends attract strongly, so water vapor is far from ideal.'],
+ ['Large molecules','Same number of particles at the same T and P. Butane is nonpolar, but each molecule is big, so the particles take up much more space than helium.']];
+function d2Reset(){var c=D2.c;if(c===0){D2.Pv=1;D2.top=60;D2.P=mkParts(16,11,{x0:60,y0:62,x1:520,y1:458},160,0);}
+ else if(c===1){D2.T=300;D2.P=mkParts(22,9,{x0:60,y0:62,x1:520,y1:458},160,0);}
+ else if(c===2){D2.P=mkParts(12,15,{x0:60,y0:62,x1:520,y1:458},140,0);}
+ else{D2.He=mkParts(6,6,{x0:62,y0:92,x1:286,y1:456},150,0);D2.Bu=mkParts(6,30,{x0:296,y0:92,x1:518,y1:456},150,0);D2.Bu.forEach(function(p){p.w=(rnd()<.5?-1:1)*(1+rnd()*1.5);});}}
+function d2Controls(){var h='<div class="subbar" style="margin:0">'+DEV.map(function(d,i){return '<button class="btn'+(D2.c===i?' sel':'')+'" data-c="'+i+'">'+d[0]+'</button>';}).join('')+'</div>';var sl=null;
+ if(D2.c===0)sl=ctlSlider('dP','Pressure',1,8,.1,D2.Pv,function(v){return v.toFixed(1)+' atm';},function(v){D2.Pv=v;});
+ if(D2.c===1)sl=ctlSlider('dT','Temperature',60,400,5,D2.T,function(v){return v+' K';},function(v){D2.T=v;});
+ $('controls').innerHTML=h+(sl?sl.html:'');if(sl)sl.bind();
+ Array.prototype.forEach.call($('controls').querySelectorAll('[data-c]'),function(b){b.onclick=function(){D2.c=+b.dataset.c;d2Reset();d2Controls();};});}
+function waterDraw(P){var Hs=P.map(function(p){return [-.9,.9].map(function(s){return [p.x+15*Math.cos(p.a+s),p.y+15*Math.sin(p.a+s)];});});
+ P.forEach(function(p,i){P.forEach(function(q,j){if(i===j)return;Hs[i].forEach(function(hh){var d=Math.hypot(q.x-hh[0],q.y-hh[1]);if(d<36){for(var k=1;k<6;k++){var t=k/6;ctx.fillStyle=RED;ctx.beginPath();ctx.arc(lerp(hh[0],q.x,t),lerp(hh[1],q.y,t),2.2,0,6.283);ctx.fill();}}});});});
+ P.forEach(function(p,i){Hs[i].forEach(function(hh){ball(hh[0],hh[1],7,'#f5f5f5','#777');txt('+',hh[0],hh[1]+.5,{s:11,c:BLUE});});ball(p.x,p.y,13,'#d7302a','#8c1414');txt('−',p.x,p.y,{s:16,c:'#fff'});});}
+function waterOrient(P,dt){P.forEach(function(p){var best=null,bd=1e9;P.forEach(function(q){if(q===p)return;var d=Math.hypot(q.x-p.x,q.y-p.y);if(d<bd){bd=d;best=q;}});
+ if(bd<75){var tg=Math.atan2(best.y-p.y,best.x-p.x),df=((tg-p.a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;p.a+=Math.min(1,dt*6)*df;}});}
+function butaneDraw(p){var ux=Math.cos(p.a),uy=Math.sin(p.a),vx=-uy,vy=ux,C=[[-1.5,1],[-.5,-1],[.5,1],[1.5,-1]].map(function(q){return [p.x+13*q[0]*ux+5*q[1]*vx,p.y+13*q[0]*uy+5*q[1]*vy];});
+ C.forEach(function(c,k){[-1,1].forEach(function(s){var ex=(k===0?-1:k===3?1:0)*4,hx=c[0]+9*s*vx+ex*ux,hy=c[1]+9*s*vy+ex*uy;seg(c[0],c[1],hx,hy,'#999',2);ball(hx,hy,4,'#fff','#888');});});
+ ctx.strokeStyle='#3c3c3c';ctx.lineWidth=4;ctx.beginPath();C.forEach(function(c,k){if(k)ctx.lineTo(c[0],c[1]);else ctx.moveTo(c[0],c[1]);});ctx.stroke();C.forEach(function(c){ball(c[0],c[1],7,'#474747','#1e1e1e');});}
+var SC_D2={title:'When do real gases deviate?',q:'For each case, which assumption of the ideal gas breaks down: "no particle volume" or "no attractions"?',canvas:true,
+ enter:function(){d2Reset();d2Controls();},
+ frame:function(dt){var c=D2.c;clear();
+  if(c===0){var tgt=458-396/D2.Pv;D2.top=lerp(D2.top,tgt,Math.min(1,dt*3));var b={x0:60,y0:D2.top,x1:520,y1:458};stepParts(D2.P,b,dt,{e:.95,att:110,rng:2,vt:160,lang:2.5});
+   card(52,40,476,426,'#fff','#8d99b0');ctx.fillStyle='#dfe6f2';ctx.fillRect(60,44,460,D2.top-44);ctx.fillStyle='#8d99b0';ctx.fillRect(60,D2.top-14,460,14);ctx.fillStyle='#a6b0c2';ctx.fillRect(280,44,20,D2.top-58);
+   near(D2.P,1.5).forEach(function(q){seg(q[0].x,q[0].y,q[1].x,q[1].y,RED,3);});D2.P.forEach(function(p){ball(p.x,p.y,p.r,ORANGE);});
+   var f=frac(D2.P,b);pill('particles fill '+Math.round(f*100)+'% of the space',290,D2.top+22,f>.25?RED:TEAL,'#fff',14);}
+  else if(c===1){var cold=clamp((220-D2.T)/150,0,1);var b2={x0:60,y0:62,x1:520,y1:458};stepParts(D2.P,b2,dt,{e:.9,att:ATT_LT,rng:2.2,g:25,vt:160*Math.sqrt(D2.T/300),lang:2.5});
+   card(52,54,476,412,'#fff','#8d99b0');near(D2.P,1.45).forEach(function(q){seg(q[0].x,q[0].y,q[1].x,q[1].y,RED,3);});D2.P.forEach(function(p){ball(p.x,p.y,p.r,tCol(D2.T*1.2));});
+   if(cold>.7)pill('the gas condenses into a liquid',290,90,BLUE,'#fff',15);}
+  else if(c===2){stepParts(D2.P,{x0:60,y0:62,x1:520,y1:458},dt,{e:.9,att:ATT_W,rng:2.3,vt:150,lang:2.5});waterOrient(D2.P,dt);card(52,54,476,412,'#fff','#8d99b0');waterDraw(D2.P);}
+  else{stepParts(D2.He,{x0:62,y0:92,x1:286,y1:456},dt,{vt:150});stepParts(D2.Bu,{x0:296,y0:92,x1:518,y1:456},dt,{e:.95,vt:150});card(52,54,476,412,'#fff','#8d99b0');seg(291,58,291,462,'#8d99b0',4);
+   txt('He (6 atoms)',170,76,{s:16,c:TEAL});txt('C₄H₁₀ butane (6 molecules)',405,76,{s:16});D2.He.forEach(function(p){ball(p.x,p.y,p.r,'#b48be0');});D2.Bu.forEach(butaneDraw);
+   pill('He fills '+(frac(D2.He,{x0:62,y0:92,x1:286,y1:456})*100).toFixed(1)+'%',170,440,TEAL,'#fff',13);pill('butane fills about '+Math.round(frac(D2.Bu,{x0:296,y0:92,x1:518,y1:456})*60)+'%',405,440,ORANGE,'#fff',13);}
+  card(548,54,236,412,'#fff');txt(DEV[c][0],666,86,{s:21,c:ORANGE});wrap(DEV[c][1],562,120,208,22,16);
+  if(c===1){thermo(666,236,D2.T);}},
+ reads:function(){var c=D2.c;return c===0?[['Pressure',D2.Pv.toFixed(1)+' atm'],['Ideal?',D2.Pv<3?'close to ideal':'deviates']]:c===1?[['Temperature',D2.T+' K'],['Ideal?',D2.T>200?'close to ideal':'deviates']]:c===2?[['Molecule','H₂O (polar)'],['Ideal?','deviates']]:[['Particles','6 and 6'],['Ideal?','butane deviates more']];}};
+function wrap(s,x,y,w,lh,size){var words=s.split(' '),line='',yy=y;ctx.font='500 '+size+'px Fredoka, sans-serif';words.forEach(function(wd){var t=line?line+' '+wd:wd;if(ctx.measureText(t).width>w&&line){txt(line,x,yy,{s:size,a:'left',w:500});line=wd;yy+=lh;}else line=t;});if(line)txt(line,x,yy,{s:size,a:'left',w:500});return yy;}
+
+/* --- real gases around you --- */
+function ico(kind){var s='<svg width="54" height="54" viewBox="0 0 54 54">';
+ if(kind==='cyl')s+='<rect x="15" y="12" width="24" height="38" rx="9" fill="#e67e22"/><rect x="22" y="4" width="10" height="10" rx="2" fill="#5a6780"/><rect x="15" y="30" width="24" height="20" rx="6" fill="#2b59c3" opacity=".45"/>';
+ else if(kind==='n2')s+='<path d="M14 18 h26 v24 a8 8 0 0 1 -8 8 h-10 a8 8 0 0 1 -8 -8z" fill="#c9d4e6"/><path d="M14 30 h26 v12 a8 8 0 0 1 -8 8 h-10 a8 8 0 0 1 -8 -8z" fill="#7fb2ff"/><path d="M20 16 q4 -8 0 -12 M30 16 q4 -8 0 -12" stroke="#b7c1d3" stroke-width="3" fill="none"/>';
+ else if(kind==='mirror')s+='<rect x="10" y="6" width="34" height="42" rx="8" fill="#dbe9f5" stroke="#8d99b0" stroke-width="3"/>'+[[18,18],[28,24],[22,32],[34,36],[36,14],[16,40]].map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#2b59c3" opacity=".6"/>';}).join('');
+ else if(kind==='ext')s+='<rect x="16" y="14" width="22" height="36" rx="8" fill="#d8434a"/><rect x="22" y="6" width="10" height="9" fill="#18233a"/><path d="M32 8 h12 l2 6" stroke="#18233a" stroke-width="3" fill="none"/>';
+ else if(kind==='ac')s+='<rect x="6" y="12" width="42" height="30" rx="6" fill="#eef1f6" stroke="#8d99b0" stroke-width="3"/><path d="M12 30 h30 M12 36 h30" stroke="#2b59c3" stroke-width="3"/>';
+ else s+='<rect x="18" y="8" width="18" height="40" rx="9" fill="#e8962a"/><rect x="22" y="2" width="10" height="8" fill="#18233a"/><circle cx="27" cy="30" r="5" fill="#fff" opacity=".7"/>';
+ return s+'</svg>';}
+var EXAMPLES=[['cyl','Kitchen oven and stove gas','High pressure','#e67e22','The cooking gas cylinder (LPG: propane and butane) is filled under high pressure. The gas does not obey PV = nRT: it turns into a <b>liquid</b>, so about <b>270×</b> more fits in the tank than as a gas.'],
+ ['n2','Liquid nitrogen','Low temperature','#2b59c3','Cooled to <b>−196 °C</b>, nitrogen particles move so slowly that their attractions hold them together: the gas becomes a liquid. Used to freeze food and in medicine.'],
+ ['mirror','Foggy bathroom mirror','Polar molecules + cold surface','#8a4fbf','Water vapor is <b>polar</b>: its molecules attract each other strongly. On a cold mirror they slow down and stick together as droplets.'],
+ ['ext','CO₂ fire extinguisher','High pressure','#d8434a','Inside, CO₂ is squeezed so much that it is a <b>liquid</b>. When you press the handle, the pressure drops and it comes out as a gas (and as cold "snow").'],
+ ['ac','Air conditioner and fridge','High pressure and cooling','#0f8b8d','The compressor squeezes the refrigerant gas until it <b>liquefies</b>. When it turns back into a gas inside, it takes heat away and cools the room.'],
+ ['tank','Scuba diving tank','Very high pressure','#e8962a','The air is squeezed to about 200 atm. At this pressure the particles\' own volume matters, so divers\' calculations must correct PV = nRT.']];
+var SC_D3={title:'Real gases around you',q:'Which condition (high pressure, low temperature or polar molecules) is used in each example?',canvas:false,
+ html:function(){return '<div class="excards">'+EXAMPLES.map(function(e){return '<div class="exc"><div class="eh">'+ico(e[0])+'<h3>'+e[1]+'</h3></div><span class="tag" style="background:'+e[3]+'">'+e[2]+'</span><p>'+e[4]+'</p></div>';}).join('')+'</div>';}};
+var SC_D4={title:'Check your understanding',q:'Answer each question in your notebook first, then check.',canvas:false,
+ reveal:[['Explain how attractive (electrical) forces affect the behavior of real gases.','Attractions pull the particles together, so they hit the walls less hard: a real gas has a <b>lower pressure</b> than an ideal gas would, and at low T it can <b>condense</b>.'],
+  ['Interpret the behavior of ideal gases using the kinetic-molecular theory.','Ideal gas particles have <b>no volume</b>, <b>no attractions</b>, move in constant <b>random motion</b>, and their collisions are perfectly <b>elastic</b>.'],
+  ['Predict the conditions under which a real gas might deviate from ideal behavior.','At <b>high pressure</b> and <b>low temperature</b>; also when the particles are <b>polar</b> or <b>large</b>.'],
+  ['List common units for each variable in the ideal gas law.','P: atm, kPa, mm Hg · V: L · n: mol · T: K'],
+  ['Which behaves more like an ideal gas: He at high T and low P, or water vapor at low T and high P?','<b>He at high T and low P</b>: small, nonpolar particles that are far apart and moving fast.']]};
+
+
+/* ================= navigation ================= */
+function probScene(p,q){return {title:p.name,q:q,canvas:false,prob:p};}
+var QA='Are you going toward liters or away from liters? So do you multiply or divide by 22.4 L/mol?',QB='Which unit is the pressure in? Which R matches it? Is T in kelvin?',QC='Is the temperature in kelvin? Which values do you need: m, M, P, V, T?';
+var TABS=[
+ {n:"Avogadro's principle",c:TEAL,hash:'avogadro',rule:['<b>Avogadro:</b> equal volumes of gases (same T and P) hold <b>equal numbers of particles</b>','At STP (0 °C, 1 atm): <b>1 mol of any gas = 22.4 L</b>','Toward liters: <b>× 22.4 L/mol</b> · away from liters: <b>÷ 22.4 L/mol</b>','Mass ⇄ moles: use the <b>molar mass</b>'],
+  steps:[['One mole',SC_A1],['Conversion map',SC_A2]].concat(PA.map(function(p){return [p.chip,probScene(p,QA)];}))},
+ {n:'PV = nRT',c:BLUE,hash:'ideal-gas-law',rule:['More particles → more wall hits → <b>higher P</b>','<b>PV = nRT</b>: know three of P, V, n, T → find the fourth','<b>Pick R by the pressure unit</b>: atm 0.0821 · kPa 8.314 · mm Hg 62.4','T in <b>K</b>, V in <b>L</b>, n in <b>mol</b>'],
+  steps:[['More gas, more P',SC_B1],['Constant P',SC_B2],['Constant P and V',SC_B3],['PV = nRT',SC_B4N],['Rearranging',SC_RE],['R in atm',SC_R1],['R in kPa',SC_R2],['R in mm Hg',SC_R3],['R summary',SC_RS]].concat(PB.map(function(p){return [p.chip,probScene(p,QB)];}))},
+ {n:'Molar mass & density',c:PLUM,hash:'molar-mass-density',rule:['n = m/M → <b>M = mRT/(PV)</b>','m/V = D → <b>D = MP/(RT)</b>','Larger molar mass → <b>greater density</b> (same P and T)','T in K; R = 0.0821 when P is in atm'],
+  steps:[['Molar mass',SC_C1],['Density',SC_C2],['Fire extinguisher',SC_C3]].concat(PC.map(function(p){return [p.chip,probScene(p,QC)];}))},
+ {n:'Real vs ideal gases',c:CORAL,hash:'real-gases',rule:['Ideal: <b>no</b> particle volume, <b>no</b> attractions, elastic collisions','Real gases deviate at <b>high P</b> and <b>low T</b>','<b>Polar</b> and <b>large</b> molecules deviate more','At ordinary conditions most gases are close to ideal'],
+  steps:[['Point by point',SC_D1],['When they deviate',SC_D2],['Real gases around you',SC_D3],['Check yourself',SC_D4]]}];
+var tabI=0,stepI=0,cur=null,lastReads='';
+TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].prob){s[1].prob.next=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
+function renderTabs(){$('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+t.n+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
+function renderSteps(){$('steps').innerHTML=TABS[tabI].steps.map(function(s,i){var p=s[1].prob,done=p&&p.solved;return '<button class="step'+(i===stepI?' on':'')+(done?' done':'')+'" data-i="'+i+'"><b>'+(done?'✓':(i+1))+'</b>'+s[0]+'</button>';}).join('');
+ Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
+function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.documentElement.style.setProperty('--accent',T.c);
+ renderTabs();renderSteps();$('stitle').textContent=cur.title;$('q').innerHTML=cur.q;$('rule').innerHTML=(cur.rule||T.rule).map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('cv').style.display=cur.canvas?'':'none';$('controls').innerHTML='';$('controls').style.display=cur.canvas?'':'none';$('panel').innerHTML='';lastReads='';
+ if(cur.enter)cur.enter();
+ if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();}else if(cur.reveal)revealUI(cur.reveal);
+ try{history.replaceState(null,'','#'+T.hash);}catch(e){}window.scrollTo&&window.scrollY>200&&window.scrollTo({top:0,behavior:'smooth'});}
+function solvedIn(t){var a=TABS[t].steps.filter(function(s){return s[1].prob&&s[1].prob.chip;});return [a.filter(function(s){return s[1].prob.solved;}).length,a.length];}
+function reads(){var r=cur.reads?cur.reads():[];if(cur.prob&&!cur.canvas){var s=solvedIn(tabI);r=[['Problems solved',s[0]+' / '+s[1]],['Mode',cur.prob.mode==='try'?'My turn':'Show me']];}
+ if(!r.length)r=[['Step',(stepI+1)+' of '+TABS[tabI].steps.length]];
+ var h=r.map(function(x){return '<div class="rd"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+var hi=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+window.addEventListener('hashchange',function(){var k=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));if(k>=0&&k!==tabI)go(k,0);});
+var last=performance.now(),rt=0;
+function loop(now){var dt=clamp((now-last)/1000,0,.04);last=now;try{if(cur.canvas&&cur.frame)cur.frame(dt);rt+=dt;if(rt>.2){rt=0;reads();}}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

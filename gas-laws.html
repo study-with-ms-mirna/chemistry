@@ -166,6 +166,16 @@ sub{font-size:.6em}
 .vs{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px}
 .vs>div{flex:1 1 220px;border-radius:14px;padding:10px;text-align:center;background:#f6f8fc}
 .vs svg{display:block;margin:0 auto}
+
+.ktab{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.kh{font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;text-align:center;color:#fff;background:var(--accent);border-radius:10px;padding:4px}
+.kc{background:#f3f6fb;border-radius:12px;padding:6px 10px;font-family:Fredoka,sans-serif;font-size:18px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.kc.unk{background:#fff4e5;border:2px dashed #e8962a}
+.kc.ng{color:#8d99b0;background:#f8f9fc}
+.kc input{width:84px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:3px;background:#fff;color:var(--ink)}
+.kc input:disabled{background:#eef1f6}
+.kc input.ok{border-color:#2e9e5b;background:#e8f6ee}.kc input.no{border-color:#d8434a;background:#fdeeee}
+.kc select,.gin select{font-family:Fredoka,sans-serif;font-size:16px;border:2px solid var(--line);border-radius:10px;padding:3px 4px;background:#fff;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -652,7 +662,7 @@ var GP=[
   k:{T1:[89,'°C','89'],V1:[0.67,'L','0.67'],V2:[1120,'mL','1120']},cv:[{v:'V2',to:'L',f:1000,op:'÷',pair:'V1'}],ans:'332',u:'°C',sense:'The volume grew, so the gas must be <b>hotter</b>: 605 K (332 °C) is hotter than 362 K (89 °C) ✓'},
  {law:'comb',X:'V1',lvl:3,src:'Hardest: Check Your Understanding',q:'A gas in a syringe is at 1.02 atm and 22.0 °C. It is heated to 100.0 °C and the pressure rises to 124.6 kPa. The new volume is 0.224 mL. What was the initial volume?',
   k:{P1:[1.02,'atm','1.02'],T1:[22.0,'°C','22.0'],T2:[100.0,'°C','100.0'],P2:[124.6,'kPa','124.6'],V2:[0.224,'mL','0.224']},cv:[{v:'P2',to:'atm',f:101.3,op:'÷',pair:'P1'}],ans:'0.214',u:'mL',sense:'V₁ (0.214 mL) is close to V₂: heating made it bigger, the higher pressure made it smaller, and the two almost cancel out ✓'}];
-var LVL=[['Easy','#0f8b8d'],['Kelvin','#e8962a'],['Combined','#8a4fbf'],['Hard: check the units','#d8434a']];
+var LVL=[['Level 1','#0f8b8d'],['Level 2','#e8962a'],['Level 3','#8a4fbf'],['Level 4','#d8434a']];
 function sig3(x){return String(Number(x.toPrecision(3)));}
 function prep(p){var val={},txt2={},unit={},lines=[],naiveK={},naiveU={},kc=[];
  Object.keys(p.k).forEach(function(v){var a=p.k[v];val[v]=a[0];txt2[v]=a[2];unit[v]=a[1];naiveK[v]=a[0];naiveU[v]=a[0];
@@ -663,8 +673,32 @@ function prep(p){var val={},txt2={},unit={},lines=[],naiveK={},naiveU={},kc=[];
  var s=solveFor(p.law,p.X);function calc(m){var t=1,b=1;s.top.forEach(function(v){t*=m[v];});s.bot.forEach(function(v){b*=m[v];});return b===0?NaN:t/b;}
  var X=calc(val),Xc=p.outC?X-273:X;
  return {val:val,txt:txt2,unit:unit,lines:lines,kc:kc,sol:s,X:X,Xc:Xc,nK:kc.length?calc(naiveK)-(p.outC?0:0):null,nU:(p.cv&&p.cv.length)?calc(naiveU):null,zero:kc.some(function(v){return p.k[v][0]===0;})};}
-function knownGrid(p){var h='<div class="gknown">';Object.keys(p.k).forEach(function(v){h+='<div class="gk">'+tl(v)+' = '+p.k[v][2]+' '+p.k[v][1]+'</div>';});
- return h+'<div class="gk unk">'+tl(p.X)+' = ? '+(p.outC?'°C':p.u)+'</div></div><div class="ln">Which law? '+GLW[p.law].why+' → <b>'+GLW[p.law].n+'</b></div>';}
+var KUNITS={P:['atm','kPa','mm Hg'],V:['L','mL'],T:['°C','K']};
+function kCell(p,v){if(v===p.X)return '<div class="kc unk">'+tl(v)+' = ? '+(p.outC?'°C':p.u)+'</div>';var a=p.k[v];return a?'<div class="kc">'+tl(v)+' = '+a[2]+' '+a[1]+'</div>':'<div class="kc ng">'+tl(v)+' not given</div>';}
+function knownGrid(p){var h='<div class="ktab"><div class="kh">Before (1)</div><div class="kh">After (2)</div>';
+ ['P','V','T'].forEach(function(g){h+=kCell(p,g+'1')+kCell(p,g+'2');});
+ return h+'</div><div class="ln why">How to decide: the value the gas <b>starts</b> with is <b>before (1)</b>. Words like <i>new, increased to, rises to, falls to, is heated to, at the surface, resulting</i> describe <b>after (2)</b>.</div><div class="ln">Which law? '+GLW[p.law].why+' → <b>'+GLW[p.law].n+'</b></div>';}
+function kInputs(p){var h='<div class="ktab"><div class="kh">Before (1)</div><div class="kh">After (2)</div>';
+ ['P','V','T'].forEach(function(g){[1,2].forEach(function(k){var v=g+k;h+='<div class="kc in">'+tl(v)+' = <input id="kv_'+v+'" inputmode="decimal" autocomplete="off"><select id="ku_'+v+'"><option value="">unit…</option>'+KUNITS[g].map(function(u){return '<option>'+u+'</option>';}).join('')+'<option value="?">? (unknown)</option><option value="ng">not given</option></select><span class="mk" id="k_'+v+'m"></span></div>';});});
+ h+='</div><div class="gin" style="margin-top:10px">Which law? <select id="kLaw"><option value="">choose…</option>'+Object.keys(GLW).map(function(l){return '<option value="'+l+'">'+GLW[l].n+'</option>';}).join('')+'</select><span class="mk" id="kLawm"></span></div>';
+ return h;}
+function kCheck(p){var msgs=[],all=true,vals={};
+ ['P1','P2','V1','V2','T1','T2'].forEach(function(v){var u=$('ku_'+v).value,x=num('kv_'+v);vals[v]={u:u,x:x};});
+ ['P1','P2','V1','V2','T1','T2'].forEach(function(v){var a=p.k[v],me=vals[v],ok,msg=null,other=v.charAt(0)+(v.charAt(1)==='1'?'2':'1');
+  if(v===p.X){ok=me.u==='?';if(!ok)msg='What does the question ask you to find? Mark it with <b>? (unknown)</b>.';}
+  else if(!a){ok=me.u==='ng';if(!ok)msg=lbl(v)+' is not in the question: choose <b>not given</b>.';}
+  else{var okx=me.x!==null&&Math.abs(me.x-a[0])<=Math.abs(a[0])*1e-6+1e-9,oku=me.u===a[1];ok=okx&&oku;
+   if(!ok){var oa=p.k[other];if(me.x!==null&&oa&&Math.abs(me.x-oa[0])<=Math.abs(oa[0])*1e-6+1e-9)msg='<b>Before or after?</b> You swapped '+lbl(v)+' and '+lbl(other)+'. Which value does the gas start with?';
+    else if(me.u==='?'||me.u==='ng')msg=lbl(v)+' <b>is</b> given in the question. Find its value.';
+    else if(okx&&!oku)msg='Check the <b>unit</b> of '+lbl(v)+' in the question.';
+    else if(me.x===null)msg='Type the value of '+lbl(v)+'.';
+    else msg='Check the value of '+lbl(v)+' in the question.';}}
+  mark('kv_'+v,ok,me.x!==null||me.u!=='');$('k_'+v+'m').innerHTML=ok?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+  if(!ok){all=false;if(msg&&msgs.indexOf(msg)<0&&!(msg.indexOf('swapped')>=0&&msgs.some(function(m){return m.indexOf('swapped '+lbl(other))>=0;})))msgs.push(msg);}});
+ var lw=$('kLaw').value,okL=lw===p.law;$('kLawm').innerHTML=okL?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+ if(!okL){all=false;msgs.push(lw===''?'Choose the law.':'Check the law: which quantities change, and which one is <b>not given</b> at all (it stays the same)? Boyle: P and V · Charles: V and T · Gay-Lussac: P and T · Combined: P, V and T.');}
+ if(all){p.kOK=true;gpPanel(PR.cur);return;}
+ $('nFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
 function subHtml(p,P){var s=P.sol,cnt={};function cell(v,pos){var u=P.unit[v];return {v:v,u:u,pos:pos};}
  var top=s.top.map(function(v){return cell(v,'t');}),bot=s.bot.map(function(v){return cell(v,'b');});
  top.forEach(function(c){var m=bot.filter(function(d){return d.u===c.u&&!d.x;})[0];if(m){m.x=1;c.x=1;}});
@@ -673,8 +707,8 @@ function subHtml(p,P){var s=P.sol,cnt={};function cell(v,pos){var u=P.unit[v];re
 function ansStr(p){return p.ans+' '+p.u;}
 
 var PR={mode:'show',st:0};
-function gpPanel(i){var p=GP[i],P=prep(p),tryM=PR.mode==='try',st=PR.st;
- var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small">'+(tryM?'Fill in each part, then check.':'Step by step. Press Next step.')+'</span><span class="small" style="margin-left:auto">'+p.src+'</span></div>';
+function gpPanel(i){PR.cur=i;var p=GP[i],P=prep(p),tryM=PR.mode==='try',st=PR.st;
+ var h='<div class="modebar"><div class="seg"><button id="mShow"'+(tryM?'':' class="on"')+'>Show me</button><button id="mTry"'+(tryM?' class="on"':'')+'>My turn</button></div><span class="small">'+(tryM?'Fill in each part, then check.':'Step by step. Press Next step.')+'</span></div>';
  h+='<div class="task"><span class="lvl" style="background:'+LVL[p.lvl][1]+'">'+LVL[p.lvl][0]+'</span>'+p.q+'</div>';
  if(!tryM){
   var conv;
@@ -690,7 +724,13 @@ function gpPanel(i){var p=GP[i],P=prep(p),tryM=PR.mode==='try',st=PR.st;
   h+='<div class="stepbar"><button class="btn" id="nBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<5?'<button class="btn fill" id="nNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="nTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+[1,2,3,4,5].map(function(k){return '<i class="'+(k<=st?'on':'')+'"></i>';}).join('')+'</div></div>';}
  else{var n=0,done=p.solved;
   h+='<div class="facts"><span>K = °C + 273</span><span>1 atm = 101.3 kPa</span><span>1 L = 1000 mL</span></div>';
-  h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>What do we know?</h4>'+knownGrid(p)+'</div>';
+  if(!p.kOK&&!done){h+='<div class="gsec"><h4><span class="n">1</span>What do we know? (your first step)</h4><div class="small" style="margin-bottom:6px">Read the question carefully. For each quantity, decide: is it <b>before (1)</b> or <b>after (2)</b>? Type the value and choose its unit. Choose <b>? (unknown)</b> for what you must find and <b>not given</b> if the question does not mention it.</div>'+kInputs(p)+'</div>'+
+   '<div class="stepbar"><button class="btn fill" id="kChk">Check step 1</button><button class="btn" id="kHint">Hint</button></div><div class="hintbox" id="kHint2">The first value of each quantity in the story is <b>before (1)</b>. Look for words like <i>new, increased to, rises to, falls to, heated to, at the surface</i>: they describe <b>after (2)</b>. Then: the quantity that is <b>not given</b> at all stays the same.</div><div class="feedback" id="nFb"></div>';
+   $('gpanel').innerHTML=h;$('mShow').onclick=function(){PR.mode='show';PR.st=0;gpPanel(i);};$('mTry').onclick=function(){PR.mode='try';gpPanel(i);};
+   $('kChk').onclick=function(){kCheck(p);};$('kHint').onclick=function(){$('kHint2').classList.toggle('on');};
+   ['P1','P2','V1','V2','T1','T2'].forEach(function(v){$('ku_'+v).onchange=function(){var o=this.value==='?'||this.value==='ng';$('kv_'+v).disabled=o;if(o)$('kv_'+v).value='';};});
+   return;}
+  h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>What do we know? <span class="good2">✓</span></h4>'+knownGrid(p)+'</div>';
   (p.cv||[]).forEach(function(c,ci){var a=p.k[c.v];h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Check the units</h4><div class="gin">Are '+lbl(c.pair)+' and '+lbl(c.v)+' in the same unit? <span class="yn" data-c="'+ci+'"><button data-a="y">Yes</button><button data-a="n">No</button></span><span class="mk" id="ynm'+ci+'"></span></div>'+
    '<div class="gin" id="cvrow'+ci+'" style="display:none">Convert: '+lbl(c.v)+' = '+a[2]+' '+a[1]+' = <input id="cv'+ci+'" inputmode="decimal" autocomplete="off"> '+c.to+' <span class="mk" id="cv'+ci+'m"></span></div></div>';});
   if(P.kc.length){h+='<div class="gsec"><h4><span class="n">'+(++n)+'</span>Convert °C → K</h4>'+P.kc.map(function(v){return '<div class="gin">'+lbl(v)+' = '+p.k[v][2]+' °C → <input id="tk_'+v+'" inputmode="decimal" autocomplete="off"> K <span class="mk" id="tk_'+v+'m"></span></div>';}).join('')+'</div>';}
@@ -791,8 +831,8 @@ var GRULE=['Temperatures in <b>kelvin</b>: K = °C + 273','P₁ and P₂ in the 
 S.gpR=panelScene({title:'How to rearrange a gas law equation',q:'What must you always do to BOTH sides of an equation?',rule:GRULE,init:function(){lesson('r',RCARDS);}});
 S.gpK=panelScene({title:'Why must temperature be in kelvin?',q:'What would happen if T₁ were 0 °C and we did not convert?',rule:GRULE,init:function(){lesson('k',KCARDS);}});
 S.gpU=panelScene({title:'Pressures and volumes must have the same units',q:'Is 1 atm bigger, smaller or the same as 101.3 kPa?',rule:GRULE,init:function(){lesson('u',UCARDS);}});
-GP.forEach(function(p,i){S['gp'+i]=panelScene({title:'Problem '+(i+1)+': '+GLW[p.law].n+' · find '+lbl(p.X),q:'Before you calculate: will '+lbl(p.X)+' be bigger or smaller than '+lbl(p.X.charAt(0)+(p.X.charAt(1)==='1'?'2':'1'))+'? Why?',rule:GRULE,
- reads:[['l','Law'],['u','Unknown'],['s','Problems solved']],read:function(){return {l:GLW[p.law].n,u:lbl(p.X),s:GP.filter(function(x){return x.solved;}).length+' / '+GP.length};},
+GP.forEach(function(p,i){S['gp'+i]=panelScene({title:'Problem '+(i+1),q:'Before you calculate: will '+lbl(p.X)+' be bigger or smaller than '+lbl(p.X.charAt(0)+(p.X.charAt(1)==='1'?'2':'1'))+'? Why?',rule:GRULE,
+ reads:[['l','Law'],['u','Unknown'],['s','Problems solved']],read:function(){return {l:(p.kOK||p.solved||PR.mode==='show'&&PR.st>=1)?GLW[p.law].n:'?',u:lbl(p.X),s:GP.filter(function(x){return x.solved;}).length+' / '+GP.length};},
  init:function(){PR.st=0;gpPanel(i);}});});
 
 /* ================= APP ================= */
@@ -801,7 +841,7 @@ var LAWS=[
  {id:'charles',name:"Charles's Law",c:'#e2708a',steps:[['Balloon on a bottle','charlesDemo'],['Explore','charlesSim'],['The equation','charlesEq']]},
  {id:'gl',name:"Gay-Lussac's Law",c:'#2b59c3',steps:[['Can implosion','glDemo'],['Explore','glSim'],['The equation','glEq']]},
  {id:'comb',name:'Combined Gas Law',c:'#8a4fbf',steps:[['All three together','combined']]},
- {id:'prac',name:'Practice problems',c:'#e8962a',steps:[['How to rearrange','gpR','A'],['Why Kelvin?','gpK','B'],['Same units','gpU','C']].concat(GP.map(function(p,i){var nm=['Boyle','Boyle','Boyle','Charles','Charles','Gay-Lussac','Gay-Lussac','Combined','Combined','Units!','Units!','Units!'][i];return [nm,'gp'+i,function(){return p.solved?'✓':String(i+1);}];}))}];
+ {id:'prac',name:'Practice problems',c:'#e8962a',steps:[['How to rearrange','gpR','A'],['Why Kelvin?','gpK','B'],['Same units','gpU','C']].concat(GP.map(function(p,i){var nm='Problem '+(i+1);return [nm,'gp'+i,function(){return p.solved?'✓':String(i+1);}];}))}];
 var cur=null,li=0,si=0,lastRead=0;
 function renderTabs(){$('tabs').innerHTML=LAWS.map(function(l,i){return '<button class="tab'+(i===li?' on':'')+'" style="--c:'+l.c+'" data-i="'+i+'"><i></i>'+l.name+'</button>';}).join('');
  Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'),0);};});
