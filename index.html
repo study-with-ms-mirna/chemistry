@@ -73,10 +73,18 @@ iframe{flex:1;width:100%;border:0;background:var(--bg)}
 .home .sec .gico{width:40px;height:40px;border-radius:11px}
 .home .sec .gico svg{width:32px;height:32px}
 .grp:not(.closed) .gico,.home .sec:not(.closed) .gico{display:none}
+/* show / hide the sidebar */
+#menu{display:inline-block}
+body.noside{grid-template-columns:0 1fr}
+body.noside aside{visibility:hidden;padding:0;border:0}
+body:not(.noside) #menu{display:none}
+#hideside{align-self:flex-end;font:inherit;font-family:var(--disp);font-weight:600;font-size:13px;color:#0f8b8d;background:#d6f1f0;border:1.5px solid #0f8b8d;border-radius:9px;padding:4px 10px;cursor:pointer;margin-bottom:-4px}
+#hideside:hover{background:#0f8b8d;color:#fff}
+@media (max-width:760px){ body:not(.noside) #menu,#menu{display:inline-block} body.noside{grid-template-columns:1fr} body.noside aside{visibility:visible;padding:18px 14px;border-right:2px solid var(--line)} body.open #menu{display:none} }
 </style>
 </head>
 <body>
-<aside id="side">
+<aside id="side"><button id="hideside" aria-label="Hide menu" title="Hide menu">« Hide</button>
   <div class="brand"><span class="bico"><svg viewBox="0 0 240 220" role="img" aria-label="Chemistry illustration: a flask, a test tube and a molecule">
 <defs>
 <linearGradient id="lq1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#58d0c9"/><stop offset="1" stop-color="#1f9c9e"/></linearGradient>
@@ -110,7 +118,7 @@ iframe{flex:1;width:100%;border:0;background:var(--bg)}
   <nav id="nav" aria-label="Activities"></nav>
 </aside>
 <main>
-  <div class="bar"><button id="menu" aria-label="Open menu">☰ Menu</button><b id="title">Home</b><a id="full" href="#" target="_blank" rel="noopener" hidden>Open full screen ↗</a></div>
+  <div class="bar"><button id="menu" aria-label="Show menu" title="Show menu">☰ Menu</button><b id="title">Home</b><a id="full" href="#" target="_blank" rel="noopener" hidden>Open full screen ↗</a></div>
   <div id="view" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
 </main>
 <script>
@@ -191,7 +199,11 @@ function route(){
       ${[...new Set(ITEMS.map(i=>i.group))].map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('home',g);return `<button class="sec${op?'':' closed'}" data-w="home" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${gi(g)}${g}<span class="n">${its.length}</span></button><div class="cards${op?'':' hide'}">${its.map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`;}).join('')}</div>`; }
 }
 addEventListener('hashchange',route);
-document.getElementById('menu').onclick=()=>document.body.classList.toggle('open');
+const MOBILE=()=>matchMedia('(max-width:760px)').matches;
+function setSide(show){ if(MOBILE()){document.body.classList.toggle('open',show);} else {document.body.classList.toggle('noside',!show); try{localStorage.setItem('mm_side',show?'1':'0');}catch(e){}} }
+try{ if(localStorage.getItem('mm_side')==='0') document.body.classList.add('noside'); }catch(e){}
+document.getElementById('menu').onclick=()=>setSide(MOBILE()?!document.body.classList.contains('open'):document.body.classList.contains('noside'));
+document.getElementById('hideside').onclick=()=>setSide(false);
 view.addEventListener('click',()=>document.body.classList.remove('open'));
 route();
 </script>
