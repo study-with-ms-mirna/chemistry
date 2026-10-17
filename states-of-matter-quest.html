@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>States of Matter Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#eaf0f8; --grid:#dbe4f1; --card:#ffffff; --ink:#18233a; --soft:#5b6780; --line:#c9d4e6;
+  --blue:#2b59c3; --bluebg:#e3ebfb; --amber:#e8962a; --amberbg:#fdf0dc;
+  --good:#23915a; --goodbg:#dcf3e6; --bad:#d14343; --badbg:#fbe3e3;
+  --teal:#0f8b8d; --tealbg:#dcf2f2; --plum:#8a4fbf; --plumbg:#efe5f8;
+  --shadow:0 6px 0 #c3cfe3;
+  --disp:"Fredoka","Trebuchet MS",sans-serif; --body:"Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.45;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px}
+.app{max-width:780px; margin:0 auto; padding-inline:16px; padding-block:18px 40px}
+h1,h2,h3{font-family:var(--disp); margin:0; line-height:1.1; text-wrap:balance}
+sub{font-size:.72em}
+button{font:inherit; color:inherit; cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--amber); outline-offset:2px}
+
+/* HUD */
+.hud{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+.stage{font-family:var(--disp); font-weight:600; font-size:15px; background:var(--card); border:2px solid var(--line); border-radius:12px; padding:4px 12px}
+.stat{display:flex; align-items:center; gap:6px; font-family:var(--disp); font-weight:600; background:var(--card); border:2px solid var(--line); border-radius:12px; padding:4px 12px; font-variant-numeric:tabular-nums}
+.stat.streak.hot{border-color:var(--amber); color:var(--amber)}
+.hud .grow{flex:1}
+.bar{height:12px; background:var(--card); border:2px solid var(--line); border-radius:99px; overflow:hidden; margin-bottom:16px}
+.bar i{display:block; height:100%; background:linear-gradient(90deg,var(--teal),var(--blue)); width:0; transition:width .4s}
+
+/* card */
+.card{background:var(--card); border:2px solid var(--line); border-radius:22px; box-shadow:var(--shadow); padding:22px 22px 20px; display:grid; gap:16px}
+.meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.tag{font-family:var(--disp); font-weight:600; font-size:13px; letter-spacing:.04em; text-transform:uppercase; border-radius:8px; padding:3px 9px}
+.tag.skill{background:var(--tealbg); color:var(--teal)}
+.tag.type{background:var(--plumbg); color:var(--plum)}
+.qnum{font-family:var(--disp); color:var(--soft); font-weight:600; margin-left:auto; font-size:14px}
+.prompt{font-size:21px; font-weight:700; line-height:1.35}
+.help{color:var(--soft); font-size:15px; margin-top:-8px}
+.mol{display:flex; justify-content:center; background:var(--bg); border-radius:16px; padding:10px}
+.mol svg{max-width:100%; height:auto}
+.mol svg text{font-family:var(--body); font-weight:700; fill:var(--ink)}
+.formula{font-size:22px; font-weight:700; text-align:center; background:var(--bg); border-radius:14px; padding:12px; overflow-x:auto}
+
+/* options */
+.opts{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.opts.one{grid-template-columns:1fr}
+@media (max-width:560px){ .opts{grid-template-columns:1fr} }
+.opt{display:flex; align-items:center; gap:12px; text-align:left; background:var(--card); border:2px solid var(--line); border-radius:14px; padding:12px 14px; min-height:54px; transition:transform .08s, border-color .15s, background .15s}
+.opt:hover:not(:disabled){border-color:var(--blue); transform:translateY(-2px)}
+.opt .k{flex:none; width:30px; height:30px; border-radius:9px; display:grid; place-items:center; font-family:var(--disp); font-weight:700; background:var(--bluebg); color:var(--blue)}
+.opt.sel{border-color:var(--blue); background:var(--bluebg)}
+.opt.right{border-color:var(--good); background:var(--goodbg)}
+.opt.right .k{background:var(--good); color:#fff}
+.opt.wrong{border-color:var(--bad); background:var(--badbg)}
+.opt.wrong .k{background:var(--bad); color:#fff}
+.opt:disabled{cursor:default}
+.opt.pic{flex-direction:column; justify-content:center; padding:8px}
+.opt.pic svg{width:170px; max-width:100%; height:auto; color:var(--ink)}
+.opt.pic svg text{font-size:14px}
+.opt.pic svg text{font-family:var(--body); font-weight:700; fill:var(--ink)}
+.tf{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.tf .opt{justify-content:center; font-family:var(--disp); font-size:22px; font-weight:700; min-height:70px}
+
+/* chips, buckets */
+.pool{display:flex; flex-wrap:wrap; gap:8px; min-height:48px; padding:10px; border:2px dashed var(--line); border-radius:14px}
+.chip{background:var(--card); border:2px solid var(--line); border-radius:12px; padding:7px 12px; font-weight:700; transition:transform .08s}
+.chip:hover:not(:disabled){transform:translateY(-2px); border-color:var(--blue)}
+.chip.sel{border-color:var(--amber); background:var(--amberbg)}
+.chip.right{border-color:var(--good); background:var(--goodbg)}
+.chip.wrong{border-color:var(--bad); background:var(--badbg)}
+.buckets{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+@media (max-width:520px){ .buckets{grid-template-columns:1fr} }
+.bucket{border:2px solid var(--line); border-radius:16px; padding:10px; min-height:110px; display:flex; flex-direction:column; gap:8px; background:var(--bg); text-align:left}
+.bucket h3{font-size:17px}
+.bucket .in{display:flex; flex-wrap:wrap; gap:6px}
+.bucket.ready{border-color:var(--amber); border-style:dashed}
+
+/* match */
+.match{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px}
+.match .col{display:grid; gap:8px; align-content:start}
+.mi{text-align:left; background:var(--card); border:2px solid var(--line); border-radius:12px; padding:10px 12px; font-weight:700; min-height:48px}
+.mi.sel{border-color:var(--amber); background:var(--amberbg)}
+.mi[data-pair]{border-width:3px}
+.mi.right{background:var(--goodbg)} .mi.wrong{background:var(--badbg)}
+
+/* build / order */
+.answerline{display:flex; flex-wrap:wrap; gap:6px; align-items:center; min-height:56px; padding:10px; border-radius:14px; background:var(--bg); border:2px solid var(--line); font-weight:700}
+.answerline .ph{color:var(--soft); font-weight:400}
+.answerline .chip{background:var(--bluebg); border-color:var(--blue)}
+.ordered{display:grid; gap:8px; counter-reset:o}
+.oslot{display:flex; align-items:center; gap:10px; padding:8px 12px; border:2px dashed var(--line); border-radius:12px; min-height:46px; background:var(--bg); font-weight:700}
+.oslot::before{counter-increment:o; content:counter(o); width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font-family:var(--disp); font-size:14px; flex:none}
+.oslot.right{border-style:solid; border-color:var(--good); background:var(--goodbg)}
+.oslot.wrong{border-style:solid; border-color:var(--bad); background:var(--badbg)}
+
+.inputrow{display:flex; gap:10px; flex-wrap:wrap}
+.inputrow input{flex:1; min-width:160px; font:inherit; font-size:22px; font-weight:700; padding:10px 14px; border-radius:14px; border:2px solid var(--line); background:var(--bg); color:var(--ink)}
+.inputrow input.right{border-color:var(--good); background:var(--goodbg)}
+.inputrow input.wrong{border-color:var(--bad); background:var(--badbg)}
+.subhint{font-size:14px; color:var(--soft)}
+
+/* actions & feedback */
+.actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.btn{font-family:var(--disp); font-weight:600; font-size:18px; border:none; border-radius:14px; padding:11px 22px; background:var(--blue); color:#fff; box-shadow:0 4px 0 #1b3a86}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn.ghost{background:transparent; color:var(--soft); box-shadow:none; border:2px solid var(--line); font-size:15px; padding:8px 14px}
+.btn.go{background:var(--good); box-shadow:0 4px 0 #166b40}
+.fb{border-radius:14px; padding:12px 14px; display:grid; gap:4px}
+.fb.good{background:var(--goodbg); border:2px solid var(--good)}
+.fb.bad{background:var(--badbg); border:2px solid var(--bad)}
+.fb b.t{font-family:var(--disp); font-size:19px}
+.fb.good b.t{color:var(--good)} .fb.bad b.t{color:var(--bad)}
+.pts{font-family:var(--disp); color:var(--amber); font-weight:700}
+
+/* screens */
+.hero{display:grid; gap:18px; text-align:left}
+.hero h1{font-size:clamp(40px,8vw,64px); font-weight:700}
+.hero h1 span{color:var(--teal)}
+.hero p{margin:0; max-width:58ch}
+.stages{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px}
+.st{border:2px solid var(--line); border-radius:14px; padding:10px 12px; background:var(--bg)}
+.st b{font-family:var(--disp); display:block; font-size:17px}
+.st small{color:var(--soft)}
+.types{display:flex; flex-wrap:wrap; gap:6px}
+.best{font-family:var(--disp); color:var(--soft)}
+.big{font-family:var(--disp); font-size:56px; font-weight:700; color:var(--teal); line-height:1}
+.skills{display:grid; gap:8px}
+.sk{display:grid; grid-template-columns:120px 1fr 52px; gap:10px; align-items:center; font-weight:700}
+.sk .t{height:14px; border-radius:99px; background:var(--bg); border:2px solid var(--line); overflow:hidden}
+.sk .t i{display:block; height:100%; background:var(--teal)}
+.sk em{font-style:normal; text-align:right; font-variant-numeric:tabular-nums; color:var(--soft)}
+.miss{display:grid; gap:8px}
+.miss div{border-left:4px solid var(--bad); padding:6px 10px; background:var(--bg); border-radius:0 10px 10px 0; font-size:15px}
+.field{display:grid; gap:6px}
+.field label{font-family:var(--disp); font-weight:600; font-size:15px}
+.fields{display:grid; grid-template-columns:2fr 1fr; gap:12px}
+@media (max-width:520px){ .fields{grid-template-columns:1fr} }
+.field input,.field select{font:inherit; font-size:18px; padding:10px 14px; border-radius:12px; border:2px solid var(--line); background:var(--bg); color:var(--ink)}
+.field input.err,.field select.err{border-color:var(--bad)}
+.errmsg{color:var(--bad); font-size:14px; min-height:1em}
+.player{font-family:var(--disp); font-weight:600; background:var(--card); border:2px solid var(--line); border-radius:12px; padding:4px 12px; max-width:40vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cert{border:3px solid var(--teal); border-radius:18px; padding:14px 16px; background:var(--tealbg); display:grid; gap:4px}
+.cert .row{display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 16px}
+.cert b.nm{font-family:var(--disp); font-size:24px}
+.cert code{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:700; letter-spacing:.08em}
+.hist{width:100%; border-collapse:collapse; font-size:15px; font-variant-numeric:tabular-nums}
+.hist th,.hist td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line)}
+.histwrap{overflow-x:auto}
+.toast{position:fixed; left:50%; top:calc(16px + env(safe-area-inset-top,0px)); transform:translateX(-50%); background:var(--ink); color:var(--card); font-family:var(--disp); font-weight:600; padding:10px 18px; border-radius:14px; z-index:5; box-shadow:0 8px 20px rgba(0,0,0,.25)}
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+.card.enter{animation:pop .25s ease-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.shake{animation:shake .3s}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important} }
+
+/* hint */
+.hintwrap{display:grid; gap:8px}
+.hintbtn{justify-self:start; display:inline-flex; align-items:center; gap:8px; font-family:var(--disp); font-weight:600; font-size:15px; color:#9a5b05; background:var(--amberbg); border:2px dashed var(--amber); border-radius:12px; padding:7px 14px}
+.hintbtn:hover{border-style:solid}
+.hintbox{background:#fff8e1; border:2px solid var(--amber); border-radius:14px; padding:10px 14px; font-size:16px}
+.hintbox b{font-family:var(--disp); color:#9a5b05; margin-right:4px}
+sup{font-size:.72em}
+.mol svg text{font-size:14px}
+.sendst{font-family:var(--disp);font-weight:600;color:var(--soft)}
+.sendst.ok{color:var(--good)}
+.sendst.err{color:var(--bad)}
+.mol svg{max-height:240px;width:auto}
+.opt.pic svg{width:140px}
+</style>
+
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+(function(){
+// ---------- helpers ----------
+const F=s=>String(s).replace(/_(\{[^}]*\}|[0-9n+−\-]+)/g,(m,g)=>'<sub>'+g.replace(/[{}]/g,'')+'</sub>').replace(/\^(\{[^}]*\}|[0-9+−\-]+)/g,(m,g)=>'<sup>'+g.replace(/[{}]/g,'')+'</sup>');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const $=(h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstElementChild;};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+// ---------- molecule drawing ----------
+const S='stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"';
+function ring(n,cx,cy,r,rot){const p=[];for(let i=0;i<n;i++){const a=(rot+i*360/n)*Math.PI/180;p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}return p;}
+function polyline(p,close){return `<polyline points="${p.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' ')}${close?' '+p[0].map(v=>v.toFixed(1)).join(','):''}" ${S}/>`;}
+function inner(a,b,c,f){f=f||.22;const m=(p)=>[p[0]+(c[0]-p[0])*f,p[1]+(c[1]-p[1])*f];const A=m(a),B=m(b);
+  const t=.15;const A2=[A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t],B2=[B[0]+(A[0]-B[0])*t,B[1]+(A[1]-B[1])*t];
+  return `<line x1="${A2[0]}" y1="${A2[1]}" x2="${B2[0]}" y2="${B2[1]}" ${S}/>`;}
+function sub(p,c,len,label,anchor){const dx=p[0]-c[0],dy=p[1]-c[1],d=Math.hypot(dx,dy);const e=[p[0]+dx/d*len,p[1]+dy/d*len];
+  let s=`<line x1="${p[0]}" y1="${p[1]}" x2="${e[0]}" y2="${e[1]}" ${S}/>`;
+  if(label){const ax=anchor||(dx>8?'start':dx<-8?'end':'middle');const ox=ax==='start'?4:ax==='end'?-4:0;const oy=dy>8?18:dy<-8?-6:6;
+    s+=`<text x="${e[0]+ox}" y="${e[1]+oy}" text-anchor="${ax}" font-size="17">${label}</text>`;}
+  return s;}
+const lbl=t=>t.replace(/(\d)(\D?)/g,(m,d,n)=>`<tspan font-size="12" dy="5">${d}</tspan>`+(n?`<tspan dy="-5">${n}</tspan>`:''));
+function svg(w,h,body,title){return `<svg viewBox="0 0 ${w} ${h}" width="${w}" role="img" aria-label="${title}" style="color:var(--ink)">${body}</svg>`;}
+// ---------- pictures: orbital boxes and electron-dot structures ----------
+// ---------- pictures: particles, hydrogen bond, phase diagram ----------
+const MOL={
+  // particle boxes for solid / liquid / gas
+  _box(kind,title){
+    let out=`<rect x="6" y="6" width="128" height="108" rx="10" fill="none" stroke="currentColor" stroke-width="2.5"/>`;
+    const dot=(x,y,c)=>`<circle cx="${x}" cy="${y}" r="8" fill="${c}" stroke="currentColor" stroke-width="1.4"/>`;
+    if(kind==='solid'){for(let r=0;r<4;r++)for(let c=0;c<5;c++)out+=dot(27+c*21.5,32+r*21,'#cfe0ff');}
+    if(kind==='liquid'){[[22,100],[42,101],[62,99],[82,101],[102,100],[120,99],[30,82],[51,81],[72,83],[93,80],[113,82],[24,63],[45,64],[67,62],[89,65],[110,61]].forEach(([x,y])=>out+=dot(x,y,'#c9efe9'));}
+    if(kind==='gas'){[[30,30,16,-6],[100,28,-14,10],[115,80,10,12],[40,90,-12,-10],[75,62,14,4],[60,30,8,14]].forEach(([x,y,dx,dy])=>{
+      out+=`<line x1="${x}" y1="${y}" x2="${x+dx*1.6}" y2="${y+dy*1.6}" stroke="var(--bad)" stroke-width="2.4" stroke-linecap="round"/>`+dot(x,y,'#ffd6e0');});}
+    return svg(140,120,out,title);},
+  solid(){return MOL._box('solid','particles packed tightly in rows');},
+  liquid(){return MOL._box('liquid','particles close together but not in rows');},
+  gas(){return MOL._box('gas','particles far apart and moving quickly');},
+  hbond(){
+    const t=(x,y,s)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="22">${s}</text>`;
+    const l=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" ${S}/>`;
+    return svg(300,150,
+      t(60,78,'O')+t(26,122,'H')+l(52,86,34,108)+t(118,78,'H')+l(74,71,104,71)+
+      `<line x1="134" y1="71" x2="178" y2="71" stroke="currentColor" stroke-width="3" stroke-dasharray="3 7" stroke-linecap="round"/>`+
+      t(196,78,'O')+t(196,24,'H')+l(196,58,196,32)+t(250,116,'H')+l(208,84,240,104)+
+      `<path d="M156 135 V86 M148 96 L156 84 L164 96" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+      'two water molecules; an arrow points to the dotted attraction between H of one molecule and O of the other');},
+  phase(){
+    const X=t=>40+t*250, Y=p=>20+(1-p)*180;
+    let out=`<rect x="40" y="20" width="250" height="180" fill="none" stroke="currentColor" stroke-width="2"/>`;
+    const tp=[0.2,0.12], cp=[0.9,0.86];
+    let d=`M${X(0)} ${Y(0.02)} Q${X(0.12)} ${Y(0.04)} ${X(tp[0])} ${Y(tp[1])}`;
+    out+=`<path d="${d}" fill="none" stroke="currentColor" stroke-width="2.6"/>`;
+    out+=`<path d="M${X(tp[0])} ${Y(tp[1])} Q${X(0.6)} ${Y(0.3)} ${X(cp[0])} ${Y(cp[1])}" fill="none" stroke="currentColor" stroke-width="2.6"/>`;
+    out+=`<line x1="${X(tp[0])}" y1="${Y(tp[1])}" x2="${X(0.17)}" y2="${Y(1)}" stroke="currentColor" stroke-width="2.6"/>`;
+    out+=`<line x1="${X(0)}" y1="${Y(0.45)}" x2="${X(1)}" y2="${Y(0.45)}" stroke="var(--soft)" stroke-width="1.4" stroke-dasharray="5 5"/>`;
+    const pt=(t,p,lab,dx,dy)=>`<circle cx="${X(t)}" cy="${Y(p)}" r="5" style="fill:var(--ink)"/><text x="${X(t)+dx}" y="${Y(p)+dy}" font-size="18" style="fill:var(--blue)">${lab}</text>`;
+    out+=pt(tp[0],tp[1],'1',8,18)+pt(cp[0],cp[1],'2',-20,-6)+pt(0.187,0.45,'3',-22,-6)+pt(0.565,0.45,'4',6,20);
+    out+=`<text x="${X(0.03)}" y="${Y(0.75)}" font-size="13">solid</text><text x="${X(0.42)}" y="${Y(0.8)}" font-size="13">liquid</text><text x="${X(0.68)}" y="${Y(0.18)}" font-size="13">gas</text>`;
+    out+=`<text x="165" y="222" text-anchor="middle" font-size="13">temperature →</text><text x="20" y="110" text-anchor="middle" font-size="13" transform="rotate(-90 20 110)">pressure →</text>`;
+    return svg(300,230,out,'phase diagram of water with four points numbered 1 to 4');},
+};
+
+// ---------- questions (from the Chapter 12 SAAT set) ----------
+const STAGES=[{n:'Gases',from:0},{n:'Forces of Attraction',from:9},{n:'Liquids & Solids',from:16},{n:'Phase Changes',from:23}];
+const Q=[
+ {t:'pick',skill:'Gases',q:'Which picture shows the particles of a gas?',o:['gas','solid','liquid'],names:['far apart, moving fast','packed in rows (solid)','close but moving (liquid)'],a:0,
+  h:'Gas particles have lots of empty space between them.',
+  x:'In a gas the particles are far apart and move quickly in straight lines, so a gas fills its whole container and can be compressed.'},
+ {t:'tf',skill:'Gases',q:'When gas particles collide, no kinetic energy is lost.',a:true,
+  h:'Kinetic-molecular theory calls these collisions “elastic”.',
+  x:'Collisions between gas particles are elastic: kinetic energy can pass from one particle to another, but the total is not lost.'},
+ {t:'mcq',skill:'Gases',q:'Temperature is a measure of the ___ of the particles.',o:['average kinetic energy','total mass','size','number'],a:0,
+  h:'Hotter particles move faster.',
+  x:'Temperature measures the average kinetic energy of the particles. Average kinetic energy is directly proportional to temperature.'},
+ {t:'match',skill:'Gases',q:'Match each word to its meaning.',help:'Tap an item on the left, then its partner on the right.',
+  pairs:[['Diffusion','gases mix, from high to low concentration'],['Effusion','gas escapes through a tiny hole'],['Barometer','measures atmospheric pressure'],['Manometer','measures gas pressure in a closed container']],
+  h:'Smelling food in another room is diffusion; a punctured tyre is effusion.',
+  x:'Diffusion = mixing. Effusion = escaping through a tiny opening. Barometer = air pressure. Manometer = gas in a closed container.'},
+ {t:'mcq',skill:'Gases',q:'1 atm is equal to ___.',o:['101.3 kPa','760 kPa','1 Pa','14.7 kPa'],a:0,
+  h:'1 atm = 760 mmHg = ? kPa',
+  x:'1 atm = 760 mmHg = 760 torr = 101.3 kPa. The SI unit is the pascal: 1 Pa = 1 N/m^{2}.'},
+ {t:'order',skill:'Graham’s law',q:'Put these gases from SLOWEST to FASTEST effusion.',help:'Tap them in order.',items:['CO_{2} (44 g/mol)','O_{2} (32 g/mol)','N_{2} (28 g/mol)','H_{2} (2 g/mol)'],
+  h:'Graham’s law: rate ∝ 1 ÷ √molar mass',
+  x:'The heavier the gas, the slower it effuses. H_{2} is the lightest, so it is the fastest.'},
+ {t:'num',skill:'Graham’s law',q:'H_{2} has a molar mass of 2 g/mol and O_{2} has 32 g/mol. How many times faster does H_{2} effuse than O_{2}?',help:'Type a number.',a:4,
+  h:'Rate_{A} ÷ Rate_{B} = √(molar mass_{B} ÷ molar mass_{A})',
+  x:'√(32 ÷ 2) = √16 = 4, so hydrogen effuses 4 times faster.'},
+ {t:'mcq',skill:'Graham’s law',q:'Which gas diffuses at the same rate as C_{2}H_{4}? (H = 1, C = 12, N = 14, O = 16)',o:['N_{2}','O_{2}','CO_{2}','H_{2}'],a:0,
+  h:'Equal molar masses give equal rates.',
+  x:'C_{2}H_{4} = 2(12) + 4(1) = 28 g/mol and N_{2} = 2(14) = 28 g/mol, so they diffuse at the same rate.'},
+ {t:'num',skill:'Dalton’s law',q:'A container has a total pressure of 2 atm. N_{2} is 0.7 atm and CO_{2} is 1 atm. What is the partial pressure of O_{2}, in atm?',help:'Type a number (decimals are fine).',a:0.3,
+  h:'P_{total} = P_{1} + P_{2} + P_{3}',
+  x:'P_{O2} = 2 − 0.7 − 1 = 0.3 atm. Partial pressure does not depend on the type of gas.'},
+
+ {t:'sort',skill:'Forces',q:'Is it a force BETWEEN molecules or a bond INSIDE a substance?',help:'Tap an item, then tap a box.',b:['Intermolecular (between)','Intramolecular (inside)'],
+  items:[['London dispersion',0],['dipole–dipole',0],['hydrogen bond',0],['ionic bond',1],['covalent bond',1],['metallic bond',1]],
+  h:'Bonds hold atoms or ions together; intermolecular forces act between separate molecules.',
+  x:'Intermolecular: dispersion, dipole–dipole, hydrogen bonds. Ionic, covalent and metallic bonds are much stronger and act inside substances.'},
+ {t:'order',skill:'Forces',q:'Put these from WEAKEST to STRONGEST.',help:'Tap them in order.',items:['London dispersion forces','dipole–dipole forces','hydrogen bonds'],
+  h:'The weakest force exists between ALL molecules, even nonpolar ones.',
+  x:'Dispersion < dipole–dipole < hydrogen bond. Hydrogen bonds are the strongest intermolecular force.'},
+ {t:'mcq',skill:'Forces',q:'What type of attraction does the arrow point to?',mol:'hbond',o:['hydrogen bond','covalent bond','ionic bond','metallic bond'],a:0,
+  h:'It is between two different water molecules, not inside one.',
+  x:'The dotted line joins the H of one water molecule to the O of another: a hydrogen bond.'},
+ {t:'sort',skill:'Hydrogen bonds',q:'Can its molecules form hydrogen bonds with each other?',help:'Tap a formula, then tap a box.',b:['Hydrogen bonds','No hydrogen bonds'],
+  items:[['H_{2}O',0],['NH_{3}',0],['HF',0],['CH_{4}',1],['HCl',1],['O_{2}',1]],
+  h:'You need H bonded directly to F, O or N.',
+  x:'H_{2}O, NH_{3} and HF have H–O, H–N or H–F bonds. CH_{4}, HCl and O_{2} do not.'},
+ {t:'mcq',skill:'Forces',q:'Which of these has the strongest dispersion forces?',o:['I_{2}','F_{2}','Cl_{2}','Br_{2}'],a:0,
+  h:'Dispersion forces grow with the number of electrons.',
+  x:'I_{2} has the most electrons, so its dispersion forces are strongest. That is why iodine is a solid while F_{2} and Cl_{2} are gases.'},
+ {t:'mcq',skill:'Forces',q:'The forces between oxygen (O_{2}) molecules are ___.',o:['London dispersion forces','hydrogen bonds','dipole–dipole forces','ionic bonds'],a:0,
+  h:'O_{2} is nonpolar.',
+  x:'Nonpolar molecules such as O_{2}, N_{2}, CH_{4} and I_{2} are held together only by dispersion forces.'},
+ {t:'tf',skill:'Hydrogen bonds',q:'Water is a liquid at room temperature because of the hydrogen bonds between its molecules.',a:true,
+  h:'CH_{4} (16 g/mol) is a gas at room temperature, but H_{2}O (18 g/mol) is not.',
+  x:'Hydrogen bonds hold water molecules together strongly, so water boils at 100 °C even though its molecules are small.'},
+
+ {t:'match',skill:'Liquids',q:'Match each property to its meaning.',help:'Tap an item on the left, then its partner on the right.',
+  pairs:[['Viscosity','resistance of a liquid to flow'],['Surface tension','inward pull at the surface (insects can stand on water)'],['Cohesion','attraction between identical molecules'],['Adhesion','attraction between different substances']],
+  h:'Honey has a high viscosity; water–glass attraction is adhesion.',
+  x:'Viscosity = resistance to flow. Surface tension = inward pull. Cohesion = same molecules. Adhesion = different substances.'},
+ {t:'mcq',skill:'Liquids',q:'When a liquid is heated, its viscosity ___.',o:['decreases','increases','does not change','doubles'],a:0,
+  h:'Think of cold honey compared with warm honey.',
+  x:'Heating gives the particles more kinetic energy to overcome the attractions, so the liquid flows more easily: viscosity decreases.'},
+ {t:'mcq',skill:'Liquids',q:'Cotton clothes absorb sweat because of ___.',o:['capillary action','surface tension','viscosity','gravity'],a:0,
+  h:'It is the same reason paper towels soak up water.',
+  x:'Capillary action: adhesion pulls water up through the narrow spaces between the fibres.'},
+ {t:'mcq',skill:'Liquids',q:'Mercury curves DOWN in a glass tube because ___.',o:['cohesion is stronger than adhesion','adhesion is stronger than cohesion','of capillary action','of its low viscosity'],a:0,
+  h:'Water curves UP because it is attracted to the glass more than to itself.',
+  x:'Mercury atoms attract each other (cohesion) more than they attract the glass (adhesion), so the surface curves down.'},
+ {t:'odd',skill:'Liquids',q:'Odd one out: which of these is NOT a fluid?',o:['ice','water','air','oxygen gas'],a:0,
+  h:'Fluids are substances that can flow.',
+  x:'Liquids and gases are fluids. Ice is a solid: its particles are held in fixed positions.'},
+ {t:'tf',skill:'Solids',q:'Ice is denser than liquid water.',a:false,
+  h:'What happens to an ice cube in a glass of water?',
+  x:'Ice floats. Hydrogen bonds hold the molecules in an open pattern, so ice is less dense than liquid water and water expands when it freezes.'},
+ {t:'mcq',skill:'Solids',q:'Which solid has particles that are NOT arranged in a regular pattern?',o:['glass','table salt','diamond','ice'],a:0,
+  h:'This is an amorphous solid; it forms when a melt cools too quickly.',
+  x:'Glass, rubber and many plastics are amorphous. Salt, diamond and ice are crystalline.'},
+
+ {t:'sort',skill:'Phase changes',q:'Does the change absorb or release energy?',help:'Tap a change, then tap a box.',b:['Endothermic (absorbs)','Exothermic (releases)'],
+  items:[['melting',0],['vaporization',0],['sublimation',0],['freezing',1],['condensation',1],['deposition',1]],
+  h:'Changes towards gas need energy; the reverse changes give it out.',
+  x:'Melting, vaporization and sublimation absorb energy. Freezing, condensation and deposition release it.'},
+ {t:'match',skill:'Phase changes',q:'Match each phase change to what happens.',help:'Tap an item on the left, then its partner on the right.',
+  pairs:[['Sublimation','solid → gas'],['Deposition','gas → solid'],['Condensation','gas → liquid'],['Melting','solid → liquid']],
+  h:'Sublimation and deposition skip the liquid state.',
+  x:'Sublimation: solid → gas (dry ice, iodine). Deposition is its reverse: gas → solid (frost).'},
+ {t:'mcq',skill:'Phase changes',q:'A liquid boils when its vapor pressure equals ___.',o:['the atmospheric pressure','zero','its melting point','the critical pressure'],a:0,
+  h:'Boiling point: vapor pressure = external pressure.',
+  x:'Boiling point is the temperature at which the vapor pressure equals the atmospheric (external) pressure.'},
+ {t:'tf',skill:'Phase changes',q:'At the top of a high mountain, water boils below 100 °C.',a:true,
+  h:'Air pressure is lower at high altitude.',
+  x:'Lower air pressure means the vapor pressure reaches it at a lower temperature, so water boils below 100 °C.'},
+ {t:'mcq',skill:'Phase diagram',q:'On this phase diagram of water, which point is the triple point?',mol:'phase',o:['point 1','point 2','point 3','point 4'],a:0,
+  h:'The triple point is where all three lines meet.',
+  x:'Point 1 is where the solid, liquid and gas regions meet. Point 2 is the critical point; points 3 and 4 are the normal freezing and boiling points.'},
+ {t:'mcq',skill:'Phase diagram',q:'Above the ___, a substance can no longer exist as a liquid.',o:['critical point','triple point','boiling point','freezing point'],a:0,
+  h:'It is at the end of the liquid–gas line.',
+  x:'Above the critical temperature and pressure, the substance cannot exist as a liquid.'},
+ {t:'mcq',skill:'Phase changes',q:'You can smell solid naphthalene (mothballs) because it ___.',o:['sublimes','melts','freezes','condenses'],a:0,
+  h:'A smell must come from a gas, but there is no liquid.',
+  x:'Naphthalene sublimes: it changes straight from solid to gas, like dry ice and iodine.'},
+];
+const TYPE={mcq:'Multiple choice',tf:'True or false',sort:'Sort it',num:'Number answer',match:'Match up',odd:'Odd one out',order:'Put in order',pick:'Pick the picture'};
+
+// ---------- game state ----------
+let i=0,score=0,streak=0,best=0,results=[],player={name:'',cls:''},startedAt=0,hintUsed=false;
+const HIST_KEY='smq-history';
+// Paste your Google Apps Script web-app URL here to collect scores in a Google Sheet (leave empty to turn off).
+const SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+const loadHist=()=>{try{return JSON.parse(store.get(HIST_KEY)||'[]')}catch(e){return[]}};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app=document.getElementById('app');
+const BEST_KEY='smq-best';
+
+function hud(){
+  const st=STAGES.filter(s=>s.from<=i).pop();
+  return `<div class="hud"><span class="stage">${st.n}</span><span class="player" title="Player">👤 ${esc(player.name)}</span><span class="grow"></span>
+   <span class="stat" title="Score">★ <b>${score}</b></span>
+   <span class="stat streak ${streak>=3?'hot':''}" title="Streak">🔥 <b>${streak}</b></span></div>
+   <div class="bar" aria-label="Progress"><i style="width:${(i/Q.length*100).toFixed(1)}%"></i></div>`;
+}
+
+function start(){
+  const b=store.get(BEST_KEY);
+  const typeTags=Object.values(TYPE).map(t=>`<span class="tag type">${t}</span>`).join('');
+  app.innerHTML=`<div class="card hero">
+    <div class="meta"><span class="tag skill">Chemistry · Chapter 12</span><span class="qnum">30 questions</span></div>
+    <h1>States of Matter <span>Quest</span></h1>
+    <p>Race through four stages of SAAT-style questions on gases, the forces between particles, liquids and solids, and phase changes. Every question type tests a different skill, so read the instructions on each card. Correct answers earn 100 points, and a streak of 3 or more adds a bonus. Stuck? Open the hint &mdash; a correct answer after a hint still earns 50 points.</p>
+    <div class="stages">${STAGES.map((s,k)=>`<div class="st"><small>Stage ${k+1}</small><b>${s.n}</b><small>${(STAGES[k+1]?STAGES[k+1].from:Q.length)-s.from} questions</small></div>`).join('')}</div>
+    <div class="types">${typeTags}</div>
+    <div class="fields">
+      <div class="field"><label for="pname">Your full name</label><input id="pname" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="${esc(store.get('smq-name')||'')}"></div>
+      <div class="field"><label for="pclass">Class</label><select id="pclass"><option value="">Choose…</option>${['12-A','12-B'].map(c=>`<option ${store.get('smq-class')===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    </div>
+    <div class="errmsg" id="perr" role="alert"></div>
+    <div class="actions"><button class="btn" id="go">Start the quest</button>${b?`<span class="best">Best score on this device: ${b}</span>`:''}</div>
+  </div>`;
+  const go=()=>{const n=document.getElementById('pname'); const nm=n.value.trim().replace(/\s+/g,' ');
+    if(nm.length<2){n.classList.add('err'); document.getElementById('perr').textContent='Please write your name before you start.'; n.focus(); return;}
+    const cs=document.getElementById('pclass'); if(!cs.value){cs.classList.add('err'); document.getElementById('perr').textContent='Please choose your class before you start.'; cs.focus(); return;}
+    player={name:nm,cls:document.getElementById('pclass').value.trim()}; store.set('smq-name',player.name); store.set('smq-class',player.cls);
+    i=0;score=0;streak=0;best=0;results=[];startedAt=Date.now();show();};
+  document.getElementById('go').onclick=go;
+  ['pname','pclass'].forEach(id=>document.getElementById(id).onkeydown=e=>{if(e.key==='Enter')go();});
+}
+
+function toast(t){const e=$(`<div class="toast">${t}</div>`);document.body.appendChild(e);setTimeout(()=>e.remove(),1400);}
+
+function show(){
+  if(i>=Q.length) return end();
+  const st=STAGES.find(s=>s.from===i); if(st && i>0) toast('Stage '+(STAGES.indexOf(st)+1)+': '+st.n);
+  const q=Q[i];
+  app.innerHTML=hud()+`<div class="card enter" id="card">
+    <div class="meta"><span class="tag skill">${q.skill}</span><span class="tag type">${TYPE[q.t]}</span><span class="qnum">${i+1} / ${Q.length}</span></div>
+    <div class="prompt">${F(q.q)}</div>${q.help?`<div class="help">${q.help}</div>`:''}
+    ${q.mol?`<div class="mol">${MOL[q.mol]()}</div>`:''}${q.formula?`<div class="formula">${F(q.formula)}</div>`:''}
+    <div id="body"></div>${q.h?`<div class="hintwrap" id="hintwrap"><button class="hintbtn" id="hintbtn" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#fff3c4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>Need a hint?</button><div class="hintbox" id="hintbox" hidden><b>Hint</b> ${F(q.h)}</div></div>`:''}<div id="fb"></div><div class="actions" id="act"></div></div>`;
+  hintUsed=false; const hb=document.getElementById('hintbtn'); if(hb) hb.onclick=()=>{hintUsed=true; document.getElementById('hintbox').hidden=false; hb.remove();};
+  RENDER[q.t](q,document.getElementById('body'));
+}
+
+function actions(html){document.getElementById('act').innerHTML=html;}
+function checkBtn(fn,enabled){actions(`<button class="btn" id="chk" ${enabled?'':'disabled'}>Check</button>`);document.getElementById('chk').onclick=fn;}
+function setCheck(on){const b=document.getElementById('chk'); if(b) b.disabled=!on;}
+
+function done(ok,q,correctText){
+  let gain=0;
+  if(ok){streak++;gain=hintUsed?50:100+(streak>=3?25*Math.min(streak-2,4):0);score+=gain;}
+  else{streak=0;document.getElementById('card').classList.add('shake');}
+  results.push({q,ok,correctText,hint:hintUsed}); const hbtn=document.getElementById('hintbtn'); if(hbtn) hbtn.remove();
+  document.getElementById('fb').innerHTML=`<div class="fb ${ok?'good':'bad'}"><b class="t">${ok?'Correct!':'Not quite'} ${ok?`<span class="pts">+${gain}${hintUsed?' (hint used)':''}</span>`:''}</b>
+    ${!ok&&correctText?`<div>Answer: <b>${F(correctText)}</b></div>`:''}<div>${F(q.x)}</div></div>`;
+  actions(`<button class="btn go" id="nx">${i+1<Q.length?'Next question →':'See my results'}</button>`);
+  const nx=document.getElementById('nx'); nx.focus({preventScroll:true}); nx.onclick=()=>{i++;show();window.scrollTo({top:0,behavior:'smooth'});};
+  const h=app.querySelector('.hud'); if(h) h.replaceWith($(hud()));
+}
+
+const RENDER={
+  mcq(q,el,cls){
+    const order=shuffle(q.o.map((t,k)=>k));
+    el.innerHTML=`<div class="opts ${cls||''}">${order.map((k,n)=>`<button class="opt" data-k="${k}"><span class="k">${'ABCD'[n]}</span><span>${F(q.o[k])}</span></button>`).join('')}</div>`;
+    el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k, ok=k===q.a;
+      el.querySelectorAll('.opt').forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add('right');});
+      if(!ok) b.classList.add('wrong');
+      done(ok,q,q.o[q.a]);
+    });
+  },
+  odd(q,el){RENDER.mcq(q,el);},
+  pick(q,el){
+    const order=shuffle(q.o.map((t,k)=>k));
+    el.innerHTML=`<div class="opts">${order.map((k,n)=>`<button class="opt pic" data-k="${k}" aria-label="Option ${'ABCD'[n]}">${MOL[q.o[k]]()}<span class="k">${'ABCD'[n]}</span></button>`).join('')}</div>`;
+    el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k, ok=k===q.a;
+      el.querySelectorAll('.opt').forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add('right');});
+      if(!ok) b.classList.add('wrong');
+      done(ok,q,(q.names||q.o)[q.a]);
+    });
+  },
+  tf(q,el){
+    el.innerHTML=`<div class="tf"><button class="opt" data-v="1">True</button><button class="opt" data-v="0">False</button></div>`;
+    el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const v=b.dataset.v==='1', ok=v===q.a;
+      el.querySelectorAll('.opt').forEach(x=>{x.disabled=true; if((x.dataset.v==='1')===q.a)x.classList.add('right');});
+      if(!ok) b.classList.add('wrong');
+      done(ok,q,q.a?'True':'False');
+    });
+  },
+  num(q,el){
+    el.innerHTML=`<div class="inputrow"><input id="ans" type="text" inputmode="decimal" autocomplete="off" placeholder="Your number" aria-label="Your answer"></div>`;
+    const inp=el.querySelector('input');
+    const go=()=>{const ok=Math.abs(parseFloat(String(inp.value).replace(',','.'))-q.a)<1e-9; inp.disabled=true; inp.classList.add(ok?'right':'wrong'); done(ok,q,String(q.a));};
+    checkBtn(go,false); inp.oninput=()=>setCheck(inp.value!==''); inp.onkeydown=e=>{if(e.key==='Enter'&&inp.value!=='')go();}; inp.focus({preventScroll:true});
+  },
+  text(q,el){
+    el.innerHTML=`<div class="inputrow"><input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" aria-label="Your answer"></div><div class="subhint" id="prev"></div>`;
+    const inp=el.querySelector('input'), prev=el.querySelector('#prev');
+    const norm=s=>q.norm==='formula'?s.replace(/\s+/g,'').toUpperCase():s.trim().toLowerCase().replace(/\s+/g,' ');
+    const go=()=>{const v=norm(inp.value); const ok=q.a.some(a=>norm(a)===v); inp.disabled=true; inp.classList.add(ok?'right':'wrong');
+      done(ok,q,q.norm==='formula'?q.a[0].replace(/(\d+)/g,'_$1'):q.a[0]);};
+    checkBtn(go,false);
+    inp.oninput=()=>{setCheck(inp.value.trim()!==''); if(q.norm==='formula') prev.innerHTML=inp.value?('You wrote: <b>'+F(inp.value.replace(/\s+/g,'').replace(/(\d+)/g,'_$1'))+'</b>'):'';};
+    inp.onkeydown=e=>{if(e.key==='Enter'&&inp.value.trim())go();}; inp.focus({preventScroll:true});
+  },
+  sort(q,el){
+    const items=shuffle(q.items.map((it,k)=>({t:it[0],b:it[1],k})));
+    const place={}; let sel=null;
+    el.innerHTML=`<div class="pool" id="pool"></div><div class="buckets">${q.b.map((b,n)=>`<button class="bucket" data-b="${n}"><h3>${b}</h3><div class="in"></div></button>`).join('')}</div>`;
+    const pool=el.querySelector('#pool');
+    function draw(){
+      pool.innerHTML=''; el.querySelectorAll('.bucket .in').forEach(x=>x.innerHTML='');
+      items.forEach(it=>{const c=$(`<button class="chip ${sel===it.k?'sel':''}" data-k="${it.k}">${F(it.t)}</button>`);
+        c.onclick=(e)=>{e.stopPropagation(); if(place[it.k]!==undefined){delete place[it.k]; sel=it.k;} else sel=(sel===it.k?null:it.k); draw();};
+        (place[it.k]===undefined?pool:el.querySelector(`.bucket[data-b="${place[it.k]}"] .in`)).appendChild(c);});
+      if(!pool.children.length) pool.innerHTML='<span class="subhint">All placed. Tap a chip to move it back.</span>';
+      el.querySelectorAll('.bucket').forEach(b=>b.classList.toggle('ready',sel!==null));
+      setCheck(Object.keys(place).length===items.length);
+    }
+    el.querySelectorAll('.bucket').forEach(b=>b.onclick=()=>{if(sel===null)return; place[sel]=+b.dataset.b; sel=null; draw();});
+    checkBtn(()=>{
+      let ok=true; el.querySelectorAll('.chip').forEach(c=>{const it=items.find(x=>x.k==c.dataset.k); const r=place[it.k]===it.b; if(!r)ok=false; c.classList.add(r?'right':'wrong'); c.disabled=true;});
+      el.querySelectorAll('.bucket').forEach(b=>{b.disabled=true;b.classList.remove('ready');});
+      const key=q.b.map((b,n)=>b+': '+q.items.filter(x=>x[1]===n).map(x=>x[0]).join(', ')).join(' | ');
+      done(ok,q,key);
+    },false);
+    draw();
+  },
+  match(q,el){
+    const L=q.pairs.map((p,k)=>({t:p[0],k})), R=shuffle(q.pairs.map((p,k)=>({t:p[1],k})));
+    const pair={}; let sel=null; const colors=['var(--blue)','var(--amber)','var(--plum)','var(--teal)'];
+    el.innerHTML=`<div class="match"><div class="col" id="L"></div><div class="col" id="R"></div></div>`;
+    function draw(){
+      const used=Object.values(pair);
+      el.querySelector('#L').innerHTML=L.map(l=>{const pi=pair[l.k]!==undefined?Object.keys(pair).indexOf(String(l.k)):-1;
+        return `<button class="mi ${sel===l.k?'sel':''}" data-l="${l.k}" ${pi>=0?`data-pair style="border-color:${colors[pi]}"`:''}>${F(l.t)}</button>`}).join('');
+      el.querySelector('#R').innerHTML=R.map(r=>{const lk=Object.keys(pair).find(k=>pair[k]===r.k);const pi=lk!==undefined?Object.keys(pair).indexOf(lk):-1;
+        return `<button class="mi" data-r="${r.k}" ${pi>=0?`data-pair style="border-color:${colors[pi]}"`:''}>${F(r.t)}</button>`}).join('');
+      el.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{const k=+b.dataset.l; if(pair[k]!==undefined){delete pair[k];} sel=(sel===k?null:k); draw();});
+      el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const rk=+b.dataset.r; const lk=Object.keys(pair).find(k=>pair[k]===rk); if(lk!==undefined)delete pair[lk]; if(sel!==null){pair[sel]=rk; sel=null;} draw();});
+      setCheck(Object.keys(pair).length===L.length);
+    }
+    checkBtn(()=>{
+      let ok=true; L.forEach(l=>{const r=pair[l.k]===l.k; if(!r)ok=false;
+        el.querySelector(`[data-l="${l.k}"]`).classList.add(r?'right':'wrong');});
+      el.querySelectorAll('.mi').forEach(b=>b.disabled=true);
+      done(ok,q,q.pairs.map(p=>p[0]+' → '+p[1]).join(' | '));
+    },false);
+    draw();
+  },
+  order(q,el){
+    const pool=shuffle(q.items.map((t,k)=>({t,k}))); const seq=[];
+    el.innerHTML=`<div class="pool" id="pool"></div><div class="ordered" id="seq"></div><button class="btn ghost" id="undo">Undo</button>`;
+    function draw(){
+      el.querySelector('#pool').innerHTML=''; pool.filter(p=>!seq.includes(p.k)).forEach(p=>{const c=$(`<button class="chip">${F(p.t)}</button>`);c.onclick=()=>{seq.push(p.k);draw();};el.querySelector('#pool').appendChild(c);});
+      if(seq.length===q.items.length) el.querySelector('#pool').innerHTML='<span class="subhint">All placed.</span>';
+      el.querySelector('#seq').innerHTML=q.items.map((_,n)=>`<div class="oslot" data-n="${n}">${seq[n]!==undefined?F(q.items[seq[n]]):''}</div>`).join('');
+      setCheck(seq.length===q.items.length);
+    }
+    el.querySelector('#undo').onclick=()=>{seq.pop();draw();};
+    checkBtn(()=>{
+      let ok=true; el.querySelectorAll('.oslot').forEach((s,n)=>{const r=seq[n]===n; if(!r)ok=false; s.classList.add(r?'right':'wrong');});
+      el.querySelector('#undo').remove(); done(ok,q,q.items.join(' → '));
+    },false);
+    draw();
+  },
+  complete(q,el){RENDER.build(q,el);},
+  cfg(q,el){RENDER.build(q,el);},
+  build(q,el){
+    const tiles=shuffle(q.tiles.map((t,k)=>({t,k}))); const line=[];
+    el.innerHTML=`<div class="answerline" id="line"></div><div class="pool" id="pool"></div>`;
+    function draw(){
+      const ln=el.querySelector('#line'); ln.innerHTML=line.length?'':'<span class="ph">Tap the pieces in order…</span>';
+      line.forEach((k,n)=>{const c=$(`<button class="chip">${tiles.find(x=>x.k===k).t}</button>`);c.onclick=()=>{line.splice(n,1);draw();};ln.appendChild(c);});
+      const pl=el.querySelector('#pool'); pl.innerHTML='';
+      tiles.filter(x=>!line.includes(x.k)).forEach(x=>{const c=$(`<button class="chip">${x.t}</button>`);c.onclick=()=>{line.push(x.k);draw();};pl.appendChild(c);});
+      setCheck(line.length>0);
+    }
+    checkBtn(()=>{
+      const got=line.map(k=>tiles.find(x=>x.k===k).t).join('|'); const want=q.a.join('|');
+      const ok=got===want; el.querySelector('#line').classList.add(ok?'right':'wrong');
+      el.querySelector('#line').style.borderColor=ok?'var(--good)':'var(--bad)';
+      el.querySelectorAll('.chip').forEach(c=>c.disabled=true);
+      done(ok,q,q.a.join(' '));
+    },false);
+    draw();
+  },
+};
+
+function end(){
+  const correct=results.filter(r=>r.ok).length;
+  const b=+(store.get(BEST_KEY)||0); const newBest=score>b; if(newBest) store.set(BEST_KEY,score);
+  const skills={}; results.forEach(r=>{const s=r.q.skill; skills[s]=skills[s]||[0,0]; skills[s][1]++; if(r.ok)skills[s][0]++;});
+  const now=new Date(); const mins=Math.max(1,Math.round((Date.now()-startedAt)/60000));
+  const when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const h=[...(player.name+'|'+player.cls+'|'+score+'|'+correct+'|'+now.toISOString().slice(0,16))].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+  const code='SQ-'+h.toString(36).toUpperCase().padStart(6,'0').slice(-6);
+  const hist=loadHist(); hist.unshift({name:player.name,cls:player.cls,score,correct,when,mins,code}); store.set(HIST_KEY,JSON.stringify(hist.slice(0,50)));
+  const mine=hist.filter(x=>x.name===player.name);
+  const summary=`States of Matter Quest (Chemistry Chapter 12)\nName: ${player.name}${player.cls?'\nClass: '+player.cls:''}\nScore: ${score} points\nCorrect: ${correct}/${Q.length}\nTime: ${mins} min\nDate: ${when}\nCheck code: ${code}`;
+  const msg=correct>=27?'States of matter master!':correct>=21?'Great work!':correct>=15?'Good effort, keep practising.':'Review the notes and try again.';
+  app.innerHTML=`<div class="card enter">
+    <div class="meta"><span class="tag skill">Quest complete</span>${newBest?'<span class="tag type">New best score</span>':''}</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:end">
+      <div><div class="big">${score}</div><div class="best">points</div></div>
+      <div><div class="big" style="color:var(--blue)">${correct}/${Q.length}</div><div class="best">correct</div></div>
+    </div>
+    <h2>${msg}</h2>
+    <div class="cert" id="cert">
+      <div class="row"><b class="nm">${esc(player.name)}</b><span>${player.cls?'Class '+esc(player.cls):''}</span></div>
+      <div class="row"><span>States of Matter Quest · Chapter 12</span><span>${when}</span></div>
+      <div class="row"><span><b>${score}</b> points · <b>${correct}/${Q.length}</b> correct · ${mins} min</span><span>Check code <code>${code}</code></span></div>
+    </div>
+    <div class="actions"><span class="sendst" id="sendst">Sending your result to your teacher…</span><button class="btn ghost" id="retry" hidden>Try again</button><button class="btn go" id="copy">Copy my result</button></div><span class="subhint" id="copied"></span>
+    <textarea id="sumtxt" readonly aria-label="Result text" style="position:absolute;left:-9999px">${esc(summary)}</textarea>
+    <h3>Your skills</h3>
+    <div class="skills">${Object.entries(skills).map(([s,[c,t]])=>`<div class="sk"><span>${s}</span><span class="t"><i style="width:${c/t*100}%"></i></span><em>${c}/${t}</em></div>`).join('')}</div>
+    ${correct<Q.length?`<h3>Review what you missed</h3><div class="miss">${results.filter(r=>!r.ok).map(r=>`<div><b>Q${Q.indexOf(r.q)+1}.</b> ${F(r.q.q)}<br>Answer: <b>${F(r.correctText)}</b></div>`).join('')}</div>`:''}
+    ${mine.length>1?`<h3>Your attempts on this device</h3><div class="histwrap"><table class="hist"><tr><th>Date</th><th>Score</th><th>Correct</th><th>Code</th></tr>${mine.slice(0,10).map(x=>`<tr><td>${x.when}</td><td>${x.score}</td><td>${x.correct}/${Q.length}</td><td>${x.code}</td></tr>`).join('')}</table></div>`:''}
+    <div class="actions"><button class="btn" id="again">Play again</button><button class="btn ghost" id="home">Back to start</button></div>
+  </div>`;
+  document.getElementById('copy').onclick=()=>{const ok=()=>{document.getElementById('copied').textContent='Copied! Paste it in your message to your teacher.';};
+    const fallback=()=>{const t=document.getElementById('sumtxt');t.style.position='static';t.style.width='100%';t.rows=8;t.focus();t.select();document.getElementById('copied').textContent='Select the text below and copy it.';};
+    try{navigator.clipboard.writeText(summary).then(ok,fallback);}catch(e){fallback();}};
+  const payload={game:'States of Matter Quest',chapter:12,name:player.name,cls:player.cls,score,correct,total:Q.length,mins,when,code,
+      missed:results.filter(r=>!r.ok).map(r=>'Q'+(Q.indexOf(r.q)+1)).join(' ')};
+  const st=document.getElementById('sendst'), rt=document.getElementById('retry');
+  const send=()=>{ st.className='sendst'; st.textContent='Sending your result to your teacher…'; rt.hidden=true;
+    fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+      .then(()=>{st.className='sendst ok'; st.textContent='✓ Your result was sent to your teacher.';})
+      .catch(()=>{st.className='sendst err'; st.textContent='Could not send. Check your internet, then tap Try again.'; rt.hidden=false;}); };
+  rt.onclick=send;
+  if(SCORE_URL) send(); else st.textContent='';
+  document.getElementById('again').onclick=()=>{i=0;score=0;streak=0;results=[];startedAt=Date.now();show();};
+  document.getElementById('home').onclick=start;
+}
+
+start();
+})();
+</script>
+</body>
+</html>

@@ -59,6 +59,20 @@ iframe{flex:1;width:100%;border:0;background:var(--bg)}
 .home .sec{display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;font-family:var(--disp);font-size:20px;font-weight:700;color:var(--ink);margin:22px 0 10px;padding:4px 0}
 .home .sec .chev{font-size:16px;color:var(--teal)}
 .home .sec .n{font-size:13px;font-weight:600;color:var(--soft);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:1px 10px}
+/* tabs: white (closed) · light teal (open) · black text · teal accents */
+:root{--tabblack:#1c1f24;--tabteal:#0f8b8d;--tablt:#d6f1f0}
+.grp,.home .sec{background:#fff;color:var(--tabblack);border:2px solid var(--tabblack);font-weight:600;align-items:center}
+.grp{border-radius:10px;margin:10px 0 4px;padding:6px 10px}
+.home .sec{width:100%;border-radius:12px;padding:8px 16px}
+.grp:hover,.home .sec:hover{background:#eefaf9;border-color:var(--tabteal)}
+.grp:not(.closed),.home .sec:not(.closed){background:var(--tablt);border-color:var(--tabteal);color:var(--tabblack)}
+.grp .chev,.home .sec .chev{color:var(--tabteal)}
+.grp .n,.home .sec .n{background:var(--tabteal);color:#fff;border-color:var(--tabteal);font-weight:700}
+.gico{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--tealbg)}
+.gico svg{width:24px;height:24px;display:block}
+.home .sec .gico{width:40px;height:40px;border-radius:11px}
+.home .sec .gico svg{width:32px;height:32px}
+.grp:not(.closed) .gico,.home .sec:not(.closed) .gico{display:none}
 </style>
 </head>
 <body>
@@ -111,6 +125,9 @@ const ICON={
   hill:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.600" stroke-linejoin="round" stroke-linecap="round"><path d="M5 40 H43 M5 40 V6" fill="none" stroke="#c9d4e6"/><path d="M8 30 H14 C20 30 21 11 26 11 C31 11 32 36 38 36 H43" fill="none"/><path d="M11 27 V15" fill="none" stroke="#e8962a"/><path d="M8 18 L11 14 L14 18" fill="none" stroke="#e8962a"/><circle cx="26" cy="7" r="3.600" fill="#58d0c9"/><circle cx="18" cy="24" r="3.600" fill="#e2708a"/></g></svg>',
   sim:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.600" stroke-linejoin="round" stroke-linecap="round"><circle cx="16" cy="28" r="9" fill="#58d0c9"/><circle cx="33" cy="22" r="7" fill="#e2708a"/><path d="M25 9 L27 14 M33 7 L32 12 M40 11 L37 15" fill="none" stroke="#e8962a"/><path d="M5 40 H12 M4 34 H8" fill="none" stroke="#c9d4e6"/></g></svg>',
   assess:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.600" stroke-linejoin="round" stroke-linecap="round"><rect x="10" y="9" width="28" height="33" rx="4" fill="#fff"/><rect x="18" y="5" width="12" height="8" rx="3" fill="#8a4fbf"/><path d="M16 22 l3 3 l5 -6" fill="none" stroke="#1f9c9e"/><path d="M28 23 H33" fill="none"/><path d="M16 33 l3 3 l5 -6" fill="none" stroke="#1f9c9e"/><path d="M28 34 H33" fill="none"/></g></svg>',
+  game:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M14 16 H34 C41 16 44 24 44 31 C44 37 39 39 35 35 L31 31 H17 L13 35 C9 39 4 37 4 31 C4 24 7 16 14 16 Z" fill="#6fc7c4"/><path d="M14 22 V30 M10 26 H18" fill="none"/></g><g stroke="#3b3550" stroke-width="1.6"><circle cx="33" cy="23" r="2.6" fill="#e2708a"/><circle cx="38" cy="28" r="2.6" fill="#f5c451"/></g></svg>',
+  sheet:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="5" width="26" height="36" rx="3" fill="#fff"/><g fill="none"><circle cx="15" cy="15" r="3"/><circle cx="15" cy="25" r="3"/><circle cx="15" cy="35" r="3"/><path d="M21 15 H29 M21 25 H29"/></g><path d="M40 12 L44 16 L28 34 L23 36 L25 31 Z" fill="#f5c451"/></g><circle cx="15" cy="25" r="2" fill="#3b3550"/></svg>',
+  states:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="14" width="13" height="20" rx="2.5" fill="#fff"/><rect x="17.5" y="14" width="13" height="20" rx="2.5" fill="#fff"/><rect x="32" y="14" width="13" height="20" rx="2.5" fill="#fff"/></g><g stroke="#3b3550" stroke-width="1.2"><circle cx="7" cy="26" r="2.2" fill="#6f9be8"/><circle cx="12" cy="26" r="2.2" fill="#6f9be8"/><circle cx="7" cy="30.5" r="2.2" fill="#6f9be8"/><circle cx="12" cy="30.5" r="2.2" fill="#6f9be8"/><circle cx="7" cy="21.5" r="2.2" fill="#6f9be8"/><circle cx="12" cy="21.5" r="2.2" fill="#6f9be8"/><circle cx="21" cy="30.5" r="2.2" fill="#3fb6b0"/><circle cx="26.5" cy="30" r="2.2" fill="#3fb6b0"/><circle cx="23.5" cy="26" r="2.2" fill="#3fb6b0"/><circle cx="36" cy="18.5" r="2.2" fill="#e2708a"/><circle cx="41.5" cy="25" r="2.2" fill="#e2708a"/><circle cx="35.5" cy="30.5" r="2.2" fill="#e2708a"/></g></svg>',
   functional:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.600" stroke-linejoin="round" stroke-linecap="round"><path d="M8 32 L19 26 M19 26 L31 32 M31 32 L41 26" fill="none"/><path d="M17 24 V11 M21 24 V11" fill="none"/><circle cx="19" cy="9" r="5.500" fill="#e2708a"/><circle cx="19" cy="27" r="5" fill="#3b3550"/><circle cx="8" cy="33" r="4" fill="#fff"/><circle cx="31" cy="33" r="5.500" fill="#e2708a"/><circle cx="42" cy="25" r="3.800" fill="#fff"/></g></svg>',
   metal:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="9" fill="#cfdcf5"/><g stroke="#3b3550" stroke-width="2.200"><circle cx="15" cy="18" r="5.200" fill="#e2708a"/><circle cx="33" cy="18" r="5.200" fill="#e2708a"/><circle cx="15" cy="31" r="5.200" fill="#e2708a"/><circle cx="33" cy="31" r="5.200" fill="#e2708a"/></g><g fill="#1f9c9e"><circle cx="24" cy="13" r="2.300"/><circle cx="24" cy="24.500" r="2.300"/><circle cx="9" cy="24.500" r="2.300"/><circle cx="39" cy="24.500" r="2.300"/><circle cx="24" cy="36" r="2.300"/></g><g fill="#fff" font-family="Arial" font-weight="700" font-size="7" text-anchor="middle"><text x="15" y="20.500">+</text><text x="33" y="20.500">+</text><text x="15" y="33.500">+</text><text x="33" y="33.500">+</text></g></svg>',
   isotope:'<svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="#3b3550" stroke-width="2.600" stroke-linejoin="round" stroke-linecap="round"><path d="M24 8 V38 M14 40 H34" fill="none"/><path d="M8 16 H40" fill="none"/><path d="M8 16 L4 28 H16 Z" fill="#fff"/><path d="M40 16 L36 28 H44 Z" fill="#fff"/><circle cx="10" cy="24" r="3.200" fill="#58d0c9"/><circle cx="40" cy="23" r="4.500" fill="#8a4fbf"/><circle cx="24" cy="8" r="3" fill="#e8962a"/></g></svg>',
@@ -123,10 +140,12 @@ const ICON={
 const ITEMS=[
   {group:'Revision Notes', title:'Electrons in Atoms',       note:'Chapter 5 · read before the quest', file:'electrons-in-atoms-notes.html', icon:ICON.note},
   {group:'Revision Notes', title:'The Periodic Table',       note:'Chapter 6 · read before the quest', file:'periodic-table-notes.html', icon:ICON.note},
+  {group:'Revision Notes', title:'States of Matter',         note:'Chapter 12 · read before the quest', file:'states-of-matter-notes.html', icon:ICON.note},
   {group:'Revision Notes', title:'Hydrocarbons',             note:'Chapter 21 · read before the quest', file:'hydrocarbons-notes.html',             icon:ICON.note},
   {group:'Revision Notes', title:'Substituted Hydrocarbons', note:'Chapter 22 · read before the quest', file:'substituted-hydrocarbons-notes.html', icon:ICON.note},
   {group:'Game Quests', title:'Electron Quest',         note:'Chapter 5 · 30 questions',  file:'electron-quest.html',         icon:ICON.electron},
   {group:'Game Quests', title:'Periodic Table Quest',   note:'Chapter 6 · 30 questions',  file:'periodic-table-quest.html',   icon:ICON.periodic},
+  {group:'Game Quests', title:'States of Matter Quest', note:'Chapter 12 · 30 questions', file:'states-of-matter-quest.html', icon:ICON.states},
   {group:'Game Quests', title:'Hydrocarbon Quest',      note:'Chapter 21 · 30 questions', file:'hydrocarbon-quest.html',      icon:ICON.hydrocarbon},
   {group:'Game Quests', title:'Functional Group Quest', note:'Chapter 22 · 30 questions', file:'functional-group-quest.html', icon:ICON.functional},
   {group:'Simulations', title:'Atomic Mass Lab', note:'Chapter 4 · Isotopes & atomic mass', file:'atomic-mass-lab.html', icon:ICON.isotope},
@@ -142,6 +161,7 @@ const ITEMS=[
   {group:'Assessments', title:'Atomic Theory', note:'End-of-topic assessment', file:'atomic-theory-assessment.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'Electrons in Atoms', note:'Chapter 5 · 84 questions', file:'electrons-in-atoms-worksheet.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'The Periodic Table', note:'Chapter 6 · 77 questions', file:'periodic-table-worksheet.html', icon:ICON.assess},
+  {group:'SAAT Worksheets', title:'States of Matter', note:'Chapter 12 · 93 questions', file:'states-of-matter-worksheet.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'Hydrocarbons', note:'Chapter 21 · 96 questions', file:'hydrocarbons-worksheet.html', icon:ICON.assess},
   {group:'SAAT Worksheets', title:'Substituted Hydrocarbons', note:'Chapter 22 · 165 questions', file:'substituted-hydrocarbons-worksheet.html', icon:ICON.assess},
 ];
@@ -152,10 +172,12 @@ const slug=f=>f.replace(/\.html$/,'');
 const OPEN=(()=>{try{return JSON.parse(localStorage.getItem('mm_open')||'{}');}catch(e){return {};}})();
 function saveOpen(){try{localStorage.setItem('mm_open',JSON.stringify(OPEN));}catch(e){}}
 function isOpen(where,g,cur){const k=where+':'+g;if(where==='nav'&&cur&&cur.group===g)return true;if(k in OPEN)return OPEN[k];return where==='home'?true:(cur?cur.group===g:false);}
+const GICON={'Revision Notes':ICON.note,'Game Quests':ICON.game,'Simulations':ICON.sim,'Assessments':ICON.assess,'SAAT Worksheets':ICON.sheet};
+const gi=g=>`<span class="gico">${GICON[g]||''}</span>`;
 function drawNav(cur){
   const groups=[...new Set(ITEMS.map(i=>i.group))];
   nav.innerHTML=`<a href="#" class="${cur?'':'on'}"><span class="ico">${ICON.home}</span><span>Home</span></a>`+
-    groups.map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('nav',g,cur);return `<button class="grp${op?'':' closed'}" data-w="nav" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${g}<span class="n">${its.length}</span></button><div class="gitems${op?'':' hide'}">`+its.map(i=>`<a href="#${slug(i.file)}" class="${cur===i?'on':''}"><span class="ico">${i.icon}</span><span>${i.title}<small>${i.note}</small></span></a>`).join('')+'</div>';}).join('');
+    groups.map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('nav',g,cur);return `<button class="grp${op?'':' closed'}" data-w="nav" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${gi(g)}${g}<span class="n">${its.length}</span></button><div class="gitems${op?'':' hide'}">`+its.map(i=>`<a href="#${slug(i.file)}" class="${cur===i?'on':''}"><span class="ico">${i.icon}</span><span>${i.title}<small>${i.note}</small></span></a>`).join('')+'</div>';}).join('');
 }
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-g]');if(!b)return;const k=b.dataset.w+':'+b.dataset.g,op=!(b.getAttribute('aria-expanded')==='true');OPEN[k]=op;saveOpen();
   b.setAttribute('aria-expanded',op);b.classList.toggle('closed',!op);const box=b.nextElementSibling;if(box)box.classList.toggle('hide',!op);});
@@ -166,7 +188,7 @@ function route(){
     view.innerHTML=`<iframe src="${fresh}" title="${it.title}" allow="fullscreen"></iframe>`; }
   else{ title.textContent='Home'; full.hidden=true;
     view.innerHTML=`<div class="home"><div class="hero"><div class="pic">${CHEM}</div><div><h1>Study with <span>Ms. Mirna</span></h1><p>Chemistry revision for SAAT. Revise the notes, play a quest, explore a simulation or take an assessment.</p></div></div>
-      ${[...new Set(ITEMS.map(i=>i.group))].map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('home',g);return `<button class="sec${op?'':' closed'}" data-w="home" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${g}<span class="n">${its.length}</span></button><div class="cards${op?'':' hide'}">${its.map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`;}).join('')}</div>`; }
+      ${[...new Set(ITEMS.map(i=>i.group))].map(g=>{const its=ITEMS.filter(i=>i.group===g),op=isOpen('home',g);return `<button class="sec${op?'':' closed'}" data-w="home" data-g="${g}" aria-expanded="${op}"><span class="chev">▼</span>${gi(g)}${g}<span class="n">${its.length}</span></button><div class="cards${op?'':' hide'}">${its.map(i=>`<a href="#${slug(i.file)}"><span class="cico">${i.icon}</span><b>${i.title}</b><small>${i.note}</small></a>`).join('')}</div>`;}).join('')}</div>`; }
 }
 addEventListener('hashchange',route);
 document.getElementById('menu').onclick=()=>document.body.classList.toggle('open');
