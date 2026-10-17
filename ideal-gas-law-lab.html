@@ -210,6 +210,23 @@ sub{font-size:.65em}
 .subbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .subbar .btn.sel{background:var(--accent);color:#fff}
 .note{font-size:15px;color:var(--muted)}
+
+.hv-chg{background:#fde3cc;color:#b35a0c;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-ask{background:#d6efef;color:#0b6f71;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-cst{border-bottom:3px dashed #8d99b0;font-weight:700;padding:0 2px}
+
+.tfhead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:18px;margin-bottom:4px}
+.tfrow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.tfrow.good{border-color:#2e9e5b;background:#f3fbf6}.tfrow.bad{border-color:#d8434a;background:#fdf4f4}
+.tfrow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.tfq{flex:1;font-size:18px;line-height:1.45}
+.tfx{font-size:16px;margin-top:6px;color:var(--ink)}
+.tfb{display:flex;gap:8px;flex:none}
+.tfbtn{width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;cursor:pointer;color:var(--ink)}
+.tfbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tfbtn:disabled{cursor:default;opacity:.55}
+.tfbtn.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff;opacity:1}
+.tfbtn.wrong{background:#d8434a;border-color:#d8434a;color:#fff;opacity:1}
 </style>
 </head>
 <body>
@@ -312,7 +329,7 @@ function probUI(P){var mode=P.mode||'show',st=P.st||0,h='';
  if(mode==='show'){var N=P.show.length;
   h+='<div class="steps3">'+P.show.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
   h+='<div class="stepbar"><button class="btn" id="sBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="sNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="sTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+P.show.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
- else{h+='<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>'+P.fields.map(fieldHtml).join('');
+ else{h+=(P.fields.some(function(f){return f.t==='n';})?'<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>':'')+P.fields.map(fieldHtml).join('');
   h+='<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk">Check</button><button class="btn" id="pHint">Hint</button><button class="btn" id="pClr">Clear</button>')+(P.next?'<button class="btn fill" id="pNext"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div>';
   h+='<div class="hintbox" id="pHint2">'+(P.hint||P.fields.map(function(f){return f.why;}).filter(Boolean).join(' · '))+'</div><div class="feedback" id="pFb">'+(P.solved?solvedMsg(P):'')+'</div>';}
  $('panel').innerHTML=h;
@@ -767,6 +784,108 @@ var SC_D4={title:'Check your understanding',q:'Answer each question in your note
   ['Which behaves more like an ideal gas: He at high T and low P, or water vapor at low T and high P?','<b>He at high T and low P</b>: small, nonpolar particles that are far apart and moving fast.']]};
 
 
+/* --- true or false assessment --- */
+var TF=[
+ ['In the real world, gases made of <b>large molecules</b> are the only gases that are truly ideal.',false,'<b>No gas is truly ideal.</b> Large molecules take up more space, so they deviate <b>more</b> from ideal behavior.'],
+ ['<b>No intermolecular attractive forces</b> exist in an ideal gas.',true,'An ideal gas is a model with no attractions or repulsions between particles.'],
+ ['Real gases deviate most from ideal behavior at <b>low pressures</b> and <b>high temperatures</b>.',false,'It is the opposite: real gases deviate most at <b>high pressure</b> (particles squeezed close) and <b>low temperature</b> (particles slow, attractions win).'],
+ ['The <b>smaller</b> the gas molecule, the more the gas behaves like an ideal gas.',true,'Small particles take up very little of the space, so they are closer to the "no volume" assumption.'],
+ ['NH<sub>3</sub> gas will most likely behave like an ideal gas because it is a <b>nonpolar</b> molecule.',false,'NH<sub>3</sub> is <b>polar</b>. Its molecules attract each other strongly, so it deviates from ideal behavior.'],
+ ['Ideal gas particles are treated as points that take up <b>no volume</b>.',true,'In the kinetic-molecular theory, the particles\' own volume is ignored.'],
+ ['Collisions between <b>real</b> gas particles are perfectly elastic.',false,'Only <b>ideal</b> gas collisions are perfectly elastic. Real collisions lose a little energy.'],
+ ['Helium at <b>high temperature</b> and <b>low pressure</b> behaves almost like an ideal gas.',true,'Small, nonpolar He particles that are far apart and moving fast: close to ideal.'],
+ ['At the same conditions, <b>water vapor</b> behaves more like an ideal gas than <b>helium</b>.',false,'Water is <b>polar</b>, so its molecules attract each other. Helium is small and nonpolar, so it is closer to ideal.'],
+ ['At very <b>high pressure</b>, the volume of the gas particles themselves becomes important.',true,'When the space is squeezed, the particles fill a big part of it, so "no volume" no longer works.'],
+ ['Real gases can <b>condense into liquids</b> when cooled because their particles attract each other.',true,'Slow particles cannot escape the attractions, so they stick together as a liquid. An ideal gas could never condense.'],
+ ['The attractions between real gas particles are <b>covalent bonds</b> that never break.',false,'They are weak <b>intermolecular forces</b>. Particles stick for a moment and pull free again, especially when they move fast.'],
+ ['Butane (C<sub>4</sub>H<sub>10</sub>) is nonpolar, so it always behaves <b>exactly</b> like an ideal gas.',false,'Butane molecules are <b>large</b>: they take up space and attract each other more than small molecules, so butane deviates.'],
+ ['Most gases behave <b>close to ideal</b> at ordinary room temperature and pressure.',true,'That is why PV = nRT gives answers close to real measurements in most problems.'],
+ ['A real gas at low temperature exerts a <b>lower pressure</b> than an ideal gas would, because attractions pull the particles back from the walls.',true,'Attractions make the particles hit the walls less hard, so the pressure is a little lower than PV = nRT predicts.']];
+var TFA={};
+function tfHtml(){var n=Object.keys(TFA).length,ok=Object.keys(TFA).filter(function(k){return TFA[k]===TF[k][1];}).length;
+ return '<div class="tfhead"><b>Choose T or F for each statement.</b> <span class="small">'+n+' / '+TF.length+' answered · '+ok+' correct</span></div>'+TF.map(function(t,i){var a=TFA[i],done=a!==undefined,good=done&&a===t[1];
+  return '<div class="tfrow'+(done?(good?' good':' bad'):'')+'"><span class="fn">'+(i+1)+'</span><div class="tfq">'+t[0]+(done?'<div class="tfx">'+(good?'<span class="good2">✓ Correct!</span> ':'<span class="bad2">✗ Not quite: it is '+(t[1]?'TRUE':'FALSE')+'.</span> ')+t[2]+'</div>':'')+'</div>'+
+  '<div class="tfb">'+['T','F'].map(function(L){var v=L==='T',cls=done?(v===t[1]?' right':(v===a?' wrong':'')):'';return '<button class="tfbtn'+cls+'" data-i="'+i+'" data-v="'+L+'"'+(done?' disabled':'')+'>'+L+'</button>';}).join('')+'</div></div>';}).join('')+
+  '<div class="stepbar"><button class="btn" id="tfReset">Start again</button>'+(n===TF.length?'<span class="ansb" style="margin-left:8px">Score: '+ok+' / '+TF.length+'</span>':'')+'</div>';}
+function tfBind(){Array.prototype.forEach.call(document.querySelectorAll('.tfbtn'),function(b){b.onclick=function(){TFA[+b.dataset.i]=b.dataset.v==='T';$('panel').innerHTML=tfHtml();tfBind();};});
+ $('tfReset').onclick=function(){TFA={};$('panel').innerHTML=tfHtml();tfBind();};}
+var SC_D5={title:'True or false? Real vs ideal gases',q:'For each false statement, what would you change to make it true?',canvas:false,html:tfHtml,bindHtml:tfBind,
+ reads:function(){var n=Object.keys(TFA).length,ok=Object.keys(TFA).filter(function(k){return TFA[k]===TF[k][1];}).length;return [['Answered',n+' / '+TF.length],['Correct',ok]];}};
+
+/* ================= TAB: INCREASES, DECREASES OR STAYS THE SAME ================= */
+var VN={P:'pressure',V:'volume',n:'amount of gas',T:'temperature'},LX={P:170,V:285,eq:395,n:495,R:595,T:695},SIDE={P:0,V:0,n:1,T:1};
+function relOf(a,b){return SIDE[a]===SIDE[b]?'inv':'dir';}
+function relText(a,b){return relOf(a,b)==='inv'?a+' and '+b+' are on the same side → inversely proportional':a+' and '+b+' are on opposite sides → directly proportional';}
+var UPC=ORANGE,ASKC=TEAL,GREYC='#b7c1d3';
+function arrowUD(x,y,up,c,big){var h=big?34:26;ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=big?6:5;ctx.beginPath();ctx.moveTo(x,y+(up?h/2:-h/2));ctx.lineTo(x,y+(up?-h/2:h/2));ctx.stroke();
+ ctx.beginPath();if(up){ctx.moveTo(x,y-h/2-10);ctx.lineTo(x-10,y-h/2+4);ctx.lineTo(x+10,y-h/2+4);}else{ctx.moveTo(x,y+h/2+10);ctx.lineTo(x-10,y+h/2-4);ctx.lineTo(x+10,y+h/2-4);}ctx.closePath();ctx.fill();}
+/* cfg: {chg,dir,ask,cst} ; stage 0..3 ; lines: text for the bottom card */
+function drawRel(cfg,stage,lines){var y=185,S=86;clear();card(40,40,720,270,'#fff');
+ var cst=stage>=1?cfg.cst.concat(['R']):['R'].filter(function(){return stage>=1;});
+ ['P','V','eq','n','R','T'].forEach(function(k){var x=LX[k],t=k==='eq'?'=':k,isC=cst.indexOf(k)>=0&&k!==cfg.ask,col=k==='eq'?MUTED:(isC?GREYC:INK);
+  if(k===cfg.chg){rr(x-34,y-50,68,100,16);ctx.fillStyle='#fde3cc';ctx.fill();ctx.strokeStyle=UPC;ctx.lineWidth=4;ctx.stroke();col=UPC;}
+  if(k===cfg.ask){rr(x-34,y-50,68,100,16);ctx.fillStyle='#d6efef';ctx.fill();ctx.strokeStyle=ASKC;ctx.lineWidth=4;ctx.stroke();col=ASKC;if(stage>=1&&cfg.cst.indexOf(k)>=0)col=GREYC;}
+  txt(t,x,y,{s:S,c:col});
+  if(isC||(k===cfg.ask&&stage>=1&&cfg.cst.indexOf(k)>=0)){seg(x-24,y+22,x+24,y-22,'#d8434a',3);txt('constant',x,y+70,{s:14,c:MUTED,w:500});}});
+ if(stage>=2){var a=cfg.chg,b=cfg.ask;
+  if(cfg.cst.indexOf(b)>=0){pill(b+' is held constant',LX[b],282,MUTED,'#fff',15);}
+  else if(relOf(a,b)==='inv'){var x1=Math.min(LX[a],LX[b]),x2=Math.max(LX[a],LX[b]);ctx.strokeStyle=PLUM;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x1,250);ctx.lineTo(x1,268);ctx.lineTo(x2,268);ctx.lineTo(x2,250);ctx.stroke();pill('same side → inversely proportional',(x1+x2)/2,290,PLUM,'#fff',15);}
+  else{var xa=LX[a],xb=LX[b];ctx.strokeStyle=BLUE;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(xa,128);ctx.quadraticCurveTo((xa+xb)/2,60,xb,128);ctx.stroke();pill('opposite sides → directly proportional',(xa+xb)/2,78,BLUE,'#fff',15);}}
+ if(stage>=3&&cfg.dir){arrowUD(LX[cfg.chg]+48,y-6,cfg.dir>0,UPC,true);var r=cfg.cst.indexOf(cfg.ask)>=0?0:(relOf(cfg.chg,cfg.ask)==='inv'?-cfg.dir:cfg.dir);
+  if(r)arrowUD(LX[cfg.ask]+48,y-6,r>0,ASKC,true);else txt('=',LX[cfg.ask]+50,y-6,{s:34,c:ASKC});}
+ card(40,330,720,140,'#fff');(lines||[]).forEach(function(l,i){txt(l[0],400,370+i*38,{s:i===0?20:17,c:l[1]||INK,w:i===0?600:500});});}
+function ansOf(q){if(q.cst.indexOf(q.ask)>=0)return 'stays the same';var r=relOf(q.chg,q.ask)==='inv'?-q.dir:q.dir;return r>0?'increases':'decreases';}
+function sym(d){return d>0?'↑':'↓';}
+/* --- intro: pick two variables --- */
+var PAIRS=[['P','V','Boyle\'s law (n and T constant)'],['V','T','Charles\'s law (n and P constant)'],['P','T','Gay-Lussac\'s law (n and V constant)'],['V','n','Avogadro\'s principle (P and T constant)'],['P','n','more gas in a rigid container (V and T constant)'],['n','T','more gas at the same P and V (T must drop)']],PI=0;
+var SC_E0={title:'Same side or opposite sides?',q:'Look at PV = nRT. If two quantities are multiplied together on the same side, what must happen to one when the other goes up?',canvas:true,
+ html:function(){return '<div class="gsec"><h4>Clues in the question: what stays the same?</h4><table class="ltab"><tr><th>The question says…</th><th>Stays the same</th></tr><tr><td>closed / rigid / sealed tank, can, cylinder, lightbulb, full tire</td><td><b>V</b> (it cannot stretch)</td></tr><tr><td>balloon, plastic bag, movable piston, "expandable"</td><td><b>P</b> (it stretches, so P stays equal to the outside)</td></tr><tr><td>sealed / closed, no gas added or removed</td><td><b>n</b></td></tr><tr><td>"at constant temperature", "temperature stays the same"</td><td><b>T</b></td></tr><tr><td>always</td><td><b>R</b></td></tr></table></div>';},
+ enter:function(){$('controls').innerHTML=PAIRS.map(function(p,i){return '<button class="btn'+(PI===i?' sel':'')+'" data-i="'+i+'">'+p[0]+' and '+p[1]+'</button>';}).join('');
+  Array.prototype.forEach.call($('controls').querySelectorAll('button'),function(b){b.onclick=function(){PI=+b.dataset.i;SC_E0.enter();};});},
+ frame:function(){var p=PAIRS[PI],others=['P','V','n','T'].filter(function(k){return k!==p[0]&&k!==p[1];}),inv=relOf(p[0],p[1])==='inv';
+  drawRel({chg:p[0],dir:1,ask:p[1],cst:others},3,[[p[0]+' ↑  →  '+p[1]+(inv?' ↓':' ↑'),INK],[relText(p[0],p[1]),inv?PLUM:BLUE],[p[2],MUTED]]);},
+ reads:function(){var p=PAIRS[PI];return [['Pair',p[0]+' and '+p[1]],['Relationship',relOf(p[0],p[1])==='inv'?'inverse':'direct']];}};
+/* --- questions --- */
+function hiQ(s){return s.replace(/\[c\](.*?)\[\/c\]/g,'<span class="hv-chg">$1</span>').replace(/\[a\](.*?)\[\/a\]/g,'<span class="hv-ask">$1</span>').replace(/\[k\](.*?)\[\/k\]/g,'<span class="hv-cst">$1</span>');}
+var IDQ=[
+ {q:'The room [c]temperature increases[/c] from 20 °C to 24 °C. What happens to the [a]pressure[/a] inside a [k]closed cylinder[/k] of oxygen in the room?',chg:'T',dir:1,ask:'P',cst:['V','n'],clue:'closed cylinder → V and n stay the same'},
+ {q:'What happens to the [a]pressure[/a] of the gas in an inflated, [k]expandable balloon[/k] if the [c]temperature is increased[/c]?',chg:'T',dir:1,ask:'P',cst:['P','n'],clue:'expandable balloon → it stretches, so P stays the same (V grows instead); sealed → n stays the same',extra:'The balloon expands: its volume increases, not its pressure.'},
+ {q:'An aerosol can of air freshener is [c]sprayed into a room[/c], so gas leaves the can. What happens to the [a]pressure[/a] of the gas inside the [k]can[/k] if its [k]temperature stays constant[/k]?',chg:'n',dir:-1,ask:'P',cst:['V','T'],clue:'rigid can → V stays the same; "temperature stays constant" → T stays the same'},
+ {q:'The [c]volume[/c] of air in human lungs [c]increases[/c] before it is exhaled. What happens to the [a]temperature[/a] of the air in the lungs, assuming the [k]pressure stays constant[/k]?',chg:'V',dir:1,ask:'T',cst:['P','n'],clue:'"pressure stays constant" → P; the same air → n'},
+ {q:'A leftover hamburger patty is sealed in a [k]plastic bag[/k] and placed in the [c]refrigerator[/c]. What happens to the [a]volume[/a] of the air in the bag?',chg:'T',dir:-1,ask:'V',cst:['P','n'],clue:'refrigerator → T decreases; flexible bag → P stays the same; sealed → n'},
+ {q:'What happens to the [a]pressure[/a] of the gas in a [k]lightbulb[/k] a few minutes after the [c]light is turned on[/c] (the bulb gets hot)?',chg:'T',dir:1,ask:'P',cst:['V','n'],clue:'glass bulb → V stays the same; sealed → n'},
+ {q:'You block the tip of a syringe and [c]push the plunger in[/c], so the volume decreases, at [k]constant temperature[/k]. What happens to the [a]pressure[/a] of the trapped air?',chg:'V',dir:-1,ask:'P',cst:['n','T'],clue:'tip blocked → n stays the same; "constant temperature" → T'},
+ {q:'You [c]pump more air[/c] into a car tire that is [k]already full[/k], so its volume cannot grow. The [k]temperature stays the same[/k]. What happens to the [a]pressure[/a]?',chg:'n',dir:1,ask:'P',cst:['V','T'],clue:'full tire → V stays the same; T stays the same'},
+ {q:'A weather balloon rises, and the [c]pressure of the air around it decreases[/c]. If the [k]temperature stays the same[/k], what happens to its [a]volume[/a]?',chg:'P',dir:-1,ask:'V',cst:['n','T'],clue:'no gas escapes → n; T stays the same'},
+ {q:'You [c]blow more air[/c] into a balloon. Its [k]pressure and temperature stay about the same[/k]. What happens to its [a]volume[/a]?',chg:'n',dir:1,ask:'V',cst:['P','T'],clue:'P and T stay the same'},
+ {q:'A gas in a cylinder with a [k]movable piston[/k] is [c]cooled[/c]. What happens to its [a]volume[/a]?',chg:'T',dir:-1,ask:'V',cst:['P','n'],clue:'movable piston → P stays the same; closed cylinder → n'},
+ {q:'More gas is [c]pumped into[/c] a [k]rigid tank[/k], but its [k]pressure gauge shows the same reading[/k]. What must have happened to the [a]temperature[/a]?',chg:'n',dir:1,ask:'T',cst:['P','V'],clue:'rigid tank → V; same gauge reading → P',star:true}];
+var VOPT=['P (pressure)','V (volume)','n (amount of gas)','T (temperature)'],VK=['P','V','n','T'],ANS=['increases','decreases','stays the same'],RELO=['same side → inversely proportional','opposite sides → directly proportional','it is held constant'];
+var PE=IDQ.map(function(q,i){var pairs=[['P','V'],['P','n'],['P','T'],['V','n'],['V','T'],['n','T']].filter(function(p){return p.indexOf(q.chg)<0;}),ok=-1;
+ pairs.forEach(function(p,j){if(p.slice().sort().join()===q.cst.slice().sort().join())ok=j;});
+ var held=q.cst.indexOf(q.ask)>=0,rel=held?2:(relOf(q.chg,q.ask)==='inv'?0:1),ans=ansOf(q);q.ans=ans;
+ var relLine=held?q.ask+' is held constant, so it cannot change':relText(q.chg,q.ask);
+ var P_={chip:'Question '+(i+1)+(q.star?' ★':''),name:'Question '+(i+1)+(q.star?' (challenge)':''),src:q.star?'Challenge':'Question '+(i+1),mode:'try',q:hiQ(q.q),Q:q,
+  show:[['Read the question','<span class="hv-chg">Orange</span> = what changes: <b>'+VN[q.chg]+' ('+q.chg+') '+sym(q.dir)+'</b> · <span class="hv-ask">Teal</span> = what you are asked: <b>'+VN[q.ask]+' ('+q.ask+')</b>'],
+   ['Cross out what stays the same','<span class="hv-cst">Clue</span>: '+q.clue+'. R is always constant.'],
+   ['Same side or opposite sides?',relLine+'.'],
+   ['Answer',q.chg+' '+sym(q.dir)+' → '+q.ask+' <span class="ansb">'+ans+'</span>'+(q.extra?'<br>'+q.extra:'')]],
+  fields:[{t:'c',lab:'What <span class="hv-chg">changes</span>?',opts:VOPT,ok:VK.indexOf(q.chg),why:'Look at the orange words.'},
+   {t:'c',lab:'What are you <span class="hv-ask">asked</span> about?',opts:VOPT,ok:VK.indexOf(q.ask),why:'Look at the teal word.'},
+   {t:'c',lab:'What stays the same? (look for <span class="hv-cst">clues</span>)',opts:pairs.map(function(p){return p[0]+' and '+p[1];}),ok:ok,why:'Clue: '+q.clue+'.'},
+   {t:'c',lab:'In PV = nRT, '+q.chg+' and '+q.ask+'…',opts:RELO,ok:rel,why:held?q.ask+' is one of the quantities that stay the same.':'P and V are on the left, n and T on the right. Same side → inverse; opposite sides → direct.'},
+   {t:'c',lab:'So the '+VN[q.ask]+'…',opts:ANS,ok:ANS.indexOf(ans),why:held?'It is held constant.':(rel===0?'Inversely proportional: when one goes up, the other goes down.':'Directly proportional: both change in the same direction.')}],
+  ans:'The '+VN[q.ask]+' '+ans+'.',sense:relLine+'.'};
+ return P_;});
+function qScene(P_){return {title:P_.name,q:'Which words tell you what stays the same? Where are the two quantities in PV = nRT?',canvas:true,prob:P_,
+ frame:function(){var q=P_.Q,st=P_.mode==='show'?clamp(P_.st-1,0,3):(P_.solved?3:0);
+  var lines=[[ 'Orange = what changes · Teal = what you are asked',MUTED]];
+  if(st>=1)lines=[['Grey = stays the same ('+q.cst.join(' and ')+'), and R is always constant',MUTED]];
+  if(st>=2)lines=[[q.cst.indexOf(q.ask)>=0?q.ask+' is held constant':relText(q.chg,q.ask),q.cst.indexOf(q.ask)>=0?MUTED:(relOf(q.chg,q.ask)==='inv'?PLUM:BLUE)]];
+  if(st>=3)lines=[[q.chg+' '+sym(q.dir)+'  →  '+q.ask+' '+q.ans,INK],lines[0]];
+  drawRel(q,st,lines);},
+ reads:function(){var s=PE.filter(function(p){return p.solved;}).length;return [['Questions solved',s+' / '+PE.length],['Mode',P_.mode==='try'?'My turn':'Show me']];}};}
+
 /* ================= navigation ================= */
 function probScene(p,q){return {title:p.name,q:q,canvas:false,prob:p};}
 var QA='Are you going toward liters or away from liters? So do you multiply or divide by 22.4 L/mol?',QB='Which unit is the pressure in? Which R matches it? Is T in kelvin?',QC='Is the temperature in kelvin? Which values do you need: m, M, P, V, T?';
@@ -775,10 +894,12 @@ var TABS=[
   steps:[['One mole',SC_A1],['Conversion map',SC_A2]].concat(PA.map(function(p){return [p.chip,probScene(p,QA)];}))},
  {n:'PV = nRT',c:BLUE,hash:'ideal-gas-law',rule:['More particles → more wall hits → <b>higher P</b>','<b>PV = nRT</b>: know three of P, V, n, T → find the fourth','<b>Pick R by the pressure unit</b>: atm 0.0821 · kPa 8.314 · mm Hg 62.4','T in <b>K</b>, V in <b>L</b>, n in <b>mol</b>'],
   steps:[['More gas, more P',SC_B1],['Constant P',SC_B2],['Constant P and V',SC_B3],['PV = nRT',SC_B4N],['Rearranging',SC_RE],['R in atm',SC_R1],['R in kPa',SC_R2],['R in mm Hg',SC_R3],['R summary',SC_RS]].concat(PB.map(function(p){return [p.chip,probScene(p,QB)];}))},
+ {n:'Up, down or same?',c:AMBER,hash:'increase-decrease',rule:['<span class="hv-chg">Orange</span>: what <b>changes</b> · <span class="hv-ask">Teal</span>: what you are <b>asked</b>','<span class="hv-cst">Clues</span> tell you what stays the same: rigid → V, balloon/bag/piston → P, sealed → n','<b>Same side</b> of PV = nRT → <b>inversely</b> proportional','<b>Opposite sides</b> → <b>directly</b> proportional'],
+  steps:[['Same side or opposite?',SC_E0]].concat(PE.map(function(p){return [p.chip,qScene(p)];}))},
  {n:'Molar mass & density',c:PLUM,hash:'molar-mass-density',rule:['n = m/M → <b>M = mRT/(PV)</b>','m/V = D → <b>D = MP/(RT)</b>','Larger molar mass → <b>greater density</b> (same P and T)','T in K; R = 0.0821 when P is in atm'],
   steps:[['Molar mass',SC_C1],['Density',SC_C2],['Fire extinguisher',SC_C3]].concat(PC.map(function(p){return [p.chip,probScene(p,QC)];}))},
  {n:'Real vs ideal gases',c:CORAL,hash:'real-gases',rule:['Ideal: <b>no</b> particle volume, <b>no</b> attractions, elastic collisions','Real gases deviate at <b>high P</b> and <b>low T</b>','<b>Polar</b> and <b>large</b> molecules deviate more','At ordinary conditions most gases are close to ideal'],
-  steps:[['Point by point',SC_D1],['When they deviate',SC_D2],['Real gases around you',SC_D3],['Check yourself',SC_D4]]}];
+  steps:[['Point by point',SC_D1],['When they deviate',SC_D2],['Real gases around you',SC_D3],['Check yourself',SC_D4],['True or false?',SC_D5]]}];
 var tabI=0,stepI=0,cur=null,lastReads='';
 TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].prob){s[1].prob.next=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
 function renderTabs(){$('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+t.n+'</button>';}).join('');
@@ -789,7 +910,7 @@ function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.
  renderTabs();renderSteps();$('stitle').textContent=cur.title;$('q').innerHTML=cur.q;$('rule').innerHTML=(cur.rule||T.rule).map(function(r){return '<li>'+r+'</li>';}).join('');
  $('cv').style.display=cur.canvas?'':'none';$('controls').innerHTML='';$('controls').style.display=cur.canvas?'':'none';$('panel').innerHTML='';lastReads='';
  if(cur.enter)cur.enter();
- if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();}else if(cur.reveal)revealUI(cur.reveal);
+ if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();if(cur.bindHtml)cur.bindHtml();}else if(cur.reveal)revealUI(cur.reveal);
  try{history.replaceState(null,'','#'+T.hash);}catch(e){}window.scrollTo&&window.scrollY>200&&window.scrollTo({top:0,behavior:'smooth'});}
 function solvedIn(t){var a=TABS[t].steps.filter(function(s){return s[1].prob&&s[1].prob.chip;});return [a.filter(function(s){return s[1].prob.solved;}).length,a.length];}
 function reads(){var r=cur.reads?cur.reads():[];if(cur.prob&&!cur.canvas){var s=solvedIn(tabI);r=[['Problems solved',s[0]+' / '+s[1]],['Mode',cur.prob.mode==='try'?'My turn':'Show me']];}
