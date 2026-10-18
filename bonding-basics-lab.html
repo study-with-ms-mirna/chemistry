@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonding Basics Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{color-scheme:light}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none;width:62px;height:62px}
+.brand{font-family:Caveat,cursive;font-size:22px;color:var(--muted);line-height:1}
+.brand b{font-family:Pacifico,cursive;font-weight:400;font-size:20px;color:var(--teal)}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:8px 14px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc;touch-action:manipulation}
+canvas.click{cursor:pointer}
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:14px}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp>span{font-family:Fredoka,sans-serif;font-weight:500;font-size:15px;color:var(--muted);margin-right:2px}
+.chip{font-family:Fredoka,sans-serif;font-weight:500;font-size:15px;padding:5px 11px;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;min-width:38px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:70px;font-weight:600;color:var(--accent)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:56vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+.ans{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:18px}
+.ans label{display:flex;align-items:center;gap:6px}
+.ans input{width:58px;font-family:Fredoka,sans-serif;font-size:20px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ans input.ok{border-color:#2e9e5b;background:#e8f6ee}.ans input.no{border-color:#d8434a;background:#fdeeee}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.rd.wide{grid-column:1/-1}
+.rulebtn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:none;background:var(--red);color:#fff;cursor:pointer;box-shadow:0 3px 0 #a52f35;align-self:flex-start}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff;display:none}
+.rule.show{display:block;animation:fadein .4s ease}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:5px 0}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+table.sum{border-collapse:collapse;width:100%;margin-top:12px;font-size:15.5px}
+table.sum th,table.sum td{border:2px solid #e2e9f4;padding:7px 8px;text-align:left;vertical-align:top}
+table.sum th{background:#f2f6fb;font-family:Fredoka,sans-serif;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:13px;height:13px;border-radius:50%;display:inline-block}
+sub,sup{font-size:.65em}
+.score{font-family:Fredoka,sans-serif;font-weight:600;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <rect x="2" y="2" width="60" height="60" rx="16" fill="#fff" stroke="#c9d4e6" stroke-width="2"/>
+    <circle cx="22" cy="34" r="12" fill="none" stroke="#9aa6ba" stroke-width="1.6" stroke-dasharray="3 3"/>
+    <circle cx="22" cy="34" r="5.5" fill="#e2708a"/><text x="22" y="37" font-family="Arial" font-weight="700" font-size="8" fill="#fff" text-anchor="middle">+</text>
+    <circle cx="34" cy="34" r="3" fill="#0f8b8d"/>
+    <path d="M36 28 q6 -9 13 -2" fill="none" stroke="#e8962a" stroke-width="2.2" stroke-linecap="round"/><path d="M47 22 l3 5 -6 0z" fill="#e8962a"/>
+    <circle cx="48" cy="40" r="8" fill="#9fb7d4" stroke="#18233a" stroke-width="1.4"/><text x="48" y="44" font-family="Arial" font-weight="700" font-size="11" fill="#18233a" text-anchor="middle">–</text>
+  </svg>
+  <div>
+    <div class="brand">Study with <b>Ms. Mirna</b></div>
+    <h1>Bonding Basics Lab</h1>
+    <div class="sub">Electron arrangement · electron-dot diagrams · ionic, covalent &amp; metallic bonds · properties · ions</div>
+  </div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<div class="steps" id="steps"></div>
+<div class="main">
+  <section class="card stage">
+    <h2 id="stitle"></h2>
+    <canvas id="cv" width="800" height="500" aria-label="Bonding simulation"></canvas>
+    <div class="controls" id="controls"></div>
+    <div id="extra"></div>
+    <div class="fb" id="fb"></div>
+  </section>
+  <aside class="side">
+    <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+    <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+    <button class="rulebtn" id="rulebtn">Reveal our rule</button>
+    <div class="rule" id="rule"><div class="lbl">Our rule</div><ul id="rulelist"></ul></div>
+  </aside>
+</div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=Math.max(2,window.devicePixelRatio||1);cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){t=clamp(t,0,1);return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b';
+var ECOL='#2b8fd8',ECOL2='#e8962a',NUC='#e2708a',ANION='#9fb7d4',CATION='#f2b8c6';
+var FONT='Fredoka, "Atkinson Hyperlegible", Arial, sans-serif';
+
+/* ---------- elements 1-20 ---------- */
+var EL=[null,
+['H','Hydrogen',1,1,'nonmetal'],['He','Helium',1,18,'noble'],['Li','Lithium',2,1,'metal'],['Be','Beryllium',2,2,'metal'],
+['B','Boron',2,13,'metalloid'],['C','Carbon',2,14,'nonmetal'],['N','Nitrogen',2,15,'nonmetal'],['O','Oxygen',2,16,'nonmetal'],
+['F','Fluorine',2,17,'nonmetal'],['Ne','Neon',2,18,'noble'],['Na','Sodium',3,1,'metal'],['Mg','Magnesium',3,2,'metal'],
+['Al','Aluminium',3,13,'metal'],['Si','Silicon',3,14,'metalloid'],['P','Phosphorus',3,15,'nonmetal'],['S','Sulfur',3,16,'nonmetal'],
+['Cl','Chlorine',3,17,'nonmetal'],['Ar','Argon',3,18,'noble'],['K','Potassium',4,1,'metal'],['Ca','Calcium',4,2,'metal']];
+var BYSYM={};for(var z=1;z<=20;z++)BYSYM[EL[z][0]]=z;
+var TYPECOL={metal:'#fde3ea',nonmetal:'#dff1f1',noble:'#efe4fa',metalloid:'#fdf0dc'};
+var TYPEBORDER={metal:CORAL,nonmetal:TEAL,noble:PLUM,metalloid:AMBER};
+var TYPENAME={metal:'metal',nonmetal:'nonmetal',noble:'noble gas',metalloid:'metalloid'};
+function arrangement(n){var caps=[2,8,8,2],a=[];for(var i=0;i<4&&n>0;i++){var k=Math.min(caps[i],n);a.push(k);n-=k;}return a;}
+function valence(Z){var a=arrangement(Z);return a[a.length-1];}
+function col8(g){return g<=2?g-1:g-11;}
+function SUBN(n){var s='₀₁₂₃₄₅₆₇₈₉';return String(n).split('').map(function(c){return s[+c];}).join('');}
+function SUPC(q){if(q===0)return '';var s={'1':'¹','2':'²','3':'³','4':'⁴'};var m=Math.abs(q);return (m>1?s[m]:'')+(q>0?'⁺':'⁻');}
+function chargeTxt(q){return q===0?'0 (neutral)':(q>0?q+'+':(-q)+'−');}
+function bracketIon(sym,x,y,S,q,dots){var g=glyph(sym,S),pad=dots?S*.2+20:14;drawSym(sym,x,y,S);var by=y+g.capH*0.5;
+  ctx.font='400 '+Math.round(S*1.15)+'px '+FONT;ctx.fillStyle=MUTED;ctx.textBaseline='alphabetic';ctx.textAlign='right';ctx.fillText('[',x-g.w/2-pad,by+S*.12);ctx.textAlign='left';ctx.fillText(']',x+g.w/2+pad,by+S*.12);
+  var bw=tw(']',Math.round(S*1.15),400);txt((Math.abs(q)>1?Math.abs(q):'')+(q>0?'+':'−'),x+g.w/2+pad+bw+3,y-g.capH*.75,{s:Math.round(S*.4),c:q>0?RED:BLUE,a:'left',w:700});}
+
+/* ---------- drawing helpers ---------- */
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px '+FONT;ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline=o.b||'middle';ctx.fillText(s,x,y);return ctx.measureText(s).width;}
+function tw(s,size,w){ctx.font=(w||600)+' '+size+'px '+FONT;return ctx.measureText(s).width;}
+function circ(x,y,r,fill,stroke,lw,dash){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||2;ctx.setLineDash(dash||[]);ctx.stroke();ctx.setLineDash([]);}}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),h=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2+Math.cos(a)*3,y2+Math.sin(a)*3);ctx.lineTo(x2-Math.cos(a-.5)*h,y2-Math.sin(a-.5)*h);ctx.lineTo(x2-Math.cos(a+.5)*h,y2-Math.sin(a+.5)*h);ctx.closePath();ctx.fill();}
+function dblarrow(x1,y1,x2,y2,c,w){arrow((x1+x2)/2,(y1+y2)/2,x2,y2,c,w);arrow((x1+x2)/2,(y1+y2)/2,x1,y1,c,w);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});}
+function banner(s,col){var w=tw(s,17)+30;rr(W/2-w/2,12,w,34,14);ctx.fillStyle='#fff';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=col||TEAL;ctx.stroke();txt(s,W/2,29,{s:17,c:col||TEAL});}
+function box(x,y,w,h,fill,stroke){rr(x,y,w,h,14);ctx.fillStyle=fill||'#fff';ctx.fill();ctx.strokeStyle=stroke||LINE;ctx.lineWidth=2;ctx.stroke();}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#e7edf6';ctx.lineWidth=1;for(var x=28;x<W;x+=28){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(var y=28;y<H;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}}
+function electron(x,y,c,r){r=r||5.5;circ(x,y,r+3,'rgba(43,143,216,0.15)');ctx.fillStyle=c||ECOL;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();}
+function ball(x,y,r,c,label,lc,ls){var g=ctx.createRadialGradient(x-r*.35,y-r*.4,r*.1,x,y,r);g.addColorStop(0,'#ffffff');g.addColorStop(.25,c);g.addColorStop(1,c);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(24,35,58,.45)';ctx.lineWidth=1.4;ctx.stroke();if(label)txt(label,x,y+1,{s:ls||Math.max(10,r*.7),c:lc||INK,w:700});}
+/* symbol with atomic number as subscript on the bottom left */
+var GB={};
+function glyph(sym,size){var k=sym+'|'+size;if(GB[k])return GB[k];ctx.font='700 '+size+'px '+FONT;ctx.textBaseline='alphabetic';ctx.textAlign='left';var m=ctx.measureText(sym),h=ctx.measureText('H');
+  var r={w:(m.actualBoundingBoxLeft!=null&&m.actualBoundingBoxRight!=null)?(m.actualBoundingBoxLeft+m.actualBoundingBoxRight):m.width,capH:h.actualBoundingBoxAscent||size*.7,desc:Math.max(0,m.actualBoundingBoxDescent||0)};GB[k]=r;return r;}
+if(document.fonts){document.fonts.ready.then(function(){GB={};});document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',function(){GB={};});}
+function drawSym(sym,x,y,size,col){var g=glyph(sym,size);ctx.font='700 '+size+'px '+FONT;ctx.fillStyle=col||INK;ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.fillText(sym,x,y+g.capH/2);return g;}
+function symZ(sym,Z,x,y,size,col,gap){var g=drawSym(sym,x,y,size,col);if(Z){ctx.font='600 '+Math.round(size*.42)+'px '+FONT;ctx.fillStyle=MUTED;ctx.textAlign='right';ctx.textBaseline='alphabetic';ctx.fillText(String(Z),x-g.w/2-4-(gap||0),y+g.capH/2+size*.08);}return g.w;}
+
+/* Bohr model. n = electrons shown; Z = protons. opt: scale, fade (inner faded), hiOuter, labels, extra (array of animated electrons), hidden */
+function shellR(i,sc){return (52+i*40)*sc;}
+function drawAtom(cx,cy,Z,n,t,opt){opt=opt||{};var sc=opt.scale||1,a=arrangement(n),levels=Math.max(a.length,opt.minLevels||0);
+  for(var i=0;i<levels;i++){var r=shellR(i,sc),full=(a[i]===[2,8,8,2][i]);
+    circ(cx,cy,r,null,full&&opt.labels!==false?'#7fc4a0':'#a9b5c9',full?2:1.6,[6,6]);}
+  var nr=26*sc;ball(cx,cy,nr,NUC,null);txt(Z+' p⁺',cx,cy-(opt.neutrons?6:0)*sc,{s:Math.round(15*sc),c:'#fff',w:700});
+  if(opt.neutrons)txt(opt.neutrons+' n⁰',cx,cy+9*sc,{s:Math.round(12*sc),c:'#fff',w:600});
+  var pos=[];
+  for(i=0;i<a.length;i++){var r2=shellR(i,sc),k=a[i],rot=t*(0.35/(i+1))+i*0.4;
+    for(var j=0;j<k;j++){var ang=rot+j*2*Math.PI/k,ex=cx+r2*Math.cos(ang),ey=cy+r2*Math.sin(ang);
+      var outer=(i===a.length-1);var c=ECOL;if(opt.hiOuter&&outer)c=ECOL2;
+      var isLast=(i===a.length-1&&j===k-1);
+      if(!(opt.skipLast&&isLast)&&!(opt.hideOuter&&outer)){ctx.globalAlpha=(opt.fade&&!outer)?0.35:1;electron(ex,ey,c,5.5*Math.max(.8,sc));ctx.globalAlpha=1;}
+      pos.push({x:ex,y:ey,level:i,outer:outer});}
+    if(opt.labels!==false){var full2=(k===[2,8,8,2][i]);var lx=cx+r2*Math.cos(-0.8),ly=cy+r2*Math.sin(-0.8);
+      if(full2&&!opt.nofull)pill(k+' · full',lx+28,ly-6,GREEN,'#fff',12);else pill(String(k),lx+16,ly-6,'#fff',INK,12);}}
+  return pos;}
+
+/* electron-dot diagram */
+var SIDES=[[0,-1],[1,0],[0,1],[-1,0]];
+function dotSlots(n){var c=[0,0,0,0];for(var i=0;i<n;i++)c[i%4]++;return c;}
+function dotXY(cx,cy,side,slot,count,size,sym){var g=glyph(sym||'O',size),gap=Math.max(size*.2,9),o=Math.max(size*.16,5.5),px=cx,py=cy;
+  if(side===0)py=cy-g.capH/2-gap;else if(side===2)py=cy+g.capH/2+g.desc+gap;else if(side===1)px=cx+g.w/2+gap*.85;else px=cx-g.w/2-gap*.85;
+  if(count===2){if(side===0||side===2)px+=slot===0?-o:o;else py+=slot===0?-o:o;}return {x:px,y:py};}
+function dotList(cx,cy,n,size,sym){var c=dotSlots(n),L=[];for(var s=0;s<4;s++)for(var k=0;k<c[s];k++)L.push(dotXY(cx,cy,s,k,c[s],size,sym));return L;}
+function drawDots(cx,cy,sym,n,size,opt){opt=opt||{};symZ(sym,opt.Z,cx,cy,size,opt.col);var L=dotList(cx,cy,n,size,sym);
+  L.forEach(function(p,i){var c=opt.dotCol?(typeof opt.dotCol==='function'?opt.dotCol(i):opt.dotCol):INK;circ(p.x,p.y,Math.max(3,size*.075),c);});return L;}
+
+/* ---------- side panel + controls ---------- */
+var lastReads='';
+function setQ(h){$('q').innerHTML=h;}
+function setRule(a){$('rulelist').innerHTML=a.map(function(s){return '<li>'+s+'</li>';}).join('');}
+function setReads(a){var h=a.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+function fb(msg,kind){var f=$('fb');if(!msg){f.className='fb';f.innerHTML='';return;}f.className='fb show '+(kind||'');f.innerHTML=msg;}
+var ruleShown=false;
+$('rulebtn').addEventListener('click',function(){ruleShown=!ruleShown;$('rule').className='rule'+(ruleShown?' show':'');$('rulebtn').textContent=ruleShown?'Hide our rule':'Reveal our rule';});
+function hideRule(){ruleShown=false;$('rule').className='rule';$('rulebtn').textContent='Reveal our rule';}
+var C=$('controls');
+function ctrlClear(){C.innerHTML='';$('extra').innerHTML='';}
+function mkBtn(label,fill,fn,parent){var b=document.createElement('button');b.type='button';b.className='btn'+(fill?' fill':'');b.textContent=label;b.addEventListener('click',fn);(parent||C).appendChild(b);return b;}
+function mkChips(label,items,cur,fn,parent){var g=document.createElement('div');g.className='grp';if(label){var l=document.createElement('span');l.textContent=label;g.appendChild(l);}
+  items.forEach(function(it){var v=typeof it==='object'?it.v:it,t=typeof it==='object'?it.t:it;var b=document.createElement('button');b.type='button';b.className='chip'+(v===cur?' on':'');b.textContent=t;b.dataset.v=v;
+    b.addEventListener('click',function(){Array.prototype.forEach.call(g.querySelectorAll('.chip'),function(c){c.classList.remove('on');});b.classList.add('on');fn(v);});g.appendChild(b);});
+  (parent||C).appendChild(g);return g;}
+function mkSlider(label,min,max,step,val,fmt,fn){var d=document.createElement('div');d.className='ctl';d.innerHTML='<span>'+label+'</span>';var r=document.createElement('input');r.type='range';r.min=min;r.max=max;r.step=step;r.value=val;var o=document.createElement('output');o.textContent=fmt(val);
+  r.addEventListener('input',function(){o.textContent=fmt(+r.value);fn(+r.value);});d.appendChild(r);d.appendChild(o);C.appendChild(d);return r;}
+function now(){return performance.now()/1000;}
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+
+/* ======================================================================
+   TAB 1 · ELECTRON ARRANGEMENT
+   ====================================================================== */
+var T1={Z:11,anim:null,fillTo:0,turnZ:16,solved:false};
+function miniTable(x0,y0,cw,ch,selZ,opt){opt=opt||{};
+  for(var g=0;g<8;g++)txt(String([1,2,13,14,15,16,17,18][g]),x0+g*cw+cw/2,y0-12,{s:13,c:MUTED});
+  txt('Group',x0-6,y0-12,{s:12,c:MUTED,a:'right'});
+  for(var p=1;p<=4;p++)txt(String(p),x0-10,y0+(p-1)*ch+ch/2,{s:13,c:MUTED,a:'right'});
+  for(var Z=1;Z<=20;Z++){var e=EL[Z],c=col8(e[3]),x=x0+c*cw,y=y0+(e[2]-1)*ch,sel=(Z===selZ);
+    rr(x+2,y+2,cw-4,ch-4,8);ctx.fillStyle=TYPECOL[e[4]];ctx.fill();ctx.lineWidth=sel?3.5:1.5;ctx.strokeStyle=sel?INK:TYPEBORDER[e[4]];ctx.stroke();
+    txt(e[0],x+cw/2,y+ch/2+3,{s:17,w:700});txt(String(Z),x+7,y+11,{s:10,c:MUTED,a:'left'});}
+}
+function tableHit(x,y,x0,y0,cw,ch){for(var Z=1;Z<=20;Z++){var e=EL[Z],c=col8(e[3]),bx=x0+c*cw,by=y0+(e[2]-1)*ch;if(x>=bx&&x<=bx+cw&&y>=by&&y<=by+ch)return Z;}return 0;}
+function energyAxis(x,yTop,yBot,levels){arrow(x,yBot,x,yTop,'#9aa6ba',2.5);ctx.save();ctx.translate(x-14,(yTop+yBot)/2);ctx.rotate(-Math.PI/2);txt('Energy',0,0,{s:13,c:MUTED});ctx.restore();
+  for(var i=0;i<levels;i++){var y=lerp(yBot-18,yTop+22,levels>1?i/3:0);seg(x-5,y,x+5,y,'#9aa6ba',2);txt('Level '+(i+1),x+9,y,{s:11,c:MUTED,a:'left',w:500});}}
+function arrStr(a){return a.join(', ');}
+function t1Draw(t){var Z=T1.Z,e=EL[Z],cx=250,cy=262;
+  if(T1.fillTo&&!T1.anim&&T1.Z<T1.fillTo){setZ1(T1.Z+1,true);}
+  var n=Z,an=T1.anim,p=an?ease((now()-an.t0)/0.7):1;
+  energyAxis(26,70,450,Math.max(arrangement(Z).length,1));
+  var pos=drawAtom(cx,cy,Z,n,t,{skipLast:an&&p<1,neutrons:null,minLevels:arrangement(Z).length});
+  if(an){var last=pos[pos.length-1];if(p<1){electron(lerp(an.x,last.x,p),lerp(an.y,last.y,p),ECOL2,6);}else T1.anim=null;}
+  var x0=470,y0=86,cw=38,ch=44;miniTable(x0,y0,cw,ch,Z);
+  var a=arrangement(Z),bx=446,by=290;box(bx,by,334,170,'#fff');
+  symZ(e[0],Z,bx+40,by+34,30);txt(e[1],bx+70,by+34,{s:18,a:'left'});
+  var x=bx+22;txt('Arrangement:',x,by+76,{s:16,a:'left',c:MUTED});var cols=[TEAL,BLUE,PLUM,AMBER];var xx=x+112;
+  for(var i=0;i<a.length;i++){xx+=txt(String(a[i]),xx,by+76,{s:24,a:'left',c:cols[i],w:700});if(i<a.length-1)xx+=txt(', ',xx,by+76,{s:24,a:'left',c:INK});}
+  txt(a.length+' occupied levels  →  Period '+e[2],x,by+112,{s:16,a:'left'});
+  txt(valence(Z)+' valence electron'+(valence(Z)>1?'s':'')+'  →  Group '+e[3],x,by+142,{s:16,a:'left'});
+  var tp=TYPENAME[e[4]];pill(tp,bx+290,by+34,TYPEBORDER[e[4]],'#fff',13);
+  setReads([['Element',SUBN(Z)+e[0]+' · '+e[1],1],['Electrons',String(Z)],['Arrangement',arrStr(a)],['Lowest energy','Level 1'],['Highest occupied','Level '+a.length],['Period',String(e[2])],['Valence e⁻ → Group',valence(Z)+' → '+e[3]]]);
+}
+function setZ1(z,animate){z=clamp(z,1,20);if(animate&&z===T1.Z+1){T1.anim={t0:now(),x:W*0.56,y:20};}else T1.anim=null;T1.Z=z;if(T1.fillTo&&z>=T1.fillTo)T1.fillTo=0;}
+function t1Click(x,y){var z=tableHit(x,y,470,86,38,44);if(z){T1.fillTo=0;setZ1(z,false);}}
+function t1Init(){ctrlClear();fb();
+  mkBtn('− electron',false,function(){T1.fillTo=0;setZ1(T1.Z-1,false);});
+  mkBtn('+ electron',true,function(){T1.fillTo=0;setZ1(T1.Z+1,true);});
+  mkBtn('Watch it fill from H',false,function(){var target=T1.Z<3?20:T1.Z;T1.Z=1;T1.anim=null;T1.fillTo=target;});
+  var lg=document.createElement('div');lg.className='legend';lg.innerHTML='<span><i style="background:#2b8fd8"></i>electron</span><span><i style="background:#e2708a"></i>nucleus (protons)</span><span>Click any element in the table</span>';$('extra').appendChild(lg);
+  setQ('Level 2 is already full with 8 electrons. Where must the <b>next</b> electron go? Add it and see.');
+  setRule(['Electrons fill the levels from the nucleus outwards: <b>2, 8, 8, 2</b> (first 20 elements).','<b>Level 1</b> is closest to the nucleus and has the <b>lowest energy</b>; the outermost occupied level has the <b>highest</b>.','Number of occupied levels = <b>period</b> number.','Electrons in the outer level = <b>valence electrons</b>. Groups 1 and 2: same as the group number; groups 13–18: group − 10.']);
+}
+/* my turn */
+var T1M={Z:16};
+function t1mNew(){var pool=[3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].filter(function(z){return z!==T1M.Z;});T1M.Z=rnd(pool);T1.solved=false;t1mInit(true);}
+function t1mDraw(t){var Z=T1M.Z,e=EL[Z],cx=250,cy=262;
+  if(T1.solved)drawAtom(cx,cy,Z,Z,t,{});else{for(var i=0;i<4;i++)circ(cx,cy,shellR(i,1),null,'#c4cede',1.6,[6,6]);ball(cx,cy,26,NUC);txt(Z+' p⁺',cx,cy,{s:15,c:'#fff',w:700});txt('?',cx+120,cy-120,{s:40,c:'#c4cede'});}
+  box(470,80,300,150,'#fff');symZ(e[0],Z,560,145,64);txt(e[1],680,130,{s:20});txt(Z+' electrons',680,160,{s:16,c:MUTED});
+  txt(T1.solved?'Correct! Here is the model.':'Fill the levels in the boxes below.',620,270,{s:16,c:T1.solved?GREEN:MUTED});
+  setReads([['Element',SUBN(Z)+e[0]],['Electrons to place',String(Z)],['Level limits','2, 8, 8, 2',1]]);}
+function t1mInit(keep){ctrlClear();fb();if(!keep)T1.solved=false;
+  var d=document.createElement('div');d.className='ans';
+  d.innerHTML='<label>Level 1 <input id="a1" inputmode="numeric"></label><label>Level 2 <input id="a2" inputmode="numeric"></label><label>Level 3 <input id="a3" inputmode="numeric"></label><label>Level 4 <input id="a4" inputmode="numeric"></label><label>Period <input id="aP" inputmode="numeric"></label><label>Valence e⁻ <input id="aV" inputmode="numeric"></label>';
+  $('extra').appendChild(d);
+  mkBtn('Check',true,function(){var Z=T1M.Z,a=arrangement(Z),ok=true,ids=['a1','a2','a3','a4'];
+    ids.forEach(function(id,i){var el=$(id),v=el.value.trim(),want=a[i]||0;var good=(v===''?0:+v)===want;el.className=good?'ok':'no';if(!good)ok=false;});
+    var P=$('aP'),V=$('aV');var gp=+P.value===EL[Z][2],gv=+V.value===valence(Z);P.className=gp?'ok':'no';V.className=gv?'ok':'no';
+    if(ok&&gp&&gv){T1.solved=true;fb('<b>Correct!</b> '+EL[Z][1]+' is '+arrStr(a)+': '+a.length+' levels → Period '+EL[Z][2]+', '+valence(Z)+' valence electron'+(valence(Z)>1?'s':'')+'.','ok');}
+    else if(ok)fb('The arrangement is right! Now: Period = number of occupied levels; valence electrons = electrons in the <b>last</b> level.','hint');
+    else fb('Not yet. Fill level 1 first (max 2), then level 2 (max 8), then level 3 (max 8). The numbers must add up to '+Z+'.','bad');});
+  mkBtn('Hint',false,function(){fb('Start with 2 in level 1. '+T1M.Z+' − 2 = '+(T1M.Z-2)+' electrons left. Level 2 takes up to 8…','hint');});
+  mkBtn('New element',false,t1mNew);
+  setQ('Write the electron arrangement of <b>'+EL[T1M.Z][1]+'</b>. Which period is it in, and how many valence electrons does it have?');
+  setRule(['Fill <b>2</b> → <b>8</b> → <b>8</b> → <b>2</b>.','Check: the numbers add up to the atomic number.','Period = number of levels; valence electrons = the last number.']);}
+
+/* ======================================================================
+   TAB 2 · ELECTRON-DOT DIAGRAMS
+   ====================================================================== */
+var T2={Z:8,anim:null,done:false,snap:null};
+function heDots(cx,cy,size){var L=[dotXY(cx,cy,1,0,2,size,'He'),dotXY(cx,cy,1,1,2,size,'He')];return L;}
+function finalDots(Z,cx,cy,size){return Z===2?heDots(cx,cy,size):dotList(cx,cy,valence(Z),size,EL[Z][0]);}
+function t2Draw(t){var Z=T2.Z,e=EL[Z],cx=210,cy=255,sc=0.82,DX=590,DY=250,S=96;
+  var an=T2.anim,p=an?ease((now()-an.t0)/1.6):(T2.done?1:0);
+  var pos=drawAtom(cx,cy,Z,Z,an?an.frozenT:t,{scale:sc,hiOuter:true,fade:true,labels:false,hideOuter:p>0});
+  arrow(410,250,480,250,'#9aa6ba',3);
+  var fin=finalDots(Z,DX,DY,S);
+  symZ(e[0],Z,DX,DY,S,null,S*.34);
+  if(p>0){var src=an?an.src:fin;fin.forEach(function(f,i){var s=src[i]||f;circ(lerp(s.x,f.x,p),lerp(s.y,f.y,p),p<1?5.5:7,p<1?ECOL2:INK);});}
+  else{txt('?',DX+70,DY-60,{s:34,c:'#c4cede'});}
+  if(an&&p>=1){T2.anim=null;T2.done=true;}
+  txt('Bohr model',cx,470,{s:15,c:MUTED});txt('Electron-dot diagram',DX,470,{s:15,c:MUTED});
+  pill('outer level: '+valence(Z)+' valence e⁻',cx,40,ECOL2,'#fff',14);
+  var v=valence(Z),single=Z===2?0:(v<=4?v:8-v),pairs=Z===2?1:(v<=4?0:v-4);
+  setReads([['Element',SUBN(Z)+e[0]+' · '+e[1],1],['Arrangement',arrStr(arrangement(Z))],['Dots',String(v)],['Single dots',String(single)],['Pairs',String(pairs)]]);}
+function t2Start(){var Z=T2.Z,cx=210,cy=255,sc=0.82;var tt=now();var a=arrangement(Z),i=a.length-1,r=shellR(i,sc),k=a[i],rot=tt*(0.35/(i+1))+i*0.4,src=[];
+  for(var j=0;j<k;j++){var ang=rot+j*2*Math.PI/k;src.push({x:cx+r*Math.cos(ang),y:cy+r*Math.sin(ang)});}
+  T2.anim={t0:now(),src:src,frozenT:tt};T2.done=false;}
+function t2Init(){ctrlClear();fb();T2.done=false;T2.anim=null;
+  var items=[];for(var z=1;z<=20;z++)items.push({v:z,t:EL[z][0]});
+  mkChips('',items,T2.Z,function(v){T2.Z=v;T2.done=false;T2.anim=null;});
+  mkBtn('Turn the outer electrons into dots',true,t2Start);
+  setQ('The atom has '+'many electrons, but the dot diagram shows only a few. <b>Which</b> electrons become dots?');
+  setRule(['An electron-dot diagram shows <b>only the valence electrons</b> (outer level) around the symbol.','Place <b>one dot on each side</b> first (top, right, bottom, left), then start <b>pairing</b>.','Number of dots = valence electrons: Group 1 → 1, Group 2 → 2, Group 13–18 → group − 10.','Noble gases have a full outer level: 8 dots (helium: 2).']);}
+/* draw it yourself */
+var T2D={Z:7,on:[0,0,0,0,0,0,0,0]};
+function slotPos(i){var side=Math.floor(i/2),k=i%2;return dotXY(400,250,side,k,2,130,EL[T2D.Z][0]);}
+function t2dDraw(t){var Z=T2D.Z,e=EL[Z];symZ(e[0],Z,400,250,130,null,46);
+  for(var i=0;i<8;i++){var p=slotPos(i);if(T2D.on[i])circ(p.x,p.y,9,INK);else circ(p.x,p.y,10,'rgba(255,255,255,.6)','#b9c5d8',2,[3,3]);}
+  txt(e[1]+' · '+Z+' electrons',400,52,{s:20});txt('Click the circles to add or remove dots',400,470,{s:15,c:MUTED});
+  var n=T2D.on.reduce(function(a,b){return a+b;},0);setReads([['Element',SUBN(Z)+e[0]+' · '+e[1],1],['Dots placed',String(n)]]);}
+function t2dClick(x,y){for(var i=0;i<8;i++){var p=slotPos(i);if(Math.hypot(x-p.x,y-p.y)<20){T2D.on[i]=T2D.on[i]?0:1;fb();return;}}}
+function t2dInit(){ctrlClear();fb();T2D.on=[0,0,0,0,0,0,0,0];
+  mkBtn('Check',true,function(){var Z=T2D.Z,v=valence(Z),n=T2D.on.reduce(function(a,b){return a+b;},0);
+    var per=[0,1,2,3].map(function(s){return T2D.on[2*s]+T2D.on[2*s+1];});var empty=per.filter(function(c){return c===0;}).length,paired=per.filter(function(c){return c===2;}).length;
+    if(n!==v){fb('Not yet: you placed '+n+' dot'+(n===1?'':'s')+'. '+EL[Z][1]+' is '+arrStr(arrangement(Z))+'. How many electrons are in the <b>outer</b> level?','bad');return;}
+    if(paired>0&&empty>0){fb('Right number of dots! But put <b>one dot on each side</b> before you make pairs.','hint');return;}
+    fb('<b>Correct!</b> '+EL[Z][1]+' has '+v+' valence electron'+(v>1?'s':'')+', so '+v+' dot'+(v>1?'s':'')+'.','ok');});
+  mkBtn('Clear',false,function(){T2D.on=[0,0,0,0,0,0,0,0];fb();});
+  mkBtn('New element',false,function(){var pool=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].filter(function(z){return z!==T2D.Z;});T2D.Z=rnd(pool);t2dInit();});
+  setQ('Draw the electron-dot diagram of <b>'+EL[T2D.Z][1]+'</b>. Start with its electron arrangement.');
+  setRule(['1. Write the arrangement (2, 8, 8, 2).','2. The last number = valence electrons = number of dots.','3. One dot per side first, then pair them.']);}
+/* families */
+var T2F={g:-1};
+function famCell(Z){var e=EL[Z];return {x:24+col8(e[3])*94,y:66+(e[2]-1)*104,w:94,h:104};}
+function t2fDraw(t){for(var c=0;c<8;c++){var hx=24+c*94+47;txt('Group '+[1,2,13,14,15,16,17,18][c],hx,40,{s:13,c:T2F.g===c?TEAL:MUTED});}
+  if(T2F.g>=0){rr(24+T2F.g*94+3,54,88,430,14);ctx.fillStyle='rgba(15,139,141,.10)';ctx.fill();ctx.strokeStyle=TEAL;ctx.lineWidth=2.5;ctx.stroke();}
+  for(var Z=1;Z<=20;Z++){var b=famCell(Z),e=EL[Z],inG=T2F.g===col8(e[3]);rr(b.x+8,b.y+6,b.w-16,b.h-12,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=inG?TEAL:'#dbe3ef';ctx.lineWidth=inG?2.5:1.5;ctx.stroke();
+    var L=Z===2?heDots(b.x+b.w/2,b.y+b.h/2,30):dotList(b.x+b.w/2,b.y+b.h/2,valence(Z),30,e[0]);symZ(e[0],null,b.x+b.w/2,b.y+b.h/2,30);txt(String(Z),b.x+18,b.y+18,{s:10,c:MUTED,a:'left'});L.forEach(function(p){circ(p.x,p.y,3.2,inG?TEAL:INK);});}
+  if(T2F.g>=0){var gN=[1,2,13,14,15,16,17,18][T2F.g],v=T2F.g===7?'8 (He: 2)':String(T2F.g<2?T2F.g+1:T2F.g+1);
+    setReads([['Group',String(gN)],['Dots each',v],['Elements',(function(){var s=[];for(var z=1;z<=20;z++)if(col8(EL[z][3])===T2F.g)s.push(EL[z][0]);return s.join(', ');})(),1]]);}
+  else setReads([['Group','click a column'],['Dots each','–']]);}
+function t2fClick(x,y){if(x<24||x>24+8*94)return;var c=Math.floor((x-24)/94);T2F.g=c;
+  var msgs=['Group 1: one dot each → very reactive metals that lose 1 electron.','Group 2: two dots each → reactive metals that lose 2 electrons.','Group 13: three dots each.','Group 14: four dots each, one on every side.','Group 15: five dots each.','Group 16: six dots each → they gain 2 electrons.','Group 17: seven dots each → very reactive nonmetals that gain 1 electron.','Group 18: full outer level (8, helium 2) → noble gases rarely react.'];fb(msgs[c],'ok');}
+function t2fInit(){ctrlClear();fb();T2F.g=-1;
+  setQ('Click a group (column). What do the dot diagrams in the same group have in common? And in the same period (row)?');
+  setRule(['Elements in the <b>same group</b> have the <b>same number of valence electrons</b> (same dots).','That is why elements in the same group have <b>similar chemical properties</b>.','Across a period the number of dots goes up by one: 1 → 8.']);}
+
+/* ======================================================================
+   TAB 3 · TYPES OF BONDS
+   ====================================================================== */
+/* ionic */
+var IONIC={NaCl:{m:'Na',x:'Cl',v:1,n:'sodium chloride'},MgO:{m:'Mg',x:'O',v:2,n:'magnesium oxide'},LiF:{m:'Li',x:'F',v:1,n:'lithium fluoride'}};
+var T3I={k:'NaCl',t0:null,p:0};
+function t3iDraw(t){var d=IONIC[T3I.k],zm=BYSYM[d.m],zx=BYSYM[d.x],S=78,v=d.v,vx=8-v;
+  var p=T3I.t0?ease((now()-T3I.t0)/1.8):0,q=T3I.t0?ease((now()-T3I.t0-1.9)/1.0):0;
+  var mx=lerp(220,235,q),xx=lerp(560,550,q),y=230;
+  /* nonmetal: initial dots then final 8 */
+  var c0=dotSlots(vx),init=[],map=[],fin=dotList(xx,y,8,S,d.x),used={};
+  for(var s=0;s<4;s++)for(var k=0;k<c0[s];k++){var ip=dotXY(xx,y,s,k,c0[s],S,d.x);init.push(ip);map.push(2*s+k);used[2*s+k]=1;}
+  var free=[];for(var f=0;f<8;f++)if(!used[f])free.push(f);
+  if(p>=1){ctx.font='700 '+S+'px '+FONT;}
+  /* metal */
+  if(p<1)symZ(d.m,zm,mx,y,S,null,S*.3);else bracketIon(d.m,mx,y,S,v,false);
+  if(p>=1)bracketIon(d.x,xx,y,S,-v,true);else symZ(d.x,zx,xx,y,S,null,S*.3);
+  init.forEach(function(ip,i){var fp=fin[map[i]];circ(lerp(ip.x,fp.x,p),lerp(ip.y,fp.y,p),6,BLUE);});
+  var mdots=dotList(220,y,v,S,d.m);
+  for(var i=0;i<v;i++){var a=mdots[i],b=fin[free[i]];var px=lerp(a.x,b.x,p),py=lerp(a.y,b.y,p)-Math.sin(p*Math.PI)*90;circ(px,py,6.5,AMBER);}
+  if(q>0){ctx.globalAlpha=q;dblarrow(mx+10,y+92,xx-10,y+92,RED,3);pill('opposite charges attract = ionic bond',(mx+xx)/2,y+128,RED,'#fff',15);ctx.globalAlpha=1;}
+  var am=arrangement(zm),ax=arrangement(zx),aIonM=arrangement(zm-v),aIonX=arrangement(zx+v);
+  txt(p<1?d.m+': '+arrStr(am):d.m+SUPC(v)+': '+arrStr(aIonM),220,420,{s:17,c:p<1?INK:GREEN});
+  txt(p<1?d.x+': '+arrStr(ax):d.x+SUPC(-v)+': '+arrStr(aIonX),560,420,{s:17,c:p<1?INK:GREEN});
+  txt(p<1?'metal':'positive ion',220,450,{s:14,c:MUTED});txt(p<1?'nonmetal':'negative ion',560,450,{s:14,c:MUTED});
+  if(p<=0)banner(d.m+' has '+v+' valence electron'+(v>1?'s':'')+'; '+d.x+' needs '+v+' more to have 8',TEAL);else if(p>=1)banner('Both now have a full outer level',GREEN);
+  setReads([[d.m+' electrons',p<1?String(zm):String(zm-v)],[d.x+' electrons',p<1?String(zx):String(zx+v)],[d.m+' charge',p<1?'0':chargeTxt(v)],[d.x+' charge',p<1?'0':chargeTxt(-v)],['Compound',d.n+(p>=1?' ('+T3I.k+')':''),1]]);}
+function t3iInit(){ctrlClear();fb();T3I.t0=null;
+  mkChips('',[{v:'NaCl',t:'Na + Cl'},{v:'MgO',t:'Mg + O'},{v:'LiF',t:'Li + F'}],T3I.k,function(v){T3I.k=v;T3I.t0=null;});
+  mkBtn('Transfer the electron(s)',true,function(){T3I.t0=now();});mkBtn('Reset',false,function(){T3I.t0=null;});
+  setQ('A metal and a nonmetal meet. Which atom <b>loses</b> electrons and which <b>gains</b>? What holds them together afterwards?');
+  setRule(['Metals <b>lose</b> their valence electrons → <b>positive ions</b>.','Nonmetals <b>gain</b> electrons → <b>negative ions</b>.','Both end with a <b>full outer level</b>.','The attraction between opposite charges is the <b>ionic bond</b> (metal + nonmetal).']);}
+/* covalent */
+var COV={H2:{a:[['H',1,250,355,[]],['H',1,550,445,[]]],f:'H–H',n:'hydrogen, H₂',cnt:[2,2]},
+         Cl2:{a:[['Cl',7,225,342,[0,3,2]],['Cl',7,575,458,[0,1,2]]],f:'Cl–Cl',n:'chlorine, Cl₂',cnt:[8,8]},
+         HCl:{a:[['H',1,240,362,[]],['Cl',7,575,460,[0,1,2]]],f:'H–Cl',n:'hydrogen chloride, HCl',cnt:[2,8]},
+         H2O:{a:[['H',1,150,288,[]],['O',6,400,400,[0,2]],['H',1,650,512,[]]],f:'H–O–H',n:'water, H₂O',cnt:[2,8,2]}};
+var T3C={k:'H2',t0:null,line:false};
+function t3cDraw(t){var d=COV[T3C.k],S=64,y=230,p=T3C.t0?ease((now()-T3C.t0)/1.6):0,A=d.a;
+  var xs=A.map(function(a){return lerp(a[2],a[3],p);});
+  A.forEach(function(a,i){symZ(a[0],null,xs[i],y,S);a[4].forEach(function(s){for(var k=0;k<2;k++){var pp=dotXY(xs[i],y,s,k,2,S,a[0]);circ(pp.x,pp.y,5,i===1&&A.length===3?BLUE:(i===0?ECOL2:BLUE));}});});
+  /* bonds between neighbours */
+  for(var i=0;i<A.length-1;i++){var x1=xs[i],x2=xs[i+1],mx=(x1+x2)/2;
+    var g1=glyph(A[i][0],S),g2=glyph(A[i+1][0],S);var e1s={x:x1+g1.w/2+S*.17,y:y},e2s={x:x2-g2.w/2-S*.17,y:y};
+    var c1=i===0?ECOL2:BLUE,c2=(i+1===A.length-1&&A.length===3)?ECOL2:(i+1===1&&A.length===3?BLUE:BLUE);
+    if(A.length===2){c1=ECOL2;c2=BLUE;}
+    if(T3C.line&&p>=1){seg(x1+g1.w/2+6,y,x2-g2.w/2-6,y,INK,5);}
+    else{circ(lerp(e1s.x,mx,p),lerp(e1s.y,y-7,p),6,c1);circ(lerp(e2s.x,mx,p),lerp(e2s.y,y+7,p),6,c2);}}
+  if(p>=1&&!T3C.line){A.forEach(function(a,i){var r=a[0]==='H'?52:78;var cx=xs[i];circ(cx,y,r,null,GREEN,2.2,[7,6]);pill(d.cnt[i]+' e⁻ ✓',cx,y+r+18,GREEN,'#fff',14);});}
+  if(p<=0)banner('Two nonmetals: neither wants to lose electrons',TEAL);else if(p>=1)banner(T3C.line?'Each line = one shared pair = one covalent bond':'They SHARE a pair of electrons',GREEN);
+  if(p>=1){txt('Structural formula:  '+d.f,400,440,{s:24});}
+  setReads([['Molecule',d.n,1],['Shared pairs',String(A.length-1)],['Bonds',p>=1?String(A.length-1)+' covalent':'–'],['Outer levels',p>=1?'full ✓':'not full',1]]);}
+function t3cInit(){ctrlClear();fb();T3C.t0=null;T3C.line=false;
+  mkChips('',[{v:'H2',t:'H₂'},{v:'Cl2',t:'Cl₂'},{v:'HCl',t:'HCl'},{v:'H2O',t:'H₂O'}],T3C.k,function(v){T3C.k=v;T3C.t0=null;T3C.line=false;});
+  mkBtn('Share electrons',true,function(){T3C.t0=now();T3C.line=false;});
+  mkBtn('Show as lines',false,function(){if(!T3C.t0)T3C.t0=now()-2;T3C.line=!T3C.line;});
+  mkBtn('Reset',false,function(){T3C.t0=null;T3C.line=false;});
+  setQ('Both atoms are nonmetals and both want to <b>gain</b> electrons. How can they both end with a full outer level?');
+  setRule(['A <b>covalent bond</b> is a pair of electrons <b>shared</b> between two atoms.','It forms between <b>two nonmetals</b>.','Sharing gives each atom a full outer level (H: 2, others: 8).','Particles made of atoms joined by covalent bonds are <b>molecules</b>.']);}
+/* polar */
+var PULL={H:2.2,Cl:3.2,O:3.4};
+var POL={HH:['H','H'],ClCl:['Cl','Cl'],HCl:['H','Cl'],OH:['H','O']};
+var T3P={k:'HCl'};
+function t3pDraw(t){var pr=POL[T3P.k],a=pr[0],b=pr[1],d=PULL[b]-PULL[a],sh=clamp(d*55,0,70),x1=300,x2=500,y=220,wob=Math.sin(t*3)*3;
+  var cx=400+sh+wob;
+  for(var i=6;i>=1;i--){ctx.globalAlpha=0.07+0.05*(6-i);ctx.fillStyle='#2b8fd8';ctx.beginPath();ctx.ellipse(lerp(400,cx,0.5+i*0.05),y,90+i*16,45+i*9,0,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
+  ball(x1,y,a==='H'?30:44,'#ffffff',a,INK,22);ball(x2,y,b==='H'?30:44,b==='Cl'?'#7fd18b':(b==='O'?'#ef8080':'#ffffff'),b,INK,22);
+  electron(cx,y-8,ECOL,6);electron(cx,y+8,ECOL,6);
+  if(d>0){txt('δ+',x1,y-70,{s:24,c:RED});txt('δ−',x2,y-80,{s:24,c:BLUE});}
+  /* tug of war */
+  var ty=360;seg(150,ty,650,ty,'#b08a5a',6);circ(400+sh*2.2,ty,10,RED);seg(400,ty-22,400,ty+22,MUTED,2,[4,4]);
+  txt(a,120,ty,{s:22});txt(b,680,ty,{s:22});
+  var bw=function(v){return v/3.6*120;};
+  rr(150,ty+34,bw(PULL[a]),14,7);ctx.fillStyle=AMBER;ctx.fill();txt('pull of '+a,150,ty+62,{s:13,c:MUTED,a:'left'});
+  rr(650-bw(PULL[b]),ty+34,bw(PULL[b]),14,7);ctx.fillStyle=AMBER;ctx.fill();txt('pull of '+b,650,ty+62,{s:13,c:MUTED,a:'right'});
+  banner(d>0?'Shared UNEQUALLY → POLAR covalent bond':'Shared EQUALLY → NONPOLAR covalent bond',d>0?PLUM:TEAL);
+  setReads([['Bond',a+'–'+b],['Type',d>0?'polar covalent':'nonpolar covalent'],['Electrons closer to',d>0?b+' (δ−)':'neither',1]]);}
+function t3pInit(){ctrlClear();fb();
+  mkChips('',[{v:'HH',t:'H–H'},{v:'ClCl',t:'Cl–Cl'},{v:'HCl',t:'H–Cl'},{v:'OH',t:'O–H (in water)'}],T3P.k,function(v){T3P.k=v;});
+  setQ('In a covalent bond the electrons are shared. Are they always shared <b>fairly</b>? Compare H–H with H–Cl.');
+  setRule(['<b>Same atoms</b> (H–H, Cl–Cl, O=O): electrons shared <b>equally</b> → <b>nonpolar</b> covalent.','<b>Different nonmetals</b> (H–Cl, O–H): one atom pulls harder → shared <b>unequally</b> → <b>polar</b> covalent.','The atom that pulls harder becomes slightly negative (<b>δ−</b>), the other slightly positive (<b>δ+</b>).']);}
+/* metallic */
+var T3M={m:'Na',on:false,parts:[]};
+var MCH={Na:1,Mg:2,Al:3};
+function t3mReset(){var q=MCH[T3M.m];T3M.parts=[];for(var i=0;i<24*q;i++)T3M.parts.push({x:90+Math.random()*620,y:90+Math.random()*290,vx:(Math.random()-.5)*80,vy:(Math.random()-.5)*80});}
+var lastT=0;
+function t3mDraw(t){var dt=Math.min(0.05,t-(lastT||t));lastT=t;var q=MCH[T3M.m];
+  rr(70,70,660,330,30);ctx.fillStyle='rgba(43,89,195,.08)';ctx.fill();
+  for(var r=0;r<4;r++)for(var c=0;c<6;c++){var x=140+c*104,y=120+r*78;ball(x,y,27,CATION,T3M.m+SUPC(q),INK,15);}
+  T3M.parts.forEach(function(p){p.vx+=(Math.random()-.5)*300*dt;p.vy+=(Math.random()-.5)*300*dt;var sp=Math.hypot(p.vx,p.vy);if(sp>110){p.vx*=110/sp;p.vy*=110/sp;}
+    var drift=T3M.on?90:0;p.x+=(p.vx+drift)*dt;p.y+=p.vy*dt;if(p.y<82){p.y=82;p.vy*=-1;}if(p.y>388){p.y=388;p.vy*=-1;}
+    if(p.x>718){if(T3M.on)p.x=82;else{p.x=718;p.vx*=-1;}}if(p.x<82){p.x=82;p.vx*=-1;}electron(p.x,p.y,ECOL,4.2);});
+  if(T3M.on){arrow(250,440,550,440,AMBER,4);txt('electrons flow → electric current',400,468,{s:15,c:AMBER});txt('−',40,235,{s:40,c:INK});txt('+',762,235,{s:40,c:RED});}
+  else txt('positive metal ions in a "sea" of moving electrons',400,445,{s:16,c:MUTED});
+  setReads([['Metal',T3M.m],['Each atom gives',q+' electron'+(q>1?'s':'')],['Ion in the metal',T3M.m+SUPC(q)],['Electrons in the sea',String(T3M.parts.length)]]);}
+function t3mInit(){ctrlClear();fb();t3mReset();
+  mkChips('Metal:',['Na','Mg','Al'],T3M.m,function(v){T3M.m=v;t3mReset();});
+  var b=mkBtn(T3M.on?'Disconnect the battery':'Connect a battery',true,function(){T3M.on=!T3M.on;b.textContent=T3M.on?'Disconnect the battery':'Connect a battery';});
+  setQ('Metal atoms hold their valence electrons loosely. What happens when many metal atoms pack together?');
+  setRule(['In a metal, the atoms release their valence electrons into a shared <b>“sea” of electrons</b>.','The <b>metallic bond</b> is the attraction between the <b>positive metal ions</b> and the sea of electrons.','The electrons are <b>free to move</b>, so metals conduct electricity.']);}
+/* predict */
+var PRED=['Na','K','Mg','Ca','Al','Cu','Fe','H','C','N','O','F','Cl','S'];
+var METAL={Na:1,K:1,Mg:1,Ca:1,Al:1,Cu:1,Fe:1};
+var NAMES={Cu:'Copper',Fe:'Iron'};
+var T3X={a:'Na',b:'Cl',quiz:false,qa:null,qb:null,ans:null,score:0,tries:0};
+function bondType(a,b){if(METAL[a]&&METAL[b])return 'metallic';if(METAL[a]||METAL[b])return 'ionic';if(a===b)return 'nonpolar covalent';if((a==='C'&&b==='H')||(a==='H'&&b==='C'))return 'covalent (almost nonpolar)';return 'polar covalent';}
+function elCard(sym,x,y){var met=!!METAL[sym];box(x-90,y-80,180,160,met?'#fde3ea':'#dff1f1',met?CORAL:TEAL);var z=BYSYM[sym];symZ(sym,z,x,y-15,56);txt((z?EL[z][1]:NAMES[sym]),x,y+35,{s:16});txt(met?'metal':'nonmetal',x,y+60,{s:14,c:met?CORAL:TEAL});}
+function miniIcon(type,x,y){if(type==='ionic'){ball(x-24,y,20,CATION,'+',INK,16);ball(x+24,y,24,ANION,'−',INK,18);}
+  else if(type==='metallic'){rr(x-55,y-30,110,60,18);ctx.fillStyle='rgba(43,89,195,.12)';ctx.fill();for(var i=0;i<3;i++)ball(x-34+i*34,y,14,CATION,'+',INK,12);for(i=0;i<5;i++)electron(x-44+i*22,y+(i%2?16:-17),ECOL,3.5);}
+  else{circ(x-16,y,26,'#eef3fa',INK,2);circ(x+16,y,26,'rgba(238,243,250,.7)',INK,2);circ(x,y-6,4.5,ECOL);circ(x,y+6,4.5,ECOL);}}
+function t3xDraw(t){var a=T3X.quiz?T3X.qa:T3X.a,b=T3X.quiz?T3X.qb:T3X.b;elCard(a,150,190);txt('+',275,190,{s:40});elCard(b,400,190);txt('→',525,190,{s:40});
+  var ty=bondType(a,b),show=!T3X.quiz||T3X.ans!==null;box(570,110,200,160,'#fff');
+  if(show){var main=ty.indexOf('covalent')>=0?'covalent':ty;miniIcon(main,670,165);txt(ty,670,230,{s:ty.length>16?15:19,c:main==='ionic'?RED:(main==='metallic'?BLUE:TEAL)});txt('bond',670,252,{s:15,c:MUTED});}
+  else txt('?',670,190,{s:60,c:'#c4cede'});
+  var why={ionic:'metal + nonmetal → electrons transferred',metallic:'metal + metal → sea of electrons'};var w=why[ty]||(a===b?'same nonmetal → electrons shared equally':'two nonmetals → electrons shared');
+  if(show)txt(w,400,330,{s:18});
+  if(T3X.quiz)txt('Score: '+T3X.score+' / '+T3X.tries,400,420,{s:18,c:TEAL});
+  setReads([['Element 1',a+(METAL[a]?' (metal)':' (nonmetal)')],['Element 2',b+(METAL[b]?' (metal)':' (nonmetal)')],['Bond',show?ty:'?',1]]);}
+function t3xNewQ(){var a=rnd(PRED),b=rnd(PRED);if(Math.random()<.45){a=rnd(PRED.filter(function(s){return METAL[s];}));b=rnd(PRED.filter(function(s){return !METAL[s];}));}T3X.qa=a;T3X.qb=b;T3X.ans=null;fb();}
+function t3xInit(){ctrlClear();fb();
+  mkChips('Mode:',[{v:0,t:'Explore'},{v:1,t:'Quiz me'}],T3X.quiz?1:0,function(v){T3X.quiz=!!v;if(T3X.quiz){T3X.score=0;T3X.tries=0;t3xNewQ();}t3xInit();});
+  if(!T3X.quiz){var r1=document.createElement('div');r1.style.width='100%';C.appendChild(r1);mkChips('Element 1:',PRED,T3X.a,function(v){T3X.a=v;},r1);
+    var r2=document.createElement('div');r2.style.width='100%';C.appendChild(r2);mkChips('Element 2:',PRED,T3X.b,function(v){T3X.b=v;},r2);}
+  else{['ionic','covalent','metallic'].forEach(function(k){mkBtn(k[0].toUpperCase()+k.slice(1),true,function(){if(T3X.ans!==null)return;var ty=bondType(T3X.qa,T3X.qb),main=ty.indexOf('covalent')>=0?'covalent':ty;T3X.ans=k;T3X.tries++;
+      if(k===main){T3X.score++;fb('<b>Correct!</b> '+T3X.qa+' + '+T3X.qb+' → '+ty+' bond.','ok');}else fb('Not quite: '+T3X.qa+' is a '+(METAL[T3X.qa]?'metal':'nonmetal')+' and '+T3X.qb+' is a '+(METAL[T3X.qb]?'metal':'nonmetal')+' → <b>'+ty+'</b> bond.','bad');});});
+    mkBtn('Next pair',false,t3xNewQ);}
+  setQ('Look only at the <b>types</b> of elements. Can you predict the bond before you see it?');
+  setRule(['<b>Metal + nonmetal</b> → <b>ionic</b> bond (electrons transferred).','<b>Nonmetal + nonmetal</b> → <b>covalent</b> bond (electrons shared); same atoms → nonpolar, different atoms → usually polar.','<b>Metal + metal</b> → <b>metallic</b> bond (sea of electrons).']);}
+
+/* ======================================================================
+   TAB 4 · PROPERTIES
+   ====================================================================== */
+var SAMP=[{k:'ionic',n:'Sodium chloride',f:'NaCl',b:'ionic',mp:801,c:RED},{k:'cov',n:'Sugar',f:'C₁₂H₂₂O₁₁',b:'covalent',mp:186,c:TEAL},{k:'met',n:'Copper',f:'Cu',b:'metallic',mp:1085,c:BLUE}];
+var PX=[140,400,660];
+var T4={T:25,state:'solid',hit:null,parts:null};
+function seedParts(){T4.parts=SAMP.map(function(s,i){var L=[];
+  if(s.k==='ionic'){for(var r=0;r<4;r++)for(var c=0;c<5;c++)L.push({hx:-72+c*36,hy:-54+r*36,ch:((r+c)%2?-1:1),rx:Math.random(),ry:Math.random()});}
+  else if(s.k==='cov'){for(var r2=0;r2<3;r2++)for(var c2=0;c2<4;c2++)L.push({hx:-66+c2*44,hy:-44+r2*44,ch:0,rx:Math.random(),ry:Math.random(),ang:Math.random()*6});}
+  else{for(var r3=0;r3<4;r3++)for(var c3=0;c3<5;c3++)L.push({hx:-72+c3*36,hy:-54+r3*36,ch:1,rx:Math.random(),ry:Math.random()});}
+  return L;});}
+function drawParticle(s,x,y,p,sz){sz=sz||1;if(s.k==='ionic'){if(p.ch>0)ball(x,y,12*sz,CATION,'+',INK,12);else ball(x,y,15*sz,ANION,'−',INK,13);}
+  else if(s.k==='cov'){ctx.save();ctx.translate(x,y);ctx.rotate(p.ang||0);ball(-8*sz,0,9*sz,'#f4f0e6');ball(8*sz,0,9*sz,'#f4f0e6');ball(0,-9*sz,8*sz,'#ef8080');ctx.restore();}
+  else ball(x,y,13*sz,'#e9a776','+',INK,12);}
+function panelHead(i){var s=SAMP[i],x=PX[i];box(x-122,58,244,406,'#fff');txt(s.n,x,84,{s:18});txt(s.f+' · '+s.b,x,106,{s:14,c:s.c});}
+function t4meltDraw(t){if(!T4.parts)seedParts();var T=T4.T;
+  SAMP.forEach(function(s,i){panelHead(i);var x=PX[i],cy=260,melted=T>=s.mp,amp=2+T/140;
+    if(s.k==='met'){rr(x-96,cy-76,192,150,20);ctx.fillStyle='rgba(43,89,195,.08)';ctx.fill();}
+    T4.parts[i].forEach(function(p,j){var px,py;
+      if(!melted){px=x+p.hx+Math.sin(t*9+j)*amp;py=cy+p.hy+Math.cos(t*8+j*1.7)*amp;}
+      else{var ph=t*0.6+p.rx*20;px=x+Math.sin(ph)*95*(0.4+p.rx*0.6);py=cy+60+Math.cos(ph*1.3+p.ry*9)*28*(0.4+p.ry*0.6);}
+      drawParticle(s,px,py,p);});
+    if(s.k==='met'&&!melted)for(var e=0;e<16;e++)electron(x-90+((t*40+e*37)%180),cy-60+((e*53)%130),ECOL,3);
+    pill(melted?'LIQUID':'SOLID',x,388,melted?AMBER:INK,'#fff',15);
+    txt('melts at about '+s.mp+' °C',x,428,{s:15,c:MUTED});});
+  banner('Temperature: '+T+' °C',T>800?RED:(T>180?AMBER:TEAL));
+  setReads(SAMP.map(function(s){return [s.n,T>=s.mp?'liquid':'solid'];}).concat([['Highest melting point','copper > sodium chloride > sugar',1]]));}
+function t4meltInit(){ctrlClear();fb();seedParts();
+  mkSlider('Heat it up',25,1200,5,T4.T,function(v){return v+' °C';},function(v){T4.T=v;});
+  setQ('Heat all three solids slowly. Which one melts <b>first</b>? Which bonds are hardest to break?');
+  setRule(['<b>Ionic</b> compounds: very high melting points – many strong attractions between + and − ions.','<b>Covalent</b> (molecular) substances: low melting points – the molecules are only weakly attracted to each other.','<b>Metals</b>: usually high melting points – strong attraction between ions and the electron sea.']);}
+/* electricity */
+function bulb(x,y,on){if(on){var g=ctx.createRadialGradient(x,y,4,x,y,46);g.addColorStop(0,'rgba(255,214,90,.95)');g.addColorStop(1,'rgba(255,214,90,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,46,0,Math.PI*2);ctx.fill();}
+  circ(x,y,17,on?'#ffe27a':'#eef1f6',INK,2);rr(x-9,y+15,18,12,3);ctx.fillStyle='#9aa6ba';ctx.fill();if(on){txt('ON',x,y,{s:11,c:INK});}}
+function t4elDraw(t){if(!T4.parts)seedParts();var dis=T4.state==='dis';
+  SAMP.forEach(function(s,i){panelHead(i);var x=PX[i],cy=300;var cond=s.k==='met'||(s.k==='ionic'&&dis);
+    /* container */
+    rr(x-90,cy-70,180,150,12);ctx.fillStyle=dis&&s.k!=='met'?'rgba(120,180,240,.22)':'#f6f8fc';ctx.fill();ctx.strokeStyle='#9aa6ba';ctx.lineWidth=2;ctx.stroke();
+    /* wires & bulb */
+    var ex1=x-55,ex2=x+55;seg(ex1,cy-60,ex1,150,INK,2.5);seg(ex2,cy-60,ex2,150,INK,2.5);seg(ex1,150,x-17,150,INK,2.5);seg(x+17,150,ex2,150,INK,2.5);bulb(x,150,cond);
+    rr(ex1-6,cy-60,12,90,3);ctx.fillStyle='#55627a';ctx.fill();rr(ex2-6,cy-60,12,90,3);ctx.fill();txt('−',ex1,cy+44,{s:18});txt('+',ex2,cy+44,{s:18,c:RED});
+    if(s.k==='met'){for(var r=0;r<3;r++)for(var c=0;c<4;c++)ball(x-39+c*26,cy-30+r*30,11,'#e9a776','+',INK,10);for(var e=0;e<14;e++){var ph=((t*0.5+e/14)%1);electron(lerp(ex2-14,ex1+14,ph),cy-40+(e*23)%75,ECOL,3);}}
+    else if(!dis){T4.parts[i].slice(0,12).forEach(function(p,j){drawParticle(s,x-33+(j%4)*22,cy-20+Math.floor(j/4)*24,p,.75);});}
+    else{T4.parts[i].slice(0,12).forEach(function(p,j){var ph=t*0.7+p.rx*30,bx=x+Math.sin(ph)*40,by=cy+Math.cos(ph*1.2+p.ry*7)*45;
+      if(s.k==='ionic'){var dir=p.ch>0?-1:1;bx=x+dir*(10+((t*20+j*13)%30));}drawParticle(s,bx,by,p,.75);});}
+    txt(cond?'conducts ✓':'does not conduct ✗',x,410,{s:17,c:cond?GREEN:RED});
+    txt(s.k==='met'?'(copper is tested as a solid)':(dis?'dissolved in water':'solid'),x,436,{s:14,c:MUTED});});
+  setReads([['Sodium chloride',dis?'conducts':'no'],['Sugar','no'],['Copper','conducts'],['Why?','charges must be free to MOVE',1]]);}
+function t4elInit(){ctrlClear();fb();seedParts();
+  mkChips('Test the substances as:',[{v:'solid',t:'Solid'},{v:'dis',t:'Dissolved in water (or melted)'}],T4.state,function(v){T4.state=v;});
+  setQ('Electricity needs <b>moving charges</b>. Which substance has charges that can move – and when?');
+  setRule(['<b>Ionic</b>: does not conduct as a solid (ions are locked in place) but <b>conducts when melted or dissolved</b> (ions can move).','<b>Covalent</b> (molecular): does <b>not</b> conduct – molecules have no charge.','<b>Metals</b>: conduct as solids – the electrons in the sea are free to move.']);}
+/* hammer */
+function t4hDraw(t){var p=T4.hit?clamp((now()-T4.hit)/1.6,0,1):0,q=T4.hit?clamp((now()-T4.hit-1.6)/1.0,0,1):0;
+  /* hammer icon */
+  SAMP.forEach(function(s,i){panelHead(i);var x=PX[i],cy=270;var hy=lerp(178,196,Math.sin(Math.min(p*3,1)*Math.PI));
+    seg(x,hy-30,x,hy-66,'#b08a5a',8);rr(x-42,hy-30,84,26,6);ctx.fillStyle='#8a94a6';ctx.fill();
+    var shift=ease(p)*36;
+    if(s.k==='ionic'){for(var r=0;r<4;r++)for(var c=0;c<5;c++){var sx=(r<2?shift:0),gap=(r<2?-q*22:0),ch=((r+c)%2?-1:1);drawParticle(s,x-72+c*36+sx,cy-54+r*36+gap,{ch:ch});}
+      if(p>=1){for(var c2=0;c2<5;c2++){var xx=x-72+c2*36+18;seg(xx-6,cy-6-q*20,xx-6,cy+4,RED,2.5);}txt('like charges repel',x,cy+100,{s:15,c:RED});}
+      txt(p>=1?'SHATTERS – brittle':'',x,420,{s:17,c:RED});}
+    else if(s.k==='met'){rr(x-96,cy-76,192,150,20);ctx.fillStyle='rgba(43,89,195,.08)';ctx.fill();for(var r3=0;r3<4;r3++)for(var c3=0;c3<5;c3++){var sx3=(r3<2?shift:0);drawParticle(s,x-72+c3*36+sx3,cy-54+r3*36,{ch:1});}
+      for(var e=0;e<16;e++)electron(x-90+((t*40+e*37)%180),cy-60+((e*53)%130),ECOL,3);txt(p>=1?'BENDS – malleable':'',x,420,{s:17,c:GREEN});}
+    else{T4.parts||seedParts();T4.parts[1].forEach(function(pp,j){var bx=x+pp.hx+(p>0?(pp.rx-.5)*70*ease(p):0),by=cy+pp.hy+(p>0?(pp.ry*80)*ease(p):0);drawParticle(s,bx,by,pp);});txt(p>=1?'CRUMBLES – soft':'',x,420,{s:17,c:AMBER});}});
+  setReads([['Ionic','brittle'],['Covalent','soft, crumbles'],['Metallic','malleable, ductile'],['Key idea','metal layers slide, the sea holds them',1]]);}
+function t4hInit(){ctrlClear();fb();seedParts();T4.hit=null;
+  mkBtn('Hit them with a hammer!',true,function(){T4.hit=now();});mkBtn('Reset',false,function(){T4.hit=null;});
+  setQ('Hit each solid with a hammer. Why does the salt crystal <b>shatter</b> but the copper only <b>bends</b>?');
+  setRule(['<b>Ionic</b> crystals are <b>brittle</b>: a hit shifts the layers, like charges line up and <b>repel</b>.','<b>Metals</b> are <b>malleable</b> and ductile: the ion layers slide but the electron sea keeps holding them.','<b>Molecular</b> solids are usually <b>soft</b>.']);}
+/* summary */
+function t4sDraw(t){var rows=[['','Ionic','Covalent','Metallic'],['Example','NaCl (salt)','sugar, water','copper, iron'],['Formed between','metal + nonmetal','nonmetal + nonmetal','metal + metal'],['Electrons are…','transferred','shared','in a "sea"'],['Particles','+ and − ions','molecules','+ ions + electrons'],['Melting point','high','low','usually high'],['Conducts as solid','no','no','yes'],['Conducts dissolved / melted','yes','no','yes (melted)'],['Hit with a hammer','shatters','soft / crumbles','bends']];
+  var x0=24,cw=[220,180,180,170],rh=50,y0=24;
+  rows.forEach(function(r,i){var x=x0;r.forEach(function(c,j){rr(x+2,y0+i*rh+2,cw[j]-4,rh-4,10);ctx.fillStyle=i===0?['#fff','#fde3ea','#dff1f1','#e2eaf9'][j]:(j===0?'#f2f6fb':'#fff');ctx.fill();if(i>0||j>0){ctx.strokeStyle='#e2e9f4';ctx.lineWidth=1.5;ctx.stroke();}
+    txt(c,j===0?x+12:x+cw[j]/2,y0+i*rh+rh/2,{s:i===0?18:(c.length>18?14:15.5),w:i===0||j===0?600:500,a:j===0?'left':'center',c:i===0?[INK,RED,TEAL,BLUE][j]:INK});x+=cw[j];});});
+  setReads([['Tip','Use this table to answer property questions',1]]);}
+function t4sInit(){ctrlClear();fb();setQ('A substance has a high melting point and conducts only when dissolved. Which type of bond does it have?');
+  setRule(['High melting point + conducts only when melted/dissolved → <b>ionic</b>.','Low melting point + never conducts → <b>covalent</b>.','Shiny + conducts as a solid + bends → <b>metallic</b>.']);}
+
+/* ---------- shared quiz deck helpers ---------- */
+function shuffled(n){var a=[];for(var i=0;i<n;i++)a.push(i);for(i=n-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function newDeck(n){return {order:shuffled(n),i:0,ans:null,score:0,done:false,n:n};}
+function doneScreen(d,what){box(170,90,460,280,'#fff');txt('Finished!',400,140,{s:30,c:TEAL});
+  txt(d.score+' / '+d.n,400,210,{s:56,c:INK});txt(Math.round(d.score/d.n*100)+'% correct',400,262,{s:20,c:MUTED});
+  txt('You answered all '+d.n+' '+what+'.',400,305,{s:17});txt('Press “Start again” for a new round in a new order.',400,335,{s:15,c:MUTED});}
+function progressLine(d,label){txt(label+' '+Math.min(d.i+1,d.n)+' of '+d.n+'   ·   Score: '+d.score,400,470,{s:16,c:TEAL});}
+
+/* ======================================================================
+   TAB 4 · TEST ME
+   ====================================================================== */
+var PQ=[
+ {n:'Potassium bromide, KBr',p:['Melts at 734 °C','Does not conduct as a solid','Conducts when dissolved in water'],a:'ionic',w:'High melting point and conducts only when dissolved → ions that can move only in solution → ionic.'},
+ {n:'Candle wax',p:['Soft','Melts at about 60 °C','Never conducts electricity'],a:'covalent',w:'Soft, low melting point and no conduction → made of molecules → covalent.'},
+ {n:'Aluminium',p:['Shiny','Can be rolled into thin foil','Conducts electricity as a solid'],a:'metallic',w:'Shiny, malleable and conducts as a solid → sea of electrons → metallic.'},
+ {n:'Water, H₂O',p:['Melts at 0 °C','Made of molecules','Pure water does not conduct'],a:'covalent',w:'Low melting point, made of molecules (two nonmetals) → covalent.'},
+ {n:'Calcium oxide, CaO',p:['Melts at 2613 °C','Shatters when hit','Conducts when melted'],a:'ionic',w:'Very high melting point, brittle and conducts only when melted → ionic.'},
+ {n:'Iron',p:['Melts at 1538 °C','Can be bent and hammered','Conducts as a solid'],a:'metallic',w:'Conducts as a solid and can be hammered → metallic.'},
+ {n:'Methane, CH₄',p:['A gas at room temperature','Boils at −162 °C','Does not conduct'],a:'covalent',w:'Very low boiling point and no conduction → small molecules → covalent.'},
+ {n:'Magnesium chloride, MgCl₂',p:['Made of Mg²⁺ and Cl⁻ ions','Melts at 714 °C','Brittle crystals'],a:'ionic',w:'Made of positive and negative ions, high melting point, brittle → ionic.'},
+ {n:'Copper wire',p:['Can be pulled into thin wires','Has electrons that are free to move','Conducts as a solid'],a:'metallic',w:'Ductile with free-moving electrons → metallic.'},
+ {n:'Sugar',p:['Melts at about 186 °C','Dissolves, but the solution does not conduct','Made of molecules'],a:'covalent',w:'Its solution does not conduct because molecules have no charge → covalent.'},
+ {n:'Substance X',p:['Formed from a metal and a nonmetal','Electrons were transferred','Forms a crystal of + and − ions'],a:'ionic',w:'Metal + nonmetal with electron transfer → ionic.'},
+ {n:'Substance Y',p:['Formed from two nonmetals','Electrons are shared','Low melting point'],a:'covalent',w:'Two nonmetals sharing electrons → covalent.'}];
+var T4T={d:null};
+function t4tDraw(t){var d=T4T.d;if(d.done){doneScreen(d,'substances');return;}var q=PQ[d.order[d.i]];
+  box(130,50,540,320,'#fff');txt(q.n,400,96,{s:26});seg(170,124,630,124,'#e2e9f4',2);
+  q.p.forEach(function(s,i){circ(190,170+i*58,7,AMBER);txt(s,212,170+i*58,{s:19,a:'left',w:500});});
+  if(d.ans===null)txt('Which type of bonding does it have?',400,410,{s:18,c:MUTED});
+  else{var main=q.a;miniIcon(main,400,410);}
+  progressLine(d,'Substance');
+  setReads([['Ionic','high mp · conducts dissolved/melted · brittle',1],['Covalent','low mp · never conducts · soft',1],['Metallic','conducts as solid · shiny · bends',1]]);}
+function t4tInit(){ctrlClear();fb();if(!T4T.d)T4T.d=newDeck(PQ.length);var d=T4T.d;
+  ['ionic','covalent','metallic'].forEach(function(k){mkBtn(k[0].toUpperCase()+k.slice(1),true,function(){if(d.done||d.ans!==null)return;var q=PQ[d.order[d.i]];d.ans=k;
+    if(k===q.a){d.score++;fb('<b>Correct!</b> '+q.w,'ok');}else fb('Not quite – it is <b>'+q.a+'</b>. '+q.w,'bad');nb.textContent=d.i===d.n-1?'See my score':'Next substance';});});
+  var nb=mkBtn(d.i===d.n-1?'See my score':'Next substance',false,function(){if(d.done)return;if(d.ans===null){fb('Choose an answer first.','hint');return;}d.i++;d.ans=null;fb();if(d.i>=d.n){d.done=true;}else nb.textContent=d.i===d.n-1?'See my score':'Next substance';});
+  mkBtn('Start again',false,function(){T4T.d=newDeck(PQ.length);t4tInit();});
+  setQ('Read the properties. Is the substance <b>ionic</b>, <b>covalent</b> or <b>metallic</b>?');
+  setRule(['High melting point + conducts only when melted/dissolved + brittle → <b>ionic</b>.','Low melting point + never conducts + soft → <b>covalent</b>.','Shiny + conducts as a solid + bends → <b>metallic</b>.']);}
+
+/* ======================================================================
+   TAB 5 · IONS, MOLECULES, COMPOUNDS
+   ====================================================================== */
+var ANAME={N:'nitride',O:'oxide',F:'fluoride',S:'sulfide',Cl:'chloride'};
+var T5={Z:11,e:11,fly:null};
+function t5Draw(t){var Z=T5.Z,e=EL[Z],n=T5.e,q=Z-n,cx=225,cy=262;
+  var pos=drawAtom(cx,cy,Z,n,t,{scale:0.92,minLevels:arrangement(Math.max(n,Z)).length,skipLast:T5.fly&&T5.fly.add});
+  if(T5.fly){var f=T5.fly,p=ease((now()-f.t0)/0.8);if(p>=1)T5.fly=null;else{var last=pos[pos.length-1]||{x:cx,y:cy};var sx=f.add?760:f.x,sy=f.add?40:f.y,ex=f.add?last.x:760,ey=f.add?last.y:40;electron(lerp(sx,ex,p),lerp(sy,ey,p),ECOL2,6);}}
+  /* dot diagram of the particle */
+  var DX=600,DY=200,S=84;
+  if(q===0){var L=Z===2?heDots(DX,DY,S):dotList(DX,DY,valence(Z),S,e[0]);symZ(e[0],Z,DX,DY,S,null,S*.34);L.forEach(function(p){circ(p.x,p.y,6,INK);});}
+  else if(q>0){bracketIon(e[0],DX,DY,S,q,false);}
+  else{var nd=Math.min(8,valence(Z)+(-q));bracketIon(e[0],DX,DY,S,q,true);dotList(DX,DY,nd,S,e[0]).forEach(function(p,i){circ(p.x,p.y,6,i>=valence(Z)?ECOL2:INK);});}
+  var a=arrangement(n),full=(a[a.length-1]===8||n===2)&&q!==0;
+  box(450,320,330,140,'#fff');
+  txt('protons  '+Z+'   −   electrons  '+n+'   =   charge  '+(q>0?'+'+q:(q<0?'−'+(-q):'0')),615,350,{s:16});
+  txt('Arrangement: '+arrStr(a),615,385,{s:18,c:full?GREEN:INK});
+  var name=q===0?e[1]+' atom (neutral)':(q>0?e[1].toLowerCase()+' ion  '+e[0]+SUPC(q):(ANAME[e[0]]||e[1].toLowerCase())+' ion  '+e[0]+SUPC(q));
+  txt(name,615,420,{s:18,c:q>0?RED:(q<0?BLUE:INK)});
+  if(full)pill('full outer level ✓  stable ion',615,450,GREEN,'#fff',13);
+  setReads([['Protons (+)',String(Z)],['Electrons (−)',String(n)],['Charge',chargeTxt(q)],['Particle',q===0?'atom':(q>0?'positive ion':'negative ion')],['Arrangement',arrStr(a),1]]);}
+function t5Change(d){var Z=T5.Z,n=T5.e+d;var met=!!METAL[EL[Z][0]]||EL[Z][4]==='metal';
+  if(met&&n>Z){fb(EL[Z][1]+' has only '+valence(Z)+' valence electron'+(valence(Z)>1?'s':'')+'. To fill its outer level it would need '+(8-valence(Z))+' more – far too many. Metals <b>lose</b> electrons instead. Try <b>Remove an electron</b>.','hint');return;}
+  if(!met&&n<Z){fb(EL[Z][1]+' has '+valence(Z)+' valence electrons. Losing all '+valence(Z)+' would be far too hard. Nonmetals <b>gain</b> electrons instead. Try <b>Add an electron</b>.','hint');return;}
+  var a0=arrangement(T5.e);if((a0[a0.length-1]===8||T5.e===2)&&T5.e!==Z){fb('The outer level is already full – this ion is stable. Press <b>Reset</b> to start again.','hint');return;}
+  if(n<1)return;
+  if(d<0){var a=arrangement(T5.e),lv=a.length-1,r=shellR(lv,0.92);T5.fly={t0:now(),add:false,x:225+r,y:262};}else T5.fly={t0:now(),add:true};
+  T5.e=n;var arr=arrangement(n),q=Z-n,full=(arr[arr.length-1]===8||n===2);
+  if(q!==0&&full)fb('<b>Full outer level!</b> '+EL[Z][1]+' becomes '+EL[Z][0]+SUPC(q)+' – the same arrangement as a noble gas ('+arrStr(arr)+').','ok');
+  else if(met&&d>0)fb(EL[Z][1]+' has only '+valence(Z)+' valence electron'+(valence(Z)>1?'s':'')+'. Gaining '+(8-valence(Z))+' would be very hard – it is much easier to <b>lose</b> '+valence(Z)+'.','hint');
+  else if(!met&&d<0)fb(EL[Z][1]+' has '+valence(Z)+' valence electrons. Losing them all is very hard – it is much easier to <b>gain</b> '+(8-valence(Z))+'.','hint');
+  else fb();}
+function t5Init(){ctrlClear();fb();T5.e=T5.Z;T5.fly=null;
+  mkChips('',['Li','Na','K','Mg','Ca','Al','N','O','F','S','Cl'].map(function(s){return {v:BYSYM[s],t:s};}),T5.Z,function(v){T5.Z=v;T5.e=v;T5.fly=null;fb();});
+  mkBtn('Remove an electron',false,function(){t5Change(-1);});mkBtn('Add an electron',true,function(){t5Change(1);});mkBtn('Reset',false,function(){T5.e=T5.Z;T5.fly=null;fb();});
+  setQ('Add or remove electrons until the outer level is <b>full</b>. Is it easier for this element to lose or to gain? What charge does it get?');
+  setRule(['An <b>ion</b> is an atom that has lost or gained electrons. Charge = protons − electrons.','Metals <b>lose</b> electrons → <b>positive</b> ions: Group 1 → 1+, Group 2 → 2+, Group 13 → 3+.','Nonmetals <b>gain</b> electrons → <b>negative</b> ions: Group 15 → 3−, Group 16 → 2−, Group 17 → 1−.','Negative ions end in <b>-ide</b>: chloride Cl⁻, oxide O²⁻.']);}
+/* sort */
+var COLS={H:'#ffffff',O:'#ef8080',C:'#59606e',N:'#7f9cf0',Cl:'#7fd18b',Na:'#b48ce8',Mg:'#9fdc7c',He:'#f4c6df',Ne:'#f6b0c0',Ca:'#ecd27a'};
+var SORT=[{f:'He',a:'atom',draw:function(x,y){ball(x,y,34,COLS.He,'He');},why:'One neutral atom on its own.'},
+ {f:'Na⁺',a:'ion',draw:function(x,y){ball(x,y,30,COLS.Na,'Na⁺');},why:'A charged particle: sodium lost one electron.'},
+ {f:'O₂',a:'molecule',draw:function(x,y){ball(x-24,y,32,COLS.O,'O');ball(x+24,y,32,COLS.O,'O');},why:'Two atoms of the SAME element bonded → a molecule of an element, not a compound.'},
+ {f:'H₂O',a:'compound',draw:function(x,y){ball(x,y,34,COLS.O,'O');ball(x-36,y+24,22,COLS.H,'H');ball(x+36,y+24,22,COLS.H,'H');},why:'Two DIFFERENT elements chemically combined → a compound (made of molecules).'},
+ {f:'Cl⁻',a:'ion',draw:function(x,y){ball(x,y,36,COLS.Cl,'Cl⁻');},why:'A charged particle: chlorine gained one electron (chloride ion).'},
+ {f:'NaCl',a:'compound',draw:function(x,y){for(var r=0;r<3;r++)for(var c=0;c<4;c++){var pos=(r+c)%2===0;ball(x-54+c*36,y-36+r*36,pos?13:17,pos?COLS.Na:COLS.Cl,pos?'+':'−',INK,12);}},why:'Two different elements combined → a compound. It is made of ions, not molecules.'},
+ {f:'N₂',a:'molecule',draw:function(x,y){ball(x-24,y,30,COLS.N,'N');ball(x+24,y,30,COLS.N,'N');},why:'Two atoms of the same element → a molecule of an element.'},
+ {f:'CO₂',a:'compound',draw:function(x,y){ball(x,y,30,COLS.C,'C','#fff');ball(x-50,y,30,COLS.O,'O');ball(x+50,y,30,COLS.O,'O');},why:'Carbon and oxygen chemically combined → a compound.'},
+ {f:'Mg²⁺',a:'ion',draw:function(x,y){ball(x,y,30,COLS.Mg,'Mg²⁺');},why:'Magnesium lost two electrons → a 2+ ion.'},
+ {f:'Ne',a:'atom',draw:function(x,y){ball(x,y,32,COLS.Ne,'Ne');},why:'A single neutral atom – noble gases exist as single atoms.'},
+ {f:'CH₄',a:'compound',draw:function(x,y){ball(x,y,30,COLS.C,'C','#fff');[[0,-46],[46,0],[0,46],[-46,0]].forEach(function(d){ball(x+d[0],y+d[1],20,COLS.H,'H');});},why:'Carbon and hydrogen combined → a compound (methane).'}];
+var T5S={d:null};
+function t5sDraw(t){var d=T5S.d;if(d.done){doneScreen(d,'particles');return;}var it=SORT[d.order[d.i]];box(200,60,400,300,'#fff');it.draw(400,200);txt(it.f,400,320,{s:30});
+  txt('Same colour = same element',400,400,{s:14,c:MUTED});progressLine(d,'Particle');
+  setReads([['Atom','one neutral atom'],['Ion','charged particle'],['Molecule','atoms bonded together',1],['Compound','2+ different elements combined',1]]);}
+function t5sInit(){ctrlClear();fb();if(!T5S.d)T5S.d=newDeck(SORT.length);var d=T5S.d;
+  [['atom','Atom'],['ion','Ion'],['molecule','Molecule of an element'],['compound','Compound']].forEach(function(k){mkBtn(k[1],true,function(){if(d.done||d.ans!==null)return;var it=SORT[d.order[d.i]];d.ans=k[0];
+    if(k[0]===it.a){d.score++;fb('<b>Correct!</b> '+it.why,'ok');}else fb('Not quite – it is <b>'+({atom:'an atom',ion:'an ion',molecule:'a molecule of an element',compound:'a compound'})[it.a]+'</b>. '+it.why,'bad');});});
+  var nb=mkBtn(d.i===d.n-1?'See my score':'Next particle',false,function(){if(d.done)return;if(d.ans===null){fb('Choose an answer first.','hint');return;}d.i++;d.ans=null;fb();if(d.i>=d.n)d.done=true;else nb.textContent=d.i===d.n-1?'See my score':'Next particle';});
+  mkBtn('Start again',false,function(){T5S.d=newDeck(SORT.length);t5sInit();});
+  setQ('Is this particle an <b>atom</b>, an <b>ion</b>, a <b>molecule of an element</b> or a <b>compound</b>?');
+  setRule(['<b>Ion</b>: a charged atom (it lost or gained electrons).','<b>Molecule</b>: two or more atoms joined by covalent bonds (O₂, H₂O).','<b>Compound</b>: two or more <b>different</b> elements chemically combined (H₂O, NaCl, CO₂).','O₂ is a molecule but <b>not</b> a compound; NaCl is a compound but is made of <b>ions</b>, not molecules.']);}
+/* formula */
+COLS.S='#ead45a';COLS.K='#c79ae8';COLS.Al='#c9ced8';
+var FORM={H2O:{s:[['H',2],['O',1]],n:'water',b:'covalent'},CO2:{s:[['C',1],['O',2]],n:'carbon dioxide',b:'covalent'},O2:{s:[['O',2]],n:'oxygen',b:'covalent'},NH3:{s:[['N',1],['H',3]],n:'ammonia',b:'covalent'},
+  CH4:{s:[['C',1],['H',4]],n:'methane',b:'covalent'},NaCl:{s:[['Na',1],['Cl',1]],n:'sodium chloride',b:'ionic'},MgCl2:{s:[['Mg',1],['Cl',2]],n:'magnesium chloride',b:'ionic'},CaCO3:{s:[['Ca',1],['C',1],['O',3]],n:'calcium carbonate',b:'ionic'},
+  H2SO4:{s:[['H',2],['S',1],['O',4]],n:'sulfuric acid',b:'covalent'},C6H12O6:{s:[['C',6],['H',12],['O',6]],n:'glucose',b:'covalent'},NaOH:{s:[['Na',1],['O',1],['H',1]],n:'sodium hydroxide',b:'ionic'},
+  Al2O3:{s:[['Al',2],['O',3]],n:'aluminium oxide',b:'ionic'},HCl:{s:[['H',1],['Cl',1]],n:'hydrogen chloride',b:'covalent'},N2:{s:[['N',2]],n:'nitrogen',b:'covalent'},O3:{s:[['O',3]],n:'ozone',b:'covalent'},
+  KNO3:{s:[['K',1],['N',1],['O',3]],n:'potassium nitrate',b:'ionic'},C2H6:{s:[['C',2],['H',6]],n:'ethane',b:'covalent'},CaCl2:{s:[['Ca',1],['Cl',2]],n:'calcium chloride',b:'ionic'}};
+var FTURN=['H2O','CO2','NH3','CH4','MgCl2','CaCO3','H2SO4','C6H12O6','NaOH','Al2O3','HCl','N2','O3','KNO3','C2H6','CaCl2'];
+function fTotal(d){return d.s.reduce(function(a,p){return a+p[1];},0);}
+function drawFormula(d,reveal){var x=400,wsum=0;d.s.forEach(function(p){wsum+=tw(p[0],64,700)+(p[1]>1?tw(String(p[1]),34,700)+4:6);});var cx=x-wsum/2;
+  d.s.forEach(function(p){var c=COLS[p[0]]||'#8a94a6';if(c==='#ffffff'||c==='#c9ced8')c='#8a94a6';if(c==='#59606e')c=INK;if(c==='#ead45a')c='#c9a600';var w=txt(p[0],cx,90,{s:64,a:'left',c:c,w:700});cx+=w;if(p[1]>1){var w2=txt(String(p[1]),cx+2,112,{s:34,a:'left',c:PLUM,w:700});cx+=w2+4;}else cx+=6;});
+  txt(d.n,x,150,{s:20,c:MUTED});
+  if(!reveal){box(220,200,360,120,'#fff');txt('?',400,260,{s:60,c:'#c4cede'});return;}
+  var colw=(W-120)/d.s.length,tot=0;
+  d.s.forEach(function(p,i){var bx=60+i*colw+colw/2,n=p[1],r=n>6?13:(n>3?17:22),per=n>6?6:(n>3?4:n),sp=r*2+6,rows=Math.ceil(n/per);
+    for(var k=0;k<n;k++){var row=Math.floor(k/per),colk=k%per,inRow=Math.min(per,n-row*per);var ox=(colk-(inRow-1)/2)*sp,oy=(row-(rows-1)/2)*sp;ball(bx+ox,240+oy,r,COLS[p[0]]||'#dfe5ee',p[0],p[0]==='C'?'#fff':INK,r>15?15:11);}
+    txt(n+' × '+p[0],bx,240+rows*sp/2+26,{s:20,c:PLUM});tot+=n;});
+  box(150,350,500,110,'#fff');
+  txt('Elements: '+d.s.length+'   ·   Atoms in total: '+tot,400,380,{s:20});
+  txt(d.s.length>1?'two or more different elements → a COMPOUND':'only one element → an ELEMENT (a molecule of '+d.n+')',400,410,{s:16,c:d.s.length>1?GREEN:BLUE});
+  txt(d.b==='ionic'?'ionic: the formula gives the RATIO of ions':'covalent: the formula shows the atoms in ONE molecule',400,438,{s:15,c:MUTED});}
+var T5F={k:'H2O'};
+function t5fDraw(t){var d=FORM[T5F.k];drawFormula(d,true);
+  setReads(d.s.map(function(p){return [p[0]+' atoms',String(p[1])];}).concat([['Elements',String(d.s.length)],['Total atoms',String(fTotal(d))]]));}
+function t5fInit(){ctrlClear();fb();
+  mkChips('',[{v:'H2O',t:'H₂O'},{v:'CO2',t:'CO₂'},{v:'O2',t:'O₂'},{v:'NH3',t:'NH₃'},{v:'CH4',t:'CH₄'},{v:'NaCl',t:'NaCl'},{v:'MgCl2',t:'MgCl₂'},{v:'CaCO3',t:'CaCO₃'}],T5F.k,function(v){T5F.k=v;});
+  setQ('What does the small number after a symbol tell you? What is the difference between the number of <b>elements</b> and the number of <b>atoms</b>?');
+  setRule(['A <b>chemical formula</b> shows which elements are in a substance and how many atoms of each.','<b>Elements</b> = the different symbols (each starts with a capital letter).','<b>Atoms</b> = add up all the subscripts. No subscript means <b>1</b>.','For ionic compounds the formula gives the <b>ratio</b> of ions (NaCl = 1 Na⁺ : 1 Cl⁻).']);}
+/* my turn: formulas */
+var T5T={d:null,checked:false};
+function t5tDraw(t){var dk=T5T.d;if(dk.done){doneScreen(dk,'formulas');return;}var d=FORM[FTURN[dk.order[dk.i]]];drawFormula(d,T5T.checked);progressLine(dk,'Formula');
+  setReads([['Elements','count the capital letters',1],['Atoms','add the subscripts (no number = 1)',1]]);}
+function t5tInit(){ctrlClear();fb();if(!T5T.d){T5T.d=newDeck(FTURN.length);T5T.checked=false;}var dk=T5T.d;
+  var box1=document.createElement('div');box1.className='ans';box1.innerHTML='<label>Number of elements <input id="fe" inputmode="numeric"></label><label>Number of atoms <input id="fa" inputmode="numeric"></label>';$('extra').appendChild(box1);
+  mkBtn('Check',true,function(){if(dk.done||T5T.checked)return;var d=FORM[FTURN[dk.order[dk.i]]],e=$('fe'),a=$('fa');if(e.value.trim()===''||a.value.trim()===''){fb('Fill in both boxes first.','hint');return;}
+    var ge=+e.value===d.s.length,ga=+a.value===fTotal(d);e.className=ge?'ok':'no';a.className=ga?'ok':'no';T5T.checked=true;
+    var parts=d.s.map(function(p){return p[1];}).join(' + ');
+    if(ge&&ga){dk.score++;fb('<b>Correct!</b> '+d.s.length+' element'+(d.s.length>1?'s':'')+' ('+d.s.map(function(p){return p[0];}).join(', ')+') and '+parts+' = '+fTotal(d)+' atoms.','ok');}
+    else fb((ge?'Elements ✓. ':'<b>Elements:</b> count the different symbols → '+d.s.map(function(p){return p[0];}).join(', ')+' = '+d.s.length+'. ')+(ga?'Atoms ✓.':'<b>Atoms:</b> add the subscripts → '+parts+' = '+fTotal(d)+'.'),'bad');
+    nb.textContent=dk.i===dk.n-1?'See my score':'Next formula';});
+  var nb=mkBtn(dk.i===dk.n-1?'See my score':'Next formula',false,function(){if(dk.done)return;if(!T5T.checked){fb('Check your answer first.','hint');return;}dk.i++;T5T.checked=false;$('fe').value='';$('fa').value='';$('fe').className='';$('fa').className='';fb();if(dk.i>=dk.n)dk.done=true;else nb.textContent=dk.i===dk.n-1?'See my score':'Next formula';});
+  mkBtn('Start again',false,function(){T5T.d=newDeck(FTURN.length);T5T.checked=false;t5tInit();});
+  setQ('How many different <b>elements</b> are in this formula? How many <b>atoms</b> in total? Predict, then check.');
+  setRule(['<b>Elements</b>: count the different symbols (capital letters). H₂SO₄ → H, S, O = 3 elements.','<b>Atoms</b>: add all the subscripts; no subscript = 1. H₂SO₄ → 2 + 1 + 4 = 7 atoms.','A substance can have few elements but many atoms: C₆H₁₂O₆ has 3 elements but 24 atoms.']);}
+
+/* ======================================================================
+   FRAMEWORK
+   ====================================================================== */
+var TABS=[
+ {t:'1. Electron arrangement',c:TEAL,s:[['Build the atom','Electrons fill the energy levels',t1Init,t1Draw,t1Click],['My turn','Write the electron arrangement',function(){t1mInit();},t1mDraw,null]]},
+ {t:'2. Electron-dot diagrams',c:BLUE,s:[['From model to dots','Only the valence electrons become dots',t2Init,t2Draw,null],['Draw it yourself','Place the dots around the symbol',t2dInit,t2dDraw,t2dClick],['Families','Same group, same dots',t2fInit,t2fDraw,t2fClick]]},
+ {t:'3. Types of bonds',c:PLUM,s:[['Ionic','Electrons are transferred',t3iInit,t3iDraw,null],['Covalent','Electrons are shared',t3cInit,t3cDraw,null],['Polar or nonpolar?','Is the sharing fair?',t3pInit,t3pDraw,null],['Metallic','A sea of electrons',t3mInit,t3mDraw,null],['Predict the bond','Metal or nonmetal?',t3xInit,t3xDraw,null]]},
+ {t:'4. Properties',c:AMBER,s:[['Melting point','Heat the three solids',t4meltInit,t4meltDraw,null],['Electricity','Which ones conduct?',t4elInit,t4elDraw,null],['Hammer test','Brittle or malleable?',t4hInit,t4hDraw,null],['Summary','Compare the three bonds',t4sInit,t4sDraw,null],['Test me','Ionic, covalent or metallic?',t4tInit,t4tDraw,null]]},
+ {t:'5. Ions & formulas',c:CORAL,s:[['Make an ion','Lose or gain electrons',t5Init,t5Draw,null],['Atom, ion, molecule or compound?','Sort the particles',t5sInit,t5sDraw,null],['Read a formula','Count the atoms',t5fInit,t5fDraw,null],['My turn','Elements or atoms?',t5tInit,t5tDraw,null]]}];
+var cur={tab:0,step:0};
+function renderNav(){var tb=$('tabs');tb.innerHTML='';TABS.forEach(function(T,i){var b=document.createElement('button');b.type='button';b.className='tab'+(i===cur.tab?' on':'');b.style.setProperty('--c',T.c);b.innerHTML='<i></i>'+T.t;b.addEventListener('click',function(){go(i,0);});tb.appendChild(b);});
+  var st=$('steps');st.innerHTML='';TABS[cur.tab].s.forEach(function(s,j){var b=document.createElement('button');b.type='button';b.className='step'+(j===cur.step?' on':'');b.innerHTML='<b>'+(j+1)+'</b>'+s[0];b.addEventListener('click',function(){go(cur.tab,j);});st.appendChild(b);});}
+function go(tab,step){cur.tab=tab;cur.step=step;var T=TABS[tab],S=T.s[step];document.documentElement.style.setProperty('--accent',T.c);
+  renderNav();$('stitle').textContent=S[1];lastReads='';hideRule();S[2]();cv.className=S[4]?'click':'';}
+cv.addEventListener('click',function(ev){var S=TABS[cur.tab].s[cur.step];if(!S[4])return;var r=cv.getBoundingClientRect();S[4]((ev.clientX-r.left)*W/r.width,(ev.clientY-r.top)*H/r.height);});
+function loop(){var t=now();clear();try{TABS[cur.tab].s[cur.step][3](t);}catch(err){console.error(err);}requestAnimationFrame(loop);}
+go(0,0);requestAnimationFrame(loop);
+})();
+</script>
+</body></html>

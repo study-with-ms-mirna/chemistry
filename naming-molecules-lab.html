@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Naming Molecules Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+.reads .rd b{font-size:19px}
+.step.done b{background:#2e9e5b;color:#fff}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.cnt{display:none;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;padding:10px 14px;border-radius:14px;background:#f6f8fc}
+.cnt.show{display:flex}
+.stp{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:17px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:26px;text-align:center;font-size:22px}
+#cv.click{cursor:pointer}
+sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+.dt tr[data-r]{cursor:pointer}
+.dt tr.sel td{background:#fff1cc!important;font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cmp{display:inline-flex;align-items:center;gap:8px;border:2px solid;border-radius:999px;padding:4px 6px 4px 12px;font-family:Fredoka,sans-serif;font-size:17px;background:#fff}
+.cmp i{font-style:normal;color:#fff;border-radius:999px;padding:2px 10px;font-weight:600}
+.solve{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;margin:6px 0}
+.ladder{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.rung{font-family:Fredoka,sans-serif;font-size:16px;padding:4px 10px;border-radius:10px;background:#eef2f8;color:var(--ink)}
+.rung.hit{color:#fff;font-weight:600;transform:scale(1.08)}
+.solverow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.big2{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin-top:6px}
+.lawbig{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;text-align:center;margin:10px 0;padding:8px;background:#f6f8fc;border-radius:14px}
+.lawsm{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.center{text-align:center;font-size:18px}
+.mysteq{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;text-align:center;padding:10px;background:#f6f8fc;border-radius:14px;margin-bottom:10px}
+.mysteq sup.q{color:var(--accent);font-size:.7em}
+.runbar,.ansrow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.runbar .lab,.ansrow2 .lab{font-family:Fredoka,sans-serif;font-size:16px;margin-left:6px}
+.ansrow2{font-family:Fredoka,sans-serif;font-size:20px;border-top:2px solid var(--line);padding-top:10px;margin-top:10px}
+.cmpbox{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-family:Fredoka,sans-serif;font-size:16px}
+.cmpbox .cmp{margin:6px 6px 0 0}
+.warn{margin-top:8px;color:#d8434a;font-weight:600}
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;margin:6px 0}
+.gin input,.gin select{width:80px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.gin select{width:64px}
+.gin input.ok,.gin select.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no,.gin select.no{border-color:#d8434a;background:#fdeeee}
+.good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
+.mk{min-width:18px}
+.hintbox .ladder{display:inline-flex}
+
+/* ===== ideal gas law lab ===== */
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.5}
+.task .src{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--accent);margin-right:8px;vertical-align:2px}
+.frow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.frow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.frow .fb2{flex:1;min-width:0}
+.frow .fl{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;margin-bottom:6px}
+.chs{display:flex;flex-wrap:wrap;gap:8px}
+.chs button{font-family:Fredoka,sans-serif;font-size:17px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px 14px;cursor:pointer;color:var(--ink)}
+.chs button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.chs button.ok{border-color:#2e9e5b;background:#2e9e5b;color:#fff}
+.chs button.no{border-color:#d8434a;background:#d8434a;color:#fff}
+.nin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:19px}
+.nin input{width:120px;font-family:Fredoka,sans-serif;font-size:20px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.nin input.ok{border-color:#2e9e5b;background:#e8f6ee}.nin input.no{border-color:#d8434a;background:#fdeeee}
+.fmark{font-weight:700;font-size:20px;min-width:22px;margin-top:2px}
+.mathl{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;margin:6px 0;line-height:1.5}
+.mathl b{font-weight:600}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;color:var(--accent)}
+.tip{font-size:14px;color:var(--muted);margin-top:6px}
+.dtab{border-collapse:separate;border-spacing:0;width:100%;margin-top:6px;font-family:Fredoka,sans-serif;font-size:18px}
+.dtab th{background:var(--accent);color:#fff;font-weight:600;padding:6px 8px}
+.dtab th:first-child{border-radius:10px 0 0 0}.dtab th:last-child{border-radius:0 10px 0 0}
+.dtab td{padding:6px 8px;text-align:center;border-bottom:2px solid #eef1f6}
+.dtab td input{width:90px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:3px}
+.dtab td input.ok{border-color:#2e9e5b;background:#e8f6ee}.dtab td input.no{border-color:#d8434a;background:#fdeeee}
+.mapflow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:17px;margin:8px 0}
+.mapflow .bx{border:2px solid var(--line);border-radius:12px;padding:6px 12px;background:#fff;font-weight:600}
+.mapflow .bx.hi{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mapflow .ar{color:var(--accent);font-weight:600;text-align:center;line-height:1.1}
+.mapflow .ar small{display:block;font-size:13px}
+.excards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exc{border:2px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.exc .eh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.exc .eh svg{flex:none}
+.exc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px;margin:0}
+.exc .tag{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:6px}
+.exc p{margin:4px 0;font-size:16px}
+.rv{border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;background:#fff}
+.rv .rq{font-size:18px;font-weight:700}
+.rv .ra{display:none;margin-top:8px;background:#e8f6ee;border-radius:12px;padding:8px 12px;font-size:17px}
+.rv.open .ra{display:block}
+.rv .btn{margin-top:8px}
+.bigeq{font-family:Fredoka,sans-serif;font-weight:600;font-size:34px;text-align:center;color:var(--accent);background:#f6f8fc;border-radius:14px;padding:10px;margin:8px 0}
+.ltab{border-collapse:collapse;width:100%;font-size:17px;margin-top:6px}
+.ltab td,.ltab th{border:2px solid #eef1f6;padding:6px 8px;text-align:center}
+.ltab th{background:#f3f6fb;font-family:Fredoka,sans-serif;font-weight:600}
+.subbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.subbar .btn.sel{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+
+.hv-chg{background:#fde3cc;color:#b35a0c;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-ask{background:#d6efef;color:#0b6f71;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-cst{border-bottom:3px dashed #8d99b0;font-weight:700;padding:0 2px}
+
+.tfhead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:18px;margin-bottom:4px}
+.tfrow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.tfrow.good{border-color:#2e9e5b;background:#f3fbf6}.tfrow.bad{border-color:#d8434a;background:#fdf4f4}
+.tfrow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.tfq{flex:1;font-size:18px;line-height:1.45}
+.tfx{font-size:16px;margin-top:6px;color:var(--ink)}
+.tfb{display:flex;gap:8px;flex:none}
+.tfbtn{width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;cursor:pointer;color:var(--ink)}
+.tfbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tfbtn:disabled{cursor:default;opacity:.55}
+.tfbtn.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff;opacity:1}
+.tfbtn.wrong{background:#d8434a;border-color:#d8434a;color:#fff;opacity:1}
+.qzopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+@media (max-width:700px){.qzopts{grid-template-columns:1fr}}
+.qzb{font-family:Fredoka,sans-serif;font-size:19px;border:2px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;cursor:pointer;color:var(--ink);text-align:left}
+.qzb:hover:not(:disabled){border-color:var(--accent)}
+.qzb.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff}.qzb.wrong{background:#d8434a;border-color:#d8434a;color:#fff}
+.qzb:disabled{cursor:default}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true"><rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/><line x1="20" y1="27" x2="38" y2="27" stroke="#7d8699" stroke-width="4"/><circle cx="18" cy="27" r="8" fill="#3e6fd8"/><circle cx="31" cy="27" r="8" fill="#3e6fd8"/><circle cx="44" cy="27" r="7" fill="#e0524a"/><rect x="12" y="38" width="34" height="6" rx="3" fill="#e8962a"/></svg>
+    <div><h1>Naming Molecules Lab</h1><div class="sub">Binary molecular compounds · prefixes · binary acids and oxyacids · writing formulas</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.globalAlpha=o.al==null?1:o.al;ctx.fillText(s,x,y);var w=ctx.measureText(s).width;ctx.globalAlpha=1;return w;}
+function tw(s,size,w){ctx.font=(w||600)+' '+size+'px Fredoka, sans-serif';return ctx.measureText(s).width;}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function card(x,y,w,h,fill,stroke){rr(x,y,w,h,14);ctx.fillStyle=fill||'#fff';ctx.fill();ctx.strokeStyle=stroke||LINE;ctx.lineWidth=2;ctx.stroke();}
+function ball(x,y,r,c,edge){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();if(r>2.5){ctx.strokeStyle=edge||'rgba(24,35,58,.45)';ctx.lineWidth=r>6?2:1.2;ctx.stroke();}
+ if(r>5){ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(x-r*.35,y-r*.35,r*.3,0,Math.PI*2);ctx.fill();}}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),s=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+var rnd=Math.random;
+function gauss(){var u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(6.283185*v);}
+
+/* ================= particle engine ================= */
+/* box: {x0,y0,x1,y1}; particle {x,y,vx,vy,r,a,w,k} */
+function mkParts(n,r,box,v,kind){var P=[],tries=0;while(P.length<n&&tries<6000){tries++;var x=lerp(box.x0+r,box.x1-r,rnd()),y=lerp(box.y0+r,box.y1-r,rnd());
+  if(P.every(function(q){return (x-q.x)*(x-q.x)+(y-q.y)*(y-q.y)>(r+q.r+3)*(r+q.r+3);})){var a=rnd()*6.283;P.push({x:x,y:y,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:rnd()*6.283,w:(rnd()-.5)*3,k:kind||0});}}
+ return P;}
+function addPart(P,r,box,v,kind){var p=mkParts(1,r,box,v,kind)[0];if(!p){var a=rnd()*6.283;p={x:lerp(box.x0+r,box.x1-r,rnd()),y:box.y0+r+2,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:0,w:(rnd()-.5)*3,k:kind||0};}P.push(p);return p;}
+/* o: e (restitution), att (attraction accel), rng (range factor), g (gravity), vt (target rms speed), kT (thermostat rate), coll (bool), hit(fn) */
+function stepParts(P,box,dt,o){o=o||{};var e=o.e==null?1:o.e,n=P.length,coll=o.coll!==false,sub=Math.max(1,Math.ceil(dt/0.008)),h=dt/sub;
+ for(var s=0;s<sub;s++){
+  if(o.att){for(var i=0;i<n;i++)for(var j=i+1;j<n;j++){var a=P[i],b=P[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),lim=a.r+b.r;
+    if(d>lim&&d<lim*(o.rng||2)){var f=o.att*h/d;a.vx+=f*dx;a.vy+=f*dy;b.vx-=f*dx;b.vy-=f*dy;}}}
+  for(i=0;i<n;i++){var p=P[i],gg=p.g!=null?p.g:o.g;if(gg)p.vy+=gg*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;var r=p.r,ew=o.ew==null?1:o.ew;
+   if(p.x<box.x0+r){p.x=box.x0+r;p.vx=Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'l');}
+   if(p.x>box.x1-r){p.x=box.x1-r;p.vx=-Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'r');}
+   if(p.y<box.y0+r){p.y=box.y0+r;p.vy=Math.abs(p.vy)*ew+(box.vy0||0);if(o.hit)o.hit(p,'t');}
+   if(p.y>box.y1-r){p.y=box.y1-r;p.vy=-Math.abs(p.vy)*(gg?ew*.8:ew);if(o.hit)o.hit(p,'b');}}
+  if(coll){for(i=0;i<n;i++)for(j=i+1;j<n;j++){a=P[i];b=P[j];dx=b.x-a.x;dy=b.y-a.y;d=Math.sqrt(dx*dx+dy*dy);lim=a.r+b.r;
+    if(d>0&&d<lim){var nx=dx/d,ny=dy/d,ma=a.m||1,mb=b.m||1,rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+     if(rv<0){var J=-(1+e)*rv/(1/ma+1/mb);a.vx-=J*nx/ma;a.vy-=J*ny/ma;b.vx+=J*nx/mb;b.vy+=J*ny/mb;if(o.bump)o.bump(a,b);}
+     var ov=(lim-d)/2;a.x-=ov*nx;a.y-=ov*ny;b.x+=ov*nx;b.y+=ov*ny;}}}}
+ if(o.lang&&o.vt!=null){var gm=o.lang,sg=Math.sqrt(gm*o.vt*o.vt*dt);P.forEach(function(p){p.vx+=-gm*p.vx*dt+sg*gauss();p.vy+=-gm*p.vy*dt+sg*gauss();});return;}
+ if(o.vt!=null&&n){var ke=0;P.forEach(function(p){ke+=p.vx*p.vx+p.vy*p.vy;});ke=Math.sqrt(ke/n);var sc=1+(o.kT||2)*dt*(o.vt/Math.max(ke,1)-1);sc=clamp(sc,.9,1.1);P.forEach(function(p){p.vx*=sc;p.vy*=sc;});}}
+function near(P,f){var out=[];for(var i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j];if(Math.hypot(b.x-a.x,b.y-a.y)<(a.r+b.r)*f)out.push([a,b]);}return out;}
+/* molecule drawings */
+var GASC={H2:['#eef2f7','#9aa6b8'],He:['#b48be0','#7a52a8'],N2:['#4a78d6','#2b4f99'],O2:['#e25a4f','#a33027'],CO2:['#3a3f4b','#1e2129'],Kr:['#56b6a6','#2f7d71']};
+function drawMol(type,x,y,a,s){s=s||1;var c=Math.cos(a),si=Math.sin(a);
+ if(type==='He'||type==='Kr'){ball(x,y,(type==='He'?4.5:7)*s,GASC[type][0],GASC[type][1]);return;}
+ if(type==='CO2'){var d=10*s;ball(x-d*c,y-d*si,6.2*s,GASC.O2[0],GASC.O2[1]);ball(x+d*c,y+d*si,6.2*s,GASC.O2[0],GASC.O2[1]);ball(x,y,5.6*s,GASC.CO2[0],GASC.CO2[1]);return;}
+ var rr2=(type==='H2'?3.6:6.2)*s,dd=(type==='H2'?3.2:5.2)*s,col=GASC[type];ball(x-dd*c,y-dd*si,rr2,col[0],col[1]);ball(x+dd*c,y+dd*si,rr2,col[0],col[1]);}
+function molR(type){return {H2:7,He:5,N2:11.5,O2:11.5,CO2:16.5,Kr:7}[type];}
+
+/* ================= number helpers ================= */
+var SUPS={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-'};
+function parseNum(s){if(s==null)return null;s=String(s).trim();if(s==='')return null;s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,function(c){return SUPS[c];}).replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');
+ s=s.replace(/[×xX*]10\^?(-?\d+)/,'e$1');var v=Number(s);if(isNaN(v))v=parseFloat(s);return isNaN(v)?null:v;}
+function okNum(x,f){if(x===null)return false;if(f.tolA!=null)return Math.abs(x-f.want)<=f.tolA;return Math.abs(x-f.want)<=Math.abs(f.want)*(f.tol||.012);}
+function nearV(x,v,tol){return x!==null&&Math.abs(x-v)<=Math.abs(v)*(tol||.02);}
+
+/* ================= practice engine ================= */
+/* problem: {src,q,show:[[title,html]],fields:[{t:'c',lab,opts,ok,why,bad:{i:msg}} | {t:'n',lab,pre,unit,want,tol,tolA,alt:[[v,msg]],why}],ans,sense,mode,hint} */
+function fieldHtml(f,k){var h='<div class="frow" id="fr'+k+'"><span class="fn">'+(k+1)+'</span><div class="fb2"><div class="fl">'+f.lab+'</div>';
+ if(f.t==='c')h+='<div class="chs" data-k="'+k+'">'+f.opts.map(function(o,i){return '<button data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
+ else h+='<div class="nin">'+(f.pre||'')+'<input id="fi'+k+'" inputmode="decimal" autocomplete="off" placeholder="?"> '+(f.unit||'')+'</div>';
+ return h+'</div><span class="fmark" id="fm'+k+'"></span></div>';}
+function probUI(P){var mode=P.mode||'show',st=P.st||0,h='';
+ h+='<div class="modebar"><div class="seg"><button id="mShow"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mTry"'+(mode==='try'?' class="on"':'')+'>My turn</button></div><span class="small">'+(mode==='show'?'Step by step. Press Next step.':'Answer each part, then press Check.')+'</span></div>';
+ h+='<div class="task"><span class="src">'+P.src+'</span>'+P.q+'</div>';
+ if(mode==='show'){var N=P.show.length;
+  h+='<div class="steps3">'+P.show.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="sBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="sNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="sTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+P.show.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+ else{h+=(P.fields.some(function(f){return f.t==='n';})?'<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>':'')+P.fields.map(fieldHtml).join('');
+  h+='<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk">Check</button><button class="btn" id="pHint">Hint</button><button class="btn" id="pClr">Clear</button>')+(P.next?'<button class="btn fill" id="pNext"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div>';
+  h+='<div class="hintbox" id="pHint2">'+(P.hint||P.fields.map(function(f){return f.why;}).filter(Boolean).join(' · '))+'</div><div class="feedback" id="pFb">'+(P.solved?solvedMsg(P):'')+'</div>';}
+ $('panel').innerHTML=h;
+ $('mShow').onclick=function(){P.mode='show';P.st=0;probUI(P);};$('mTry').onclick=function(){P.mode='try';probUI(P);};
+ if(mode==='show'){$('sBack').onclick=function(){P.st=st-1;probUI(P);};var n=$('sNext');if(n)n.onclick=function(){P.st=st+1;probUI(P);if(P.onShow)P.onShow(P.st);};var t=$('sTry');if(t)t.onclick=function(){P.mode='try';probUI(P);};}
+ else{if(P.solved){P.fields.forEach(function(f,k){fill(P,f,k);});}
+  Array.prototype.forEach.call(document.querySelectorAll('.chs'),function(g){Array.prototype.forEach.call(g.children,function(b){b.onclick=function(){if(P.solved)return;Array.prototype.forEach.call(g.children,function(x){x.classList.remove('on','ok','no');});b.classList.add('on');};});});
+  var c=$('pChk');if(c){c.onclick=function(){probCheck(P);};$('pHint').onclick=function(){$('pHint2').classList.toggle('on');};$('pClr').onclick=function(){probUI(P);};}
+  var nx=$('pNext');if(nx)nx.onclick=function(){P.next();};}}
+function fill(P,f,k){if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] button[data-i="'+f.ok+'"]');if(b)b.classList.add('ok');}else{var e=$('fi'+k);e.value=f.show||String(f.want);e.classList.add('ok');e.disabled=true;}$('fm'+k).innerHTML='<span class="good2">✓</span>';}
+function solvedMsg(P){return '<span class="good">Well done! '+P.ans+'</span>'+(P.sense?'<div class="small" style="font-size:16px;margin-top:4px">'+P.sense+'</div>':'');}
+function probCheck(P){var msgs=[],all=true;
+ P.fields.forEach(function(f,k){var ok,msg=null,filled=true;
+  if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] .on, .chs[data-k="'+k+'"] .ok, .chs[data-k="'+k+'"] .no'),i=b?+b.getAttribute('data-i'):-1;filled=i>=0;ok=i===f.ok;
+   if(b){b.classList.remove('on','ok','no');b.classList.add(ok?'ok':'no');}
+   if(!ok)msg=!filled?'Part '+(k+1)+': choose an answer.':((f.bad&&f.bad[i])||f.why);}
+  else{var e=$('fi'+k),x=parseNum(e.value);filled=x!==null;ok=okNum(x,f);e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);
+   if(!ok){if(!filled)msg='Part '+(k+1)+': type a number.';else{(f.alt||[]).forEach(function(a){if(!msg&&nearV(x,a[0],a[2]||.02))msg=a[1];});if(!msg)msg=f.why;}}}
+  $('fm'+k).innerHTML=ok?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+  if(!ok){all=false;if(msg)msgs.push('<b>Part '+(k+1)+':</b> '+msg.replace(/^Part \d+: /,''));}});
+ if(all){P.solved=true;if(P.onSolve)P.onSolve();renderSteps();probUI(P);return;}
+ $('pFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
+
+/* ================= lesson cards ================= */
+function cardsUI(L){var st=L.st||0,N=L.cards.length,h='<div class="steps3">'+L.cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+ h+='<div class="stepbar"><button class="btn" id="cBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="cNext">'+(st===0?'Start ▶':'Next ▶')+'</button>':(L.next?'<button class="btn fill" id="cGo">Next ▶</button>':''))+'<div class="stepdots">'+L.cards.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';
+ $('panel').innerHTML=h;$('cBack').onclick=function(){L.st=st-1;cardsUI(L);if(L.on)L.on(L.st);};var n=$('cNext');if(n)n.onclick=function(){L.st=st+1;cardsUI(L);if(L.on)L.on(L.st);};var g=$('cGo');if(g)g.onclick=function(){L.next();};
+ if(L.bind)L.bind();}
+function revealUI(items){$('panel').innerHTML=items.map(function(it,k){return '<div class="rv" id="rv'+k+'"><div class="rq">'+it[0]+'</div><div class="ra">'+it[1]+'</div><button class="btn" data-k="'+k+'">Show answer</button></div>';}).join('');
+ Array.prototype.forEach.call(document.querySelectorAll('.rv .btn'),function(b){b.onclick=function(){var r=$('rv'+b.dataset.k);r.classList.toggle('open');b.textContent=r.classList.contains('open')?'Hide answer':'Show answer';};});}
+
+/* ================= controls helpers ================= */
+function ctlButtons(list){$('controls').innerHTML=list.map(function(b,i){return '<button class="btn'+(b.fill?' fill':'')+(b.sel?' sel':'')+'" id="cb'+i+'">'+b.t+'</button>';}).join('');list.forEach(function(b,i){$('cb'+i).onclick=b.f;});}
+function ctlSlider(id,lab,min,max,step,val,fmt,on){return {html:'<label class="ctl">'+lab+' <input type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'"><output id="'+id+'o">'+fmt(val)+'</output></label>',bind:function(){var e=$(id);e.oninput=function(){var v=+e.value;$(id+'o').textContent=fmt(v);on(v);};}};}
+
+/* ================= chemistry data ================= */
+var EL={H:{n:'hydrogen',r:'hydr',c:'#f4f6f9',e:'#8d99b0',t:INK,s:15},C:{n:'carbon',r:'carb',c:'#4a4f5c',e:'#22252c',t:'#fff',s:22},N:{n:'nitrogen',r:'nitr',c:'#3e6fd8',e:'#26489a',t:'#fff',s:22},
+ O:{n:'oxygen',r:'ox',c:'#e0524a',e:'#9e2a24',t:'#fff',s:22},F:{n:'fluorine',r:'fluor',c:'#9ad14b',e:'#5f8f22',t:INK,s:20},Cl:{n:'chlorine',r:'chlor',c:'#3fae5a',e:'#22743a',t:'#fff',s:24},
+ Br:{n:'bromine',r:'brom',c:'#a8423a',e:'#6c221c',t:'#fff',s:25},I:{n:'iodine',r:'iod',c:'#7b4bb0',e:'#4c2a75',t:'#fff',s:27},S:{n:'sulfur',r:'sulf',c:'#e9c635',e:'#a5861a',t:INK,s:24},
+ P:{n:'phosphorus',r:'phosph',c:'#ef8a2d',e:'#a65a14',t:'#fff',s:24},As:{n:'arsenic',r:'arsen',c:'#9c6fc0',e:'#68428a',t:'#fff',s:25},Ag:{n:'silver',r:'silv',c:'#c9ced6',e:'#7d8592',t:INK,s:25}};
+var PF=['','mono','di','tri','tetra','penta','hexa','hepta','octa','nona','deca'];
+var PCOL=AMBER,ECOL=TEAL,SCOL=RED,ACOL=PLUM;
+/* chemistry text with _n subscripts and ^{..} superscripts drawn on canvas */
+function chemParts(s){var out=[],i=0;while(i<s.length){var ch=s[i];if(ch==='_'){var m=s.slice(i+1).match(/^\{([^}]*)\}|^(\d+)/);out.push({t:m[1]||m[2],k:'sub'});i+=1+m[0].length;}
+  else if(ch==='^'){var m2=s.slice(i+1).match(/^\{([^}]*)\}/);out.push({t:m2[1],k:'sup'});i+=1+m2[0].length;}else{var j=i;while(j<s.length&&s[j]!=='_'&&s[j]!=='^')j++;out.push({t:s.slice(i,j),k:'n'});i=j;}}return out;}
+function chemW(s,size){return chemParts(s).reduce(function(a,p){return a+tw(p.t,p.k==='n'?size:size*.62);},0);}
+function chem(s,x,y,o){o=o||{};var size=o.s||30,w=chemW(s,size),xx=o.a==='left'?x:(o.a==='right'?x-w:x-w/2);
+ chemParts(s).forEach(function(p){var sz=p.k==='n'?size:size*.62,dy=p.k==='sub'?size*.28:(p.k==='sup'?-size*.38:0);txt(p.t,xx,y+dy,{s:sz,c:o.c||INK,a:'left',w:o.w||600,al:o.al});xx+=tw(p.t,sz,o.w||600);});return w;}
+/* ---------- molecules ---------- */
+function atomR(e){return EL[e].s;}
+function mkAtom(e,x,y,g){return {e:e,x:x,y:y,g:g};}
+function binaryMol(A,x,B,y){var at=[],bd=[],i;
+ if(x+y<=3&&(y===1||x===1)){var seq=[];if(x===1&&y===2)seq=[[B,'B'],[A,'A'],[B,'B']];else{for(i=0;i<x;i++)seq.push([A,'A']);for(i=0;i<y;i++)seq.push([B,'B']);}
+  var sp=66,x0=-(seq.length-1)*sp/2;seq.forEach(function(e,k){at.push(mkAtom(e[0],x0+k*sp,0,e[1]));});
+  for(i=0;i<at.length-1;i++)bd.push([i,i+1]);return {at:at,bd:bd};}
+ var sp2=72;for(i=0;i<x;i++)at.push(mkAtom(A,-(x-1)*sp2/2+i*sp2,0,'A'));
+ var R=x===1?(y>6?80:70):(y>6?92:80);
+ for(i=0;i<y;i++){var a=-Math.PI/2+i*2*Math.PI/y+(x>1?Math.PI/y:0),bx=Math.cos(a)*R*(x>1?1.45:1.05),by=Math.sin(a)*R*.85;at.push(mkAtom(B,bx,by,'B'));
+  var best=0,bdist=1e9;for(var k=0;k<x;k++){var d=Math.hypot(at[k].x-bx,at[k].y-by);if(d<bdist){bdist=d;best=k;}}bd.push([best,at.length-1]);}
+ for(i=0;i<x-1;i++)bd.push([i,i+1]);return {at:at,bd:bd};}
+function acidMol(ac){var at=[],bd=[],i;
+ if(ac.kind==='bin'){if(ac.X==='CN'){at=[mkAtom('H',-70,0,'H'),mkAtom('C',0,0,'X'),mkAtom('N',64,0,'X')];bd=[[0,1],[1,2]];return {at:at,bd:bd};}
+  at.push(mkAtom(ac.X,0,0,'X'));if(ac.nH===1){at[0].x=30;at.push(mkAtom('H',-36,0,'H'));bd.push([0,1]);}else{for(i=0;i<ac.nH;i++){at.push(mkAtom('H',i?54:-54,-40,'H'));bd.push([0,i+1]);}}return {at:at,bd:bd};}
+ at.push(mkAtom(ac.X,0,0,'X'));var nO=ac.nO,R=ac.nO>3?66:62,Os=[];
+ for(i=0;i<nO;i++){var an=-Math.PI/2+i*2*Math.PI/nO+(nO===3?0:(nO===2?Math.PI/2:(nO===1?-Math.PI/2:Math.PI/4))),ox=Math.cos(an)*R,oy=Math.sin(an)*R;at.push(mkAtom('O',ox,oy,'X'));bd.push([0,at.length-1]);Os.push(at.length-1);}
+ Os.sort(function(a,b){return Math.abs(at[b].x)-Math.abs(at[a].x)||at[a].x-at[b].x;});
+ for(i=0;i<ac.nH&&i<Os.length;i++){var o=at[Os[i]],sx=o.x<-1?-1:(o.x>1?1:-1);at.push(mkAtom('H',o.x+sx*50,o.y,'H'));bd.push([Os[i],at.length-1]);}
+ return {at:at,bd:bd};}
+function drawMol(M,cx,cy,o){o=o||{};var sc=o.sc||1,hl=o.hl||[],box=o.box,al=o.al==null?1:o.al;
+ M.bd.forEach(function(b){var a=M.at[b[0]],c=M.at[b[1]];ctx.globalAlpha=al;seg(cx+a.x*sc,cy+a.y*sc,cx+c.x*sc,cy+c.y*sc,'#7d8699',6*sc);ctx.globalAlpha=1;});
+ if(box){var g=M.at.filter(function(a){return a.g===box.g;}),x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;g.forEach(function(a){var r=atomR(a.e)*sc+8;x0=Math.min(x0,cx+a.x*sc-r);x1=Math.max(x1,cx+a.x*sc+r);y0=Math.min(y0,cy+a.y*sc-r);y1=Math.max(y1,cy+a.y*sc+r);});
+  ctx.globalAlpha=box.al==null?1:box.al;rr(x0,y0,x1-x0,y1-y0,16);ctx.setLineDash([8,6]);ctx.strokeStyle=box.c||PLUM;ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([]);if(box.lab)pill(box.lab,(x0+x1)/2,y0-16,box.c||PLUM,'#fff',15);ctx.globalAlpha=1;}
+ M.at.forEach(function(a,i){var x=cx+a.x*sc,y=cy+a.y*sc,r=atomR(a.e)*sc,E=EL[a.e],h=hl.indexOf(a.g)>=0;
+  if(h){ctx.fillStyle='rgba(232,150,42,.28)';ctx.beginPath();ctx.arc(x,y,r+10,0,6.283);ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();}
+  ctx.globalAlpha=al;ctx.fillStyle=E.c;ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill();ctx.strokeStyle=E.e;ctx.lineWidth=2.5;ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.arc(x-r*.35,y-r*.35,r*.3,0,6.283);ctx.fill();ctx.globalAlpha=1;
+  txt(a.e,x,y+1,{s:Math.max(12,r*.85),c:E.t,al:al});});
+ if(o.badges){o.badges.forEach(function(bg){var list=M.at.filter(function(a){return a.g===bg.g;});list.forEach(function(a,k){var f=clamp(bg.u*list.length-k,0,1);if(f<=0)return;var r=atomR(a.e)*sc;ctx.globalAlpha=f;ball(cx+a.x*sc+r*.75,cy+a.y*sc-r*.75,11,bg.c||AMBER,'#fff');txt(String(k+1),cx+a.x*sc+r*.75,cy+a.y*sc-r*.75+1,{s:13,c:'#fff'});ctx.globalAlpha=1;});});}}
+function groupCenter(M,g,cx,cy,sc){var l=M.at.filter(function(a){return a.g===g;}),x=0,y=0;l.forEach(function(a){x+=a.x;y+=a.y;});sc=sc||1;return {x:cx+x/l.length*sc,y:cy+y/l.length*sc};}
+/* ---------- word animation ---------- */
+function wordLayout(tok,y,S,hl){hl=hl||[];var w=tok.map(function(t){return tw(t.t,S);}),spc=S*.36,gap=function(i){if(i>=tok.length-1)return 0;if(tok[i].sp)return spc;return (hl.indexOf(tok[i].id)>=0||hl.indexOf(tok[i+1].id)>=0)?16:0;},tot=0;tok.forEach(function(t,i){tot+=w[i]+gap(i);});
+ var x=400-tot/2,pos={};tok.forEach(function(t,i){pos[t.id]={x:x+w[i]/2,y:y,w:w[i],t:t};x+=w[i]+gap(i);});return pos;}
+function tokCol(t){return t.c==='p'?PCOL:t.c==='e'?ECOL:t.c==='s'?SCOL:t.c==='a'?ACOL:t.c==='m'?MUTED:(t.c||INK);}
+function drawWords(prev,cur,u,y,S,o){o=o||{};var A=wordLayout(prev.tok||[],y,S,prev.hl),B=wordLayout(cur.tok||[],y,S,cur.hl),ids={};
+ Object.keys(A).concat(Object.keys(B)).forEach(function(k){ids[k]=1;});var res={},L=[];
+ Object.keys(ids).forEach(function(id){var a=A[id],b=B[id],x,yy,al,t;if(a&&b){x=lerp(a.x,b.x,u);yy=y;al=1;t=b.t;}else if(b){x=b.x;yy=y-26*(1-u);al=u;t=b.t;}else{x=a.x;yy=y+26*u;al=1-u;t=a.t;}
+  L.push({id:id,x:x,yy:yy,al:al,t:t,b:b,w:tw(t.t,S)});});
+ L.forEach(function(e){if((cur.hl||[]).indexOf(e.id)>=0&&e.b){var wasH=(prev.hl||[]).indexOf(e.id)>=0;ctx.globalAlpha=wasH?1:u;rr(e.x-e.w/2-7,e.yy-S*.62,e.w+14,S*1.24,10);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1;}});
+ L.forEach(function(e){txt(e.t.t,e.x,e.yy,{s:S,c:tokCol(e.t),al:e.al});if((cur.strike||[]).indexOf(e.id)>=0&&e.b){ctx.globalAlpha=u;seg(e.x-e.w/2-3,e.yy+S*.08,e.x+e.w/2+3,e.yy+S*.08,RED,4);ctx.globalAlpha=1;}
+  res[e.id]={x:e.x,y:e.yy,w:e.w};});return res;}
+/* ---------- builder: a sequence of frames {mol options, tok, notes} on one canvas ---------- */
+function Builder(){this.F=[];this.i=0;this.u=1;this.dir=1;this.play=false;this.pt=0;}
+Builder.prototype.set=function(F,M,title){this.F=F;this.M=M;this.title=title;this.i=0;this.u=1;this.play=false;};
+Builder.prototype.go=function(d){var j=clamp(this.i+d,0,this.F.length-1);if(j===this.i)return;this.dir=d;this.i=j;this.u=0;};
+Builder.prototype.draw=function(dt){this.u=Math.min(1,this.u+dt*1.3);if(this.play){this.pt+=dt;if(this.pt>2.6&&this.u>=1){this.pt=0;if(this.i<this.F.length-1)this.go(1);else this.play=false;}}
+ var u=ease(this.u),cur=this.F[this.i],prev=this.u>=1?cur:(this.F[clamp(this.i-this.dir,0,this.F.length-1)]),M=this.M;clear();
+ card(30,28,740,228,'#fff');txt(this.title,400,52,{s:16,c:MUTED,w:500});
+ var mcx=cur.mx||400,mcy=150,sc=cur.sc||1;
+ drawMol(M,mcx,mcy,{sc:sc,hl:cur.hlg||[],badges:(cur.badges||[]).map(function(b){var was=(prev.badges||[]).some(function(p){return p.g===b.g;});return {g:b.g,c:b.c,u:was?1:u};}),box:cur.box?{g:cur.box.g,lab:cur.box.lab,c:cur.box.c,al:(prev.box?1:u)}:null});
+ card(30,266,740,92,'#fff');var pos=drawWords(prev,cur,u,312,cur.S||46);
+ (cur.ann||[]).forEach(function(a){var gcen=groupCenter(M,a.g,mcx,mcy,sc),p=pos[a.to];if(!p)return;ctx.globalAlpha=u;ctx.strokeStyle=a.c||AMBER;ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(gcen.x,gcen.y+40);ctx.quadraticCurveTo((gcen.x+p.x)/2,250,p.x,p.y-30);ctx.stroke();ctx.setLineDash([]);
+  if(a.lab)pill(a.lab,(gcen.x+p.x)/2,236,a.c||AMBER,'#fff',14);ctx.globalAlpha=1;});
+ card(30,368,740,104,'#fff');if(this.F.length>1)txt('Step '+(this.i+1)+' of '+this.F.length,400,388,{s:13,c:MUTED,w:500});txt(cur.note||'',400,420,{s:21,c:INK});if(cur.note2)txt(cur.note2,400,452,{s:17,c:cur.c2||MUTED,w:500});};
+function builderControls(B,extra){var h=(extra||'')+'<button class="btn" id="bB">◀ Back</button><button class="btn fill" id="bN">Next ▶</button><button class="btn" id="bP">▶ Play all</button><button class="btn" id="bS">Start again</button>';
+ $('controls').innerHTML=h;$('bB').onclick=function(){B.play=false;B.go(-1);};$('bN').onclick=function(){B.play=false;B.go(1);};$('bP').onclick=function(){if(B.i>=B.F.length-1){B.i=0;B.u=1;}B.play=true;B.pt=2;};$('bS').onclick=function(){B.play=false;B.i=0;B.u=1;};}
+/* ---------- names ---------- */
+function vowelDrop(prefix,root){return /[ao]$/.test(prefix)&&/^o/.test(root);}
+function binaryName(A,x,B,y){var p2=PF[y],r=EL[B].r;if(vowelDrop(p2,r))p2=p2.slice(0,-1);return (x>1?PF[x]:'')+EL[A].n+' '+p2+r+'ide';}
+function fstr(parts){return parts.map(function(p){return p[0]+(p[1]>1?'_'+p[1]:'');}).join('');}
+/* frames for naming a binary molecular compound */
+function framesBinary(A,x,B,y,common){var f=fstr([[A,x],[B,y]]),nA=EL[A].n,rB=EL[B].r,restB=EL[B].n.slice(rB.length),p2=PF[y],v=vowelDrop(p2,rB),F=[];
+ var eA={id:'eA',t:nA,c:'e',sp:1},pA={id:'pA',t:x>1?PF[x]:'mono',c:'p'},rr_={id:'rB',t:rB,c:'e'},xB={id:'xB',t:restB,c:'m'},ide={id:'ide',t:'ide',c:'s'};
+ var pB={id:'pB',t:p2,c:'p'},pB0={id:'pB0',t:p2.slice(0,-1),c:'p'},vB={id:'vB',t:p2.slice(-1),c:'p'};
+ F.push({tok:[],note:(common?common+': ':'')+'what is the name of '+plainF(f)+'?',note2:'Two nonmetals → a binary molecular compound'});
+ F.push({tok:[eA],hlg:['A'],hl:['eA'],ann:[{g:'A',to:'eA',c:TEAL}],note:'Rule 1: name the first element with its full name',note2:A+' = '+nA});
+ F.push({tok:[eA,rr_,xB],hlg:['B'],hl:['rB','xB'],ann:[{g:'B',to:'rB',c:TEAL}],note:'Rule 2: the second element is '+EL[B].n+'…',note2:'…but we only keep its root'});
+ F.push({tok:[eA,rr_,xB],hlg:['B'],strike:['xB'],note:'Keep the root "'+rB+'-"',note2:'drop "-'+restB+'"'});
+ F.push({tok:[eA,rr_,ide],hl:['ide'],note:'Add the suffix -ide',note2:EL[B].n+' → '+rB+'ide',c2:RED});
+ F.push({tok:[pA,eA,rr_,ide],hlg:['A'],hl:['pA'],badges:[{g:'A'}],ann:[{g:'A',to:'pA',lab:x+' '+A+' → '+(x>1?PF[x]:'mono')+'-'}],note:'Rule 3: count the '+nA+' atoms',note2:x+' atom'+(x>1?'s':'')+' → '+(x>1?PF[x]:'mono')+'-',c2:AMBER});
+ if(x===1){F.push({tok:[pA,eA,rr_,ide],badges:[{g:'A'}],strike:['pA'],note:'Exception 1: the first element never uses mono-',note2:'not "mono'+nA+'"',c2:RED});
+  F.push({tok:[eA,rr_,ide],badges:[{g:'A'}],note:'So the first word is just "'+nA+'"'});}
+ var base=x===1?[eA]:[pA,eA];
+ F.push({tok:base.concat([pB,rr_,ide]),hlg:['B'],hl:['pB'],badges:[{g:'A'},{g:'B'}],ann:[{g:'B',to:'pB',lab:y+' '+B+' → '+p2+'-'}],note:'Count the '+EL[B].n+' atoms',note2:y+' atom'+(y>1?'s':'')+' → '+p2+'-',c2:AMBER});
+ if(v){F.push({tok:base.concat([pB0,vB,rr_,ide]),badges:[{g:'A'},{g:'B'}],hl:['vB','rB'],strike:['vB'],note:'Exception 2: two vowels meet ('+p2.slice(-1)+' + o)',note2:'drop the "'+p2.slice(-1)+'" of '+p2+'-',c2:RED});
+  F.push({tok:base.concat([pB0,rr_,ide]),badges:[{g:'A'},{g:'B'}],note:p2+' + '+rB+'ide → '+p2.slice(0,-1)+rB+'ide'});}
+ var fin=base.concat(v?[pB0,rr_,ide]:[pB,rr_,ide]);
+ F.push({tok:fin,badges:[{g:'A'},{g:'B'}],hl:fin.map(function(t){return t.id;}),note:plainF(f)+' = '+binaryName(A,x,B,y),note2:(common?'Common name: '+common:'The name tells you exactly what is in the molecule'),c2:TEAL});
+ return F;}
+function plainF(f){return f.replace(/_(\d+)/g,function(m,d){return d.split('').map(function(c){return '₀₁₂₃₄₅₆₇₈₉'[+c];}).join('');});}
+
+/* ================= TAB 1: BINARY MOLECULAR COMPOUNDS ================= */
+var BIN=[['C',1,'O',1],['C',1,'O',2],['N',2,'O',1],['N',1,'O',2],['N',2,'O',4],['P',1,'Cl',3],['S',1,'F',6],['P',2,'O',5],['N',1,'F',3],['C',1,'Cl',4],['S',1,'O',3],['S',2,'F',10]];
+function fOf(c){return fstr([[c[0],c[1]],[c[2],c[3]]]);}
+/* --- 1 warm-up: what's in a name? --- */
+var WB=new Builder();
+function warmFrames(){var di={id:'di',t:'di',c:'p'},ni={id:'ni',t:'nitrogen',c:'e',sp:1},mo={id:'mo',t:'mon',c:'p'},ox={id:'ox',t:'oxide',c:'e'},all=[di,ni,mo,ox];
+ return [{tok:all,note:'Laughing gas, N₂O, used by dentists',note2:'Its scientific name is dinitrogen monoxide. Compare the name with the molecule.'},
+  {tok:all,hl:['ni','ox'],hlg:[],ann:[{g:'A',to:'ni',c:TEAL},{g:'B',to:'ox',c:TEAL}],note:'The words name the elements',note2:'nitrogen → N · oxide → O (oxygen)',c2:TEAL},
+  {tok:all,hl:['di'],hlg:['A'],badges:[{g:'A'}],ann:[{g:'A',to:'di',lab:'2 N atoms'}],note:'di- = 2',note2:'there are two nitrogen atoms',c2:AMBER},
+  {tok:all,hl:['mo'],hlg:['B'],badges:[{g:'A'},{g:'B'}],ann:[{g:'B',to:'mo',lab:'1 O atom'}],note:'mono- = 1',note2:'there is one oxygen atom',c2:AMBER},
+  {tok:all,hl:['di','ni','mo','ox'],badges:[{g:'A'},{g:'B'}],note:'The name tells you exactly what is in the molecule!',note2:'Today: the rules that turn any formula into a name',c2:TEAL}];}
+var SC_W={title:"What's in a name?",q:'Compare the formula N₂O with its name, dinitrogen monoxide. What do di- and mono- tell you?',canvas:true,
+ enter:function(){WB.set(warmFrames(),binaryMol('N',2,'O',1),'N₂O');builderControls(WB);},frame:function(dt){WB.draw(dt);},reads:function(){return [['Molecule','N₂O'],['Step',(WB.i+1)+' / '+WB.F.length]];}};
+/* --- 2 name builder --- */
+var NB=new Builder(),NBk=2;
+function nbSet(){var c=BIN[NBk];NB.set(framesBinary(c[0],c[1],c[2],c[3]),binaryMol(c[0],c[1],c[2],c[3]),plainF(fOf(c)));}
+function chooser(list,cur,lab,on){return '<div class="subbar" style="margin:0 0 4px;width:100%">'+list.map(function(c,i){return '<button class="btn'+(cur===i?' sel':'')+'" data-k="'+i+'">'+lab(c)+'</button>';}).join('')+'</div>';}
+function bindChooser(on){Array.prototype.forEach.call($('controls').querySelectorAll('[data-k]'),function(b){b.onclick=function(){on(+b.dataset.k);};});}
+var SC_NB={title:'Name builder: three rules',q:'Watch the three rules. Which part of the name comes from counting atoms?',canvas:true,
+ enter:function(){nbSet();builderControls(NB,chooser(BIN,NBk,function(c){return plainF(fOf(c));}));bindChooser(function(k){NBk=k;SC_NB.enter();});},
+ frame:function(dt){NB.draw(dt);},reads:function(){var c=BIN[NBk];return [['Formula',plainF(fOf(c))],['Step',(NB.i+1)+' / '+NB.F.length]];}};
+/* --- 3 prefixes --- */
+var PN=3,PSH=0;var PEX=['','CO: carbon monoxide','CO₂: carbon dioxide','SO₃: sulfur trioxide','CCl₄: carbon tetrachloride','PCl₅: phosphorus pentachloride','SF₆: sulfur hexafluoride','IF₇: iodine heptafluoride','octa- = 8: an octopus has 8 arms','nona- = 9: a nonagon has 9 sides','S₂F₁₀: disulfur decafluoride'];
+var PHK=['','monorail: one rail','dilemma: two choices','tricycle: three wheels','tetrahedron: four faces','pentagon: five sides','hexagon: six sides','heptagon: seven sides','octopus: eight arms','nonagon: nine sides','decade: ten years'];
+var SC_PF={title:'Prefixes count the atoms',q:'Which prefix would you use for 7 atoms? Can you think of another word that starts with the same prefix?',canvas:true,
+ enter:function(){var sl=ctlSlider('pfN','Number of atoms',1,10,1,PN,function(v){return v;},function(v){PN=v;PSH=0;});$('controls').innerHTML=sl.html;sl.bind();},
+ frame:function(dt){PSH=Math.min(1,PSH+dt*1.6);clear();card(30,28,740,250,'#fff');var n=PN,sz=n>6?24:28,gap=sz*2+12,x0=400-(n-1)*gap/2;
+  for(var i=0;i<n;i++){var f=clamp(PSH*n*1.2-i,0,1);if(f<=0)continue;ctx.globalAlpha=f;var X=x0+i*gap,Y=120+(1-ease(f))*-30;ball(X,Y,sz,EL.O.c,EL.O.e);txt('O',X,Y+1,{s:sz*.85,c:'#fff'});ball(X+sz*.75,Y-sz*.75,11,AMBER,'#fff');txt(String(i+1),X+sz*.75,Y-sz*.75+1,{s:13,c:'#fff'});ctx.globalAlpha=1;}
+  txt(n+' atom'+(n>1?'s':''),400,192,{s:18,c:MUTED,w:500});txt(PF[n]+'-',400,238,{s:54,c:AMBER});
+  card(30,292,740,180,'#fff');txt('Remember it: '+PHK[n],400,334,{s:22,c:INK});txt(PEX[n],400,382,{s:24,c:TEAL});
+  txt('1 mono · 2 di · 3 tri · 4 tetra · 5 penta · 6 hexa · 7 hepta · 8 octa · 9 nona · 10 deca',400,436,{s:16,c:MUTED,w:500});},
+ reads:function(){return [['Atoms',PN],['Prefix',PF[PN]+'-']];}};
+/* --- 4 exceptions --- */
+var EB=new Builder(),EBk=0;
+var EXC=[['No mono- first: CO',function(){var m={id:'m1',t:'mono',c:'p'},c={id:'c',t:'carbon',c:'e',sp:1},m2={id:'m2',t:'mono',c:'p'},m2a={id:'m2a',t:'mon',c:'p'},o={id:'o',t:'o',c:'p'},ox={id:'ox',t:'oxide',c:'e'};
+   return [{tok:[m,c,m2,ox],note:'Counting gives: 1 C → mono-, 1 O → mono-',note2:'"monocarbon monooxide"?'},{tok:[m,c,m2,ox],strike:['m1'],hl:['m1'],note:'Exception 1: the first element never uses mono-',c2:RED,note2:'cross out the first mono-'},
+    {tok:[c,m2,ox],note:'carbon monooxide?',note2:'Now look at where the prefix meets the root'},{tok:[c,m2a,o,ox],hl:['o','ox'],strike:['o'],note:'Exception 2: two vowels meet (o + o) → drop one',note2:'mono + oxide',c2:RED},
+    {tok:[c,m2a,ox],hl:['c','m2a','ox'],note:'CO = carbon monoxide',note2:'both exceptions in one name!',c2:TEAL}];},['C',1,'O',1]],
+ ['tetra + oxide: N₂O₄',function(){var d={id:'d',t:'di',c:'p'},n={id:'n',t:'nitrogen',c:'e',sp:1},t={id:'t',t:'tetra',c:'p'},t0={id:'t0',t:'tetr',c:'p'},a={id:'a',t:'a',c:'p'},ox={id:'ox',t:'oxide',c:'e'};
+   return [{tok:[d,n,t,ox],note:'2 N → di-, 4 O → tetra-',note2:'"dinitrogen tetraoxide"?'},{tok:[d,n,t0,a,ox],hl:['a','ox'],strike:['a'],note:'a + o: two vowels meet → drop the a',c2:RED,note2:'tetra + oxide'},{tok:[d,n,t0,ox],hl:['d','n','t0','ox'],note:'N₂O₄ = dinitrogen tetroxide',c2:TEAL,note2:'easier to say!'}];},['N',2,'O',4]],
+ ['penta + oxide: P₂O₅',function(){var d={id:'d',t:'di',c:'p'},n={id:'n',t:'phosphorus',c:'e',sp:1},t={id:'t',t:'penta',c:'p'},t0={id:'t0',t:'pent',c:'p'},a={id:'a',t:'a',c:'p'},ox={id:'ox',t:'oxide',c:'e'};
+   return [{tok:[d,n,t,ox],note:'2 P → di-, 5 O → penta-',note2:'"diphosphorus pentaoxide"?'},{tok:[d,n,t0,a,ox],hl:['a','ox'],strike:['a'],note:'a + o: two vowels meet → drop the a',c2:RED,note2:'penta + oxide'},{tok:[d,n,t0,ox],hl:['d','n','t0','ox'],note:'P₂O₅ = diphosphorus pentoxide',c2:TEAL,note2:'the a is dropped'}];},['P',2,'O',5]],
+ ['But: di + oxide (CO₂)',function(){var c={id:'c',t:'carbon',c:'e',sp:1},d={id:'d',t:'di',c:'p'},ox={id:'ox',t:'oxide',c:'e'};
+   return [{tok:[c,d,ox],hl:['d','ox'],note:'di + oxide: i + o',note2:'we only drop the a or o of the prefix'},{tok:[c,d,ox],hl:['c','d','ox'],note:'CO₂ = carbon dioxide',c2:TEAL,note2:'nothing is dropped here'}];},['C',1,'O',2]]];
+var SC_EX={title:'Two exceptions',q:'Why do we say "monoxide" and not "monooxide"? Which letter is dropped in "pentoxide"?',canvas:true,
+ enter:function(){var e=EXC[EBk],c=e[2];EB.set(e[1](),binaryMol(c[0],c[1],c[2],c[3]),plainF(fOf(c)));builderControls(EB,chooser(EXC,EBk,function(x){return x[0];}));bindChooser(function(k){EBk=k;SC_EX.enter();});},
+ frame:function(dt){EB.draw(dt);},reads:function(){return [['Case',EXC[EBk][0]],['Step',(EB.i+1)+' / '+EB.F.length]];}};
+/* --- typed practice (shared by all tabs) --- */
+function norm(s){return String(s||'').toLowerCase().replace(/[.,]/g,' ').replace(/\s+/g,' ').trim();}
+function binFeedback(ans,c){var A=c[0],x=c[1],B=c[2],y=c[3],nA=EL[A].n,rB=EL[B].r,p2=PF[y],want=binaryName(A,x,B,y),a=norm(ans);if(a===want)return null;
+ var w=a.split(' ');if(w.length!==2)return 'The name has <b>two words</b>: the first element, then the second element ending in <b>-ide</b>.';
+ if(w[0]==='mono'+nA)return '<b>Exception 1:</b> the first element never uses mono-.';
+ if(w[0].slice(-nA.length)!==nA)return 'First word: the <b>full name</b> of the first element ('+A+'), with a prefix only if there is more than one atom.';
+ var q1=w[0].slice(0,-nA.length);if(x===1&&q1)return 'There is only <b>one</b> '+A+' atom: no prefix on the first element.';if(x>1&&q1!==PF[x])return 'Count the <b>'+A+'</b> atoms again and use the matching prefix.';
+ if(w[1].indexOf(EL[B].n)>=0||w[1].slice(-3)!=='ide')return 'Second word: the <b>root</b> of '+EL[B].n+' + <b>-ide</b>.';
+ if(w[1].slice(-(rB.length+3))!==rB+'ide')return 'Check the root of '+EL[B].n+': it is "'+rB+'-".';
+ var q2=w[1].slice(0,-(rB.length+3));if(vowelDrop(p2,rB)&&q2===p2)return '<b>Exception 2:</b> two vowels meet ('+p2.slice(-1)+' + o). Drop the '+p2.slice(-1)+'.';
+ return 'Count the <b>'+B+'</b> atoms again and use the matching prefix.';}
+/* practice scene: P = {chip,name,q,want,fb(ans)->msg|null,frames(),mol,label,inputHint} */
+function practiceScene(P,qText){var B=P.anim||new Builder();P.B=B;
+ function full(){if(P.setA)P.setA();else B.set(P.frames(),P.mol,P.label);}
+ function reset(){full();if(!P.solved&&!P.shown){var f0=B.F[0];B.F=[{tok:[],note:'Type your answer below, then press Check',note2:P.inputHint||''}];if(P.setA){B.F[0].note2='';}B.i=0;}else{B.i=B.F.length-1;}}
+ var sc={title:P.name,q:qText,canvas:true,prob:null,P:P,
+  enter:function(){reset();$('controls').innerHTML='';},
+  html:function(){return '<div class="task"><span class="src">'+P.chip+'</span>'+P.q+'</div><div class="frow"><span class="fn">?</span><div class="fb2"><div class="fl">'+(P.ask||'Your answer:')+'</div><div class="nin"><input id="pAns" style="width:min(420px,70vw);text-align:left" autocomplete="off" spellcheck="false" placeholder="type here"'+(P.solved?' value="'+P.wantShow+'" disabled':'')+'><span id="pPrev" class="ansb"></span></div></div><span class="fmark" id="pMk">'+(P.solved?'<span class="good2">✓</span>':'')+'</span></div>'+
+   '<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk2">Check</button><button class="btn" id="pHint3">Hint</button>')+'<button class="btn" id="pShow">'+(P.solved?'▶ Replay the steps':'Show me the steps')+'</button>'+(P.next2?'<button class="btn fill" id="pNx"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div><div class="hintbox" id="pH3">'+P.hint+'</div><div class="feedback" id="pFb2">'+(P.solved?'<span class="good">Well done! '+P.wantShow+'</span>':'')+'</div>';},
+  bindHtml:function(){var inp=$('pAns');if(P.preview&&inp){inp.oninput=function(){$('pPrev').innerHTML=P.preview(inp.value);};}
+   if(inp)inp.onkeydown=function(e){if(e.key==='Enter'&&$('pChk2'))$('pChk2').click();};
+   if($('pChk2'))$('pChk2').onclick=function(){var msg=P.fb(inp.value);if(!norm(inp.value)){$('pFb2').innerHTML='<span class="bad">Type an answer first.</span>';return;}
+    if(msg===null){P.solved=true;renderSteps();reset();B.i=0;B.u=1;B.play=true;B.pt=2;$('panel').innerHTML=sc.html();sc.bindHtml();}else{$('pMk').innerHTML='<span class="bad2">✗</span>';inp.classList.add('no');$('pFb2').innerHTML='<span class="bad">Not yet.</span> '+msg;}};
+   if($('pHint3'))$('pHint3').onclick=function(){$('pH3').classList.toggle('on');};
+   $('pShow').onclick=function(){P.shown=true;full();B.i=0;B.u=1;B.play=true;B.pt=2;};
+   var nx=$('pNx');if(nx)nx.onclick=P.next2;},
+  frame:function(dt){B.draw(dt);},reads:function(){var all=TABS[tabI].steps.filter(function(s){return s[1].P;}),k=all.filter(function(s){return s[1].P.solved;}).length;return [['Solved',k+' / '+all.length],['Question',P.chip]];}};
+ return sc;}
+var NPQ=[['C',1,'O',2],['S',1,'O',2],['N',1,'F',3],['C',1,'Cl',4],['N',2,'O',4],['As',2,'O',3],['N',2,'O',5],['S',2,'F',10]];
+var NP=NPQ.map(function(c,i){var f=plainF(fOf(c)),P={chip:'Problem '+(i+1),name:'Name the compound: '+f,q:'Name the compound <b>'+f+'</b>.',wantShow:binaryName(c[0],c[1],c[2],c[3]),
+  fb:function(a){return binFeedback(a,c);},frames:function(){return framesBinary(c[0],c[1],c[2],c[3]);},mol:binaryMol(c[0],c[1],c[2],c[3]),label:f,
+  hint:'1. Full name of the first element (prefix only if more than one atom). 2. Prefix + root of the second element + -ide. Watch the two exceptions!'};return P;});
+/* --- common names --- */
+var CN=[['water','H',2,'O',1],['ammonia','N',1,'H',3],['hydrazine','N',2,'H',4],['nitric oxide','N',1,'O',1],['laughing gas','N',2,'O',1]],CNk=0,CB=new Builder();
+var SC_CN={title:'Common names',q:'Water, ammonia and hydrazine were named long before the rules. What are their scientific names?',canvas:true,
+ enter:function(){var c=CN[CNk];CB.set(framesBinary(c[1],c[2],c[3],c[4],c[0]),binaryMol(c[1],c[2],c[3],c[4]),plainF(fstr([[c[1],c[2]],[c[3],c[4]]])));builderControls(CB,chooser(CN,CNk,function(x){return x[0];}));bindChooser(function(k){CNk=k;SC_CN.enter();});},
+ frame:function(dt){CB.draw(dt);},reads:function(){return [['Common name',CN[CNk][0]],['Step',(CB.i+1)+' / '+CB.F.length]];}};
+
+/* ================= TAB 2: ACIDS ================= */
+var BA=[{f:'HCl',nH:1,X:'Cl',root:'chlor',rest:'ine'},{f:'HBr',nH:1,X:'Br',root:'brom',rest:'ine'},{f:'HF',nH:1,X:'F',root:'fluor',rest:'ine'},{f:'HI',nH:1,X:'I',root:'iod',rest:'ine'},
+ {f:'H_2S',nH:2,X:'S',root:'sulfur',rest:''},{f:'HCN',nH:1,X:'CN',root:'cyan',rest:'ide',ion:'cyanide ion CN⁻'}];
+BA.forEach(function(a){a.kind='bin';a.name='hydro'+a.root+'ic acid';});
+var OA=[{f:'HNO_3',nH:1,X:'N',nO:3,ion:'nitrate',ionU:'NO₃⁻',pre:'',root:'nitr',suf:'ate'},{f:'HNO_2',nH:1,X:'N',nO:2,ion:'nitrite',ionU:'NO₂⁻',pre:'',root:'nitr',suf:'ite'},
+ {f:'HClO_3',nH:1,X:'Cl',nO:3,ion:'chlorate',ionU:'ClO₃⁻',pre:'',root:'chlor',suf:'ate'},{f:'HClO_2',nH:1,X:'Cl',nO:2,ion:'chlorite',ionU:'ClO₂⁻',pre:'',root:'chlor',suf:'ite'},
+ {f:'HClO_4',nH:1,X:'Cl',nO:4,ion:'perchlorate',ionU:'ClO₄⁻',pre:'per',root:'chlor',suf:'ate'},{f:'HClO',nH:1,X:'Cl',nO:1,ion:'hypochlorite',ionU:'ClO⁻',pre:'hypo',root:'chlor',suf:'ite'},
+ {f:'H_2SO_4',nH:2,X:'S',nO:4,ion:'sulfate',ionU:'SO₄²⁻',pre:'',root:'sulf',suf:'ate',root2:'sulfur'},{f:'H_2SO_3',nH:2,X:'S',nO:3,ion:'sulfite',ionU:'SO₃²⁻',pre:'',root:'sulf',suf:'ite',root2:'sulfur'},
+ {f:'H_3PO_4',nH:3,X:'P',nO:4,ion:'phosphate',ionU:'PO₄³⁻',pre:'',root:'phosph',suf:'ate',root2:'phosphor'},{f:'H_2CO_3',nH:2,X:'C',nO:3,ion:'carbonate',ionU:'CO₃²⁻',pre:'',root:'carbon',suf:'ate'},
+ {f:'HIO_4',nH:1,X:'I',nO:4,ion:'periodate',ionU:'IO₄⁻',pre:'per',root:'iod',suf:'ate'}];
+OA.forEach(function(a){a.kind='oxy';a.root2=a.root2||a.root;a.nsuf=a.suf==='ate'?'ic':'ous';a.name=a.pre+a.root2+a.nsuf+' acid';});
+function framesBinAcid(a){var F=[],hy={id:'hy',t:'hydro',c:'p'},rt={id:'rt',t:a.root,c:'e'},rs={id:'rs',t:a.rest,c:'m'},ic={id:'ic',t:'ic',c:'s',sp:1},ac={id:'ac',t:'acid',c:'a'},f=plainF(a.f);
+ F.push({tok:[],note:f+'(aq): what is its name?',note2:'Does it make H⁺ in water? Does it contain oxygen?'});
+ F.push({tok:[],hlg:['H'],note:'It makes H⁺ in water → it is an acid',note2:'No oxygen → a binary acid',c2:BLUE});
+ F.push({tok:[hy],hlg:['H'],hl:['hy'],ann:[{g:'H',to:'hy',lab:'H → hydro-'}],note:'Rule 1: start with hydro- for the hydrogen'});
+ var withR=a.rest?[hy,rt,rs]:[hy,rt];F.push({tok:withR,hlg:['X'],hl:a.rest?['rt','rs']:['rt'],ann:[{g:'X',to:'rt',c:TEAL}],note:a.X==='CN'?'No oxygen: use the root of the cyanide ion':'Add the second element: '+(EL[a.X]?EL[a.X].n:''),note2:a.X==='S'?'for sulfur we keep the whole word "sulfur"':(a.ion||'')});
+ if(a.rest)F.push({tok:withR,strike:['rs'],note:'Keep only the root "'+a.root+'-"'});
+ F.push({tok:[hy,rt,ic],hl:['ic'],note:'Add the suffix -ic',c2:RED,note2:'hydro + '+a.root+' + ic'});
+ F.push({tok:[hy,rt,ic,ac],hl:['ac'],note:'Rule 2: the second word is always "acid"'});
+ F.push({tok:[hy,rt,ic,ac],hl:['hy','rt','ic','ac'],note:f+'(aq) = '+a.name,c2:BLUE,note2:'binary acid: hydro- + root + -ic acid'});return F;}
+function framesOxyAcid(a){var F=[],f=plainF(a.f),pre={id:'pre',t:a.pre,c:'p'},rt={id:'rt',t:a.root,c:'e'},r2={id:'r2',t:a.root2,c:'e'},su={id:'su',t:a.suf,c:'s'},ns={id:'ns',t:a.nsuf,c:'s',sp:1},ac={id:'ac',t:'acid',c:'a'};
+ var P=a.pre?[pre]:[],box={g:'X',lab:a.ionU+' = '+a.ion,c:PLUM},mn=a.suf==='ate'?'I ATE something ICky  (-ate → -ic)':'SpRITE is delicIOUS  (-ite → -ous)';
+ F.push({tok:[],note:f+': what is its name?',note2:'Does it contain oxygen?'});
+ F.push({tok:[],hlg:['H'],box:box,note:'H + oxygen → an oxyacid',note2:'Find the oxyanion (a polyatomic ion with oxygen)',c2:PLUM});
+ F.push({tok:P.concat([rt,su]),box:box,hl:['su'],note:'Start from the name of the oxyanion: '+a.ion,note2:a.pre?'keep the prefix "'+a.pre+'-"':''});
+ F.push({tok:P.concat([rt,su]),box:box,strike:['su'],hl:['su'],note:a.suf==='ate'?'The ion ends in -ate → change it to -ic':'The ion ends in -ite → change it to -ous',note2:mn,c2:RED});
+ var R=a.root2!==a.root?r2:rt;F.push({tok:P.concat([R,ns]),box:box,hl:a.root2!==a.root?['r2','ns']:['ns'],note:a.ion+' → '+a.pre+a.root2+a.nsuf,note2:a.root2!==a.root?'for '+(a.X==='S'?'sulfur':'phosphorus')+' the root becomes "'+a.root2+'-"':mn,c2:a.root2!==a.root?MUTED:RED});
+ F.push({tok:P.concat([R,ns,ac]),box:box,hl:['ac'],note:'The second word is always "acid"',note2:'the hydrogen is not part of the name'});
+ F.push({tok:P.concat([R,ns,ac]),box:box,hl:P.concat([R,ns,ac]).map(function(t){return t.id;}),note:f+' = '+a.name,c2:PLUM,note2:'oxyacid: -ate → -ic acid · -ite → -ous acid'});return F;}
+/* --- 1 what is an acid? --- */
+var AQ={L:[],R:[],t:0};
+function aqReset(){AQ.t=0;AQ.L=[];AQ.R=[];AQ.I=[];for(var i=0;i<6;i++){AQ.L.push({x:110+rnd()*180,y:170+rnd()*200,vx:(rnd()-.5)*60,vy:(rnd()-.5)*60,a:rnd()*6.28,va:(rnd()-.5)*1.2,at:1.2+i*.7,r:34});AQ.R.push({x:510+rnd()*180,y:170+rnd()*200,vx:(rnd()-.5)*60,vy:(rnd()-.5)*60,a:rnd()*6.28,va:(rnd()-.5)*1.2,r:42});}}
+/* keep every particle inside its beaker of water: box x0..x1, y 112..408 */
+function moveP(p,x0,x1,dt){p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=(p.va||0)*dt;var r=p.r||20,y0=118,y1=410;
+ if(p.x<x0+r){p.x=x0+r;p.vx=Math.abs(p.vx);}if(p.x>x1-r){p.x=x1-r;p.vx=-Math.abs(p.vx);}if(p.y<y0+r){p.y=y0+r;p.vy=Math.abs(p.vy);}if(p.y>y1-r){p.y=y1-r;p.vy=-Math.abs(p.vy);}}
+function sepP(L){for(var i=0;i<L.length;i++)for(var j=i+1;j<L.length;j++){var a=L[i],b=L[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.01,m=(a.r||20)+(b.r||20);if(d<m){var nx=dx/d,ny=dy/d,o=(m-d)/2;a.x-=nx*o;a.y-=ny*o;b.x+=nx*o;b.y+=ny*o;var rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(rv<0){a.vx+=rv*nx;a.vy+=rv*ny;b.vx-=rv*nx;b.vy-=rv*ny;}}}}
+var SC_AC={title:'What is an acid?',q:'Why is HCl in water an acid but NO₂ is not? What does HCl release into the water?',canvas:true,
+ enter:function(){aqReset();ctlButtons([{t:'Add to water again',fill:true,f:aqReset}]);},
+ frame:function(dt){dt=clamp(dt,0,.04);AQ.t+=dt;clear();[[60,'HCl in water',BLUE],[460,'NO₂ in water',MUTED]].forEach(function(b){rr(b[0],100,280,320,18);ctx.fillStyle='#e3f1fb';ctx.fill();ctx.strokeStyle='#8d99b0';ctx.lineWidth=4;ctx.stroke();txt(b[1],b[0]+140,80,{s:20,c:b[2]});});
+  sepP(AQ.L.concat(AQ.I));sepP(AQ.R);ctx.save();rr(62,102,276,316,16);ctx.clip();
+  AQ.L=AQ.L.filter(function(p){moveP(p,62,338,dt);var ux=Math.cos(p.a),uy=Math.sin(p.a);
+   if(AQ.t>p.at){var sp=1;AQ.I.push({k:'Cl',x:p.x+ux*10,y:p.y+uy*10,vx:p.vx+ux*45,vy:p.vy+uy*45,r:21,born:AQ.t});AQ.I.push({k:'H',x:p.x-ux*14,y:p.y-uy*14,vx:p.vx-ux*70,vy:p.vy-uy*70,r:13,born:AQ.t});return false;}
+   var hx=p.x-ux*14,hy=p.y-uy*14,cx=p.x+ux*10,cy=p.y+uy*10;seg(hx,hy,cx,cy,'#7d8699',5);ball(cx,cy,20,EL.Cl.c,EL.Cl.e);txt('Cl',cx,cy+1,{s:14,c:'#fff'});ball(hx,hy,12,EL.H.c,EL.H.e);txt('H',hx,hy+1,{s:11,c:INK});return true;});
+  AQ.I.forEach(function(p){moveP(p,62,338,dt);var glow=clamp(1-(AQ.t-p.born)/1.2,0,1);
+   if(p.k==='Cl'){ball(p.x,p.y,20,EL.Cl.c,EL.Cl.e);txt('Cl⁻',p.x,p.y+1,{s:14,c:'#fff'});}
+   else{if(glow>0){ctx.globalAlpha=glow*.6;ctx.fillStyle=AMBER;ctx.beginPath();ctx.arc(p.x,p.y,22,0,6.283);ctx.fill();ctx.globalAlpha=1;}ball(p.x,p.y,12,EL.H.c,EL.H.e);txt('H⁺',p.x,p.y+1,{s:11,c:INK});}});
+  ctx.restore();ctx.save();rr(462,102,276,316,16);ctx.clip();
+  AQ.R.forEach(function(p){moveP(p,462,738,dt);var ux=Math.cos(p.a),uy=Math.sin(p.a),ax=-uy,ay=ux,o1x=p.x-ux*22+ax*12,o1y=p.y-uy*22+ay*12,o2x=p.x+ux*22+ax*12,o2y=p.y+uy*22+ay*12;seg(o1x,o1y,p.x,p.y,'#7d8699',5);seg(o2x,o2y,p.x,p.y,'#7d8699',5);ball(o1x,o1y,15,EL.O.c,EL.O.e);ball(o2x,o2y,15,EL.O.c,EL.O.e);ball(p.x,p.y,16,EL.N.c,EL.N.e);txt('N',p.x,p.y+1,{s:13,c:'#fff'});});
+  ctx.restore();
+  var split=AQ.I.length/2;card(60,436,680,46,'#fff');
+  txt(split?'HCl releases H⁺ → it is an ACID ('+split+' H⁺ so far) · NO₂ stays whole: not an acid':'Watch the molecules in the water…',400,459,{s:18,c:split?BLUE:MUTED});},
+ reads:function(){return [['H⁺ ions (left)',AQ.I.length/2],['H⁺ ions (right)',0]];}};
+/* --- 2 binary acids / 3 oxyacids builders --- */
+var BAB=new Builder(),BAk=0,OAB=new Builder(),OAk=0;
+var SC_BA={title:'Naming binary acids',q:'What do all binary acid names start with? Which suffix do they all end with?',canvas:true,
+ enter:function(){var a=BA[BAk];BAB.set(framesBinAcid(a),acidMol(a),plainF(a.f)+'(aq)');builderControls(BAB,chooser(BA,BAk,function(x){return plainF(x.f);}));bindChooser(function(k){BAk=k;SC_BA.enter();});},
+ frame:function(dt){BAB.draw(dt);},reads:function(){return [['Acid',plainF(BA[BAk].f)],['Step',(BAB.i+1)+' / '+BAB.F.length]];}};
+var SC_OA={title:'Naming oxyacids',q:'Nitrate gives nitric acid. What does nitrite give? Which word helps you remember?',canvas:true,
+ enter:function(){var a=OA[OAk];OAB.set(framesOxyAcid(a),acidMol(a),plainF(a.f));builderControls(OAB,chooser(OA,OAk,function(x){return plainF(x.f);}));bindChooser(function(k){OAk=k;SC_OA.enter();});},
+ frame:function(dt){OAB.draw(dt);},reads:function(){var a=OA[OAk];return [['Acid',plainF(a.f)],['Oxyanion',a.ionU+' '+a.ion]];}};
+/* --- acid practice --- */
+function acidFeedback(ans,a){var s=norm(ans);if(s===a.name)return null;
+ if(!/ acid$/.test(s))return 'The second word is always <b>acid</b>.';var w=s.replace(/ acid$/,'');
+ if(a.kind==='bin'){if(w.indexOf('hydro')!==0)return 'No oxygen → <b>binary acid</b>: start with <b>hydro-</b>.';if(!/ic$/.test(w))return 'Binary acids end in <b>-ic</b>.';return 'Check the root of the second element.';}
+ if(w.indexOf('hydro')===0)return 'It contains <b>oxygen</b>, so it is an <b>oxyacid</b>: no hydro-.';
+ if(a.suf==='ate'&&/ous$/.test(w))return 'The ion is '+a.ion+' (<b>-ate</b>) → <b>-ic</b>. "I ATE something ICky."';
+ if(a.suf==='ite'&&/ic$/.test(w))return 'The ion is '+a.ion+' (<b>-ite</b>) → <b>-ous</b>. "SpRITE is delicIOUS."';
+ if(a.pre&&w.indexOf(a.pre)!==0)return 'Keep the prefix <b>'+a.pre+'-</b> from the ion name.';
+ return 'Find the oxyanion first: '+a.ionU+' is <b>'+a.ion+'</b>. Then change the ending.';}
+var APQ=[BA[3],OA[2],OA[3],OA[6],BA[4],OA[1]];
+var AP=APQ.map(function(a,i){var f=plainF(a.f);return {chip:'Problem '+(i+1),name:'Name the acid: '+f,q:'Name the acid <b>'+f+'</b> (dissolved in water).',wantShow:a.name,fb:function(s){return acidFeedback(s,a);},
+ frames:function(){return a.kind==='bin'?framesBinAcid(a):framesOxyAcid(a);},mol:acidMol(a),label:f,hint:'Oxygen? No → hydro- + root + -ic acid. Yes → find the oxyanion: -ate → -ic acid, -ite → -ous acid. Use the Oxyanions table if needed.'};});
+/* --- 4 flowchart --- */
+var FC=[{f:'HBr',acid:1,O:0,name:'hydrobromic acid',why1:'starts with H: makes H⁺',why2:'no oxygen'},{f:'H₂SO₃',acid:1,O:1,name:'sulfurous acid',why1:'starts with H: makes H⁺',why2:'SO₃²⁻ = sulfite → -ous'},
+ {f:'NO₂',acid:0,name:'nitrogen dioxide',why1:'no H at the front'},{f:'HNO₂',acid:1,O:1,name:'nitrous acid',why1:'starts with H',why2:'NO₂⁻ = nitrite → -ous'},{f:'CS₂',acid:0,name:'carbon disulfide',why1:'no H at the front'},
+ {f:'HClO₄',acid:1,O:1,name:'perchloric acid',why1:'starts with H',why2:'ClO₄⁻ = perchlorate → -ic'},{f:'HI',acid:1,O:0,name:'hydroiodic acid',why1:'starts with H',why2:'no oxygen'},{f:'N₂O₅',acid:0,name:'dinitrogen pentoxide',why1:'no H at the front'}],FCk=0,FCt=0;
+var FBX={b0:[400,58,280,44,'Look at the formula'],b1:[400,132,400,48,'Does it form an acid in water?'],b2:[215,226,410,50,'Name as an acid. Is oxygen present?'],b3:[620,232,320,74,'Binary molecular compound: prefixes + root + -ide'],
+ b4:[125,334,230,74,'hydro- + root + -ic, then acid'],b5:[380,334,260,74,'oxyanion: -ate → -ic, -ite → -ous, then acid']};
+function fcPath(c){return c.acid?(c.O?['b0','b1','b2','b5']:['b0','b1','b2','b4']):['b0','b1','b3'];}
+function fcBox(k,on,done){var b=FBX[k];rr(b[0]-b[2]/2,b[1]-b[3]/2,b[2],b[3],12);ctx.fillStyle=on?'#fff4d6':(done?'#e6f4f4':'#fff');ctx.fill();ctx.strokeStyle=on?AMBER:(done?TEAL:LINE);ctx.lineWidth=on?4:2;ctx.stroke();
+ var words=b[4].split(' '),lines=[''],mx=b[2]-20;words.forEach(function(w){var t=lines[lines.length-1]?lines[lines.length-1]+' '+w:w;if(tw(t,18)>mx){lines.push(w);}else lines[lines.length-1]=t;});
+ lines.forEach(function(l,i){txt(l,b[0],b[1]+(i-(lines.length-1)/2)*22,{s:18,c:INK});});}
+var SC_FC={title:'A flowchart for naming molecules',q:'Before the token moves: will this formula go left (acid) or right (molecular compound)?',canvas:true,
+ enter:function(){FCt=0;$('controls').innerHTML=chooser(FC,FCk,function(c){return c.f;})+'<button class="btn" id="fcR">▶ Run again</button>';bindChooser(function(k){FCk=k;SC_FC.enter();});$('fcR').onclick=function(){FCt=0;};},
+ frame:function(dt){FCt+=dt;var c=FC[FCk],path=fcPath(c),segT=2.0,k=Math.min(path.length-1,Math.floor(FCt/segT)),f=clamp((FCt-k*segT)/1.1,0,1);clear();
+  [['b1','b2','Yes',150,180],['b1','b3','No',540,182],['b2','b4','No',120,282],['b2','b5','Yes',300,282],['b0','b1','',0,0]].forEach(function(e){var a=FBX[e[0]],b=FBX[e[1]],on=path.indexOf(e[0])>=0&&path.indexOf(e[1])>=0&&path.indexOf(e[1])<=k;
+   arrow(a[0]+(b[0]-a[0])*.15,a[1]+a[3]/2,b[0],b[1]-b[3]/2-4,on?AMBER:'#b7c1d3',on?5:3);if(e[2])txt(e[2],e[3],e[4],{s:15,c:on?AMBER:MUTED});});
+  Object.keys(FBX).forEach(function(kk){var i=path.indexOf(kk);fcBox(kk,i===k,i>=0&&i<k);});
+  var A=FBX[path[Math.max(0,k-1)]],B=FBX[path[k]],tx=k===0?B[0]:lerp(A[0],B[0],ease(f)),ty=k===0?B[1]:lerp(A[1],B[1],ease(f));
+  var why=k===1?c.why1:(k===2&&c.acid?c.why2:'');
+  pill(c.f,tx+(k===0?170:0),ty-(k===0?0:38),BLUE,'#fff',20);
+  if(why&&f>=1)pill(why,B[0],B[1]+B[3]/2+22,PLUM,'#fff',16);
+  card(60,400,680,76,'#fff');if(k===path.length-1&&f>=1){txt(c.f+'  →  '+c.name,400,438,{s:28,c:TEAL});}else txt('Follow the arrows…',400,438,{s:20,c:MUTED,w:500});},
+ reads:function(){return [['Formula',FC[FCk].f],['Type',FC[FCk].acid?(FC[FCk].O?'oxyacid':'binary acid'):'binary molecular']];}};
+
+/* ================= TAB 3: WRITING FORMULAS ================= */
+/* animator with the same interface as Builder (F, i, u, play, go, draw) */
+function FAnim(){this.F=[];this.i=0;this.u=1;this.dir=1;this.play=false;this.pt=0;}
+FAnim.prototype.go=Builder.prototype.go;
+FAnim.prototype.setMol=function(c){this.k='mol';this.c=c;var A=c[0],x=c[1],B=c[2],y=c[3],p2=PF[y],v=vowelDrop(p2,EL[B].r);
+ this.tok=[].concat(x>1?[{id:'pA',t:PF[x],c:'p'}]:[]).concat([{id:'eA',t:EL[A].n,c:'e',sp:1},{id:'pB',t:v?p2.slice(0,-1):p2,c:'p'},{id:'eB',t:EL[B].r+'ide',c:'e'}]);
+ this.F=[{note:'Write the formula for '+binaryName(A,x,B,y),note2:'the name tells you which atoms, and how many'},{note:'The element names give the symbols',note2:EL[A].n+' → '+A+' · '+EL[B].r+'ide → '+B+' ('+EL[B].n+')',c2:TEAL},
+  {note:x>1?PF[x]+'- = '+x+' → subscript '+x:'No prefix on the first element → 1 atom',note2:x>1?'':'a subscript of 1 is not written',c2:AMBER},{note:p2+'- = '+y+(y>1?' → subscript '+y:' → 1 atom (not written)'),c2:AMBER},
+  {note:binaryName(A,x,B,y)+' = '+plainF(fOf(c)),c2:TEAL,note2:'the prefixes became the subscripts'}];this.i=0;this.u=1;this.play=false;this.M=binaryMol(A,x,B,y);};
+FAnim.prototype.setAcid=function(a){this.k='acid';this.a=a;var bin=a.kind==='bin';
+ this.tok=bin?[{id:'hy',t:'hydro',c:'p'},{id:'rt',t:a.root,c:'e'},{id:'ic',t:'ic',c:'s',sp:1},{id:'ac',t:'acid',c:'a'}]:[].concat(a.pre?[{id:'pre',t:a.pre,c:'p'}]:[]).concat([{id:'rt',t:a.root2,c:'e'},{id:'ic',t:a.nsuf,c:'s',sp:1},{id:'ac',t:'acid',c:'a'}]);
+ var q=a.q;this.F=[{note:'Write the formula for '+a.name,note2:'acid → it starts with H'},
+  {note:bin?'hydro- … -ic acid → a binary acid':(a.nsuf==='ic'?'-ic acid → the ion ends in -ate':'-ous acid → the ion ends in -ite'),note2:bin?'H + one other element (no oxygen)':(a.nsuf==='ic'?'I ATE something ICky':'SpRITE is delicIOUS'),c2:RED},
+  {note:'The ion: '+a.ionName+' = '+a.ionU,note2:'its charge is '+q+'–',c2:PLUM},{note:'Add H⁺ ions to cancel the charge',note2:q+'– + '+q+' × (1+) = 0',c2:BLUE},
+  {note:a.name+' = '+plainF(a.f),c2:TEAL,note2:q+' H⁺ + '+a.ionU+' → '+plainF(a.f)}];this.i=0;this.u=1;this.play=false;this.M=acidMol(a);};
+FAnim.prototype.draw=function(dt){this.u=Math.min(1,this.u+dt*1.0);if(this.play){this.pt+=dt;if(this.pt>3&&this.u>=1){this.pt=0;if(this.i<this.F.length-1)this.go(1);else this.play=false;}}
+ var u=ease(this.u),st=this.i,fr=this.F[st];clear();card(30,28,740,90,'#fff');var pos=wordLayout(this.tok,74,40);
+ this.tok.forEach(function(t){var p=pos[t.id];txt(t.t,p.x,p.y,{s:40,c:tokCol(t)});});
+ card(30,128,740,230,'#fff');
+ if(this.k==='mol')this.drawMol(st,u,pos);else this.drawAcid(st,u,pos);
+ card(30,368,740,104,'#fff');txt('Step '+(st+1)+' of '+this.F.length,400,388,{s:13,c:MUTED,w:500});txt(fr.note,400,420,{s:21});if(fr.note2)txt(fr.note2,400,452,{s:17,c:fr.c2||MUTED,w:500});};
+FAnim.prototype.drawMol=function(st,u,pos){var c=this.c,A=c[0],x=c[1],B=c[2],y=c[3],S=90,yb=250,wA=tw(A,S),wB=tw(B,S),sub=S*.58,ws=tw('10',sub),tot=wA+ws+wB+ws,x0=330-tot/2;
+ var xA=x0+wA/2,xsA=x0+wA+ws/2-6,xB=x0+wA+ws+wB/2,xsB=x0+wA+ws+wB+ws/2-6;
+ if(st>=1){var al=st===1?u:1;txt(A,xA,yb,{s:S,c:TEAL,al:al});txt(B,xB,yb,{s:S,c:TEAL,al:al});if(st===1){[[pos.eA,xA],[pos.eB,xB]].forEach(function(q){ctx.globalAlpha=u;arrow(q[0].x,98,q[1],yb-55,TEAL,3);ctx.globalAlpha=1;});}}
+ function fly(pp,n,xs,on){if(!pp)return;var t=on?u:1,X=lerp(pp.x,xs,ease(t)),Y=lerp(84,yb+S*.3,ease(t));txt(String(n),X,Y,{s:lerp(34,sub,t),c:AMBER});}
+ if(st>=2){if(x>1)fly(pos.pA,x,xsA,st===2);else{ctx.globalAlpha=st===2?u:1;txt('(1)',xsA+4,yb+S*.3,{s:22,c:MUTED,w:500});ctx.globalAlpha=1;}}
+ if(st>=3){if(y>1)fly(pos.pB,y,xsB,st===3);else{ctx.globalAlpha=st===3?u:1;txt('(1)',xsB+4,yb+S*.3,{s:22,c:MUTED,w:500});ctx.globalAlpha=1;}}
+ if(st>=4){ctx.globalAlpha=u;drawMol(this.M,640,245,{sc:.7});ctx.globalAlpha=1;}};
+FAnim.prototype.drawAcid=function(st,u,pos){var a=this.a,q=a.q,ix=480,iy=232,iw=chemW(a.ionChem,70);
+ if(st>=1){var ids=a.kind==='bin'?['hy','ic']:['ic'];ids.forEach(function(id){var p=pos[id];ctx.globalAlpha=st===1?u:1;rr(p.x-p.w/2-6,74-26,p.w+12,52,10);ctx.strokeStyle=RED;ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=1;});}
+ if(st>=2){var al=st===2?u:1;ctx.globalAlpha=al;txt(a.ionName,ix,160,{s:20,c:PLUM});var w=chem(a.ionChem,ix,iy,{s:70,c:PLUM});ball(ix+w/2+28,iy-40,24,PLUM,'#fff');txt(q+'–',ix+w/2+28,iy-39,{s:17,c:'#fff'});ctx.globalAlpha=1;}
+ if(st>=3){var n=q;for(var k=0;k<n;k++){var f=st===3?clamp(u*n*1.1-k,0,1):1,tx=ix-iw/2-34-k*52,X=lerp(60,tx,ease(f)),Y=lerp(150,iy-6,ease(f));if(f<=0)continue;ball(X,Y,22,EL.H.c,EL.H.e);txt('H⁺',X,Y+1,{s:15,c:INK});}
+  var got=st===3?Math.min(n,Math.floor(u*n*1.1+.0001)):n,ch=q-got;pill('total charge: '+(ch?ch+'–':'0'),ix-60,330,ch?RED:GREEN,'#fff',16);}
+ if(st>=4){ctx.globalAlpha=u;rr(560,262,190,80,14);ctx.fillStyle=TEAL;ctx.fill();chem(a.f,655,302,{s:44,c:'#fff'});ctx.globalAlpha=1;}};
+/* acid formula data */
+var AF=[BA[0],BA[2],OA[6],OA[7],OA[0],OA[8],OA[9],OA[10]].map(function(a){var o={};for(var k in a)o[k]=a[k];
+ if(a.kind==='bin'){o.ionName=EL[a.X].n.replace(/ine$/,'ide');o.ionU=a.X+'⁻';o.ionChem=a.X;o.q=1;}else{o.ionName=a.ion;o.ionU=a.ionU;o.q=a.nH;o.ionChem=a.f.replace(/^H(_\d)?/,'');}return o;});
+var MFL=[['N',2,'O',4],['C',1,'Cl',4],['S',1,'F',6],['P',2,'O',3],['Cl',1,'F',3],['S',2,'F',10]];
+var MFA=new FAnim(),MFk=0,AFA=new FAnim(),AFk=2;
+var SC_MF={title:'From names to formulas: prefixes → subscripts',q:'In "dinitrogen tetroxide", which part tells you the subscript of N? Which part tells you the subscript of O?',canvas:true,
+ enter:function(){MFA.setMol(MFL[MFk]);builderControls(MFA,chooser(MFL,MFk,function(c){return binaryName(c[0],c[1],c[2],c[3]);}));bindChooser(function(k){MFk=k;SC_MF.enter();});},
+ frame:function(dt){MFA.draw(dt);},reads:function(){var c=MFL[MFk];return [['Name',binaryName(c[0],c[1],c[2],c[3])],['Step',(MFA.i+1)+' / '+MFA.F.length]];}};
+var SC_AF={title:'Formulas of acids: cancel the charge with H⁺',q:'Phosphate has a 3– charge. How many H⁺ ions does phosphoric acid need?',canvas:true,
+ enter:function(){AFA.setAcid(AF[AFk]);builderControls(AFA,chooser(AF,AFk,function(a){return a.name;}));bindChooser(function(k){AFk=k;SC_AF.enter();});},
+ frame:function(dt){AFA.draw(dt);},reads:function(){var a=AF[AFk];return [['Acid',a.name],['Ion charge',a.q+'–']];}};
+/* --- formula practice --- */
+function parseF(s){var m,re=/([A-Z][a-z]?)(\d*)/g,out={},str=String(s||'').replace(/\s/g,'');if(!/^([A-Z][a-z]?\d*)+$/.test(str))return null;while((m=re.exec(str))){out[m[1]]=(out[m[1]]||0)+(+m[2]||1);}return out;}
+function fPreview(s){var t=String(s||'').replace(/\s/g,'');return t?plainF(t.replace(/(\d+)/g,'_$1')):'';}
+function formulaFeedback(ans,want,isAcid,extra){var a=String(ans||'').replace(/\s/g,'');if(a===want)return null;
+ if(a.toLowerCase()===want.toLowerCase())return 'Check the <b>capital letters</b>: each symbol starts with a capital, and a second letter is small (Cl, not CL).';
+ var A=parseF(a),W=parseF(want);if(!A)return 'Write symbols and numbers only, like <b>N2O4</b> (the numbers become subscripts).';
+ var miss=Object.keys(W).filter(function(e){return !A[e];}),add=Object.keys(A).filter(function(e){return !W[e];});
+ if(miss.length||add.length)return 'Check the <b>elements</b>: the name tells you which elements are in it.';
+ var bad=Object.keys(W).filter(function(e){return A[e]!==W[e];});
+ if(isAcid&&bad.length===1&&bad[0]==='H')return 'Count the <b>H⁺</b> again: you need as many as the charge of the ion.';
+ if(Object.keys(W).every(function(e){return A[e]===W[e];}))return 'Check the <b>order</b>: write the elements in the same order as the name'+(isAcid?' (H first)':'')+'.';
+ return 'Check the subscripts of <b>'+bad.join(', ')+'</b>: '+(isAcid?'use the ion formula and its charge.':'use the prefixes.')+(extra||'');}
+var FPQ=[{n:'silver chloride',w:'AgCl',ionic:1},{n:'dihydrogen monoxide',w:'H2O',c:['H',2,'O',1]},{n:'chlorine trifluoride',w:'ClF3',c:['Cl',1,'F',3]},{n:'diphosphorus trioxide',w:'P2O3',c:['P',2,'O',3]},
+ {n:'disulfur decafluoride',w:'S2F10',c:['S',2,'F',10]},{n:'carbonic acid',w:'H2CO3',acid:OA[9]},{n:'periodic acid',w:'HIO4',acid:OA[10]},{n:'dinitrogen trioxide',w:'N2O3',c:['N',2,'O',3]},{n:'sulfurous acid',w:'H2SO3',acid:OA[7]},{n:'hydrofluoric acid',w:'HF',acid:BA[2]}];
+var FP=FPQ.map(function(o,i){var A=new FAnim(),acid=o.acid?AF.filter(function(x){return x.name===o.acid.name;})[0]:null;
+ if(o.acid&&!acid){acid={};for(var k in o.acid)acid[k]=o.acid[k];if(acid.kind==='bin'){acid.ionName=EL[acid.X].n.replace(/ine$/,'ide');acid.ionU=acid.X+'⁻';acid.ionChem=acid.X;acid.q=1;}else{acid.ionName=acid.ion;acid.q=acid.nH;acid.ionChem=acid.f.replace(/^H(_\d)?/,'');}}
+ var P={chip:'Problem '+(i+1),name:'Write the formula: '+o.n,q:'Write the formula for <b>'+o.n+'</b>.'+(o.ionic?' <span class="small">(Careful: silver is a metal!)</span>':''),ask:'Type the formula (numbers become subscripts):',wantShow:fPreview(o.w),preview:fPreview,
+  fb:function(s){return formulaFeedback(s,o.w,!!o.acid,o.ionic?' Silver chloride is ionic: Ag⁺ and Cl⁻ combine 1 : 1.':'');},hint:o.acid?'Find the ion from the name (-ic → -ate, -ous → -ite, hydro- → no oxygen), then add enough H⁺ to cancel its charge.':(o.ionic?'Silver is a metal, so this is an ionic compound: no prefixes. Ag⁺ and Cl⁻ cancel 1 : 1.':'The prefixes give the subscripts. No prefix on the first element → 1.'),
+  anim:A,setA:function(){if(o.acid)A.setAcid(acid);else if(o.c)A.setMol(o.c);else{A.setMol(['Ag',1,'Cl',1]);A.tok=[{id:'eA',t:'silver',c:'e',sp:1},{id:'eB',t:'chloride',c:'e'}];A.F[1].note2='silver → Ag · chloride → Cl';A.F[2].note='Ag⁺ has a 1+ charge';A.F[2].note2='';A.F[3].note='Cl⁻ has a 1– charge → 1 : 1';A.F[0].note='Silver chloride is ionic: Ag⁺ + Cl⁻';A.F[4].note='silver chloride = AgCl';A.F[4].note2='an ionic compound: the charges cancel 1 : 1';}}};return P;});
+
+/* ================= TAB 4: MIXED QUIZ ================= */
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function uniq(a){var o=[];a.forEach(function(x){if(x&&o.indexOf(x)<0)o.push(x);});return o;}
+function qBinName(c){var A=c[0],x=c[1],B=c[2],y=c[3],ok=binaryName(A,x,B,y),nA=EL[A].n,rB=EL[B].r,w=[];
+ if(x===1)w.push('mono'+nA+' '+ok.split(' ')[1]);if(vowelDrop(PF[y],rB))w.push(ok.split(' ')[0]+' '+PF[y]+rB+'ide');
+ w.push(ok.split(' ')[0]+' '+(vowelDrop(PF[y],rB)?PF[y].slice(0,-1):PF[y])+EL[B].n);w.push((x>1?PF[x]:'')+nA+' '+PF[Math.min(10,y+1)].replace(/a$/,rB[0]==='o'?'':'a')+rB+'ide');w.push(binaryName(B,y,A,x));
+ return {kind:'name',show:plainF(fOf(c)),ask:'Name this compound',ok:ok,opts:uniq(shuffle(w)).filter(function(s){return s!==ok;}).slice(0,3),mol:binaryMol(A,x,B,y),why:'Prefix for each count; first element: full name (no mono-); second: root + -ide; drop a/o before "oxide".'};}
+function qAcidName(a){var ok=a.name,w=[];if(a.kind==='bin'){w.push(a.root+'ic acid');w.push('hydro'+a.root+'ous acid');w.push('hydrogen '+(EL[a.X]?EL[a.X].n.replace(/ine$/,'ide'):a.root+'ide'));}
+ else{w.push(a.pre+a.root2+(a.nsuf==='ic'?'ous':'ic')+' acid');w.push('hydro'+a.pre+a.root2+a.nsuf+' acid');w.push('hydrogen '+a.ion);}
+ return {kind:'name',show:plainF(a.f)+(a.kind==='bin'?'(aq)':''),ask:'Name this acid',ok:ok,opts:uniq(w).filter(function(s){return s!==ok;}).slice(0,3),mol:acidMol(a),why:a.kind==='bin'?'No oxygen → hydro- + root + -ic acid.':'Oxyanion '+a.ion+': -ate → -ic, -ite → -ous. No hydro- for oxyacids.'};}
+function qFormula(name,ok,wr,mol,why){return {kind:'formula',show:name,ask:'Choose the formula',ok:ok,opts:uniq(wr).filter(function(s){return s!==ok;}).slice(0,3),mol:mol,why:why};}
+function binF(c){return fOf(c);}
+function poolQ(){var P=[];[['N',2,'O',5],['C',1,'O',1],['C',1,'O',2],['N',2,'O',4],['P',2,'O',5],['S',1,'F',6],['P',1,'Cl',3],['N',1,'F',3],['C',1,'Cl',4],['S',1,'O',3],['N',2,'O',1],['As',2,'O',3]].forEach(function(c){P.push(qBinName(c));});
+ [BA[1],BA[3],BA[4],OA[0],OA[1],OA[2],OA[3],OA[6],OA[7],OA[4]].forEach(function(a){P.push(qAcidName(a));});
+ [['C',1,'Br',4],['N',2,'O',3],['S',2,'F',10],['Cl',1,'F',3],['P',2,'O',3]].forEach(function(c){var A=c[0],x=c[1],B=c[2],y=c[3],ok=binF(c);P.push(qFormula(binaryName(A,x,B,y),ok,[fstr([[A,y],[B,x]]),fstr([[A,x+1],[B,y]]),fstr([[B,y],[A,x]]),fstr([[A,x],[B,y+1]])],binaryMol(A,x,B,y),'The prefixes give the subscripts.'));});
+ [[OA[6],'H_2SO_4',['HSO_4','H_2SO_3','H_4SO_4']],[OA[8],'H_3PO_4',['HPO_4','H_2PO_4','H_3PO_3']],[OA[9],'H_2CO_3',['HCO_3','H_2CO_2','CH_2O_3']],[BA[0],'HCl',['HCl_2','H_2Cl','HClO']]].forEach(function(r){P.push(qFormula(r[0].name,r[1],r[2],acidMol(r[0]),'Find the ion, then add H⁺ to cancel its charge.'));});
+ return P;}
+var QZ={list:[],i:0,score:0,pick:null,order:[]};
+function qzNew(){var p=poolQ(),first=[p[0],p[12+0],p[12+4],p[22]];QZ.list=first.concat(shuffle(p.filter(function(q){return first.indexOf(q)<0;})).slice(0,6));QZ.i=0;QZ.score=0;QZ.pick=null;qzOrder();}
+function qzOrder(){var q=QZ.list[QZ.i];QZ.order=shuffle([q.ok].concat(q.opts));}
+function qzHtml(){if(QZ.i>=QZ.list.length)return '<div class="task" style="text-align:center"><div class="ansb" style="font-size:30px">Score: '+QZ.score+' / '+QZ.list.length+'</div><div class="small" style="font-size:16px;margin-top:6px">'+(QZ.score>=8?'Excellent naming!':QZ.score>=5?'Good work. Review the steps you missed.':'Go back to the name builders and try again.')+'</div></div><div class="stepbar"><button class="btn fill" id="qzN">New quiz ▶</button></div>';
+ var q=QZ.list[QZ.i],done=QZ.pick!==null,txtF=function(s){return q.kind==='formula'?plainF(s):s;};
+ return '<div class="tfhead"><b>Question '+(QZ.i+1)+' of '+QZ.list.length+'</b><span class="small">score '+QZ.score+'</span></div><div class="task">'+q.ask+': <b>'+(q.kind==='formula'?q.show:q.show)+'</b></div><div class="qzopts">'+QZ.order.map(function(o,k){var cls=done?(o===q.ok?' right':(o===QZ.pick?' wrong':'')):'';return '<button class="qzb'+cls+'" data-k="'+k+'"'+(done?' disabled':'')+'>'+txtF(o)+'</button>';}).join('')+'</div>'+
+  (done?'<div class="feedback">'+(QZ.pick===q.ok?'<span class="good">Correct!</span> ':'<span class="bad">Not quite.</span> The answer is <b>'+txtF(q.ok)+'</b>. ')+q.why+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(QZ.i<QZ.list.length-1?'Next question ▶':'See my score ▶')+'</button></div>':'');}
+function qzBind(){Array.prototype.forEach.call(document.querySelectorAll('.qzb'),function(b){b.onclick=function(){var q=QZ.list[QZ.i];QZ.pick=QZ.order[+b.dataset.k];if(QZ.pick===q.ok)QZ.score++;$('panel').innerHTML=qzHtml();qzBind();};});
+ var n=$('qzN');if(n)n.onclick=function(){if(QZ.i>=QZ.list.length){qzNew();}else{QZ.i++;QZ.pick=null;if(QZ.i<QZ.list.length)qzOrder();}$('panel').innerHTML=qzHtml();qzBind();};}
+var SC_QZ={title:'Exit quiz: name it or write it',q:'Before you choose: is it a molecular compound, a binary acid or an oxyacid?',canvas:true,
+ enter:function(){if(!QZ.list.length)qzNew();},html:qzHtml,bindHtml:qzBind,
+ frame:function(){clear();var q=QZ.list[Math.min(QZ.i,QZ.list.length-1)];card(30,28,740,444,'#fff');if(QZ.i>=QZ.list.length){txt('Score: '+QZ.score+' / '+QZ.list.length,400,240,{s:48,c:CORAL});return;}
+  txt(q.ask,400,70,{s:20,c:MUTED,w:500});txt(q.show,400,130,{s:q.kind==='formula'?40:56,c:INK});
+  drawMol(q.mol,400,320,{sc:1});if(QZ.pick!==null){pill(QZ.pick===q.ok?'✓ correct':'✗  answer: '+(q.kind==='formula'?plainF(q.ok):q.ok),400,440,QZ.pick===q.ok?GREEN:RED,'#fff',18);}},
+ reads:function(){return [['Question',Math.min(QZ.i+1,QZ.list.length)+' / '+QZ.list.length],['Score',QZ.score]];}};
+/* ================= tabs ================= */
+var OXT='<div class="gsec"><h4>Common oxyanions</h4><table class="ltab"><tr><th>-ate ion → -ic acid</th><th>-ite ion → -ous acid</th></tr><tr><td>nitrate NO₃⁻ → nitric acid</td><td>nitrite NO₂⁻ → nitrous acid</td></tr><tr><td>sulfate SO₄²⁻ → sulfuric acid</td><td>sulfite SO₃²⁻ → sulfurous acid</td></tr><tr><td>chlorate ClO₃⁻ → chloric acid</td><td>chlorite ClO₂⁻ → chlorous acid</td></tr><tr><td>perchlorate ClO₄⁻ → perchloric acid</td><td>hypochlorite ClO⁻ → hypochlorous acid</td></tr><tr><td>phosphate PO₄³⁻ → phosphoric acid</td><td>phosphite PO₃³⁻ → phosphorous acid</td></tr><tr><td>carbonate CO₃²⁻ → carbonic acid</td><td></td></tr><tr><td>periodate IO₄⁻ → periodic acid</td><td></td></tr></table></div>';
+SC_OA.html=function(){return OXT;};
+var QN='Count the atoms of each element first. Which exception could apply?',QAc='Is there oxygen in the formula? So is it a binary acid or an oxyacid?',QF='Which part of the name gives each subscript?';
+var TABS=[
+ {n:'Molecular compounds',c:TEAL,hash:'molecular',rule:['First element: <b>full name</b>','Second element: <b>root + -ide</b>','<b>Prefixes</b> give the number of each atom','No <b>mono-</b> on the first element · drop the <b>a/o</b> before "oxide"'],
+  steps:[["What's in a name?",SC_W],['Name builder',SC_NB],['Prefixes',SC_PF],['Two exceptions',SC_EX]].concat(NP.map(function(p){return [p.chip,practiceScene(p,QN)];})).concat([['Common names',SC_CN]])},
+ {n:'Naming acids',c:BLUE,hash:'acids',rule:['An <b>acid</b> produces H⁺ in water','No oxygen → <b>hydro-</b> + root + <b>-ic acid</b>','Oxyacid: <b>-ate → -ic acid</b> (I ATE something ICky)','<b>-ite → -ous acid</b> (SpRITE is delicIOUS)'],
+  steps:[['What is an acid?',SC_AC],['Binary acids',SC_BA],['Oxyacids',SC_OA]].concat(AP.map(function(p){return [p.chip,practiceScene(p,QAc)];})).concat([['Flowchart',SC_FC]])},
+ {n:'Writing formulas',c:PLUM,hash:'formulas',rule:['Molecular compounds: <b>prefixes → subscripts</b>','No prefix on the first element → 1 (not written)','Acids: find the ion, then add <b>H⁺</b> to cancel its charge','-ic acid → -ate ion · -ous acid → -ite ion'],
+  steps:[['Prefixes → subscripts',SC_MF],['Acid formulas',SC_AF]].concat(FP.map(function(p){return [p.chip,practiceScene(p,QF)];}))},
+ {n:'Exit quiz',c:CORAL,hash:'quiz',rule:['Is it an acid? (H first, in water)','Oxygen? No → hydro-…-ic acid · yes → -ic / -ous','Not an acid → prefixes + root + -ide','Formulas: prefixes or charges give the subscripts'],steps:[['Quiz',SC_QZ]]}];
+TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].P){s[1].P.next2=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
+var tabI=0,stepI=0,cur=null,lastReads='';
+TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].prob){s[1].prob.next=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
+function renderTabs(){$('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+t.n+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
+function renderSteps(){$('steps').innerHTML=TABS[tabI].steps.map(function(s,i){var p=s[1].prob||s[1].P,done=p&&p.solved;return '<button class="step'+(i===stepI?' on':'')+(done?' done':'')+'" data-i="'+i+'"><b>'+(done?'✓':(i+1))+'</b>'+s[0]+'</button>';}).join('');
+ Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
+function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.documentElement.style.setProperty('--accent',T.c);
+ renderTabs();renderSteps();$('stitle').textContent=cur.title;$('q').innerHTML=cur.q;$('rule').innerHTML=(cur.rule||T.rule).map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('cv').style.display=cur.canvas?'':'none';$('controls').innerHTML='';$('controls').style.display=cur.canvas?'':'none';$('panel').innerHTML='';lastReads='';
+ if(cur.enter)cur.enter();
+ if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();if(cur.bindHtml)cur.bindHtml();}else if(cur.reveal)revealUI(cur.reveal);
+ try{history.replaceState(null,'','#'+T.hash);}catch(e){}window.scrollTo&&window.scrollY>200&&window.scrollTo({top:0,behavior:'smooth'});}
+function solvedIn(t){var a=TABS[t].steps.filter(function(s){return s[1].prob&&s[1].prob.chip;});return [a.filter(function(s){return s[1].prob.solved;}).length,a.length];}
+function reads(){var r=cur.reads?cur.reads():[];if(cur.prob&&!cur.canvas){var s=solvedIn(tabI);r=[['Problems solved',s[0]+' / '+s[1]],['Mode',cur.prob.mode==='try'?'My turn':'Show me']];}
+ if(!r.length)r=[['Step',(stepI+1)+' of '+TABS[tabI].steps.length]];
+ var h=r.map(function(x){return '<div class="rd"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+var hi=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+window.addEventListener('hashchange',function(){var k=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));if(k>=0&&k!==tabI)go(k,0);});
+var last=performance.now(),rt=0;
+function loop(now){var dt=clamp((now-last)/1000,0,.04);last=now;try{if(cur.canvas&&cur.frame)cur.frame(dt);rt+=dt;if(rt>.2){rt=0;reads();}}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);window.labGo=go;window.labTABS=TABS;
+})();
+</script>
+</body>
+</html>
