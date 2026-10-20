@@ -179,7 +179,7 @@ function symZ(sym,Z,x,y,size,col,gap){var g=drawSym(sym,x,y,size,col);if(Z){ctx.
 /* Bohr model. n = electrons shown; Z = protons. opt: scale, fade (inner faded), hiOuter, labels, extra (array of animated electrons), hidden */
 function shellR(i,sc){return (52+i*40)*sc;}
 function drawAtom(cx,cy,Z,n,t,opt){opt=opt||{};var sc=opt.scale||1,a=arrangement(n),levels=Math.max(a.length,opt.minLevels||0);
-  for(var i=0;i<levels;i++){var r=shellR(i,sc),full=(a[i]===[2,8,8,2][i]);
+  for(var i=0;i<levels;i++){var r=shellR(i,sc),full=(i<3&&a[i]===[2,8,8][i]);
     circ(cx,cy,r,null,full&&opt.labels!==false?'#7fc4a0':'#a9b5c9',full?2:1.6,[6,6]);}
   var nr=26*sc;ball(cx,cy,nr,NUC,null);txt(Z+' p⁺',cx,cy-(opt.neutrons?6:0)*sc,{s:Math.round(15*sc),c:'#fff',w:700});
   if(opt.neutrons)txt(opt.neutrons+' n⁰',cx,cy+9*sc,{s:Math.round(12*sc),c:'#fff',w:600});
@@ -190,7 +190,7 @@ function drawAtom(cx,cy,Z,n,t,opt){opt=opt||{};var sc=opt.scale||1,a=arrangement
       var isLast=(i===a.length-1&&j===k-1);
       if(!(opt.skipLast&&isLast)&&!(opt.hideOuter&&outer)){ctx.globalAlpha=(opt.fade&&!outer)?0.35:1;electron(ex,ey,c,5.5*Math.max(.8,sc));ctx.globalAlpha=1;}
       pos.push({x:ex,y:ey,level:i,outer:outer});}
-    if(opt.labels!==false){var full2=(k===[2,8,8,2][i]);var lx=cx+r2*Math.cos(-0.8),ly=cy+r2*Math.sin(-0.8);
+    if(opt.labels!==false){var full2=(i<3&&k===[2,8,8][i]);var lx=cx+r2*Math.cos(-0.8),ly=cy+r2*Math.sin(-0.8);
       if(full2&&!opt.nofull)pill(k+' · full',lx+28,ly-6,GREEN,'#fff',12);else pill(String(k),lx+16,ly-6,'#fff',INK,12);}}
   return pos;}
 
@@ -724,4 +724,6 @@ function loop(){var t=now();clear();try{TABS[cur.tab].s[cur.step][3](t);}catch(e
 go(0,0);requestAnimationFrame(loop);
 })();
 </script>
+<!-- visit counter (GoatCounter) -->
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" data-goatcounter-settings='{"allow_frame": true}' async src="//gc.zgo.at/count.js"></script>
 </body></html>
