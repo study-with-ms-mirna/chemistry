@@ -383,6 +383,7 @@ function chem(s,x,y,o){o=o||{};var size=o.s||30,w=chemW(s,size),xx=o.a==='left'?
 function atomR(e){return EL[e].s;}
 function mkAtom(e,x,y,g){return {e:e,x:x,y:y,g:g};}
 function binaryMol(A,x,B,y){var at=[],bd=[],i;
+ if(A==='H'&&x===2&&y===1){at=[mkAtom('H',-50,20,'A'),mkAtom(B,0,-18,'B'),mkAtom('H',50,20,'A')];bd=[[0,1],[1,2]];return {at:at,bd:bd};}
  if(x+y<=3&&(y===1||x===1)){var seq=[];if(x===1&&y===2)seq=[[B,'B'],[A,'A'],[B,'B']];else{for(i=0;i<x;i++)seq.push([A,'A']);for(i=0;i<y;i++)seq.push([B,'B']);}
   var sp=66,x0=-(seq.length-1)*sp/2;seq.forEach(function(e,k){at.push(mkAtom(e[0],x0+k*sp,0,e[1]));});
   for(i=0;i<at.length-1;i++)bd.push([i,i+1]);return {at:at,bd:bd};}
