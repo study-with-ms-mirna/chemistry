@@ -279,6 +279,11 @@ sub{font-size:.65em}
 .ptab td:first-child{font-family:Fredoka,sans-serif;font-weight:600;background:#f6f8fc;width:24%}
 .sw{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-3px;margin:0 2px;border:1px solid rgba(24,35,58,.25)}
 .safe{margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.namerow select{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;min-width:140px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.namerow label{min-width:120px}
+.namerow input.no,.namerow select.no{border-color:#d8434a;background:#fdeeee}
+.exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
+.sendst{font-family:Fredoka,sans-serif;font-size:16px;color:var(--muted)}.sendst.ok{color:#2e9e5b;font-weight:600}.sendst.err{color:#d8434a;font-weight:600}
 </style>
 </head>
 <body>
@@ -974,29 +979,53 @@ var QX=[{q:'Vinegar turns blue litmus red and fizzes with baking soda. Vinegar i
  {q:'An <b>Arrhenius base</b> is a substance that…',o:['produces OH⁻ ions in water','accepts an electron pair','donates H⁺','produces H⁺ ions in water'],a:0,w:'Arrhenius: base → OH⁻ in water.'},
  {q:'Which acid is <b>diprotic</b>?',o:['H₂SO₄','HCl','CH₃COOH','H₃PO₄'],a:0,w:'H₂SO₄ has two ionizable H atoms.'},
  {q:'Which model of acids and bases is the <b>broadest</b>?',o:['Lewis','Brønsted–Lowry','Arrhenius','they are all the same'],a:0,w:'Every Arrhenius and Brønsted–Lowry acid is also a Lewis acid.'}];
-function mkQuiz(L,exit){return {L:L,exit:!!exit,name:'',ord:null};}
-function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.ord=Q.L.map(function(q){return shuffle(q.o.map(function(_,k){return k;}));});}
+function mkQuiz(L,exit){return {L:L,exit:!!exit,ord:null,player:null};}
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.sent=false;Q.started=Date.now();Q.ord=Q.L.map(function(q){return shuffle(q.o.map(function(_,k){return k;}));});}
 function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
-function qzHtml(Q){if(!Q.ord)qzStart(Q);var N=Q.L.length;
+function exStartHtml(Q){var me={};try{me=JSON.parse(lsGet('msm-student')||'{}')||{};}catch(e){}var nm=Q.player?Q.player.name:(me.name||''),cl=Q.player?Q.player.cls:(me.cls||'');
+ return '<div class="qz"><div class="lbl">Exit ticket · Chapter 18.1</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions from all three objectives. One try per question.</div>'+
+  '<div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div>'+
+  '<div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
+  '<div class="exerr" id="exErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="exGo">Start the exit ticket ▶</button></div></div>';}
+function exResult(Q){var N=Q.L.length,now=new Date(),mins=Math.max(1,Math.round((Date.now()-Q.started)/60000)),
+ when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+ hh=(Q.player.name+'|'+Q.player.cls+'|'+Q.score*100+'|'+Q.score+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7),
+ code='AB-'+('000000'+hh.toString(36).toUpperCase()).slice(-6);
+ Q.res={when:when,code:code,payload:{game:'Intro to Acids & Bases Lab: Exit Ticket',chapter:18,name:Q.player.name,cls:Q.player.cls,score:Q.score*100,correct:Q.score,total:N,mins:mins,when:when,code:code,
+  missed:Q.hist.map(function(h,k){return h?'':'Q'+(k+1);}).filter(Boolean).join(' ')}};}
+function exSend(Q){var st=$('exSt'),rt=$('exRetry');if(!st)return;st.className='sendst';st.textContent='Sending your result to your teacher…';if(rt)rt.style.display='none';
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Q.res.payload)})
+  .then(function(){Q.sent=true;var s2=$('exSt');if(s2){s2.className='sendst ok';s2.textContent='✓ Your result was sent to your teacher.';}})
+  .catch(function(){var s2=$('exSt'),r2=$('exRetry');if(s2){s2.className='sendst err';s2.textContent='Could not send. Check your internet, then tap Send again.';}if(r2)r2.style.display='';});}
+function qzHtml(Q){if(Q.exit&&!Q.player)return exStartHtml(Q);if(!Q.ord)qzStart(Q);var N=Q.L.length;
  if(Q.done){var pct=Q.score/N,msg=pct>=.8?'Excellent! You have got this objective.':(pct>=.6?'Good work. Look at the ones you missed, then try again.':'Go back through the steps in this tab, then try again.');
   if(Q.exit)msg=pct>=.8?'Excellent work today!':(pct>=.6?'Good effort. Review the questions you missed.':'Review this lesson again before the next class.');
-  var d=new Date(),ds=d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  return '<div class="qz qzend">'+(Q.exit?'<div class="ticket"><div class="lbl">Exit ticket · Chapter 18.1 Introduction to acids and bases</div><div class="tname">'+(esc(Q.name)||'Name: ____________')+'</div><div class="small">'+ds+'</div><div class="qzbig">'+Q.score+' / '+N+'</div><div>'+msg+'</div>'+qzDots(Q)+'<div class="small">Show this screen to your teacher.</div></div>':'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q))+
+  return '<div class="qz qzend">'+(Q.exit?'<div class="ticket"><div class="lbl">Exit ticket · Chapter 18.1 Introduction to acids and bases</div><div class="tname">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div><div class="small">'+Q.res.when+' · check code '+Q.res.code+'</div><div class="qzbig">'+Q.score+' / '+N+'</div><div>'+msg+'</div>'+qzDots(Q)+
+   '<div class="stepbar" style="justify-content:center"><span class="'+(Q.sent?'sendst ok':'sendst')+'" id="exSt">'+(Q.sent?'✓ Your result was sent to your teacher.':'Sending your result to your teacher…')+'</span><button class="btn" id="exRetry" style="display:none">Send again</button></div></div>':'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q))+
    '<div class="qzrev">'+Q.L.map(function(q,k){return '<div class="'+(Q.hist[k]?'ok':'no')+'">'+(Q.hist[k]?'✓':'✗')+' <b>'+(k+1)+'.</b> '+q.q.replace(/<span class="small">.*<\/span>/,'')+' → <b>'+q.o[q.a]+'</b></div>';}).join('')+'</div>'+
-   '<div class="stepbar" style="justify-content:center"><button class="btn fill" id="qzR">Try again</button></div></div>';}
+   '<div class="stepbar" style="justify-content:center"><button class="btn fill" id="qzR">'+(Q.exit?'Start again':'Try again')+'</button></div></div>';}
  var q=Q.L[Q.i],ans=Q.pick!==null;
- var h='<div class="qz">'+(Q.exit?'<div class="namerow"><label>Your name: <input id="qzName" autocomplete="off" value="'+esc(Q.name)+'"></label></div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div>';
+ var h='<div class="qz">'+(Q.exit?'<div class="small" style="margin-bottom:6px">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div>';
  h+='<div class="qzq">'+q.q+'</div>'+(q.pic?'<div class="qzpic">'+q.pic+'</div>':'');
  h+='<div class="qzopts">'+Q.ord[Q.i].map(function(k,j){var cls=ans?(k===q.a?' right':(k===Q.pick?' wrong':'')):'';return '<button class="qzb'+cls+'" data-k="'+k+'"'+(ans?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
  if(ans)h+='<div class="qzfb '+(Q.pick===q.a?'ok':'no')+'"><b>'+(Q.pick===q.a?'Correct!':'Not quite.')+'</b> '+(Q.pick===q.a?'':'The answer is <b>'+q.o[q.a]+'</b>. ')+q.w+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(Q.i<N-1?'Next question ▶':'See my score ▶')+'</button></div>';
  return h+'</div>';}
 function qzRender(Q){$('panel').innerHTML=qzHtml(Q);qzBind(Q);}
 function qzBind(Q){each('.qzb',function(b){b.onclick=function(){if(Q.pick!==null)return;var q=Q.L[Q.i];Q.pick=+b.getAttribute('data-k');var ok=Q.pick===q.a;if(ok)Q.score++;Q.hist[Q.i]=ok;qzRender(Q);};});
- var n=$('qzN');if(n)n.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;}else{Q.done=true;renderSteps();}qzRender(Q);};
- var r=$('qzR');if(r)r.onclick=function(){qzStart(Q);renderSteps();qzRender(Q);};
- var nm=$('qzName');if(nm)nm.oninput=function(){Q.name=nm.value;};}
+ var n=$('qzN');if(n)n.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;qzRender(Q);}else{Q.done=true;if(Q.exit)exResult(Q);renderSteps();qzRender(Q);if(Q.exit)exSend(Q);}};
+ var r=$('qzR');if(r)r.onclick=function(){if(Q.exit){Q.ord=null;Q.done=false;var keep=Q.player;Q.player=null;Q.last=keep;qzRender(Q);return;}qzStart(Q);renderSteps();qzRender(Q);};
+ var rt=$('exRetry');if(rt)rt.onclick=function(){exSend(Q);};
+ var go=$('exGo');if(go){var nm=$('exName'),cl=$('exCls');if(Q.last&&!nm.value){nm.value=Q.last.name;cl.value=Q.last.cls;}
+  var start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exErr');nm.classList.toggle('no',v.length<2);cl.classList.toggle('no',!c);
+   if(v.length<2||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}
+   if(!c){er.textContent='Please choose your class.';cl.focus();return;}
+   Q.player={name:v,cls:c};qzStart(Q);renderSteps();qzRender(Q);};
+  go.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}}
 function quizScene(Q,title,think){return {title:title,q:think,canvas:false,quiz:Q,html:function(){return qzHtml(Q);},bindHtml:function(){qzBind(Q);},
- reads:function(){if(!Q.ord)qzStart(Q);return [['Question',Math.min(Q.i+1,Q.L.length)+' / '+Q.L.length],['Score',Q.score]];}};}
+ reads:function(){if(Q.exit&&!Q.player)return [['Status','enter name and class']];if(!Q.ord)qzStart(Q);return [['Question',Math.min(Q.i+1,Q.L.length)+' / '+Q.L.length],['Score',Q.score]];}};}
 var QZ1=mkQuiz(Q1),QZ2=mkQuiz(Q2),QZ3=mkQuiz(Q3),QZX=mkQuiz(QX,true);
 
 /* ================= navigation ================= */
@@ -1011,7 +1040,7 @@ var TABS=[
   rule:['<b>Arrhenius</b>: acid → H⁺ in water · base → OH⁻ in water','<b>Brønsted–Lowry</b>: acid = H⁺ <b>donor</b> · base = H⁺ <b>acceptor</b>','<b>Lewis</b>: acid = electron-pair <b>acceptor</b> · base = electron-pair <b>donor</b>','Conjugate base = acid − H⁺ · conjugate acid = base + H⁺'],
   steps:[['Arrhenius',SC_M1],['Brønsted–Lowry',SC_M2]].concat(PBL.map(function(p){return [p.chip,blProbScene(p)];})).concat([['Mono- & polyprotic',SC_M4],['Lewis',SC_M5],['Anhydrides',SC_M6],['Compare models',SC_M7],['Quiz me',quizScene(QZ3,'Quiz me: the three models','Which model does each question use: Arrhenius, Brønsted–Lowry or Lewis?')]])},
  {n:'Exit ticket',c:CORAL,hash:'exit-ticket',obj:'Show what you learned today: 10 questions from all three objectives.',
-  rule:['Type your name first','One try per question: think before you click','At the end, show your score to your teacher'],
+  rule:['Type your full name and choose your class','One try per question: think before you click','Your result is sent to your teacher at the end'],
   steps:[['Exit ticket',quizScene(QZX,'Exit ticket: Introduction to acids and bases','Read each question carefully. Which objective is it testing?')]]}];
 function mixFields(P){(P.fields||[]).forEach(function(f){if(f.t!=='c'||f.keep||P.keep)return;var idx=shuffle(f.opts.map(function(_,i){return i;})),o=f.opts;f.opts=idx.map(function(i){return o[i];});f.ok=idx.indexOf(f.ok);if(f.bad){var nb={};Object.keys(f.bad).forEach(function(k){nb[idx.indexOf(+k)]=f.bad[k];});f.bad=nb;}});}
 hoP.keep=true;PBL.forEach(function(p){p.keep=true;});
@@ -1042,6 +1071,7 @@ requestAnimationFrame(loop);
 reads();
 })();
 </script>
+<script src="student-visits.js"></script>
 <!-- visit counter (GoatCounter) -->
 <script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
 <script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
