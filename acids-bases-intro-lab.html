@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intro to Acids &amp; Bases Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+.reads .rd b{font-size:19px}
+.step.done b{background:#2e9e5b;color:#fff}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.cnt{display:none;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;padding:10px 14px;border-radius:14px;background:#f6f8fc}
+.cnt.show{display:flex}
+.stp{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:17px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:26px;text-align:center;font-size:22px}
+#cv.click{cursor:pointer}
+sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+.dt tr[data-r]{cursor:pointer}
+.dt tr.sel td{background:#fff1cc!important;font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cmp{display:inline-flex;align-items:center;gap:8px;border:2px solid;border-radius:999px;padding:4px 6px 4px 12px;font-family:Fredoka,sans-serif;font-size:17px;background:#fff}
+.cmp i{font-style:normal;color:#fff;border-radius:999px;padding:2px 10px;font-weight:600}
+.solve{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;margin:6px 0}
+.ladder{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.rung{font-family:Fredoka,sans-serif;font-size:16px;padding:4px 10px;border-radius:10px;background:#eef2f8;color:var(--ink)}
+.rung.hit{color:#fff;font-weight:600;transform:scale(1.08)}
+.solverow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.big2{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin-top:6px}
+.lawbig{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;text-align:center;margin:10px 0;padding:8px;background:#f6f8fc;border-radius:14px}
+.lawsm{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.center{text-align:center;font-size:18px}
+.mysteq{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;text-align:center;padding:10px;background:#f6f8fc;border-radius:14px;margin-bottom:10px}
+.mysteq sup.q{color:var(--accent);font-size:.7em}
+.runbar,.ansrow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.runbar .lab,.ansrow2 .lab{font-family:Fredoka,sans-serif;font-size:16px;margin-left:6px}
+.ansrow2{font-family:Fredoka,sans-serif;font-size:20px;border-top:2px solid var(--line);padding-top:10px;margin-top:10px}
+.cmpbox{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-family:Fredoka,sans-serif;font-size:16px}
+.cmpbox .cmp{margin:6px 6px 0 0}
+.warn{margin-top:8px;color:#d8434a;font-weight:600}
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;margin:6px 0}
+.gin input,.gin select{width:80px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.gin select{width:64px}
+.gin input.ok,.gin select.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no,.gin select.no{border-color:#d8434a;background:#fdeeee}
+.good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
+.mk{min-width:18px}
+.hintbox .ladder{display:inline-flex}
+
+/* ===== ideal gas law lab ===== */
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.5}
+.task .src{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--accent);margin-right:8px;vertical-align:2px}
+.frow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.frow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.frow .fb2{flex:1;min-width:0}
+.frow .fl{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;margin-bottom:6px}
+.chs{display:flex;flex-wrap:wrap;gap:8px}
+.chs button{font-family:Fredoka,sans-serif;font-size:17px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px 14px;cursor:pointer;color:var(--ink)}
+.chs button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.chs button.ok{border-color:#2e9e5b;background:#2e9e5b;color:#fff}
+.chs button.no{border-color:#d8434a;background:#d8434a;color:#fff}
+.nin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:19px}
+.nin input{width:120px;font-family:Fredoka,sans-serif;font-size:20px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.nin input.ok{border-color:#2e9e5b;background:#e8f6ee}.nin input.no{border-color:#d8434a;background:#fdeeee}
+.fmark{font-weight:700;font-size:20px;min-width:22px;margin-top:2px}
+.mathl{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;margin:6px 0;line-height:1.5}
+.mathl b{font-weight:600}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;color:var(--accent)}
+.tip{font-size:14px;color:var(--muted);margin-top:6px}
+.dtab{border-collapse:separate;border-spacing:0;width:100%;margin-top:6px;font-family:Fredoka,sans-serif;font-size:18px}
+.dtab th{background:var(--accent);color:#fff;font-weight:600;padding:6px 8px}
+.dtab th:first-child{border-radius:10px 0 0 0}.dtab th:last-child{border-radius:0 10px 0 0}
+.dtab td{padding:6px 8px;text-align:center;border-bottom:2px solid #eef1f6}
+.dtab td input{width:90px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:3px}
+.dtab td input.ok{border-color:#2e9e5b;background:#e8f6ee}.dtab td input.no{border-color:#d8434a;background:#fdeeee}
+.mapflow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:17px;margin:8px 0}
+.mapflow .bx{border:2px solid var(--line);border-radius:12px;padding:6px 12px;background:#fff;font-weight:600}
+.mapflow .bx.hi{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mapflow .ar{color:var(--accent);font-weight:600;text-align:center;line-height:1.1}
+.mapflow .ar small{display:block;font-size:13px}
+.excards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exc{border:2px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.exc .eh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.exc .eh svg{flex:none}
+.exc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px;margin:0}
+.exc .tag{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:6px}
+.exc p{margin:4px 0;font-size:16px}
+.rv{border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;background:#fff}
+.rv .rq{font-size:18px;font-weight:700}
+.rv .ra{display:none;margin-top:8px;background:#e8f6ee;border-radius:12px;padding:8px 12px;font-size:17px}
+.rv.open .ra{display:block}
+.rv .btn{margin-top:8px}
+.bigeq{font-family:Fredoka,sans-serif;font-weight:600;font-size:34px;text-align:center;color:var(--accent);background:#f6f8fc;border-radius:14px;padding:10px;margin:8px 0}
+.ltab{border-collapse:collapse;width:100%;font-size:17px;margin-top:6px}
+.ltab td,.ltab th{border:2px solid #eef1f6;padding:6px 8px;text-align:center}
+.ltab th{background:#f3f6fb;font-family:Fredoka,sans-serif;font-weight:600}
+.subbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.subbar .btn.sel{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+
+.hv-chg{background:#fde3cc;color:#b35a0c;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-ask{background:#d6efef;color:#0b6f71;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-cst{border-bottom:3px dashed #8d99b0;font-weight:700;padding:0 2px}
+
+.tfhead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:18px;margin-bottom:4px}
+.tfrow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.tfrow.good{border-color:#2e9e5b;background:#f3fbf6}.tfrow.bad{border-color:#d8434a;background:#fdf4f4}
+.tfrow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.tfq{flex:1;font-size:18px;line-height:1.45}
+.tfx{font-size:16px;margin-top:6px;color:var(--ink)}
+.tfb{display:flex;gap:8px;flex:none}
+.tfbtn{width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;cursor:pointer;color:var(--ink)}
+.tfbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tfbtn:disabled{cursor:default;opacity:.55}
+.tfbtn.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff;opacity:1}
+.tfbtn.wrong{background:#d8434a;border-color:#d8434a;color:#fff;opacity:1}
+
+/* ===== acids & bases lab ===== */
+.objbar{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-left:8px solid var(--accent);border-radius:14px;padding:8px 14px;margin-bottom:12px;font-size:17px}
+.objbar b{font-family:Fredoka,sans-serif;font-weight:600;color:var(--accent);white-space:nowrap}
+.vhead{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;color:var(--accent);margin:18px 0 10px}
+.vhead svg{flex:none}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.vid{border:2px solid var(--line);border-radius:18px;padding:8px 8px 10px;background:#fff;box-shadow:0 4px 0 var(--shadow)}
+.vbox{position:relative;width:100%;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#18233a}
+.vbox>button,.vbox>iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;padding:0;margin:0}
+.vbox>button{cursor:pointer;background:#18233a}
+.vbox img{width:100%;height:100%;object-fit:cover;display:block}
+.vplay{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(24,35,58,.78);border:3px solid #fff}
+.vplay:after{content:"";position:absolute;left:21px;top:15px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}
+.vdur{position:absolute;right:8px;bottom:8px;background:rgba(24,35,58,.85);color:#fff;font-family:Fredoka,sans-serif;font-size:14px;padding:2px 8px;border-radius:8px}
+.vt{font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;margin:8px 2px 2px}
+.vw{font-size:15px;color:var(--muted);margin:0 2px}
+.vlink{display:inline-block;margin:6px 2px 0;font-family:Fredoka,sans-serif;font-size:14px;color:var(--accent);text-decoration:none}
+.vlink:hover{text-decoration:underline}
+.qz{border:2px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+.qzh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:18px}
+.qzdots{display:flex;gap:6px;flex-wrap:wrap}
+.qzdots i{width:13px;height:13px;border-radius:50%;background:var(--line);display:block}
+.qzdots i.cur{background:var(--accent)}.qzdots i.ok{background:#2e9e5b}.qzdots i.no{background:#d8434a}
+.qzq{font-size:21px;font-weight:700;margin:12px 0 10px;line-height:1.4}
+.qzpic{display:flex;justify-content:center;margin:4px 0 12px}
+.qzopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:700px){.qzopts{grid-template-columns:1fr}}
+.qzb{display:flex;align-items:flex-start;gap:10px;text-align:left;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:18px;line-height:1.35;border:2px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 var(--shadow);color:var(--ink)}
+.qzb:hover:not(:disabled){border-color:var(--accent)}
+.qzb:disabled{cursor:default}
+.qzb .L{flex:none;width:28px;height:28px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.qzb.right{border-color:#2e9e5b;background:#e8f6ee}.qzb.right .L{background:#2e9e5b;color:#fff}
+.qzb.wrong{border-color:#d8434a;background:#fdeeee}.qzb.wrong .L{background:#d8434a;color:#fff}
+.qzfb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.qzfb.ok{background:#e8f6ee;border-color:#2e9e5b}.qzfb.no{background:#fdeeee;border-color:#d8434a}
+.qzend{text-align:center}
+.qzbig{font-family:Fredoka,sans-serif;font-weight:700;font-size:48px;color:var(--accent);line-height:1.1;margin:6px 0}
+.qzend .qzdots{justify-content:center;margin:10px 0}
+.qzrev{text-align:left;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.qzrev div{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.qzrev div.ok{border-color:#2e9e5b;background:#f3fbf6}.qzrev div.no{border-color:#d8434a;background:#fdf4f4}
+.ticket{border:3px dashed var(--accent);border-radius:18px;padding:12px;margin-bottom:10px}
+.ticket .tname{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px}
+.namerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-family:Fredoka,sans-serif;font-size:18px}
+.namerow input{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;min-width:220px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ptab{border-collapse:separate;border-spacing:0;width:100%;font-size:17px;border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.ptab th{font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;padding:8px;color:#fff}
+.ptab td{padding:8px 10px;border-top:1px solid #e3e9f2;vertical-align:middle}
+.ptab td:first-child{font-family:Fredoka,sans-serif;font-weight:600;background:#f6f8fc;width:24%}
+.sw{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-3px;margin:0 2px;border:1px solid rgba(24,35,58,.25)}
+.safe{margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <path d="M14 11 V38 a5 5 0 0 0 5 5 H39 a5 5 0 0 0 5 -5 V11" fill="#eaf0f8" stroke="#18233a" stroke-width="2"/>
+      <path d="M15 26 H43 V38 a4 4 0 0 1 -4 4 H19 a4 4 0 0 1 -4 -4Z" fill="#e2708a" opacity=".85"/>
+      <rect x="21" y="8" width="6" height="26" rx="1.5" fill="#4a74d9"/><rect x="21" y="25" width="6" height="9" fill="#e0525f"/>
+      <rect x="31" y="8" width="6" height="26" rx="1.5" fill="#e0525f"/>
+      <circle cx="35" cy="37" r="1.8" fill="#fff"/><circle cx="24" cy="39" r="1.4" fill="#fff"/>
+    </svg>
+    <div><h1>Intro to Acids &amp; Bases Lab</h1><div class="sub">Chapter 18 · Section 1 · properties · acidic, basic or neutral · Arrhenius, Brønsted–Lowry and Lewis models</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="objbar" id="obj"></div>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+      <div id="vids"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.globalAlpha=o.al==null?1:o.al;ctx.fillText(s,x,y);var w=ctx.measureText(s).width;ctx.globalAlpha=1;return w;}
+function tw(s,size,w){ctx.font=(w||600)+' '+size+'px Fredoka, sans-serif';return ctx.measureText(s).width;}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function card(x,y,w,h,fill,stroke){rr(x,y,w,h,14);ctx.fillStyle=fill||'#fff';ctx.fill();ctx.strokeStyle=stroke||LINE;ctx.lineWidth=2;ctx.stroke();}
+function ball(x,y,r,c,edge){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();if(r>2.5){ctx.strokeStyle=edge||'rgba(24,35,58,.45)';ctx.lineWidth=r>6?2:1.2;ctx.stroke();}
+ if(r>5){ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(x-r*.35,y-r*.35,r*.3,0,Math.PI*2);ctx.fill();}}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),s=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+var rnd=Math.random;
+function gauss(){var u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(6.283185*v);}
+
+/* ================= particle engine ================= */
+/* box: {x0,y0,x1,y1}; particle {x,y,vx,vy,r,a,w,k} */
+function mkParts(n,r,box,v,kind){var P=[],tries=0;while(P.length<n&&tries<6000){tries++;var x=lerp(box.x0+r,box.x1-r,rnd()),y=lerp(box.y0+r,box.y1-r,rnd());
+  if(P.every(function(q){return (x-q.x)*(x-q.x)+(y-q.y)*(y-q.y)>(r+q.r+3)*(r+q.r+3);})){var a=rnd()*6.283;P.push({x:x,y:y,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:rnd()*6.283,w:(rnd()-.5)*3,k:kind||0});}}
+ return P;}
+function addPart(P,r,box,v,kind){var p=mkParts(1,r,box,v,kind)[0];if(!p){var a=rnd()*6.283;p={x:lerp(box.x0+r,box.x1-r,rnd()),y:box.y0+r+2,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:0,w:(rnd()-.5)*3,k:kind||0};}P.push(p);return p;}
+/* o: e (restitution), att (attraction accel), rng (range factor), g (gravity), vt (target rms speed), kT (thermostat rate), coll (bool), hit(fn) */
+function stepParts(P,box,dt,o){o=o||{};var e=o.e==null?1:o.e,n=P.length,coll=o.coll!==false,sub=Math.max(1,Math.ceil(dt/0.008)),h=dt/sub;
+ for(var s=0;s<sub;s++){
+  if(o.att){for(var i=0;i<n;i++)for(var j=i+1;j<n;j++){var a=P[i],b=P[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),lim=a.r+b.r;
+    if(d>lim&&d<lim*(o.rng||2)){var f=o.att*h/d;a.vx+=f*dx;a.vy+=f*dy;b.vx-=f*dx;b.vy-=f*dy;}}}
+  for(i=0;i<n;i++){var p=P[i],gg=p.g!=null?p.g:o.g;if(gg)p.vy+=gg*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;var r=p.r,ew=o.ew==null?1:o.ew;
+   if(p.x<box.x0+r){p.x=box.x0+r;p.vx=Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'l');}
+   if(p.x>box.x1-r){p.x=box.x1-r;p.vx=-Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'r');}
+   if(p.y<box.y0+r){p.y=box.y0+r;p.vy=Math.abs(p.vy)*ew+(box.vy0||0);if(o.hit)o.hit(p,'t');}
+   if(p.y>box.y1-r){p.y=box.y1-r;p.vy=-Math.abs(p.vy)*(gg?ew*.8:ew);if(o.hit)o.hit(p,'b');}}
+  if(coll){for(i=0;i<n;i++)for(j=i+1;j<n;j++){a=P[i];b=P[j];dx=b.x-a.x;dy=b.y-a.y;d=Math.sqrt(dx*dx+dy*dy);lim=a.r+b.r;
+    if(d>0&&d<lim){var nx=dx/d,ny=dy/d,ma=a.m||1,mb=b.m||1,rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+     if(rv<0){var J=-(1+e)*rv/(1/ma+1/mb);a.vx-=J*nx/ma;a.vy-=J*ny/ma;b.vx+=J*nx/mb;b.vy+=J*ny/mb;if(o.bump)o.bump(a,b);}
+     var ov=(lim-d)/2;a.x-=ov*nx;a.y-=ov*ny;b.x+=ov*nx;b.y+=ov*ny;}}}}
+ if(o.lang&&o.vt!=null){var gm=o.lang,sg=Math.sqrt(gm*o.vt*o.vt*dt);P.forEach(function(p){p.vx+=-gm*p.vx*dt+sg*gauss();p.vy+=-gm*p.vy*dt+sg*gauss();});return;}
+ if(o.vt!=null&&n){var ke=0;P.forEach(function(p){ke+=p.vx*p.vx+p.vy*p.vy;});ke=Math.sqrt(ke/n);var sc=1+(o.kT||2)*dt*(o.vt/Math.max(ke,1)-1);sc=clamp(sc,.9,1.1);P.forEach(function(p){p.vx*=sc;p.vy*=sc;});}}
+function near(P,f){var out=[];for(var i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j];if(Math.hypot(b.x-a.x,b.y-a.y)<(a.r+b.r)*f)out.push([a,b]);}return out;}
+/* ================= number helpers ================= */
+var SUPS={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-'};
+function parseNum(s){if(s==null)return null;s=String(s).trim();if(s==='')return null;s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,function(c){return SUPS[c];}).replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');
+ s=s.replace(/[×xX*]10\^?(-?\d+)/,'e$1');var v=Number(s);if(isNaN(v))v=parseFloat(s);return isNaN(v)?null:v;}
+function okNum(x,f){if(x===null)return false;if(f.tolA!=null)return Math.abs(x-f.want)<=f.tolA;return Math.abs(x-f.want)<=Math.abs(f.want)*(f.tol||.012);}
+function nearV(x,v,tol){return x!==null&&Math.abs(x-v)<=Math.abs(v)*(tol||.02);}
+
+/* ================= practice engine ================= */
+/* problem: {src,q,show:[[title,html]],fields:[{t:'c',lab,opts,ok,why,bad:{i:msg}} | {t:'n',lab,pre,unit,want,tol,tolA,alt:[[v,msg]],why}],ans,sense,mode,hint} */
+function fieldHtml(f,k){var h='<div class="frow" id="fr'+k+'"><span class="fn">'+(k+1)+'</span><div class="fb2"><div class="fl">'+f.lab+'</div>';
+ if(f.t==='c')h+='<div class="chs" data-k="'+k+'">'+f.opts.map(function(o,i){return '<button data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
+ else h+='<div class="nin">'+(f.pre||'')+'<input id="fi'+k+'" inputmode="decimal" autocomplete="off" placeholder="?"> '+(f.unit||'')+'</div>';
+ return h+'</div><span class="fmark" id="fm'+k+'"></span></div>';}
+function probUI(P){var mode=P.mode||'show',st=P.st||0,h='';
+ h+='<div class="modebar"><div class="seg"><button id="mShow"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mTry"'+(mode==='try'?' class="on"':'')+'>My turn</button></div><span class="small">'+(mode==='show'?'Step by step. Press Next step.':'Answer each part, then press Check.')+'</span></div>';
+ h+='<div class="task"><span class="src">'+P.src+'</span>'+P.q+'</div>';
+ if(mode==='show'){var N=P.show.length;
+  h+='<div class="steps3">'+P.show.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="sBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="sNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="sTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+P.show.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+ else{h+=(P.fields.some(function(f){return f.t==='n';})?'<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>':'')+P.fields.map(fieldHtml).join('');
+  h+='<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk">Check</button><button class="btn" id="pHint">Hint</button><button class="btn" id="pClr">Clear</button>')+(P.next?'<button class="btn fill" id="pNext"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div>';
+  h+='<div class="hintbox" id="pHint2">'+(P.hint||P.fields.map(function(f){return f.why;}).filter(Boolean).join(' · '))+'</div><div class="feedback" id="pFb">'+(P.solved?solvedMsg(P):'')+'</div>';}
+ $('panel').innerHTML=h;
+ $('mShow').onclick=function(){P.mode='show';P.st=0;probUI(P);};$('mTry').onclick=function(){P.mode='try';probUI(P);};
+ if(mode==='show'){$('sBack').onclick=function(){P.st=st-1;probUI(P);};var n=$('sNext');if(n)n.onclick=function(){P.st=st+1;probUI(P);if(P.onShow)P.onShow(P.st);};var t=$('sTry');if(t)t.onclick=function(){P.mode='try';probUI(P);};}
+ else{if(P.solved){P.fields.forEach(function(f,k){fill(P,f,k);});}
+  Array.prototype.forEach.call(document.querySelectorAll('.chs'),function(g){Array.prototype.forEach.call(g.children,function(b){b.onclick=function(){if(P.solved)return;Array.prototype.forEach.call(g.children,function(x){x.classList.remove('on','ok','no');});b.classList.add('on');};});});
+  var c=$('pChk');if(c){c.onclick=function(){probCheck(P);};$('pHint').onclick=function(){$('pHint2').classList.toggle('on');};$('pClr').onclick=function(){probUI(P);};}
+  var nx=$('pNext');if(nx)nx.onclick=function(){P.next();};}}
+function fill(P,f,k){if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] button[data-i="'+f.ok+'"]');if(b)b.classList.add('ok');}else{var e=$('fi'+k);e.value=f.show||String(f.want);e.classList.add('ok');e.disabled=true;}$('fm'+k).innerHTML='<span class="good2">✓</span>';}
+function solvedMsg(P){return '<span class="good">Well done! '+P.ans+'</span>'+(P.sense?'<div class="small" style="font-size:16px;margin-top:4px">'+P.sense+'</div>':'');}
+function probCheck(P){var msgs=[],all=true;
+ P.fields.forEach(function(f,k){var ok,msg=null,filled=true;
+  if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] .on, .chs[data-k="'+k+'"] .ok, .chs[data-k="'+k+'"] .no'),i=b?+b.getAttribute('data-i'):-1;filled=i>=0;ok=i===f.ok;
+   if(b){b.classList.remove('on','ok','no');b.classList.add(ok?'ok':'no');}
+   if(!ok)msg=!filled?'Part '+(k+1)+': choose an answer.':((f.bad&&f.bad[i])||f.why);}
+  else{var e=$('fi'+k),x=parseNum(e.value);filled=x!==null;ok=okNum(x,f);e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);
+   if(!ok){if(!filled)msg='Part '+(k+1)+': type a number.';else{(f.alt||[]).forEach(function(a){if(!msg&&nearV(x,a[0],a[2]||.02))msg=a[1];});if(!msg)msg=f.why;}}}
+  $('fm'+k).innerHTML=ok?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+  if(!ok){all=false;if(msg)msgs.push('<b>Part '+(k+1)+':</b> '+msg.replace(/^Part \d+: /,''));}});
+ if(all){P.solved=true;if(P.onSolve)P.onSolve();renderSteps();probUI(P);return;}
+ $('pFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
+
+/* ================= lesson cards ================= */
+function cardsUI(L){var st=L.st||0,N=L.cards.length,h='<div class="steps3">'+L.cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+ h+='<div class="stepbar"><button class="btn" id="cBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="cNext">'+(st===0?'Start ▶':'Next ▶')+'</button>':(L.next?'<button class="btn fill" id="cGo">Next ▶</button>':''))+'<div class="stepdots">'+L.cards.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';
+ $('panel').innerHTML=h;$('cBack').onclick=function(){L.st=st-1;cardsUI(L);if(L.on)L.on(L.st);};var n=$('cNext');if(n)n.onclick=function(){L.st=st+1;cardsUI(L);if(L.on)L.on(L.st);};var g=$('cGo');if(g)g.onclick=function(){L.next();};
+ if(L.bind)L.bind();}
+function revealUI(items){$('panel').innerHTML=items.map(function(it,k){return '<div class="rv" id="rv'+k+'"><div class="rq">'+it[0]+'</div><div class="ra">'+it[1]+'</div><button class="btn" data-k="'+k+'">Show answer</button></div>';}).join('');
+ Array.prototype.forEach.call(document.querySelectorAll('.rv .btn'),function(b){b.onclick=function(){var r=$('rv'+b.dataset.k);r.classList.toggle('open');b.textContent=r.classList.contains('open')?'Hide answer':'Show answer';};});}
+
+/* ================= controls helpers ================= */
+function ctlButtons(list){$('controls').innerHTML=list.map(function(b,i){return '<button class="btn'+(b.fill?' fill':'')+(b.sel?' sel':'')+'" id="cb'+i+'">'+b.t+'</button>';}).join('');list.forEach(function(b,i){$('cb'+i).onclick=b.f;});}
+function ctlSlider(id,lab,min,max,step,val,fmt,on){return {html:'<label class="ctl">'+lab+' <input type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'"><output id="'+id+'o">'+fmt(val)+'</output></label>',bind:function(){var e=$(id);e.oninput=function(){var v=+e.value;$(id+'o').textContent=fmt(v);on(v);};}};}
+
+/* ================= shared lab drawing ================= */
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function each(sel,f){Array.prototype.forEach.call(document.querySelectorAll(sel),f);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var CLEAR='rgba(176,208,240,.42)',GLASS='#7d8aa3';
+function beakerPath(x,y,w,h){var r=16;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+h-r);ctx.arcTo(x,y+h,x+r,y+h,r);ctx.lineTo(x+w-r,y+h);ctx.arcTo(x+w,y+h,x+w,y+h-r,r);ctx.lineTo(x+w,y);}
+function beaker(x,y,w,h,lvl,liq){var top=y+h*(1-lvl);
+ ctx.save();beakerPath(x,y,w,h);ctx.closePath();ctx.fillStyle='rgba(235,243,252,.25)';ctx.fill();ctx.clip();
+ ctx.fillStyle=liq||CLEAR;ctx.fillRect(x-2,top,w+4,y+h-top+2);ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillRect(x-2,top,w+4,3);ctx.restore();
+ ctx.strokeStyle=GLASS;ctx.lineWidth=3;beakerPath(x,y,w,h);ctx.stroke();seg(x-8,y-5,x,y,GLASS,3);seg(x+w,y,x+w+8,y-5,GLASS,3);
+ for(var i=1;i<=3;i++)seg(x+w-22,y+h-i*h/4.2,x+w-8,y+h-i*h/4.2,'rgba(125,138,163,.55)',2);
+ return top;}
+function tubePath(x,y,w,h){var r=w/2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+h-r);ctx.arc(x+r,y+h-r,r,Math.PI,0,true);ctx.lineTo(x+w,y);}
+function bubStep(B,dt,topY){for(var i=B.length-1;i>=0;i--){var b=B[i];b.y-=b.v*dt;b.x+=Math.sin((b.y+b.p)*.08)*.5;if(b.y<topY+b.r)B.splice(i,1);}}
+function bubDraw(B){ctx.lineWidth=1.5;ctx.strokeStyle='rgba(90,103,128,.8)';ctx.fillStyle='rgba(255,255,255,.75)';B.forEach(function(b){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.283);ctx.fill();ctx.stroke();});}
+function ionPill(x,y,lab,k,al,size){size=size||14;al=al==null?1:al;var w=tw(lab,size)+14,h=size+11;ctx.globalAlpha=al;rr(x-w/2,y-h/2,w,h,h/2);ctx.fillStyle=k>0?'#fde3e8':(k<0?'#dde7fb':'#eef1f6');ctx.fill();ctx.strokeStyle=k>0?CORAL:(k<0?BLUE:'#8d99b0');ctx.lineWidth=2;ctx.stroke();txt(lab,x,y+1,{s:size,c:k>0?'#b8364f':(k<0?'#22449a':INK),al:al});ctx.globalAlpha=1;return w;}
+function wsm(x,y,a,al){ctx.globalAlpha=al;[-.91,.91].forEach(function(s){ctx.fillStyle='#ffffff';ctx.strokeStyle='rgba(90,103,128,.7)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x+9*Math.cos(a+s),y+9*Math.sin(a+s),4,0,6.283);ctx.fill();ctx.stroke();});
+ ctx.fillStyle='#e98a83';ctx.beginPath();ctx.arc(x,y,6.5,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+function mkWater(n,b){var W=[];for(var i=0;i<n;i++)W.push({x:lerp(b.x0,b.x1,rnd()),y:lerp(b.y0,b.y1,rnd()),vx:(rnd()-.5)*30,vy:(rnd()-.5)*30,a:rnd()*6.28,w:(rnd()-.5)*2});return W;}
+function stepWater(W,b,dt,al){W.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.w*dt;if(p.x<b.x0||p.x>b.x1)p.vx*=-1;if(p.y<b.y0||p.y>b.y1)p.vy*=-1;p.x=clamp(p.x,b.x0,b.x1);p.y=clamp(p.y,b.y0,b.y1);wsm(p.x,p.y,p.a,al==null?.35:al);});}
+function wander(P,b,dt,sp){P.forEach(function(p){p.vx+=gauss()*sp*dt*3;p.vy+=gauss()*sp*dt*3;var v=Math.hypot(p.vx,p.vy);if(v>sp){p.vx*=sp/v;p.vy*=sp/v;}p.x+=p.vx*dt;p.y+=p.vy*dt;
+ if(p.x<b.x0){p.x=b.x0;p.vx=Math.abs(p.vx);}if(p.x>b.x1){p.x=b.x1;p.vx=-Math.abs(p.vx);}if(p.y<b.y0){p.y=b.y0;p.vy=Math.abs(p.vy);}if(p.y>b.y1){p.y=b.y1;p.vy=-Math.abs(p.vy);}});}
+function hexRgb(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function mixHex(a,b,t){var A=hexRgb(a),B=hexRgb(b);return 'rgb('+[0,1,2].map(function(i){return Math.round(lerp(A[i],B[i],t));}).join(',')+')';}
+var LBLUE='#4a74d9',LRED='#e0525f';
+function strip(x,y,s,wet,wc,h,w){h=h||150;w=w||26;var wh=h*.4*wet;ctx.fillStyle='#8d99b0';rr(x-w/2-6,y-14,w+12,16,5);ctx.fill();
+ rr(x-w/2,y,w,h,5);ctx.fillStyle=s==='b'?LBLUE:LRED;ctx.fill();
+ if(wh>0){ctx.save();rr(x-w/2,y,w,h,5);ctx.clip();ctx.fillStyle=wc==='b'?LBLUE:LRED;ctx.fillRect(x-w/2,y+h-wh,w,wh);ctx.fillStyle='rgba(24,35,58,.13)';ctx.fillRect(x-w/2,y+h-wh,w,wh);ctx.restore();}
+ ctx.strokeStyle='rgba(24,35,58,.35)';ctx.lineWidth=1.5;rr(x-w/2,y,w,h,5);ctx.stroke();}
+var ELC={H:['#f4f6fa','#18233a',14],O:['#e25a4f','#fff',21],Cl:['#3fb36b','#fff',24],F:['#8cc63f','#18233a',19],Na:['#8a4fbf','#fff',24],N:['#2b59c3','#fff',21],C:['#3a3f4b','#fff',20],S:['#e8c22a','#18233a',23],P:['#e8962a','#fff',23],B:['#e3a07a','#18233a',20]};
+function atom(x,y,e,al){var d=ELC[e];al=al==null?1:al;ctx.globalAlpha=al;ball(x,y,d[2],d[0],'rgba(24,35,58,.5)');txt(e,x,y+1,{s:d[2]>16?18:14,c:d[1],al:al});ctx.globalAlpha=1;}
+function bondL(x1,y1,x2,y2,ord,al,dash){ctx.globalAlpha=al==null?1:al;if(ord===2){var a=Math.atan2(y2-y1,x2-x1),ox=-Math.sin(a)*4.5,oy=Math.cos(a)*4.5;seg(x1+ox,y1+oy,x2+ox,y2+oy,'#5a6780',4);seg(x1-ox,y1-oy,x2-ox,y2-oy,'#5a6780',4);}else seg(x1,y1,x2,y2,'#5a6780',5,dash);ctx.globalAlpha=1;}
+function badge(x,y,s,c,al){ctx.globalAlpha=al==null?1:al;ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,12,0,6.283);ctx.fill();txt(s,x,y+1,{s:18,c:'#fff',al:al==null?1:al});ctx.globalAlpha=1;}
+
+/* ================= videos ================= */
+var VID={
+ litmus:['yp4x1SOGyLA','2:30','The litmus test','Watch for: blue litmus turns red in the acid, red litmus turns blue in the base.'],
+ cabbage:['4phd0XRMKHU','1:49','Red cabbage indicator','Watch for: red/pink in acids, green in bases.'],
+ phenol:['MhLKxDtYWFU','1:38','Phenolphthalein indicator','Watch for: colorless in acid, pink in base.'],
+ universal:['qDsFMzN35r8','2:05','Universal indicator','Watch for: red in acid, green in water, blue/purple in base.'],
+ mg:['SeKsLi_6WkY','0:37','Magnesium + hydrochloric acid','Watch for: hydrogen bubbles as the ribbon disappears.'],
+ h2test:['bRu2nwFK9O8','1:58','Acid + metal: test the gas','Watch for: the "pop" of hydrogen gas with a burning splint.'],
+ caco3:['bES2n13nn14','1:42','Calcium carbonate + hydrochloric acid','Watch for: fizzing (CO₂ gas) as the solid reacts.'],
+ co2test:['pCDAXJyrABw','2:31','Acid + carbonate: test the gas','Watch for: limewater turning milky with carbon dioxide.'],
+ cond1:['gtLY7WtxmCc','0:19','Acetic acid vs hydrochloric acid','Watch for: a dim bulb in acetic acid, a bright bulb in HCl.'],
+ cond2:['JKNe8YafHQo','0:59','Conductivity of acids and bases','Watch for: more ions → a brighter bulb.']};
+var PLAYICO='<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="4" width="24" height="18" rx="5" fill="currentColor"/><path d="M10.5 8.5 L17.5 13 L10.5 17.5Z" fill="#fff"/></svg>';
+function vidHtml(keys){return '<div class="vhead">'+PLAYICO+'Watch the real experiment</div><div class="vids">'+keys.map(function(k){var v=VID[k];
+ return '<div class="vid"><div class="vbox" id="vb_'+v[0]+'"><button data-v="'+v[0]+'" data-s="'+(v[4]||'')+'" data-e="'+(v[5]||'')+'" aria-label="Play: '+esc(v[2])+'"><img src="https://i.ytimg.com/vi/'+v[0]+'/hqdefault.jpg" alt=""><span class="vplay"></span><span class="vdur">'+v[1]+'</span></button></div><div class="vt">'+v[2]+'</div><div class="vw">'+v[3]+'</div><a class="vlink" href="https://www.youtube.com/watch?v='+v[0]+(v[4]?'&t='+v[4]+'s':'')+'" target="_blank" rel="noopener">Open on YouTube ↗</a></div>';}).join('')+'</div>';}
+function vidBind(){each('.vbox button',function(b){b.onclick=function(){var id=b.getAttribute('data-v'),st=b.getAttribute('data-s'),en=b.getAttribute('data-e');b.parentNode.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1'+(st?'&start='+st:'')+(en?'&end='+en:'')+'" title="Experiment video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';};});}
+
+/* ================= TAB 1: PROPERTIES ================= */
+var SOLN={hcl:{n:'Hydrochloric acid',s:'HCl(aq)',f:'HCl(aq)',k:'acid',pH:1,liq:CLEAR},
+ lemon:{n:'Lemon juice',s:'Lemon juice',f:'citric acid',k:'acid',pH:2.3,liq:'rgba(245,228,140,.55)'},
+ vinegar:{n:'Vinegar',s:'Vinegar',f:'acetic acid, CH₃COOH(aq)',k:'acid',pH:2.9,liq:'rgba(236,226,196,.55)'},
+ water:{n:'Distilled water',s:'Pure water',f:'H₂O(l)',k:'neutral',pH:7,liq:CLEAR},
+ sugar:{n:'Sugar water',s:'Sugar water',f:'C₁₂H₂₂O₁₁(aq)',k:'neutral',pH:7,liq:CLEAR},
+ salt:{n:'Salt water',s:'Salt water',f:'NaCl(aq)',k:'neutral',pH:7,liq:CLEAR},
+ soda:{n:'Baking soda solution',s:'Baking soda',f:'NaHCO₃(aq)',k:'base',pH:8.3,liq:CLEAR},
+ ammonia:{n:'Ammonia cleaner',s:'Ammonia',f:'NH₃(aq)',k:'base',pH:11.5,liq:'rgba(200,225,245,.5)'},
+ naoh:{n:'Sodium hydroxide',s:'NaOH(aq)',f:'NaOH(aq)',k:'base',pH:13,liq:CLEAR}};
+
+/* --- litmus --- */
+var LT={sol:'vinegar',an:null,S:null,res:{}},LIT_LIST=['hcl','lemon','vinegar','water','sugar','soda','ammonia','naoh'],LREST={b:[446,64],r:[540,64]},LBK={x:120,y:230,w:230,h:210,l:.55};
+function litReset(){LT.an=null;LT.S={b:{w:0,c:null},r:{w:0,c:null}};}litReset();
+function litNew(s){var k=SOLN[LT.sol].k;return s==='b'?(k==='acid'?'r':'b'):(k==='base'?'b':'r');}
+function litDip(s){if(LT.an)return;LT.S[s]={w:0,c:null};LT.an={s:s,t:0};}
+function litCtl(){$('controls').innerHTML='<div class="subbar" style="margin:0">'+LIT_LIST.map(function(k){return '<button class="btn'+(LT.sol===k?' sel':'')+'" data-s="'+k+'">'+SOLN[k].s+'</button>';}).join('')+'</div><button class="btn fill" id="dipB">Dip blue litmus</button><button class="btn fill" id="dipR">Dip red litmus</button>';
+ each('#controls [data-s]',function(b){b.onclick=function(){LT.sol=b.getAttribute('data-s');litReset();litCtl();};});$('dipB').onclick=function(){litDip('b');};$('dipR').onclick=function(){litDip('r');};}
+function litFrame(dt){var A=LT.an,bk=LBK,lt=bk.y+bk.h*(1-bk.l);
+ if(A){A.t+=dt;if(A.t>=3.4){var c=litNew(A.s);LT.S[A.s]={w:1,c:c};LT.res[LT.sol]=LT.res[LT.sol]||{};LT.res[LT.sol][A.s]=c;LT.an=null;A=null;}}
+ clear();
+ ['b','r'].forEach(function(s){var p=LREST[s],x=p[0],y=p[1],st=LT.S[s],wet=st.w,wc=st.c,dip=A&&A.s===s;
+  if(dip){var m=A.t<1?ease(A.t):(A.t<2.4?1:1-ease(clamp(A.t-2.4,0,1)));x=lerp(p[0],bk.x+bk.w/2,m);y=lerp(p[1],lt+60-150,m);if(A.t>=1){wet=clamp((A.t-1)/1.2,0,1);wc=litNew(s);}}
+  strip(x,y,s,wet,wc);if(!dip)txt(s==='b'?'blue litmus':'red litmus',p[0],p[1]+170,{s:14,c:MUTED,w:500});});
+ beaker(bk.x,bk.y,bk.w,bk.h,bk.l,SOLN[LT.sol].liq);
+ txt(SOLN[LT.sol].n,bk.x+bk.w/2,bk.y+bk.h+24,{s:20});txt(SOLN[LT.sol].f,bk.x+bk.w/2,bk.y+bk.h+48,{s:15,c:MUTED,w:500});
+ if(A&&A.t>1&&A.t<2.6){var same=(A.s==='b'&&litNew('b')==='b')||(A.s==='r'&&litNew('r')==='r');pill(same?'no color change':'color change!',bk.x+bk.w/2,bk.y-24,same?MUTED:ORANGE,'#fff',16);}
+ card(590,22,196,456,'#fff');txt('My results',688,46,{s:19});txt('blue',716,74,{s:12,c:LBLUE});txt('red',754,74,{s:12,c:LRED});
+ LIT_LIST.forEach(function(k,i){var y=106+i*46,r=LT.res[k]||{};if(k===LT.sol){rr(596,y-21,184,42,10);ctx.fillStyle='#fff3d6';ctx.fill();}
+  txt(SOLN[k].s,604,y,{s:14,a:'left',w:500});
+  [['b',716],['r',754]].forEach(function(q){var c=r[q[0]],X=q[1];rr(X-7,y-17,14,34,3);if(c){ctx.fillStyle=q[0]==='b'?LBLUE:LRED;ctx.fill();ctx.fillStyle=c==='b'?LBLUE:LRED;ctx.fillRect(X-7,y+1,14,16);}else{ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}});});
+ txt('top: before · bottom: after',688,462,{s:11,c:MUTED,w:500});}
+var litP={src:"Let's Discover!",mode:'try',q:'Test all eight solutions with <b>both</b> strips (look at your results table), then complete the rule.',
+ fields:[{t:'c',lab:'Acids (HCl, lemon juice, vinegar) turn <b>blue</b> litmus…',opts:['red','still blue'],ok:0,why:'Look at the HCl, lemon juice and vinegar rows.'},
+  {t:'c',lab:'Acids make <b>red</b> litmus…',opts:['stay red','turn blue'],ok:0,why:'Look at the red strips of the acids.'},
+  {t:'c',lab:'Bases (baking soda, ammonia, NaOH) turn <b>red</b> litmus…',opts:['blue','still red'],ok:0,why:'Look at the base rows.'},
+  {t:'c',lab:'Pure water and sugar water…',opts:['change neither strip','turn both strips red','turn both strips blue'],ok:0,why:'Neutral solutions do not change litmus.'}],
+ show:[['Acids','HCl, lemon juice and vinegar turn <b>blue litmus red</b>. Red litmus stays red.'],['Bases','Baking soda, ammonia and NaOH turn <b>red litmus blue</b>. Blue litmus stays blue.'],['Neutral','Pure water and sugar water change <b>neither</b> strip.'],['What is litmus?','Litmus is an <b>indicator</b>: a dye that has one color in acids and another color in bases.']],
+ ans:'Acids: blue litmus → red · bases: red litmus → blue · neutral: no change.',sense:'Litmus is an <b>indicator</b>: a dye that changes color in acids and bases.'};
+var SC_L1={title:'Litmus paper: dip, look, record',q:'Which solutions turn blue litmus red? Which turn red litmus blue? Which change nothing?',canvas:true,prob:litP,vids:['litmus'],
+ enter:litCtl,frame:litFrame,
+ reads:function(){var r=LT.res[LT.sol]||{};function f(c){return c==null?'–':(c==='r'?'red':'blue');}return [['Solution',SOLN[LT.sol].s],['Tested',Object.keys(LT.res).length+' / 8'],['Blue litmus →',f(r.b)],['Red litmus →',f(r.r)]];}};
+
+/* --- indicators --- */
+var IN={k:null,t:0},IN_LIST=['hcl','lemon','vinegar','water','soda','ammonia','naoh'];
+var INDC={cab:{n:'Red cabbage juice',d:'purple to start',c:[[1,'#d4213f'],[3,'#e0478c'],[5,'#b35bbf'],[7,'#7a5ac6'],[8.5,'#4a6fd6'],[10,'#2a9fb0'],[11.5,'#2fa36b'],[13,'#d6cc2a']]},
+ php:{n:'Phenolphthalein',d:'colorless to start',c:[[1,'#eaf1f9'],[8.1,'#eaf1f9'],[8.6,'#f6bcd8'],[10,'#e8559d'],[13,'#dc3f8e']]},
+ uni:{n:'Universal indicator',d:'green to start',c:[[1,'#d8232a'],[3,'#ee6a2a'],[5,'#f2b42a'],[7,'#3aa84a'],[9,'#1f9a9a'],[11,'#2b59c3'],[13,'#6b3fa0']]}};
+function indCol(k,pH){var c=INDC[k].c;if(pH<=c[0][0])return c[0][1];for(var i=1;i<c.length;i++)if(pH<=c[i][0])return mixHex(c[i-1][1],c[i][1],(pH-c[i-1][0])/(c[i][0]-c[i-1][0]));return c[c.length-1][1];}
+function dropper(x,y){rr(x-8,y-34,16,22,8);ctx.fillStyle=CORAL;ctx.fill();ctx.fillStyle='#e6eef8';ctx.fillRect(x-4,y-13,8,34);ctx.strokeStyle=GLASS;ctx.lineWidth=1.5;ctx.strokeRect(x-4,y-13,8,34);}
+function inFrame(dt){if(IN.k)IN.t+=dt;clear();var X0=58,DX=106,W=50,Y=110,H=230,L=.58,lt=Y+H*(1-L);
+ if(IN.k){var I=INDC[IN.k];txt(I.n,400,30,{s:22});txt('('+I.d+')',400,56,{s:15,c:MUTED,w:500});}else txt('Choose an indicator to add to every tube',400,40,{s:20,c:MUTED});
+ rr(30,Y+44,740,14,6);ctx.fillStyle='#d9c6a5';ctx.fill();
+ IN_LIST.forEach(function(k,i){var x=X0+i*DX,cx=x+W/2,S=SOLN[k],si=i*.35,f=IN.k?clamp((IN.t-si-.55)/.9,0,1):0;
+  ctx.save();tubePath(x,Y,W,H);ctx.closePath();ctx.fillStyle='rgba(235,243,252,.3)';ctx.fill();ctx.clip();ctx.fillStyle=S.liq;ctx.fillRect(x,lt,W,Y+H-lt);
+  if(f>0){var col=indCol(IN.k,S.pH),d=(Y+H-lt)*f;ctx.fillStyle=col;ctx.globalAlpha=.92;ctx.fillRect(x,lt,W,d);for(var b=0;b<6;b++){ctx.globalAlpha=.92*(1-b/6);ctx.fillRect(x,lt+d+b*3,W,3);}ctx.globalAlpha=1;}
+  ctx.restore();ctx.strokeStyle=GLASS;ctx.lineWidth=3;tubePath(x,Y,W,H);ctx.stroke();
+  if(IN.k&&IN.t>=si&&IN.t<si+.75){var u=(IN.t-si)/.75;dropper(cx,Y-26);if(u>.25&&u<.9){var dy=lerp(Y+10,lt,(u-.25)/.65);ctx.fillStyle=IN.k==='php'?'#c9d4e6':indCol(IN.k,7);ctx.beginPath();ctx.arc(cx,dy,5,0,6.283);ctx.fill();}}
+  txt(S.s,cx,Y+H+24,{s:14});if(f>=1)txt('pH ≈ '+S.pH,cx,Y+H+46,{s:13,c:MUTED,w:500});});
+ rr(30,Y+70,740,12,5);ctx.fillStyle='rgba(217,198,165,.95)';ctx.fill();
+ if(IN.k){var bx=70,bw=660,by=414;for(var j=0;j<120;j++){ctx.fillStyle=indCol(IN.k,1+12*j/119);ctx.fillRect(bx+j*bw/120,by,bw/120+1,26);}ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.strokeRect(bx,by,bw,26);
+  [1,4,7,10,13].forEach(function(p){txt(String(p),bx+(p-1)/12*bw,by+40,{s:13,c:MUTED,w:500});});txt('← more acidic',bx+120,by+58,{s:14,c:RED,w:500});txt('neutral',bx+bw/2,by+58,{s:14,c:MUTED,w:500});txt('more basic →',bx+bw-110,by+58,{s:14,c:BLUE,w:500});
+  IN_LIST.forEach(function(k){var X=bx+(SOLN[k].pH-1)/12*bw;ctx.fillStyle=INK;ctx.beginPath();ctx.moveTo(X,by-2);ctx.lineTo(X-6,by-11);ctx.lineTo(X+6,by-11);ctx.closePath();ctx.fill();});}}
+var inP={src:"Let's Discover!",mode:'try',q:'Add each indicator and compare the colors of the acids (left) and the bases (right).',
+ fields:[{t:'c',lab:'With red cabbage juice, the <b>acids</b> turn…',opts:['red / pink','green / yellow','stay purple'],ok:0,why:'Add red cabbage juice and look at the three tubes on the left.'},
+  {t:'c',lab:'With red cabbage juice, the <b>bases</b> turn…',opts:['blue, green or yellow','red / pink'],ok:0,why:'Look at the three tubes on the right.'},
+  {t:'c',lab:'Phenolphthalein turns pink in…',opts:['bases','acids','pure water'],ok:0,why:'Add phenolphthalein: which tubes turn pink?'},
+  {t:'c',lab:'Universal indicator in pure water is…',opts:['green','red','purple'],ok:0,why:'Look at the middle tube.'}],
+ show:[['Indicators','An <b>indicator</b> is a dye whose color depends on how acidic or basic a solution is.'],['Red cabbage juice','Acids → <b>red/pink</b> · neutral → <b>purple</b> · bases → <b>blue, green, yellow</b>.'],['Phenolphthalein','Acids and water → <b>colorless</b> · bases → <b>pink</b>.'],['Universal indicator','Strong acid → <b>red</b> · neutral → <b>green</b> · strong base → <b>purple</b>.']],
+ ans:'Indicators show acids and bases by color.',sense:'Different indicators, different colors, but every one of them tells acids from bases.'};
+var SC_L2={title:'Indicators: colors in acids and bases',q:'Red cabbage juice is purple. Predict: what color will it turn in vinegar? In ammonia cleaner?',canvas:true,prob:inP,vids:['cabbage','phenol','universal'],
+ enter:function(){$('controls').innerHTML=['cab','php','uni'].map(function(k){return '<button class="btn'+(IN.k===k?' sel':'')+'" data-i="'+k+'">'+INDC[k].n+'</button>';}).join('')+'<button class="btn" id="inR">Rinse the tubes</button>';
+  each('#controls [data-i]',function(b){b.onclick=function(){IN.k=b.getAttribute('data-i');IN.t=0;SC_L2.enter();};});$('inR').onclick=function(){IN.k=null;IN.t=0;SC_L2.enter();};},
+ frame:inFrame,reads:function(){return [['Indicator',IN.k?INDC[IN.k].n:'none'],['Tubes','3 acids · water · 3 bases']];}};
+
+/* --- acids + metals --- */
+/* --- pop sound: the real hydrogen pop (recorded clip), with a made-up pop as a backup --- */
+var AC=null,POPBUF=null,POPB64='UklGRjhKAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YRRKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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qQB4AH0AiABxAHkAmwCYAIYAigCIAF8ALgAhACgAHgAOAAQA4v+2/7j/yP+j/2n/Wv9q/2f/Uf9E/0D/Nf8g/xT/E/8Q/xP/Mv9M/yH/4f7h/u7+xP6p/sT+yf6u/rf+xP6h/on+rf7N/rz+q/7D/uT+7/73/hf/RP9e/2X/eP+U/5r/pP/J/+D/3f/u/xEADgDw/+3/AAAMAA4AEQAQAAgABAADAOz/wf+n/6n/o/+W/6H/u//I/8P/vP+6/7f/tP+//97/8P/1/wgAGwAVABEAHAAmADIARQBNAFIAWwBdAFwAUgA1ACQAJwAiABoAGAAJAPT/7f/g/8z/yf/Q/9D/0v/V/9L/0f/X/+D/6f/o/97/1//a/+D/4f/d/9n/1P/J/77/t/+w/6r/o/+O/3X/bf90/3n/fP+C/4H/c/9o/3H/ff96/3n/f/+M/53/qv+x/7f/u/+5/7f/uv+//8z/0f/I/8X/zv/Y/97/5P/p/+f/3P/R/8r/wf+1/7L/sP+p/6b/q/+v/6v/qP+t/7L/s/+0/7X/r/+v/77/x//H/8r/3P/w//X/7//r/+v/5//m/+7/7f/i/+D/4v/c/9X/2v/l/+f/4f/d/+D/5f/n/+X/4v/i/+b/7P/t/+j/5v/v//b/9v/4//j/9f/4/wMACQAFAAQACAAKAAwAEQAXABgAFQASAA8ADAAGAAIAAwAHAAwAEQATAA8ADwATAA8ABgAAAAEABQAHAAYAAwAAAP///v/+/wEABgADAP3/AAACAPz/+P/6////AwAEAAQABgAKAAkABQAEAAYABgABAAEABwADAPf/9P/4//n/+v/7//z//v/+//z//f8BAAIA/v/4//T/9f/4//v/+//7////AQD8//j//P8CAAcADAAQAA0ABQADAAkACQADAAUACQADAP/////7//j/+v/8//7/AgAEAAUABQAAAAAABgAJAAoACQAEAP7/+//4//n/+//7//3/AAD9//3/AAD8//r///8CAPv/9f/4//7/AQAAAPz/+//7//P/7P/x//r//P/6//v//f/9////AwAHAAkABgAEAAMA///5//b/+P/7//T/6f/p/+//8//2//n/+P/2//j/9//z//P/+/8CAP//9//1//n/+f/4//3/AgABAP3//v8BAPn/8//7/wEA/P/9/////P/8//7//f///wEA//8DAAcAAwD+/wIABwAEAAAAAAD9//f/9v/5//j/9f/3//n/9f/4/////v/4//j/+P/z//L/9P/y//H/9f/3//L/8//5//3//v/8//z//P/9//z/+f/4//v//P/7//v/+f/y//T///8CAP//AgAFAP//+v/7//7///8AAAIABQAEAAEAAAAAAP//AAABAP///P/7//7//P/3//f//P///wIABgAHAAsAEAAOAAsABwAAAP7////+//7/AQABAAIABAAEAAYACAAFAAMABgAJAAcAAQD+/wEABwAIAAMA/P/4//v//f/8//v/+v/5//3////4//b/+//9////BQAFAP//AwAMAAoABAADAAIA+//3//f/9v/4//v/9v/v/+//8//3//z///8CAAgACQAEAAEAAQABAAUABgADAAMAAwAAAP3//P/6////BQACAPz/+//+/wMABQACAAEABQAHAAcACQAKAAoADgAOAA0ADAAHAAMACQALAAYABgAIAAUABwAKAAcAAwABAP7//f///wIAAwAEAAQABAADAAEAAgAEAAUABwAKAAYAAgACAAIAAwADAAQABQAGAAYABwAGAAQAAQD7//j//f8AAPv/+P/4//T/9f/4//X/9/8AAAMAAAAEAAUAAQADAAcABgAFAAgACgALAAoABAD+/wIABwAEAP3//v///wEAAwABAP7/AgADAP3//f8AAPz//P8BAAEAAgAHAAgABwAIAAQA//8BAAUABQAHAAwACwADAP//AAAAAPz/9//5//7///8AAAAA+//3//n/+//5//v//f/6//j/+f/6//n//P///wIAAQD8//r/AAAGAAYAAgAFAAsADQAMAAkAAwD//wAAAQAAAAIABAACAAIABAAEAAAA/f///wMABAACAAEAAgABAP///P/4//r/AgAGAAIA/P/9/wIAAgD//wEABAABAAIABAAAAPv//f8AAP///v/9//3/AAADAAMAAAAAAAAAAgACAAEA//8BAAgACAACAAEAAgD/////AwAEAAAAAAACAAQAAwABAP///v///wAAAQAAAP///f/7//v//v8CAAQAAwD8//r///////r//P8DAAQAAgD+//v/+//9////AAABAAAA///+////AQADAAMAAgAAAAAAAwADAP////8CAAEAAgAGAAYAAQD//wEAAgABAAAAAAAAAAIAAgAAAP3//f/+/wAAAAD9//z/AAADAAEAAQADAAEA//8BAAIA/v/9/wEABAABAPz/+v/9/wAAAQABAAEAAQADAAIA///+/wAAAwADAAEAAQADAAIAAAAAAAAA//8CAAUABwAIAAYAAwABAAMABAAAAP3//v8AAAEA///+//z//P/8//z//f/+//3//f/9//z/+//+/wAAAAAAAP///P/7//7/AAAAAP//AgAFAAYAAwACAAIAAAD//wIABAADAAQAAwABAAAAAAD+//7/AAD/////AQABAP//AAABAAAAAAD/////AQADAAEA//8CAAQABAAEAAMAAgACAAMAAQAAAAIAAQAAAAEAAAD9//z//f/8//z//f/9//7/AAD///3//v8AAAEAAgACAAIAAgACAAEAAQABAAEAAAABAAIAAwACAAEAAQABAAAAAQABAAEAAQABAAEAAAD/////AAABAAIAAwACAAEAAgACAAIAAwACAAEAAgADAAMAAwADAAIAAgACAAIAAQABAAAAAAABAAEAAAD/////AAABAAAA////////AAABAAEAAQABAAEAAAAAAAAAAQACAAEAAAAAAP/////+//3//f/+///////+/////////wAAAAABAAEAAgAAAAAAAQABAAAAAAD///////8AAAAA//////////8AAP////8AAAAAAQABAAAAAAAAAAEAAQABAAAAAAABAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAQABAAEAAQAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////AAAAAP////8AAP//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+function popSynth(t){try{var n=Math.floor(AC.sampleRate*.18),buf=AC.createBuffer(1,n,AC.sampleRate),d=buf.getChannelData(0);for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3);
+ var src=AC.createBufferSource();src.buffer=buf;var bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1400;bp.Q.value=.8;var g1=AC.createGain();g1.gain.setValueAtTime(1.2,t);g1.gain.exponentialRampToValueAtTime(.001,t+.18);src.connect(bp);bp.connect(g1);g1.connect(AC.destination);src.start(t);
+ var o=AC.createOscillator(),g2=AC.createGain();o.type='sine';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(55,t+.14);g2.gain.setValueAtTime(.9,t);g2.gain.exponentialRampToValueAtTime(.001,t+.16);o.connect(g2);g2.connect(AC.destination);o.start(t);o.stop(t+.18);
+ var q=AC.createOscillator(),g3=AC.createGain();q.type='triangle';q.frequency.setValueAtTime(1300,t);q.frequency.exponentialRampToValueAtTime(500,t+.09);g3.gain.setValueAtTime(.25,t);g3.gain.exponentialRampToValueAtTime(.001,t+.1);q.connect(g3);g3.connect(AC.destination);q.start(t);q.stop(t+.12);}catch(e){}}
+function popLoad(cb){if(POPBUF)return cb(POPBUF);try{var bin=atob(POPB64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);AC.decodeAudioData(u.buffer,function(b){POPBUF=b;cb(b);},function(){cb(null);});}catch(e){cb(null);}}
+function popSound(delay){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!AC)AC=new C();if(AC.state==='suspended')AC.resume();var t=AC.currentTime+(delay||0);
+ popLoad(function(b){if(!b){popSynth(t);return;}var src=AC.createBufferSource(),g=AC.createGain();src.buffer=b;g.gain.value=.9;src.connect(g);g.connect(AC.destination);src.start(Math.max(t,AC.currentTime));});}catch(e){}}
+var MT={on:false,t:0,amt:[1,1,1],B:[[],[],[]],pop:-1},MT_S=['hcl','water','naoh'],MT_R=[1,0,0],MB={y:200,w:200,h:200,l:.62,x:[50,300,550]};
+function mtReset(){MT.on=false;MT.t=0;MT.amt=[1,1,1];MT.B=[[],[],[]];MT.pop=-1;}
+function splint(x,y,t){ctx.save();ctx.translate(x,y);ctx.rotate(-.5);ctx.fillStyle='#c8a46e';ctx.fillRect(0,-3,90,6);ctx.restore();var fl=1+.15*Math.sin(t*25);ctx.fillStyle='rgba(255,170,40,.95)';ctx.beginPath();ctx.ellipse(x-2,y-2,6*fl,11*fl,-.5,0,6.283);ctx.fill();ctx.fillStyle='rgba(255,236,150,.95)';ctx.beginPath();ctx.ellipse(x-1,y,3,6,-.5,0,6.283);ctx.fill();}
+function mtFrame(dt){var top=MB.y+MB.h*(1-MB.l),bot=MB.y+MB.h-14,eq=MT.on&&MT.t>1;if(MT.on)MT.t+=dt;if(MT.pop>=0){MT.pop+=dt;if(MT.pop>2.4)MT.pop=-1;}clear();
+ card(40,14,720,54,'#fff');txt(eq?'Mg(s) + 2HCl(aq) → MgCl₂(aq) + H₂(g)':'Drop a piece of magnesium ribbon into each beaker',400,41,{s:eq?24:19,c:eq?INK:MUTED});
+ MT_S.forEach(function(k,i){var x=MB.x[i],S=SOLN[k],cx=x+MB.w/2;
+  if(MT.on&&MT.t>.7){var r=MT_R[i]*MT.amt[i];MT.amt[i]=Math.max(0,MT.amt[i]-MT_R[i]*dt/10);var n=r*dt*30;while(n>0){if(rnd()<n)MT.B[i].push({x:cx-60+rnd()*120*Math.max(MT.amt[i],.08),y:bot-6,r:2+rnd()*3.5,v:60+rnd()*70,p:rnd()*100});n-=1;}}
+  bubStep(MT.B[i],dt,top);beaker(x,MB.y,MB.w,MB.h,MB.l,S.liq);
+  if(MT.on){var ry=lerp(MB.y-40,bot,ease(clamp(MT.t/.7,0,1))),len=120*MT.amt[i];if(len>1){ctx.fillStyle='#a9b1bd';rr(cx-60,ry-4,len,8,3);ctx.fill();ctx.fillStyle='rgba(255,255,255,.7)';ctx.fillRect(cx-58,ry-3,Math.max(0,len-4),2);}}
+  bubDraw(MT.B[i]);if(MT.B[i].length>3)pill('H₂ gas',cx,top-18,TEAL,'#fff',14);
+  txt(S.n,cx,MB.y+MB.h+26,{s:18});txt(S.f,cx,MB.y+MB.h+50,{s:14,c:MUTED,w:500});
+  if(MT.pop>=0){var gas=MT_R[i]>0&&MT.on&&MT.t>1;splint(cx-10,MB.y-30,MT.pop);
+   if(MT.pop>.4){if(gas){var a=clamp(1-(MT.pop-.4)/1.4,0,1);for(var q=0;q<10;q++){var an=q*.628;seg(cx-10+20*Math.cos(an),MB.y-30+20*Math.sin(an),cx-10+(32+18*(1-a))*Math.cos(an),MB.y-30+(32+18*(1-a))*Math.sin(an),'rgba(232,150,42,'+a+')',4);}txt('POP!',cx+60,MB.y-56,{s:30,c:ORANGE});}
+    else txt('no gas · no pop',cx,MB.y-10,{s:15,c:MUTED,w:500});}}});
+ if(MT.on&&MT.amt[0]<=0)pill('the magnesium is used up',150,MB.y+MB.h-40,PLUM,'#fff',14);}
+var mtP={src:"Let's Discover!",mode:'try',q:'Drop magnesium into the three beakers. Watch, then do the pop test.',
+ fields:[{t:'c',lab:'Which beaker bubbled?',opts:['only the acid (HCl)','all three','only the base (NaOH)'],ok:0,why:'Look where the bubbles form.'},
+  {t:'c',lab:'The burning splint made a "pop". The gas is…',opts:['hydrogen, H₂','carbon dioxide, CO₂','oxygen, O₂'],ok:0,why:'Hydrogen burns with a squeaky pop.'},
+  {t:'c',lab:'What happened to the magnesium in the acid?',opts:['it was used up: it reacted','it did not change'],ok:0,why:'Watch the length of the ribbon.'}],
+ show:[['Observe','Only the <b>acid</b> bubbles. Water and the base do nothing.'],['Test the gas','A burning splint makes a <b>pop</b> → the gas is <b>hydrogen, H₂</b>.'],['The equation','Mg(s) + 2HCl(aq) → MgCl₂(aq) + H₂(g)'],['Our rule','Acids react with active metals such as <b>Mg</b> and <b>Zn</b> to produce <b>hydrogen gas</b>.']],
+ ans:'Acids react with active metals (Mg, Zn) to produce hydrogen gas.'};
+var SC_L3={title:'Acids react with metals',q:'Which beaker will bubble when you add magnesium: the acid, the water or the base? What is the gas?',canvas:true,prob:mtP,vids:['mg','h2test'],
+ enter:function(){ctlButtons([{t:'Drop in magnesium',fill:true,f:function(){if(!MT.on){MT.on=true;MT.t=0;}}},{t:'Pop test (burning splint)',f:function(){MT.pop=0;if(MT.on&&MT.t>1)popSound(.4);}},{t:'Reset',f:mtReset}]);},
+ frame:mtFrame,reads:function(){return [['Mg left in HCl',Math.round(MT.amt[0]*100)+'%'],['Mg left in water',Math.round(MT.amt[1]*100)+'%'],['Mg left in NaOH',Math.round(MT.amt[2]*100)+'%']];}};
+
+/* --- acids + carbonates --- */
+var CB={on:false,t:0,amt:[1,1,1,1],B:[[],[],[],[]],lw:-1},CB_S=['hcl','vinegar','water','naoh'],CB_R=[1,.35,0,0],CBB={y:190,w:165,h:190,l:.6,x:[25,220,415,610]},CHIP=[1,.8,1.1,.9,1,.82,1.05,.95];
+function cbReset(){CB.on=false;CB.t=0;CB.amt=[1,1,1,1];CB.B=[[],[],[],[]];CB.lw=-1;}
+function chip(cx,cy,s){ctx.beginPath();CHIP.forEach(function(r,i){var a=i/CHIP.length*6.283,x=cx+24*s*r*Math.cos(a),y=cy+15*s*r*Math.sin(a);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.closePath();ctx.fillStyle='#f3f1ea';ctx.fill();ctx.strokeStyle='#a9a291';ctx.lineWidth=2;ctx.stroke();}
+function cbFrame(dt){var top=CBB.y+CBB.h*(1-CBB.l),bot=CBB.y+CBB.h-16,eq=CB.on&&CB.t>1;if(CB.on)CB.t+=dt;if(CB.lw>=0)CB.lw+=dt;clear();
+ CB_S.forEach(function(k,i){var x=CBB.x[i],S=SOLN[k],cx=x+CBB.w/2,s=Math.sqrt(CB.amt[i]);
+  if(CB.on&&CB.t>.7){var r=CB_R[i]*Math.max(CB.amt[i],0);CB.amt[i]=Math.max(0,CB.amt[i]-CB_R[i]*dt/14);var n=r*dt*34;while(n>0){if(rnd()<n)CB.B[i].push({x:cx-22*s+rnd()*44*s,y:bot-8,r:2+rnd()*3.5,v:60+rnd()*70,p:rnd()*100});n-=1;}}
+  bubStep(CB.B[i],dt,top);
+  if(CB.lw>=0){var lx=cx-14,ly=62,act=CB_R[i]>0&&CB.on&&CB.t>1,milk=act?clamp(CB.lw/2,0,1)*(i===0?1:.75):0;ctx.strokeStyle='#8d99b0';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx+40,CBB.y+6);ctx.quadraticCurveTo(cx+46,ly-16,cx,ly-10);ctx.stroke();
+   ctx.save();tubePath(lx,ly,28,80);ctx.closePath();ctx.clip();ctx.fillStyle=CLEAR;ctx.fillRect(lx,ly+22,28,60);ctx.fillStyle='rgba(214,210,196,'+milk+')';ctx.fillRect(lx,ly+22,28,60);ctx.fillStyle='rgba(255,255,255,'+milk+')';for(var mq=0;mq<14;mq++){ctx.beginPath();ctx.arc(lx+5+((mq*7)%19),ly+28+((mq*11)%46),1.8,0,6.283);ctx.fill();}ctx.restore();ctx.strokeStyle=GLASS;ctx.lineWidth=2.5;tubePath(lx,ly,28,80);ctx.stroke();
+   if(CB.lw>.6)txt(act?'milky!':'stays clear',cx+44,ly+50,{s:14,c:act?ORANGE:MUTED,a:'left'});}
+  beaker(x,CBB.y,CBB.w,CBB.h,CBB.l,S.liq);
+  if(CB.on&&CB.amt[i]>.02){var cy=lerp(CBB.y-40,bot-4,ease(clamp(CB.t/.7,0,1)));chip(cx,cy,Math.max(s,.15));}
+  bubDraw(CB.B[i]);if(CB.B[i].length>3)pill('CO₂',cx,top-16,TEAL,'#fff',14);
+  txt(S.n,cx,CBB.y+CBB.h+24,{s:17});txt(S.f.split(',')[0],cx,CBB.y+CBB.h+46,{s:13,c:MUTED,w:500});});
+ card(40,440,720,48,'#fff');txt(eq?'CaCO₃(s) + 2HCl(aq) → CaCl₂(aq) + H₂O(l) + CO₂(g)':'Drop a marble chip (calcium carbonate, CaCO₃) into each beaker',400,465,{s:eq?21:18,c:eq?INK:MUTED});}
+var cbP={src:"Let's Discover!",mode:'try',q:'Drop a marble chip (CaCO₃) into each beaker, then do the limewater test.',
+ fields:[{t:'c',lab:'Which beakers fizzed?',opts:['HCl and vinegar (the acids)','all four','only NaOH'],ok:0,why:'Look where the bubbles form.'},
+  {t:'c',lab:'The gas turns limewater milky. It is…',opts:['carbon dioxide, CO₂','hydrogen, H₂','oxygen, O₂'],ok:0,why:'Milky limewater is the test for CO₂.'},
+  {t:'c',lab:'What happens when a base (NaOH) meets a carbonate?',opts:['no reaction','it fizzes more than an acid'],ok:0,why:'Look at the NaOH beaker.'}],
+ show:[['Observe','The <b>acids</b> fizz (HCl faster than vinegar). Water and NaOH do nothing.'],['Test the gas','The gas turns limewater <b>milky</b> → it is <b>carbon dioxide, CO₂</b>.'],['The equation','CaCO₃(s) + 2HCl(aq) → CaCl₂(aq) + H₂O(l) + CO₂(g)'],['Our rule','Acids react with <b>carbonates</b> (marble, limestone, baking soda) to produce <b>CO₂ gas</b>.']],
+ ans:'Acids react with carbonates to produce carbon dioxide gas.'};
+var SC_L4={title:'Acids react with carbonates',q:'Marble statues slowly wear away in acid rain. What gas do you think forms when acid meets marble?',canvas:true,prob:cbP,vids:['caco3','co2test'],
+ enter:function(){ctlButtons([{t:'Drop in a marble chip',fill:true,f:function(){if(!CB.on){CB.on=true;CB.t=0;}}},{t:'Limewater test',f:function(){CB.lw=0;}},{t:'Reset',f:cbReset}]);},
+ frame:cbFrame,reads:function(){return [['Chip left in HCl',Math.round(CB.amt[0]*100)+'%'],['Chip left in vinegar',Math.round(CB.amt[1]*100)+'%'],['Water / NaOH','no reaction']];}};
+
+/* --- conductivity --- */
+var CD={sol:'hcl',amt:1,P:[],W:[],e:0,b:0},CD_LIST=['water','sugar','salt','hcl','vinegar','naoh','ammonia'];
+var CDEF={water:{f:0},sugar:{f:0,mol:'C₁₂H₂₂O₁₁'},salt:{f:1,c:'Na⁺',a:'Cl⁻'},hcl:{f:1,c:'H₃O⁺',a:'Cl⁻'},vinegar:{f:1/6,c:'H₃O⁺',a:'CH₃COO⁻',mol:'CH₃COOH'},naoh:{f:1,c:'Na⁺',a:'OH⁻'},ammonia:{f:1/6,c:'NH₄⁺',a:'OH⁻',mol:'NH₃'}};
+var CBX={x0:272,x1:528,y0:318,y1:446},CMX={x0:236,x1:566,y0:318,y1:446},WPA=[[190,110],[253,110],[253,200]],WPB=[[553,200],[553,70],[50,70],[50,110],[100,110]];
+function cdBuild(){var d=CDEF[CD.sol],n=CD.sol==='water'?0:6*CD.amt,ni=Math.round(d.f*n),P=[];
+ function mk(k,lab,b){P.push({k:k,lab:lab,x:lerp(b.x0,b.x1,rnd()),y:lerp(b.y0,b.y1,rnd()),vx:(rnd()-.5)*40,vy:(rnd()-.5)*40,f:1});}
+ for(var i=0;i<n;i++){if(i<ni){mk(1,d.c,CBX);mk(-1,d.a,CBX);}else mk(0,d.mol,CMX);}
+ CD.P=P;if(!CD.W.length)CD.W=mkWater(14,{x0:215,x1:585,y0:312,y1:450});}
+function cdIons(){return CD.P.filter(function(p){return p.k!==0;}).length;}
+function along(path,d){for(var i=0;i<path.length-1;i++){var a=path[i],b=path[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d<=L)return [lerp(a[0],b[0],d/L),lerp(a[1],b[1],d/L)];d-=L;}return path[path.length-1];}
+function plen(path){var s=0;for(var i=0;i<path.length-1;i++)s+=Math.hypot(path[i+1][0]-path[i][0],path[i+1][1]-path[i][1]);return s;}
+function cdFrame(dt){var ions=cdIons(),bt=ions/36;CD.b=lerp(CD.b,bt,Math.min(1,dt*3));var b=CD.b;CD.e+=dt*70*bt;clear();
+ [WPA,WPB].forEach(function(p){ctx.strokeStyle='#5a6780';ctx.lineWidth=4;ctx.lineJoin='round';ctx.beginPath();p.forEach(function(q,i){if(i)ctx.lineTo(q[0],q[1]);else ctx.moveTo(q[0],q[1]);});ctx.stroke();});
+ if(bt>0.01)[WPA,WPB].forEach(function(p){var L=plen(p);for(var d=CD.e%40;d<L;d+=40){var q=along(p,d);ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(q[0],q[1],3.5,0,6.283);ctx.fill();}});
+ rr(100,96,90,28,6);ctx.fillStyle=AMBER;ctx.fill();ctx.fillStyle='#5a6780';ctx.fillRect(190,103,6,14);txt('+',114,110,{s:18,c:'#fff'});txt('−',176,110,{s:20,c:'#fff'});txt('battery',145,142,{s:13,c:MUTED,w:500});
+ if(b>.01){var g=ctx.createRadialGradient(400,46,8,400,46,22+110*b);g.addColorStop(0,'rgba(255,214,90,'+(.95*b)+')');g.addColorStop(1,'rgba(255,214,90,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(400,46,22+110*b,0,6.283);ctx.fill();}
+ ctx.fillStyle='#8d99b0';ctx.fillRect(388,62,24,14);ctx.fillStyle=mixHex('#f3f6fb','#ffe27a',clamp(b*1.4,0,1));ctx.strokeStyle=GLASS;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(400,44,21,0,6.283);ctx.fill();ctx.stroke();
+ ctx.strokeStyle=b>.05?'#e8962a':'#8d99b0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(392,62);ctx.lineTo(392,48);for(var z=0;z<4;z++){ctx.lineTo(394+z*4,z%2?44:52);}ctx.lineTo(408,48);ctx.lineTo(408,62);ctx.stroke();
+ txt('bulb',446,34,{s:13,c:MUTED,w:500});
+ var top=beaker(200,260,400,200,.82,SOLN[CD.sol].liq);
+ stepWater(CD.W,{x0:215,x1:585,y0:top+14,y1:450},dt,.3);
+ CD.P.forEach(function(p){p.vx+=gauss()*120*dt;p.vy+=gauss()*120*dt;var v=Math.hypot(p.vx,p.vy);if(v>45){p.vx*=45/v;p.vy*=45/v;}p.x+=p.vx*dt+(p.k>0?-24:(p.k<0?24:0))*dt;p.y+=p.vy*dt;p.f=Math.min(1,p.f+dt*2);
+  var B=p.k===0?CMX:CBX;if(p.y<B.y0){p.y=B.y0;p.vy=Math.abs(p.vy);}if(p.y>B.y1){p.y=B.y1;p.vy=-Math.abs(p.vy);}
+  if(p.k===0){if(p.x<B.x0){p.x=B.x0;p.vx=Math.abs(p.vx);}if(p.x>B.x1){p.x=B.x1;p.vx=-Math.abs(p.vx);}}
+  else if(p.k>0&&p.x<B.x0){p.x=B.x1-4;p.f=0;}else if(p.k<0&&p.x>B.x1){p.x=B.x0+4;p.f=0;}else p.x=clamp(p.x,B.x0-2,B.x1+2);
+  ionPill(p.x,p.y,p.lab,p.k,p.f,p.k===0?11:13);});
+ [[253,'−',BLUE],[553,'+',CORAL]].forEach(function(e){ctx.fillStyle='#5a6780';rr(e[0]-8,200,16,232,4);ctx.fill();badge(e[0],180,e[1],e[2]);});
+ if(CD.sol==='water')pill('only water molecules: almost no ions',400,top+70,MUTED,'#fff',15);
+ card(615,96,172,380,'#fff');txt(SOLN[CD.sol].s,701,122,{s:18});
+ txt('Bulb',701,158,{s:15,c:MUTED,w:500});rr(632,170,138,18,9);ctx.fillStyle='#e6ebf3';ctx.fill();if(b>.005){rr(632,170,Math.max(18,138*b),18,9);ctx.fillStyle=AMBER;ctx.fill();}
+ txt(b<.03?'off':(b<.25?'dim':(b<.6?'medium':'bright')),701,206,{s:18,c:b<.03?MUTED:ORANGE});
+ txt('Ions',701,244,{s:15,c:MUTED,w:500});txt(String(ions),701,272,{s:30,c:ions?CORAL:MUTED});
+ txt('Molecules (no charge)',701,306,{s:13,c:MUTED,w:500});txt(String(CD.P.length-ions),701,330,{s:22,c:MUTED});
+ ionPill(660,372,'+ ion',1,1,13);ionPill(742,372,'− ion',-1,1,13);ionPill(701,408,'molecule',0,1,12);txt('ions move → current flows',701,446,{s:12,c:MUTED,w:500});}
+var cdP={src:"Let's Discover!",mode:'try',q:'Test every solution. Then change the amount dissolved and watch the ions and the bulb.',
+ fields:[{t:'c',lab:'Same amount (3 scoops): which made the bulb the <b>brightest</b>?',opts:['HCl, NaOH and salt water','vinegar and ammonia','sugar water'],ok:0,why:'Compare the bulb for each solution at 3 scoops.'},
+  {t:'c',lab:'Pure water and sugar water…',opts:['do not light the bulb: no ions','light the bulb brightly'],ok:0,why:'Count the ions in each one.'},
+  {t:'c',lab:'More HCl (1 → 3 scoops) makes the bulb…',opts:['brighter: more ions','dimmer','stay the same'],ok:0,why:'Change the amount and count the ions.'},
+  {t:'c',lab:'Vinegar is an acid but the bulb is dim. Why?',opts:['only a few CH₃COOH molecules form ions','it has no H atoms','vinegar is a base'],ok:0,why:'Count the molecules and the ions in vinegar.'}],
+ show:[['What lights the bulb?','The bulb lights only when <b>ions</b> (charged particles) can move between the two metal plates.'],['No ions','Pure water and sugar water have almost no ions → <b>no light</b>.'],['Many ions','HCl and NaOH break apart <b>completely</b> into ions → <b>bright</b>. Salt water also has many ions.'],['Few ions','In vinegar and ammonia only a <b>few</b> molecules form ions → <b>dim</b>.'],['Our rule','<b>More ions → more conduction → brighter bulb.</b> Acids and bases conduct because they form ions in water.']],
+ ans:'More ions → more conduction → brighter bulb.',sense:'HCl breaks apart completely; acetic acid only a little. You will learn why in Section 2 (strong and weak acids).'};
+var SC_L5={title:'Conductivity: more ions, more light',q:'Why does the bulb light up in some solutions and not in others? What is moving through the liquid?',canvas:true,prob:cdP,vids:['cond1','cond2'],
+ rule:['The bulb lights only if <b>ions</b> can move in the solution','Acids and bases <b>conduct</b> because they form ions in water','<b>More ions → more conduction</b> (brighter bulb)','HCl, NaOH: <b>all</b> break into ions · vinegar, ammonia: only <b>a few</b>'],
+ enter:function(){cdBuild();var s=ctlSlider('cdA','Amount dissolved',1,3,1,CD.amt,function(v){return v+(v>1?' scoops':' scoop');},function(v){CD.amt=v;cdBuild();});
+  $('controls').innerHTML='<div class="subbar" style="margin:0">'+CD_LIST.map(function(k){return '<button class="btn'+(CD.sol===k?' sel':'')+'" data-s="'+k+'">'+SOLN[k].s+'</button>';}).join('')+'</div>'+s.html;s.bind();
+  each('#controls [data-s]',function(b){b.onclick=function(){CD.sol=b.getAttribute('data-s');SC_L5.enter();};});},
+ frame:cdFrame,reads:function(){var i=cdIons();return [['Solution',SOLN[CD.sol].s],['Amount',CD.amt+(CD.amt>1?' scoops':' scoop')],['Ions',i],['Bulb',Math.round(i/36*100)+'%']];}};
+
+/* --- summary --- */
+function swc(c){return '<span class="sw" style="background:'+c+'"></span>';}
+var SC_L6={title:'Summary: properties of acids and bases',q:'Name one property that acids and bases share, and two that are different.',canvas:false,
+ html:function(){return '<table class="ptab"><tr><th style="background:#5a6780">Property</th><th style="background:'+RED+'">Acids</th><th style="background:'+BLUE+'">Bases</th></tr>'+
+  '<tr><td>Taste</td><td>sour (lemon, vinegar)</td><td>bitter</td></tr>'+
+  '<tr><td>Feel</td><td>can sting or burn skin</td><td>slippery (soap)</td></tr>'+
+  '<tr><td>Litmus</td><td>blue '+swc(LBLUE)+' → red '+swc(LRED)+'</td><td>red '+swc(LRED)+' → blue '+swc(LBLUE)+'</td></tr>'+
+  '<tr><td>Red cabbage</td><td>red / pink '+swc('#e0478c')+'</td><td>blue, green, yellow '+swc('#2fa36b')+'</td></tr>'+
+  '<tr><td>Phenolphthalein</td><td>colorless</td><td>pink '+swc('#e8559d')+'</td></tr>'+
+  '<tr><td>Active metals (Mg, Zn)</td><td>react → <b>H₂ gas</b></td><td>no reaction</td></tr>'+
+  '<tr><td>Carbonates (CaCO₃)</td><td>react → <b>CO₂ gas</b></td><td>no reaction</td></tr>'+
+  '<tr><td>Electricity</td><td>conduct (form ions)</td><td>conduct (form ions)</td></tr>'+
+  '<tr><td>Examples</td><td>lemon juice, vinegar, soft drinks, stomach acid (HCl)</td><td>soap, baking soda, ammonia cleaner, antacids, drain cleaner (NaOH)</td></tr></table>'+
+  '<div class="safe"><b>Safety:</b> never taste or touch chemicals in the lab to test them. Use indicators instead.</div>';}};
+
+/* ================= TAB 2: ACIDIC, BASIC OR NEUTRAL ================= */
+var SI={t:0,pause:false};
+function lpair(x,y,a,d,al){if(al<=0)return;var px=x+d*Math.cos(a),py=y+d*Math.sin(a),ox=-Math.sin(a)*5,oy=Math.cos(a)*5;ctx.globalAlpha=al;ctx.fillStyle=INK;ctx.beginPath();ctx.arc(px+ox,py+oy,3.2,0,6.283);ctx.fill();ctx.beginPath();ctx.arc(px-ox,py-oy,3.2,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+function siFrame(dt){if(!SI.pause)SI.t+=dt;if(SI.t>11)SI.t=0;var t=SI.t;clear();
+ var p1=ease(clamp(t/1.5,0,1))-ease(clamp((t-9.4)/1.2,0,1)),p2=ease(clamp((t-1.7)/1.5,0,1))-ease(clamp((t-8)/1.3,0,1)),sep=ease(clamp((t-3.4)/1.4,0,1))-ease(clamp((t-6.6)/1.2,0,1));
+ var y=150,ax=lerp(210,320,p1)-90*sep,bx=lerp(590,450,p1)+100*sep,UL=Math.PI+.87,LL=Math.PI-.87,hA=-.9,hB=.9;
+ var h0x=ax+30*Math.cos(hA),h0y=y+30*Math.sin(hA),tx=bx+30*Math.cos(UL),ty=y+30*Math.sin(UL),hx=lerp(h0x,tx,p2),hy=lerp(h0y,ty,p2)-30*Math.sin(Math.PI*p2),SC=1.45;function X(x){return 400+(x-400)*SC;}
+ ctx.save();ctx.translate(400,y);ctx.scale(SC,SC);ctx.translate(-400,-y);
+ bondL(ax,y,ax+30*Math.cos(hB),y+30*Math.sin(hB),1);bondL(ax,y,h0x,h0y,1,1-p2);
+ [hA,hB].forEach(function(a){bondL(bx,y,bx+30*Math.cos(a),y+30*Math.sin(a),1);});bondL(bx,y,tx,ty,1,p2);
+ atom(ax,y,'O');atom(ax+30*Math.cos(hB),y+30*Math.sin(hB),'H');atom(bx,y,'O');[hA,hB].forEach(function(a){atom(bx+30*Math.cos(a),y+30*Math.sin(a),'H');});
+ lpair(ax,y,UL,30,1);lpair(ax,y,LL,30,1);lpair(ax,y,hA,30,p2);lpair(bx,y,LL,30,1);lpair(bx,y,UL,30,1-p2);
+ if(p2>0&&p2<1){ctx.strokeStyle='rgba(232,150,42,.8)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(hx,hy,21,0,6.283);ctx.stroke();txt('H⁺',hx,hy-34,{s:18,c:ORANGE});}
+ atom(hx,hy,'H');
+ var q=clamp(p2*1.3-.3,0,1);if(q>0){badge(ax-30,y-38,'−',BLUE,q);badge(bx+34,y-38,'+',CORAL,q);}
+ ctx.restore();
+ if(sep>.05){txt('OH⁻',X(ax),y+104,{s:28,c:BLUE,al:sep});txt('hydroxide ion',X(ax),y+132,{s:15,c:MUTED,w:500,al:sep});txt('H₃O⁺',X(bx),y+104,{s:28,c:CORAL,al:sep});txt('hydronium ion',X(bx),y+132,{s:15,c:MUTED,w:500,al:sep});}
+ else if(p2<.1){txt('H₂O',X(ax),y+104,{s:26});txt('H₂O',X(bx),y+104,{s:26});}
+ var st=t<1.6?'Two water molecules collide':(t<3.4?'One H⁺ (a proton) jumps across; it leaves its electrons behind':(t<6.6?'A hydronium ion, H₃O⁺, and a hydroxide ion, OH⁻, form':(t<9.4?'The reverse also happens: H₃O⁺ gives the H⁺ back':'Two water molecules again')));
+ txt(st,400,312,{s:19,c:TEAL});
+ card(40,330,720,156,'#fff');txt('H₂O(l) + H₂O(l)  ⇌  H₃O⁺(aq) + OH⁻(aq)',400,368,{s:30});
+ txt('This is the self-ionization of water. In pure water only about 2 in every billion molecules do this.',400,410,{s:15,c:MUTED,w:500});
+ txt('Every H₃O⁺ that forms comes with one OH⁻ → equal amounts → pure water is NEUTRAL',400,448,{s:17,c:TEAL});}
+var CARDS_SI={cards:[['What is H⁺?','A hydrogen atom has 1 proton and 1 electron. <b>H⁺</b> has lost its electron: it is just a <b>proton</b>.'],
+ ['The hydronium ion','In water, H⁺ never floats alone: it bonds to a water molecule → <b>H₃O⁺, the hydronium ion</b>. Chemists use H⁺ and H₃O⁺ for the same thing.'],
+ ['Self-ionization','Water molecules can pass an H⁺ to each other: <b>H₂O + H₂O ⇌ H₃O⁺ + OH⁻</b>. The ⇌ means it goes both ways.'],
+ ['Why is pure water neutral?','Each time one H₃O⁺ forms, one OH⁻ forms too. So pure water always has <b>[H₃O⁺] = [OH⁻]</b>: it is <b>neutral</b>.']]};
+var SC_W1={title:'Water ionizes itself',q:'When one water molecule gives H⁺ to another, which two ions form? Why must they always form in equal numbers?',canvas:true,cards:CARDS_SI,
+ enter:function(){ctlButtons([{t:'Pause / play',f:function(){SI.pause=!SI.pause;}},{t:'Replay',fill:true,f:function(){SI.t=0;SI.pause=false;}}]);},
+ frame:siFrame,reads:function(){return [['Reaction','H₂O + H₂O ⇌ H₃O⁺ + OH⁻'],['In pure water','[H₃O⁺] = [OH⁻]']];}};
+
+/* --- H3O+ vs OH- --- */
+var HO={lv:0,P:[],W:[]},HO_N=[[1,16],[2,8],[4,4],[8,2],[16,1]],HB={x0:96,x1:404,y0:172,y1:440};
+function hoSync(){var n=HO_N[HO.lv+2];[[1,n[0]],[-1,n[1]]].forEach(function(q){var k=q[0],want=q[1],have=HO.P.filter(function(p){return p.k===k&&!p.dead;});
+ if(have.length<want){for(var i=have.length;i<want;i++)HO.P.push({k:k,x:lerp(HB.x0,HB.x1,rnd()),y:lerp(HB.y0,HB.y1,rnd()),vx:(rnd()-.5)*50,vy:(rnd()-.5)*50,f:0});}
+ else for(var j=want;j<have.length;j++)have[j].dead=true;});}
+function hoKind(){return HO.lv>0?'acid':(HO.lv<0?'base':'neutral');}
+function hoFrame(dt){var n=HO_N[HO.lv+2],k=hoKind();clear();
+ var top=beaker(60,110,380,350,.86,CLEAR);if(!HO.W.length)HO.W=mkWater(22,{x0:80,x1:420,y0:top+10,y1:448});stepWater(HO.W,{x0:80,x1:420,y0:top+10,y1:448},dt,.28);
+ wander(HO.P,HB,dt,40);HO.P=HO.P.filter(function(p){if(p.dead)p.f-=dt*2;else p.f=Math.min(1,p.f+dt*2);return p.f>0;});
+ HO.P.forEach(function(p){ionPill(p.x,p.y,p.k>0?'H₃O⁺':'OH⁻',p.k,p.f,14);});
+ txt(k==='acid'?'water + acid (HCl)':(k==='base'?'water + base (NaOH)':'pure water'),250,86,{s:20});
+ card(470,24,316,452,'#fff');var lab=k==='acid'?'ACIDIC':(k==='base'?'BASIC':'NEUTRAL'),col=k==='acid'?RED:(k==='base'?BLUE:GREEN);pill(lab,628,62,col,'#fff',24);
+ txt(k==='acid'?'more H₃O⁺ than OH⁻':(k==='base'?'more OH⁻ than H₃O⁺':'H₃O⁺ = OH⁻'),628,104,{s:17,c:col});
+ [[n[0],'H₃O⁺',CORAL,560],[n[1],'OH⁻',BLUE,696]].forEach(function(b){var h=b[0]/16*180;rr(b[3]-34,320-h,68,h,8);ctx.fillStyle=b[2];ctx.fill();txt(String(b[0]),b[3],320-h-16,{s:22,c:b[2]});txt(b[1],b[3],342,{s:20,c:b[2]});});
+ seg(500,320,756,320,INK,2);
+ txt('Litmus test:',530,410,{s:16,a:'left'});var bl=k==='acid'?'r':'b',rd=k==='base'?'b':'r';
+ [['b',650,bl],['r',700,rd]].forEach(function(s){rr(s[1]-9,384,18,56,4);ctx.fillStyle=s[0]==='b'?LBLUE:LRED;ctx.fill();ctx.fillStyle=s[2]==='b'?LBLUE:LRED;ctx.fillRect(s[1]-9,414,18,26);});
+ txt('blue',650,454,{s:12,c:MUTED,w:500});txt('red',700,454,{s:12,c:MUTED,w:500});}
+var hoP={src:"Let's Discover!",mode:'try',q:'Add acid and base. Watch both bars, then complete the rule.',
+ fields:[{t:'c',lab:'More H₃O⁺ than OH⁻ → the solution is…',opts:['acidic','basic','neutral'],ok:0,why:'Add acid: which ion has the taller bar?'},
+  {t:'c',lab:'More OH⁻ than H₃O⁺ → the solution is…',opts:['acidic','basic','neutral'],ok:1,why:'Add base and compare the bars.'},
+  {t:'c',lab:'Equal H₃O⁺ and OH⁻ → the solution is…',opts:['acidic','basic','neutral'],ok:2,why:'Like pure water.'},
+  {t:'c',lab:'Does an acidic solution contain any OH⁻ ions?',opts:['Yes, but fewer than H₃O⁺','No, none at all'],ok:0,why:'Look at the OH⁻ bar when you add acid: it is small, not zero.'}],
+ show:[['Pure water','Equal numbers: <b>[H₃O⁺] = [OH⁻]</b> → <b>neutral</b>.'],['Add an acid','H₃O⁺ goes <b>up</b>, OH⁻ goes <b>down</b> → <b>[H₃O⁺] > [OH⁻]</b> → <b>acidic</b>.'],['Add a base','OH⁻ goes <b>up</b>, H₃O⁺ goes <b>down</b> → <b>[OH⁻] > [H₃O⁺]</b> → <b>basic</b>.'],['Both are always there','Every water solution has <b>both</b> ions. What decides is which one there is <b>more</b> of.']],
+ ans:'Acidic: [H₃O⁺] > [OH⁻] · basic: [OH⁻] > [H₃O⁺] · neutral: equal.',sense:'Square brackets [ ] mean "concentration of".'};
+var SC_W2={title:'H₃O⁺ vs OH⁻: who has more?',q:'You add HCl to pure water. Which ion increases? What happens to the other one?',canvas:true,prob:hoP,
+ enter:function(){hoSync();ctlButtons([{t:'+ Add acid (HCl)',fill:true,f:function(){HO.lv=Math.min(2,HO.lv+1);hoSync();}},{t:'+ Add base (NaOH)',fill:true,f:function(){HO.lv=Math.max(-2,HO.lv-1);hoSync();}},{t:'Pure water',f:function(){HO.lv=0;hoSync();}}]);},
+ frame:hoFrame,reads:function(){var n=HO_N[HO.lv+2];return [['H₃O⁺',n[0]],['OH⁻',n[1]],['Solution',hoKind()==='acid'?'acidic':(hoKind()==='base'?'basic':'neutral')]];}};
+
+/* --- classify it --- */
+var CLB=[[6,2],[3,3],[1,6],[5,1]],CLP=null,CLK=['acidic','neutral','basic','acidic'];
+function clInit(){CLP=CLB.map(function(c,i){var x0=25+i*192,P=[],tries=0,need=[];for(var a=0;a<c[0];a++)need.push(1);for(var b=0;b<c[1];b++)need.push(-1);
+ need.forEach(function(k){var ok=false;while(!ok&&tries<4000){tries++;var x=lerp(x0+34,x0+136,rnd()),y=lerp(176,336,rnd());ok=P.every(function(p){return Math.abs(p.x-x)>56||Math.abs(p.y-y)>32;});if(ok)P.push({k:k,x:x,y:y,ph:rnd()*6});}});return P;});}
+var clP={src:'Practice',mode:'show',q:'Each beaker shows only the H₃O⁺ and OH⁻ ions (water molecules are not drawn). Is each solution <b>acidic</b>, <b>basic</b> or <b>neutral</b>?',
+ fields:['A','B','C','D'].map(function(L,i){return {t:'c',lab:'Beaker '+L+' is…',opts:['acidic','basic','neutral'],ok:['acidic','basic','neutral'].indexOf(CLK[i]),why:'Count H₃O⁺ and OH⁻ in beaker '+L+'. Which is more?',keep:true};}).concat([{t:'c',lab:'Which beaker could be pure water?',opts:['A','B','C','D'],ok:1,why:'Pure water has equal numbers of both ions.',keep:true}]),
+ show:[['Count the ions','A: 6 H₃O⁺, 2 OH⁻ · B: 3 H₃O⁺, 3 OH⁻ · C: 1 H₃O⁺, 6 OH⁻ · D: 5 H₃O⁺, 1 OH⁻'],['Compare','More H₃O⁺ → acidic · more OH⁻ → basic · equal → neutral'],['Answers','A <b>acidic</b> · B <b>neutral</b> · C <b>basic</b> · D <b>acidic</b>'],['Pure water?','Only <b>B</b> has equal numbers, so only B could be pure water.']],
+ ans:'A acidic · B neutral · C basic · D acidic.'};
+var SC_W3={title:'Classify it: acidic, basic or neutral?',q:'Do you need to count the water molecules? Which two ions decide?',canvas:true,prob:clP,
+ enter:function(){if(!CLP)clInit();},
+ frame:function(dt){clear();var st=clP.mode==='show'?(clP.st||0):(clP.solved?4:0),tt=performance.now()/1000;
+  CLB.forEach(function(c,i){var x0=25+i*192;txt('ABCD'[i],x0+85,70,{s:30,c:ACC()});beaker(x0,110,170,250,.9,CLEAR);
+   CLP[i].forEach(function(p){ionPill(p.x+3*Math.sin(tt*1.3+p.ph),p.y+3*Math.cos(tt*1.1+p.ph),p.k>0?'H₃O⁺':'OH⁻',p.k,1,16);});
+   if(st>=1)txt(c[0]+' H₃O⁺ · '+c[1]+' OH⁻',x0+85,388,{s:15,c:MUTED,w:500});
+   if(st>=3){var k=CLK[i];pill(k,x0+85,424,k==='acidic'?RED:(k==='basic'?BLUE:GREEN),'#fff',17);}});},
+ reads:function(){return [['Beakers','4'],['Mode',clP.mode==='try'?'My turn':'Show me']];}};
+function ACC(){return TABS[tabI].c;}
+
+/* ================= TAB 3: THREE MODELS ================= */
+/* --- Arrhenius --- */
+var AR={k:'HCl',t:-1,W:[]};
+function arFrame(dt){if(AR.t>=0)AR.t+=dt;var u=AR.t<0?0:ease(clamp(AR.t/1.6,0,1)),cy=160;clear();
+ card(24,18,570,300,'#eef5fc');if(!AR.W.length)AR.W=mkWater(14,{x0:44,x1:574,y0:36,y1:300});stepWater(AR.W,{x0:44,x1:574,y0:36,y1:300},dt,.35);
+ txt(AR.t<0?'Press "Dissolve in water"':'in water',309,40,{s:15,c:MUTED,w:500});
+ ctx.save();ctx.translate(309,cy);ctx.scale(1.4,1.4);ctx.translate(-309,-cy);
+ if(AR.k==='HCl'){var hx=lerp(374,190,u),cx=lerp(410,450,u);bondL(hx,cy,cx,cy,1,1-u);atom(cx,cy,'Cl');atom(hx,cy,'H');
+  if(u>.6){ionPill(hx,cy-44,'H⁺',1,clamp(u*2.5-1.5,0,1),17);ionPill(cx,cy-50,'Cl⁻',-1,clamp(u*2.5-1.5,0,1),17);txt('(H⁺ joins water → H₃O⁺)',hx,cy+44,{s:13,c:MUTED,w:500,al:u});}}
+ else if(AR.k==='NaOH'){var nx=lerp(352,190,u),ox=lerp(404,440,u);bondL(nx,cy,ox,cy,1,1-u,[6,6]);bondL(ox,cy,ox+30,cy-18,1);atom(nx,cy,'Na');atom(ox,cy,'O');atom(ox+30,cy-18,'H');
+  if(u>.6){ionPill(nx,cy-48,'Na⁺',1,clamp(u*2.5-1.5,0,1),17);ionPill(ox+12,cy-56,'OH⁻',-1,clamp(u*2.5-1.5,0,1),17);}}
+ else{var w=AR.t<0?0:Math.sin(AR.t*8)*3*(1-clamp(AR.t/3,0,1)),D=[[-32,22],[32,22],[0,-36]];D.forEach(function(d){bondL(309+w,cy,309+w+d[0],cy+d[1],1);});atom(309+w,cy,'N');D.forEach(function(d){atom(309+w+d[0],cy+d[1],'H');});
+  if(u>.3){txt('?',420,cy-40,{s:70,c:AMBER,al:u});ionPill(309,cy+76,'no OH to release!',0,u,15);}}
+ ctx.restore();
+ card(612,18,174,300,'#fff');txt('Litmus test',699,44,{s:17});var res=AR.k==='HCl'?['r','r']:['b','b'];
+ [['b',670],['r',728]].forEach(function(s,i){strip(s[1],74,s[0],u>.95?1:0,res[i],150,24);});
+ if(u>.95)pill(AR.k==='HCl'?'acidic':'basic',699,288,AR.k==='HCl'?RED:BLUE,'#fff',16);
+ card(24,332,762,154,'#fff');txt('Arrhenius acid: contains H and ionizes to produce H⁺ in water',405,362,{s:18,c:TEAL});txt('Arrhenius base: contains OH and dissociates to produce OH⁻ in water',405,394,{s:18,c:PLUM});
+ txt(AR.k==='HCl'?'HCl(g) → H⁺(aq) + Cl⁻(aq)':(AR.k==='NaOH'?'NaOH(s) → Na⁺(aq) + OH⁻(aq)':'NH₃ has no OH, yet its solution turns red litmus blue.'),405,436,{s:20,c:AR.k==='NH3'?RED:INK});
+ if(AR.k==='NH3')txt('The Arrhenius model cannot explain NH₃ as a base. We need a broader model.',405,466,{s:16,c:MUTED,w:500});}
+var SC_M1={title:'The Arrhenius model',q:'NH₃ makes red litmus turn blue, so it is a base. Can the Arrhenius model explain why?',canvas:true,
+ enter:function(){var h=[['HCl','HCl'],['NaOH','NaOH'],['NH3','NH₃']].map(function(c){return '<button class="btn'+(AR.k===c[0]?' sel':'')+'" data-k="'+c[0]+'">'+c[1]+'</button>';}).join('')+'<button class="btn fill" id="arGo">Dissolve in water ▶</button>';
+  $('controls').innerHTML=h;each('#controls [data-k]',function(b){b.onclick=function(){AR.k=b.getAttribute('data-k');AR.t=-1;SC_M1.enter();};});$('arGo').onclick=function(){AR.t=0;};},
+ frame:arFrame,reads:function(){return [['Compound',AR.k==='NH3'?'NH₃':AR.k],['Arrhenius',AR.k==='HCl'?'acid':(AR.k==='NaOH'?'base':'cannot explain')]];}};
+
+/* --- Brønsted–Lowry --- */
+var RX=[{b:'HF + H₂O',sp:['HF','H₂O','H₃O⁺','F⁻'],arr:'⇌',acid:0,base:1,ca:2,cb:3,note:'Here water accepts H⁺, so water is a base.'},
+ {b:'NH₃ + H₂O',sp:['NH₃','H₂O','NH₄⁺','OH⁻'],arr:'⇌',acid:1,base:0,ca:2,cb:3,note:'Here water gives H⁺, so water is an acid. NH₃ is a base without any OH!'},
+ {b:'HCl + H₂O',sp:['HCl','H₂O','H₃O⁺','Cl⁻'],arr:'→',acid:0,base:1,ca:2,cb:3,note:'HCl gives its H⁺ to water.'},
+ {b:'H₂O + H₂O',sp:['H₂O','H₂O','H₃O⁺','OH⁻'],arr:'⇌',acid:0,base:1,ca:2,cb:3,note:'Water can be the acid AND the base: water is amphoteric.'}];
+var BL={r:0,t:0,rev:false};
+function blPos(rx,size){var it=[rx.sp[0],'+',rx.sp[1],rx.arr,rx.sp[2],'+',rx.sp[3]],ws=it.map(function(s,i){return tw(s,size)+(i===3?84:(i%2?50:40));}),x=400-ws.reduce(function(a,b){return a+b;},0)/2,c=[];it.forEach(function(s,i){c.push(x+ws[i]/2);x+=ws[i];});return c;}
+function drawBL(rx,o){var size=40,y=o.y||160,c=blPos(rx,size),X=[c[0],c[2],c[4],c[6]],role={};role[rx.acid]=['acid',TEAL];role[rx.base]=['base',PLUM];role[rx.ca]=['conjugate acid',PLUM];role[rx.cb]=['conjugate base',TEAL];
+ txt(rx.sp[0],X[0],y,{s:size});txt('+',c[1],y,{s:size,c:MUTED});txt(rx.sp[1],X[1],y,{s:size});txt(rx.arr,c[3],y,{s:size,c:MUTED,al:Math.max(.25,o.prod)});
+ txt(rx.sp[2],X[2],y,{s:size,al:o.prod});txt('+',c[5],y,{s:size,c:MUTED,al:o.prod});txt(rx.sp[3],X[3],y,{s:size,al:o.prod});
+ [0,1,2,3].forEach(function(i){var a=o.L?o.L[i]:(i<2?o.lab1:o.lab2);if(a>0){ctx.globalAlpha=a;pill(role[i][0],X[i],y+50,role[i][1],'#fff',14);ctx.globalAlpha=1;}});
+ if(o.pair>0){ctx.globalAlpha=o.pair;[[rx.acid,rx.cb,TEAL,y+92],[rx.base,rx.ca,PLUM,y+120]].forEach(function(p){ctx.strokeStyle=p[2];ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(X[p[0]],y+66);ctx.lineTo(X[p[0]],p[3]);ctx.lineTo(X[p[1]],p[3]);ctx.lineTo(X[p[1]],y+66);ctx.stroke();txt('conjugate acid–base pair',(X[p[0]]+X[p[1]])/2,p[3]+13,{s:12,c:p[2],w:500,al:o.pair});});ctx.globalAlpha=1;}
+ if(o.pt>0&&o.pt<1){var f=o.rev?X[rx.ca]:X[rx.acid],t=o.rev?X[rx.cb]:X[rx.base],px=lerp(f,t,ease(o.pt)),py=y-40-70*Math.sin(Math.PI*o.pt);ctx.strokeStyle='rgba(232,150,42,.35)';ctx.lineWidth=3;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(f,y-40);ctx.quadraticCurveTo((f+t)/2,y-180,t,y-40);ctx.stroke();ctx.setLineDash([]);ball(px,py,15,AMBER,'#b36b10');txt('H⁺',px,py+1,{s:13,c:'#fff'});}}
+function blFrame(dt){BL.t+=dt;var rx=RX[BL.r],t=BL.t;clear();
+ var o=BL.rev?{pt:clamp(t/1.4,0,1),prod:1,lab1:1,lab2:1,pair:1,rev:true}:{pt:clamp(t/1.3,0,1),prod:clamp((t-1.2)/.6,0,1),lab1:clamp((t-1.8)/.5,0,1),lab2:clamp((t-2.3)/.5,0,1),pair:clamp((t-2.8)/.6,0,1)};
+ if(o.pt>=1)o.pt=0;drawBL(rx,o);
+ var msg=BL.rev?(t<1.5?'Reverse: '+rx.sp[rx.ca]+' gives H⁺ back to '+rx.sp[rx.cb]:'In the reverse reaction the conjugate acid is the H⁺ donor'):(t<1.3?rx.sp[rx.acid]+' gives H⁺ to '+rx.sp[rx.base]:(t<2.8?'acid = H⁺ donor · base = H⁺ acceptor':rx.note));
+ txt(msg,400,32,{s:18,c:ORANGE});
+ card(40,350,720,136,'#fff');txt('Brønsted–Lowry acid: H⁺ donor  ·  base: H⁺ acceptor',400,380,{s:20,c:INK});
+ txt('conjugate base = the acid after it loses H⁺',400,414,{s:17,c:TEAL});txt('conjugate acid = the base after it gains H⁺',400,442,{s:17,c:PLUM});
+ txt('Water can act as an acid or a base: it is amphoteric',400,470,{s:15,c:MUTED,w:500});}
+var SC_M2={title:'The Brønsted–Lowry model',q:'In HF + H₂O, water accepts H⁺. In NH₃ + H₂O, water gives H⁺. What does that tell you about water?',canvas:true,
+ enter:function(){$('controls').innerHTML=RX.map(function(r,i){return '<button class="btn'+(BL.r===i?' sel':'')+'" data-r="'+i+'">'+r.b+'</button>';}).join('')+'<button class="btn fill" id="blF">Play forward ▶</button><button class="btn" id="blR">◀ Reverse</button>';
+  each('#controls [data-r]',function(b){b.onclick=function(){BL.r=+b.getAttribute('data-r');BL.t=0;BL.rev=false;SC_M2.enter();};});$('blF').onclick=function(){BL.t=0;BL.rev=false;};$('blR').onclick=function(){BL.t=0;BL.rev=true;};},
+ frame:blFrame,reads:function(){var r=RX[BL.r];return [['Acid (H⁺ donor)',r.sp[r.acid]],['Base (H⁺ acceptor)',r.sp[r.base]],['Conjugate acid',r.sp[r.ca]],['Conjugate base',r.sp[r.cb]]];}};
+
+/* --- conjugate pair problems --- */
+var PBL=[{chip:'Problem 1',name:'Ammonium ion and hydroxide ion',rx:{sp:['NH₄⁺','OH⁻','NH₃','H₂O'],arr:'⇌',acid:0,base:1,ca:3,cb:2},why1:'NH₄⁺ has one more H than NH₃.'},
+ {chip:'Problem 2',name:'Hydrobromic acid in water',rx:{sp:['HBr','H₂O','H₃O⁺','Br⁻'],arr:'⇌',acid:0,base:1,ca:2,cb:3},why1:'HBr has one more H than Br⁻.'},
+ {chip:'Problem 3',name:'Carbonate ion in water',rx:{sp:['CO₃²⁻','H₂O','HCO₃⁻','OH⁻'],arr:'⇌',acid:1,base:0,ca:2,cb:3},why1:'H₂O has one more H than OH⁻.'},
+ {chip:'Challenge ★',name:'Hydrogen sulfate ion in water',rx:{sp:['HSO₄⁻','H₂O','H₃O⁺','SO₄²⁻'],arr:'⇌',acid:0,base:1,ca:2,cb:3},why1:'HSO₄⁻ has one more H than SO₄²⁻.'}];
+PBL.forEach(function(p){var r=p.rx,S=r.sp,eq=S[0]+' + '+S[1]+' '+r.arr+' '+S[2]+' + '+S[3];
+ p.src=p.chip.replace(' ★','');p.q='Identify the acid, base, conjugate acid and conjugate base:<br><b style="font-family:Fredoka,sans-serif;font-size:22px">'+eq+'</b>';
+ p.fields=[{t:'c',lab:'Compare both sides. Which reactant <b>loses</b> an H⁺ (the acid)?',opts:[S[0],S[1]],ok:r.acid,why:'Find the reactant that has one more H than a product.'},
+  {t:'c',lab:'Which reactant <b>gains</b> an H⁺ (the base)?',opts:[S[0],S[1]],ok:r.base,why:'It is the reactant that turns into a product with one more H.'},
+  {t:'c',lab:'The <b>conjugate acid</b> (the base + H⁺) is…',opts:[S[2],S[3]],ok:r.ca-2,why:'Add one H⁺ to the base: which product do you get?'},
+  {t:'c',lab:'The <b>conjugate base</b> (the acid − H⁺) is…',opts:[S[2],S[3]],ok:r.cb-2,why:'Remove one H⁺ from the acid: which product do you get?'}];
+ p.show=[['What do we know?','Reactants: '+S[0]+' and '+S[1]+' · products: '+S[2]+' and '+S[3]+'. Look for the H⁺ that moves.'],
+  ['Find the acid',p.why1+' So <b>'+S[r.acid]+'</b> gives away H⁺: it is the <b>acid</b>.'],
+  ['Find the base','<b>'+S[r.base]+'</b> accepts the H⁺: it is the <b>base</b>.'],
+  ['Conjugates','The base + H⁺ = <b>'+S[r.ca]+'</b>, the <b>conjugate acid</b>. The acid − H⁺ = <b>'+S[r.cb]+'</b>, the <b>conjugate base</b>.'],
+  ['Check the pairs',S[r.acid]+' / '+S[r.cb]+' and '+S[r.base]+' / '+S[r.ca]+': each pair differs by exactly one H⁺ ✓']];
+ p.ans='acid '+S[r.acid]+' · base '+S[r.base]+' · conjugate acid '+S[r.ca]+' · conjugate base '+S[r.cb];});
+function blProbScene(p){return {title:p.name,q:'Which particle on the left has one more H than a particle on the right?',canvas:true,prob:p,
+ frame:function(){var st=p.mode==='show'?(p.st||0):(p.solved?5:0),tt=(performance.now()/1000)%2.6;clear();
+  var r=p.rx,L=[0,1,2,3].map(function(i){return i===r.acid?(st>=2?1:0):(i===r.base?(st>=3?1:0):(st>=4?1:0));});
+  drawBL(r,{y:190,pt:st>=1&&st<5?tt/1.3:0,prod:1,L:L,pair:st>=5?1:0});
+  txt(st===0?'Find the H⁺ that moves from one reactant to the other':'H⁺ donor = acid · H⁺ acceptor = base',400,46,{s:18,c:st===0?MUTED:ORANGE});},
+ reads:function(){var s=PBL.filter(function(q){return q.solved;}).length;return [['Problems solved',s+' / '+PBL.length],['Mode',p.mode==='try'?'My turn':'Show me']];}};}
+
+/* --- monoprotic and polyprotic --- */
+var PA2={HCl:{n:'hydrochloric acid',ty:'monoprotic',A:[['Cl',0,0],['H',-62,0,1]],Bd:[[0,1,1]],eq:['HCl + H₂O → H₃O⁺ + Cl⁻']},
+ HF:{n:'hydrofluoric acid',ty:'monoprotic',A:[['F',0,0],['H',-58,0,1]],Bd:[[0,1,1]],eq:['HF + H₂O ⇌ H₃O⁺ + F⁻']},
+ CH3COOH:{n:'acetic acid',lab:'CH₃COOH',ty:'monoprotic',A:[['C',-72,0],['H',-72,-58],['H',-130,0],['H',-72,58],['C',0,0],['O',36,-54],['O',64,22],['H',122,22,1]],Bd:[[0,1,1],[0,2,1],[0,3,1],[0,4,1],[4,5,2],[4,6,1],[6,7,1]],eq:['CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻'],note:'Only the H bonded to O is ionizable (a very polar bond). The 3 H bonded to C are not.'},
+ H2SO4:{n:'sulfuric acid',lab:'H₂SO₄',ty:'diprotic',A:[['S',0,0],['O',0,-64],['O',0,64],['O',-64,0],['H',-122,0,1],['O',64,0],['H',122,0,1]],Bd:[[0,1,2],[0,2,2],[0,3,1],[3,4,1],[0,5,1],[5,6,1]],eq:['H₂SO₄ + H₂O → H₃O⁺ + HSO₄⁻','HSO₄⁻ + H₂O ⇌ H₃O⁺ + SO₄²⁻']},
+ H2CO3:{n:'carbonic acid',lab:'H₂CO₃',ty:'diprotic',A:[['C',0,0],['O',0,-62],['O',-56,34],['H',-108,62,1],['O',56,34],['H',108,62,1]],Bd:[[0,1,2],[0,2,1],[2,3,1],[0,4,1],[4,5,1]],eq:['H₂CO₃ + H₂O ⇌ H₃O⁺ + HCO₃⁻','HCO₃⁻ + H₂O ⇌ H₃O⁺ + CO₃²⁻']},
+ H3PO4:{n:'phosphoric acid',lab:'H₃PO₄',ty:'triprotic',A:[['P',0,0],['O',0,-64],['O',-64,0],['H',-122,0,1],['O',64,0],['H',122,0,1],['O',0,64],['H',0,122,1]],Bd:[[0,1,2],[0,2,1],[2,3,1],[0,4,1],[4,5,1],[0,6,1],[6,7,1]],eq:['H₃PO₄ + H₂O ⇌ H₃O⁺ + H₂PO₄⁻','H₂PO₄⁻ + H₂O ⇌ H₃O⁺ + HPO₄²⁻','HPO₄²⁻ + H₂O ⇌ H₃O⁺ + PO₄³⁻']}};
+var PO={k:'H3PO4',n:0,t:9};
+function poIon(D){var L=[];D.A.forEach(function(a,i){if(a[3])L.push(i);});return L;}
+function poFrame(dt){PO.t+=dt;var D=PA2[PO.k],ion=poIon(D),cx=400,cy=170,pulse=.5+.5*Math.sin(performance.now()/300);clear();
+ function P(i){return [cx+D.A[i][1],cy+D.A[i][2]];}
+ ctx.save();ctx.translate(cx,cy);ctx.scale(1.2,1.2);ctx.translate(-cx,-cy);
+ D.Bd.forEach(function(b){var r=ion.indexOf(b[1]),gone=r>=0&&r<PO.n;if(gone&&r<PO.n-1)return;var al=gone?1-clamp(PO.t/.6,0,1):1;if(al<=0)return;var a=P(b[0]),c=P(b[1]);bondL(a[0],a[1],c[0],c[1],b[2],al);});
+ D.A.forEach(function(a,i){var r=ion.indexOf(i),p=P(i);if(r>=0&&r<PO.n){var fly=r===PO.n-1?ease(clamp(PO.t/1.2,0,1)):1;if(fly>=1)return;var X=lerp(p[0],720,fly),Y=lerp(p[1],60,fly);atom(X,Y,'H',1-fly*.3);ionPill(X,Y-30,'H⁺',1,1-fly,13);return;}
+  if(r>=0){ctx.strokeStyle='rgba(232,150,42,'+(.4+.5*pulse)+')';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p[0],p[1],21,0,6.283);ctx.stroke();}atom(p[0],p[1],a[0]);});
+ ion.forEach(function(h,r){if(r<PO.n){var b=D.Bd.filter(function(x){return x[1]===h;})[0],p=P(b[0]);badge(p[0]+18,p[1]-22,'−',BLUE,r===PO.n-1?clamp(PO.t/.8,0,1):1);}});
+ ctx.restore();if(PO.n>0)txt('H⁺ → joins water → H₃O⁺',690,30,{s:14,c:CORAL});
+ if(D.note)txt('not ionizable',cx-86,cy-112,{s:14,c:MUTED,w:500});
+ card(40,330,720,158,'#fff');txt((D.lab||PO.k)+': '+D.n+' · '+D.ty+' ('+ion.length+' ionizable H)',400,356,{s:20,c:ACC()});
+ var y0=D.note?410:392;if(D.note)txt(D.note,400,382,{s:15,c:MUTED,w:500});
+ D.eq.forEach(function(e,i){var on=i<PO.n;txt((D.eq.length>1?'Step '+(i+1)+':  ':'')+(on?e:'…'),400,y0+i*30,{s:19,c:on?INK:'#b7c1d3',w:on?600:500});});}
+var poP={src:'Practice',mode:'show',q:'Write the steps in the complete ionization of <b>hydrosulfuric acid, H₂S</b>.',
+ fields:[{t:'c',lab:'How many ionizable H does H₂S have?',opts:['2: diprotic','1: monoprotic','3: triprotic'],ok:0,why:'Both H atoms are bonded to S, and each can be given away.'},
+  {t:'c',lab:'Step 1: H₂S + H₂O ⇌ H₃O⁺ + ___',opts:['HS⁻','S²⁻','H₃S⁺'],ok:0,why:'Remove one H⁺ from H₂S: one H less and one more negative charge.'},
+  {t:'c',lab:'Step 2: (the ion from step 1) + H₂O ⇌ H₃O⁺ + ___',opts:['S²⁻','HS⁻','H₂S'],ok:0,why:'Remove one more H⁺: no H left, charge goes from 1− to 2−.'}],
+ show:[['How many H can ionize?','H₂S has <b>2</b> ionizable H → <b>diprotic</b> → <b>two</b> steps.'],['Step 1','H₂S + H₂O ⇌ H₃O⁺ + <b>HS⁻</b>'],['Step 2','HS⁻ + H₂O ⇌ H₃O⁺ + <b>S²⁻</b>'],['Check','Each step removes exactly one H⁺ and adds one negative charge ✓']],
+ ans:'H₂S + H₂O ⇌ H₃O⁺ + HS⁻ · HS⁻ + H₂O ⇌ H₃O⁺ + S²⁻'};
+var SC_M4={title:'Monoprotic and polyprotic acids',q:'Acetic acid has 4 H atoms. Why can it give away only one of them?',canvas:true,prob:poP,
+ rule:['<b>Monoprotic</b>: 1 ionizable H (HCl, HF, CH₃COOH)','<b>Diprotic</b>: 2 (H₂SO₄, H₂CO₃) · <b>triprotic</b>: 3 (H₃PO₄)','Polyprotic acids ionize <b>one H⁺ at a time</b>','Only H in <b>very polar bonds</b> (like O–H) can ionize'],
+ enter:function(){$('controls').innerHTML=Object.keys(PA2).map(function(k){return '<button class="btn'+(PO.k===k?' sel':'')+'" data-k="'+k+'">'+(PA2[k].lab||k)+'</button>';}).join('')+'<button class="btn fill" id="poGo">Remove one H⁺ ▶</button><button class="btn" id="poRe">Start again</button>';
+  each('#controls [data-k]',function(b){b.onclick=function(){PO.k=b.getAttribute('data-k');PO.n=0;PO.t=9;SC_M4.enter();};});
+  $('poGo').onclick=function(){if(PO.n<poIon(PA2[PO.k]).length){PO.n++;PO.t=0;}};$('poRe').onclick=function(){PO.n=0;PO.t=9;};},
+ frame:poFrame,reads:function(){var D=PA2[PO.k];return [['Acid',D.lab||PO.k],['Type',D.ty],['H⁺ removed',PO.n+' / '+poIon(D).length]];}};
+
+/* --- Lewis --- */
+var LW={k:'bf3',t:-1};
+function lsym(x,y,e,c,al){txt(e,x,y,{s:34,c:c,al:al});}
+function curvedArrow(x1,y1,x2,y2,h,p,c){var mx=(x1+x2)/2,my=Math.min(y1,y2)-h,N=30,k=Math.max(1,Math.round(N*p));ctx.strokeStyle=c;ctx.lineWidth=3.5;ctx.beginPath();for(var i=0;i<=k;i++){var t=i/N,x=(1-t)*(1-t)*x1+2*(1-t)*t*mx+t*t*x2,y=(1-t)*(1-t)*y1+2*(1-t)*t*my+t*t*y2;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);}ctx.stroke();
+ if(p>=1){var a=Math.atan2(y2-my,x2-mx);ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-13*Math.cos(a-.45),y2-13*Math.sin(a-.45));ctx.lineTo(x2-13*Math.cos(a+.45),y2-13*Math.sin(a+.45));ctx.closePath();ctx.fill();}}
+function lwFrame(dt){if(LW.t>=0)LW.t+=dt;var t=LW.t<0?0:LW.t,pa=clamp(t/1.1,0,1),u=ease(clamp((t-1.3)/1.4,0,1)),br=clamp((t-2.9)/.6,0,1),cx=480,cy=190,R=72,D2R=Math.PI/180;clear();
+ function bnd(x1,y1,x2,y2,al){var a=Math.atan2(y2-y1,x2-x1);seg(x1+20*Math.cos(a),y1+20*Math.sin(a),x2-20*Math.cos(a),y2-20*Math.sin(a),INK,3.5);}
+ var bf=LW.k==='bf3',CEN=bf?'B':'N',CC=bf?'#b5651d':BLUE,LIG=bf?'F':'H',LC=bf?'#3f8f1f':INK,cur=[];
+ if(bf){[[0,0],[240,270],[120,90]].forEach(function(q){cur.push(lerp(q[0],q[1],u)*D2R);});}else{[[0,0],[260,270],[100,90]].forEach(function(q){cur.push(lerp(q[0],q[1],u)*D2R);});}
+ var nx=lerp(230,cx-R,u),ny=cy;
+ cur.forEach(function(a){bnd(cx,cy,cx+R*Math.cos(a),cy+R*Math.sin(a));});if(u>0){ctx.globalAlpha=u;bnd(nx,ny,cx,cy);ctx.globalAlpha=1;}
+ lsym(cx,cy,CEN,CC);
+ cur.forEach(function(a){var x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);lsym(x,y,LIG,LC);if(bf)[0,Math.PI/2,-Math.PI/2].forEach(function(o){lpair(x,y,a+o,24,1);});});
+ if(bf){ctx.globalAlpha=1-u;ctx.strokeStyle=CORAL;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(cx-38,cy,12,0,6.283);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+  lsym(nx,ny,'F',LC);[Math.PI/2,Math.PI,-Math.PI/2].forEach(function(a){lpair(nx,ny,a,24,1);});lpair(nx,ny,0,24,1-u);if(u===0)txt('−',nx+32,ny-26,{s:26,c:INK});
+  if(LW.t>=0&&u===0)curvedArrow(nx+26,ny-10,cx-40,cy-12,80,pa,ORANGE);}
+ else{lpair(cx,cy,Math.PI,24,1-u);lsym(nx,ny,'H',INK);if(u===0){txt('+',nx+16,ny-22,{s:20,c:INK});ctx.strokeStyle=CORAL;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(nx+28,ny,11,0,6.283);ctx.stroke();ctx.setLineDash([]);}
+  if(LW.t>=0&&u===0)curvedArrow(cx-26,cy-10,nx+20,ny-12,80,pa,ORANGE);}
+ if(br>0){ctx.globalAlpha=br;var L=cx-R-34,Rr=cx+R+34;ctx.strokeStyle=INK;ctx.lineWidth=3.5;[[L,1],[Rr,-1]].forEach(function(s){ctx.beginPath();ctx.moveTo(s[0]+10*s[1],cy-R-30);ctx.lineTo(s[0],cy-R-30);ctx.lineTo(s[0],cy+R+30);ctx.lineTo(s[0]+10*s[1],cy+R+30);ctx.stroke();});txt(bf?'−':'+',Rr+16,cy-R-30,{s:26,c:INK,al:br});ctx.globalAlpha=1;}
+ if(u<.5){var a1=1-u*2;ctx.globalAlpha=a1;pill('Lewis '+(bf?'base':'acid'),230,300,bf?PLUM:TEAL,'#fff',16);pill('Lewis '+(bf?'acid':'base'),cx,300,bf?TEAL:PLUM,'#fff',16);ctx.globalAlpha=1;
+  txt(bf?'donates an electron pair':'accepts an electron pair',230,328,{s:14,c:MUTED,w:500,al:a1});txt(bf?'accepts an electron pair':'donates an electron pair',cx,328,{s:14,c:MUTED,w:500,al:a1});}
+ else txt(bf?'BF₄⁻ forms: the F⁻ electron pair is now shared':'NH₄⁺ forms: the N electron pair is now shared',400,318,{s:17,c:TEAL,al:clamp(u*2-1,0,1)});
+ if(LW.t>=0&&u===0&&pa>.2)txt('the electron pair moves',(bf?(230+cx)/2:(230+cx)/2),88,{s:15,c:ORANGE,w:500});
+ card(40,350,720,136,'#fff');txt(bf?'F⁻ + BF₃ → BF₄⁻':'H⁺ + NH₃ → NH₄⁺',400,378,{s:24});
+ txt('Lewis acid: electron-pair ACCEPTOR · Lewis base: electron-pair DONOR',400,414,{s:17,c:INK});
+ txt(bf?'BF₃ has no H at all, so only the Lewis model can call it an acid.':'Every Brønsted–Lowry reaction is also a Lewis reaction: H⁺ accepts an electron pair.',400,448,{s:16,c:MUTED,w:500});
+ txt(bf?'Another example: SO₃ + MgO → MgSO₄ (O²⁻ in MgO donates a pair to SO₃)':'NH₃ is a base in the Brønsted–Lowry and Lewis models, but not in the Arrhenius model (no OH).',400,474,{s:14,c:MUTED,w:500});}
+var SC_M5={title:'The Lewis model',q:'BF₃ has no hydrogen at all. How can it still be an acid?',canvas:true,
+ enter:function(){$('controls').innerHTML='<button class="btn'+(LW.k==='bf3'?' sel':'')+'" data-k="bf3">F⁻ + BF₃</button><button class="btn'+(LW.k==='nh3'?' sel':'')+'" data-k="nh3">H⁺ + NH₃</button><button class="btn fill" id="lwGo">Play ▶</button><button class="btn" id="lwRe">Reset</button>';
+  each('#controls [data-k]',function(b){b.onclick=function(){LW.k=b.getAttribute('data-k');LW.t=-1;SC_M5.enter();};});$('lwGo').onclick=function(){LW.t=0;};$('lwRe').onclick=function(){LW.t=-1;};},
+ frame:lwFrame,reads:function(){return LW.k==='bf3'?[['Lewis acid','BF₃'],['Lewis base','F⁻'],['Product','BF₄⁻']]:[['Lewis acid','H⁺'],['Lewis base','NH₃'],['Product','NH₄⁺']];}};
+
+/* --- anhydrides --- */
+var OXI=[{f:'SO₃',el:'S',nm:'sulfur',t:'nonmetal',p:'H₂SO₄',k:'acid',life:'Real life: SO₂ and SO₃ from burning coal dissolve in rain → acid rain.',cell:[3,16]},
+ {f:'CO₂',el:'C',nm:'carbon',t:'nonmetal',p:'H₂CO₃',k:'acid',life:'Real life: CO₂ makes soft drinks and rain slightly acidic.',cell:[2,14]},
+ {f:'CaO',el:'Ca',nm:'calcium',t:'metal',p:'Ca(OH)₂',k:'base',life:'Real life: CaO is quicklime; with water it makes limewater, Ca(OH)₂.',cell:[4,2]},
+ {f:'Na₂O',el:'Na',nm:'sodium',t:'metal',p:'2NaOH',k:'base',life:'Real life: metal oxides in water make basic solutions.',cell:[3,1]}];
+var AN={i:0,t:0};
+var NONM={'1,1':1,'1,18':1,'2,14':1,'2,15':1,'2,16':1,'2,17':1,'2,18':1,'3,15':1,'3,16':1,'3,17':1,'3,18':1,'4,16':1,'4,17':1,'4,18':1,'5,17':1,'5,18':1,'6,18':1},MLD={'2,13':1,'3,14':1,'4,14':1,'4,15':1,'5,15':1,'5,16':1};
+function miniPT(x0,y0,s,hi){for(var r=1;r<=6;r++)for(var c=1;c<=18;c++){if(r===1&&c>1&&c<18)continue;if((r===2||r===3)&&c>2&&c<13)continue;var k=r+','+c,x=x0+(c-1)*s,y=y0+(r-1)*s,on=hi[0]===r&&hi[1]===c;
+ ctx.fillStyle=on?ACC():(NONM[k]?'#ffe3b8':(MLD[k]?'#e7e1f2':'#dbe4f1'));ctx.fillRect(x,y,s-2,s-2);}}
+function anFrame(dt){AN.t+=dt;var O=OXI[AN.i],t=AN.t,m=ease(clamp((t-.3)/1.2,0,1)),pr=clamp((t-1.4)/.5,0,1),dip=clamp((t-2)/1.2,0,1),acid=O.k==='acid';clear();
+ card(24,18,752,236,'#fff');var y=96,size=34;
+ var wO=tw(O.f,size)+30,wW=tw('H₂O',size)+30,wP=tw(O.p,size)+30;
+ var xo=lerp(150,290,m),xw=lerp(330,372,m);
+ ctx.globalAlpha=1-pr*.85;rr(xo-wO/2,y-28,wO,56,28);ctx.fillStyle=acid?'#fff1d6':'#e7e1f2';ctx.fill();ctx.globalAlpha=1;txt(O.f,xo,y,{s:size,al:1-pr*.85});
+ if(m<1){txt('+',240,y,{s:size,c:MUTED,al:1-m});}
+ ctx.globalAlpha=1-pr*.85;rr(xw-wW/2,y-28,wW,56,28);ctx.fillStyle='#dbe9f7';ctx.fill();ctx.globalAlpha=1;txt('H₂O',xw,y,{s:size,al:1-pr*.85});
+ txt('→',450,y,{s:size,c:MUTED});ctx.globalAlpha=pr;rr(590-wP/2,y-28,wP,56,28);ctx.fillStyle=acid?'#fde3e8':'#dde7fb';ctx.fill();ctx.globalAlpha=1;txt(O.p,590,y,{s:size,al:pr});
+ txt(O.f+' + H₂O → '+O.p,400,40,{s:17,c:MUTED,w:500});
+ if(pr>0){pill(acid?'an acid':'a base',590,152,acid?RED:BLUE,'#fff',16);ctx.globalAlpha=pr;}
+ ctx.globalAlpha=1;txt('litmus:',300,212,{s:15,c:MUTED,w:500});[['b',380],['r',430]].forEach(function(s){rr(s[1]-9,186,18,52,4);ctx.fillStyle=s[0]==='b'?LBLUE:LRED;ctx.fill();if(dip>0){var nc=s[0]==='b'?(acid?'r':'b'):(acid?'r':'b');ctx.fillStyle=nc==='b'?LBLUE:LRED;ctx.fillRect(s[1]-9,238-26*dip,18,26*dip);}});
+ if(dip>=1)txt(acid?'blue → red: acidic':'red → blue: basic',560,212,{s:17,c:acid?RED:BLUE});
+ card(24,270,752,216,'#fff');miniPT(48,300,15,O.cell);txt('metal',60,410,{s:12,c:MUTED,w:500,a:'left'});ctx.fillStyle='#dbe4f1';ctx.fillRect(48,404,10,10);
+ ctx.fillStyle='#ffe3b8';ctx.fillRect(110,404,10,10);txt('nonmetal',122,410,{s:12,c:MUTED,w:500,a:'left'});
+ txt(O.el+' ('+O.nm+') is a '+O.t,520,306,{s:20,c:ACC()});
+ txt(acid?'oxide of a nonmetal + water → acid':'oxide of a metal + water → base',520,340,{s:18});
+ txt(O.f+' is '+(acid?'an ACIDIC':'a BASIC')+' ANHYDRIDE',520,376,{s:19,c:acid?RED:BLUE});
+ var words=O.life.split(' '),line='',yy=414;ctx.font='500 15px Fredoka, sans-serif';words.forEach(function(w2){var tt=line?line+' '+w2:w2;if(ctx.measureText(tt).width>430&&line){txt(line,520,yy,{s:15,c:MUTED,w:500});line=w2;yy+=22;}else line=tt;});txt(line,520,yy,{s:15,c:MUTED,w:500});}
+var anP={src:"Let's Discover!",mode:'try',q:'Try all four oxides, then complete the rule.',
+ fields:[{t:'c',lab:'Oxides of <b>nonmetals</b> (SO₃, CO₂) + water make…',opts:['acids','bases'],ok:0,why:'Try SO₃ and CO₂.'},
+  {t:'c',lab:'Oxides of <b>metals</b> (CaO, Na₂O) + water make…',opts:['bases','acids'],ok:0,why:'Try CaO and Na₂O.'},
+  {t:'c',lab:'MgO (magnesium oxide) in water would turn red litmus…',opts:['blue','stay red'],ok:0,why:'Mg is a metal, so MgO forms a base.'}],
+ show:[['Anhydride','An <b>anhydride</b> is an oxide that forms an acid or a base when it reacts with water.'],['Nonmetal oxides','SO₃ + H₂O → H₂SO₄ · CO₂ + H₂O → H₂CO₃ → <b>acidic anhydrides</b>.'],['Metal oxides','CaO + H₂O → Ca(OH)₂ · Na₂O + H₂O → 2NaOH → <b>basic anhydrides</b>.'],['MgO','Mg is a metal → MgO is a basic anhydride → red litmus turns <b>blue</b>.']],
+ ans:'Nonmetal oxides → acids · metal oxides → bases.'};
+var SC_M6={title:'Anhydrides: oxides that make acids or bases',q:'Rain falling through air polluted with SO₃ becomes acidic. Why?',canvas:true,prob:anP,
+ enter:function(){$('controls').innerHTML=OXI.map(function(o,i){return '<button class="btn'+(AN.i===i?' sel':'')+'" data-i="'+i+'">'+o.f+'</button>';}).join('')+'<button class="btn fill" id="anGo">Add water ▶</button>';
+  each('#controls [data-i]',function(b){b.onclick=function(){AN.i=+b.getAttribute('data-i');AN.t=0;SC_M6.enter();};});$('anGo').onclick=function(){AN.t=0;};},
+ frame:anFrame,reads:function(){var O=OXI[AN.i];return [['Oxide',O.f],['Element',O.t],['Forms',O.p+' ('+O.k+')']];}};
+
+/* --- compare the models --- */
+var CMP={t:0};
+function ell(cx,cy,rx,ry,f,s){ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,6.283);ctx.fillStyle=f;ctx.fill();ctx.strokeStyle=s;ctx.lineWidth=3;ctx.stroke();}
+var CHIPS=[['HCl',420,355,TEAL],['NaOH',525,355,TEAL],['H₂SO₄',470,400,TEAL],['NH₃',230,300,BLUE],['H₂O',245,365,BLUE],['CO₃²⁻',665,315,BLUE],['BF₃',115,245,PLUM],['SO₃',650,112,PLUM]];
+var SC_M7={title:'Comparing the three models',q:'Is every Arrhenius acid also a Brønsted–Lowry acid? Is every Lewis acid a Brønsted–Lowry acid?',canvas:true,
+ enter:function(){CMP.t=0;ctlButtons([{t:'Replay',f:function(){CMP.t=0;}}]);},
+ frame:function(dt){CMP.t+=dt;clear();ell(400,252,382,238,'#f3edf9',PLUM);ell(430,302,292,182,'#eaf0fb',BLUE);ell(472,356,168,104,'#e6f4f4',TEAL);
+  txt('Lewis model',400,40,{s:22,c:PLUM});txt('acid: accepts an e⁻ pair · base: donates an e⁻ pair',400,66,{s:14,c:PLUM,w:500});
+  txt('Brønsted–Lowry model',430,148,{s:20,c:BLUE});txt('acid: H⁺ donor · base: H⁺ acceptor',430,172,{s:14,c:BLUE,w:500});
+  txt('Arrhenius model',472,282,{s:19,c:TEAL});txt('acid → H⁺ · base → OH⁻ (in water)',472,304,{s:13,c:TEAL,w:500});
+  CHIPS.forEach(function(c,i){var a=clamp((CMP.t-.4-i*.35)/.4,0,1);if(a>0){ctx.globalAlpha=a;pill(c[0],c[1],c[2],c[3],'#fff',17*(.6+.4*a));ctx.globalAlpha=1;}});},
+ html:function(){return '<table class="ptab"><tr><th style="background:#5a6780">Model</th><th style="background:'+RED+'">Acid</th><th style="background:'+BLUE+'">Base</th></tr><tr><td>Arrhenius</td><td>produces H⁺ in water</td><td>produces OH⁻ in water</td></tr><tr><td>Brønsted–Lowry</td><td>H⁺ donor</td><td>H⁺ acceptor</td></tr><tr><td>Lewis</td><td>electron-pair acceptor</td><td>electron-pair donor</td></tr></table><div class="safe" style="background:#f3edf9;border-color:'+PLUM+'">Each model is <b>broader</b> than the one before: every Arrhenius acid is a Brønsted–Lowry acid, and every Brønsted–Lowry acid is a Lewis acid, but not the other way round.</div>';},
+ reads:function(){return [['Broadest','Lewis'],['Narrowest','Arrhenius']];}};
+
+/* ================= QUIZZES ================= */
+function beakerSvg(h,o){var s='<svg width="200" height="150" viewBox="0 0 200 150" role="img" aria-label="'+h+' hydronium and '+o+' hydroxide ions"><path d="M20 10 V128 a12 12 0 0 0 12 12 H168 a12 12 0 0 0 12 -12 V10" fill="#eef5fc" stroke="#7d8aa3" stroke-width="3"/><path d="M21.5 30 H178.5 V128 a10.5 10.5 0 0 1 -10.5 10.5 H32 a10.5 10.5 0 0 1 -10.5 -10.5Z" fill="rgba(176,208,240,.45)"/>';
+ var cells=[];for(var r=0;r<3;r++)for(var c=0;c<5;c++)cells.push([42+c*29+(r%2)*10,52+r*30]);var ord=[7,1,12,4,9,0,13,6,2,11,5,14,3,8,10],n=0;
+ function put(k){var p=cells[ord[n++]];s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+(k>0?'#fde3e8':'#dde7fb')+'" stroke="'+(k>0?CORAL:BLUE)+'" stroke-width="2.5"/><text x="'+p[0]+'" y="'+(p[1]+6)+'" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="17" fill="'+(k>0?'#b8364f':'#22449a')+'">'+(k>0?'+':'−')+'</text>';}
+ for(var i=0;i<h;i++)put(1);for(var j=0;j<o;j++)put(-1);return s+'</svg>';}
+var KEY=' <span class="small">(+ = H₃O⁺, − = OH⁻)</span>';
+var Q1=[{q:'A solution turns <b>blue litmus red</b>. The solution is…',o:['an acid','a base','neutral','impossible to tell'],a:0,w:'Acids turn blue litmus red.'},
+ {q:'Which properties belong to <b>bases</b>?',o:['bitter taste and slippery feel','sour taste','react with Mg to make H₂','turn blue litmus red'],a:0,w:'Bases taste bitter and feel slippery (like soap). The others are properties of acids.'},
+ {q:'Magnesium ribbon is dropped into HCl(aq). The bubbles are…',o:['hydrogen gas, H₂','carbon dioxide, CO₂','oxygen gas, O₂','chlorine gas, Cl₂'],a:0,w:'Acids react with active metals to make H₂ gas (it pops with a burning splint).'},
+ {q:'A marble chip (CaCO₃) fizzes in an acid. The gas…',o:['is CO₂ and turns limewater milky','is H₂ and pops','is O₂ and relights a splint','is water vapor'],a:0,w:'Acids + carbonates → CO₂. CO₂ turns limewater milky.'},
+ {q:'Red cabbage juice turns <b>green</b> in a cleaner. The cleaner is…',o:['basic','acidic','neutral','a metal'],a:0,w:'Red cabbage indicator turns blue, green or yellow in bases.'},
+ {q:'Same amount dissolved in water. Which makes the bulb glow the <b>brightest</b>?',o:['HCl(aq)','vinegar, CH₃COOH(aq)','sugar water','distilled water'],a:0,w:'HCl breaks apart completely into ions. More ions → more conduction.'},
+ {q:'You dissolve <b>more</b> NaOH in the same water. The bulb…',o:['gets brighter: more ions','gets dimmer','stays the same','turns off'],a:0,w:'More dissolved NaOH → more Na⁺ and OH⁻ ions → more conduction.'},
+ {q:'Salt water (NaCl) lights the bulb brightly. This shows that salt water…',o:['contains many ions that can move','is an acid','is a base','contains H₃O⁺ only'],a:0,w:'Conduction shows ions. Salt water is neutral, so conductivity alone cannot tell an acid from a base.'}];
+var Q2=[{q:'Is this solution acidic, basic or neutral?'+KEY,pic:beakerSvg(6,2),o:['acidic','basic','neutral'],a:0,w:'More H₃O⁺ (6) than OH⁻ (2) → acidic.'},
+ {q:'Is this solution acidic, basic or neutral?'+KEY,pic:beakerSvg(2,7),o:['acidic','basic','neutral'],a:1,w:'More OH⁻ (7) than H₃O⁺ (2) → basic.'},
+ {q:'Is this solution acidic, basic or neutral?'+KEY,pic:beakerSvg(4,4),o:['acidic','basic','neutral'],a:2,w:'Equal numbers of H₃O⁺ and OH⁻ → neutral.'},
+ {q:'What is the <b>hydronium ion</b>, H₃O⁺?',o:['a water molecule that has gained an H⁺','a water molecule that has lost an H⁺','the hydroxide ion','a molecule of hydrogen gas'],a:0,w:'H₂O + H⁺ → H₃O⁺.'},
+ {q:'Pure water contains…',o:['equal amounts of H₃O⁺ and OH⁻','no ions at all','only H₃O⁺ ions','more OH⁻ than H₃O⁺'],a:0,w:'Self-ionization always makes one H₃O⁺ for every OH⁻.'},
+ {q:'NaOH is added to pure water. What happens?',o:['[OH⁻] increases and the solution becomes basic','[H₃O⁺] increases and it becomes acidic','nothing changes','both ions disappear'],a:0,w:'NaOH releases OH⁻, so [OH⁻] > [H₃O⁺].'},
+ {q:'A solution has <b>[H₃O⁺] > [OH⁻]</b>. Which statement is true?',o:['It is acidic, and it still contains some OH⁻','It is acidic and contains no OH⁻','It is basic','It is neutral'],a:0,w:'Both ions are always present. More H₃O⁺ → acidic.'}];
+var Q3=[{q:'A <b>Brønsted–Lowry acid</b> is…',o:['an H⁺ donor','an H⁺ acceptor','an electron-pair donor','a substance that produces OH⁻'],a:0,w:'Brønsted–Lowry: acid donates H⁺, base accepts H⁺.'},
+ {q:'A <b>Lewis base</b> is…',o:['an electron-pair donor','an electron-pair acceptor','an H⁺ donor','a substance that produces H⁺'],a:0,w:'Lewis: base donates an electron pair; acid accepts it.'},
+ {q:'NH₃ + H₂O ⇌ NH₄⁺ + OH⁻. The <b>conjugate acid</b> of NH₃ is…',o:['NH₄⁺','OH⁻','H₂O','NH₂⁻'],a:0,w:'NH₃ (base) + H⁺ → NH₄⁺, its conjugate acid.'},
+ {q:'Why can the Arrhenius model <b>not</b> explain NH₃ as a base?',o:['NH₃ contains no OH to release as OH⁻','NH₃ does not dissolve in water','NH₃ has no hydrogen atoms','NH₃ does not change litmus'],a:0,w:'An Arrhenius base must contain OH. NH₃ does not, yet its solution is basic.'},
+ {q:'Water acts as an acid in one reaction and as a base in another. Water is…',o:['amphoteric','polyprotic','an anhydride','a conjugate base'],a:0,w:'Amphoteric = can act as an acid or a base.'},
+ {q:'Phosphoric acid, H₃PO₄, is…',o:['triprotic','monoprotic','diprotic','not an acid'],a:0,w:'It has three ionizable H atoms (all bonded to O).'},
+ {q:'How many ionizable H atoms does acetic acid, CH₃COOH, have?',o:['1','2','3','4'],a:0,w:'Only the H bonded to O (a very polar bond) can ionize.'},
+ {q:'In F⁻ + BF₃ → BF₄⁻, BF₃ is…',o:['a Lewis acid: it accepts an electron pair','a Lewis base: it donates an electron pair','a Brønsted–Lowry acid','an Arrhenius base'],a:0,w:'BF₃ accepts the electron pair from F⁻.'},
+ {q:'SO₃ reacts with water to form H₂SO₄. SO₃ is…',o:['an acidic anhydride','a basic anhydride','a Lewis base','amphoteric'],a:0,w:'Nonmetal oxide + water → acid.'}];
+var QX=[{q:'Vinegar turns blue litmus red and fizzes with baking soda. Vinegar is…',o:['an acid','a base','neutral','a metal'],a:0,w:'Both are properties of acids.'},
+ {q:'Is this solution acidic, basic or neutral?'+KEY,pic:beakerSvg(5,1),o:['acidic','basic','neutral'],a:0,w:'More H₃O⁺ than OH⁻ → acidic.'},
+ {q:'Phenolphthalein turns <b>pink</b> in a solution. The solution is…',o:['basic','acidic','neutral','pure water'],a:0,w:'Phenolphthalein is colorless in acids and water, pink in bases.'},
+ {q:'Which solution makes a conductivity bulb glow the <b>dimmest</b>?',o:['sugar water','HCl(aq)','NaOH(aq)','salt water'],a:0,w:'Sugar dissolves as molecules, not ions: no ions → no conduction.'},
+ {q:'Same water, more salt dissolved: 1 scoop → 3 scoops. The bulb…',o:['gets brighter','gets dimmer','stays the same','turns off'],a:0,w:'More ions → more conduction.'},
+ {q:'Which pair is a <b>conjugate acid–base pair</b>?',o:['HF and F⁻','HF and H₂O','H₃O⁺ and F⁻','H₂O and F⁻'],a:0,w:'A conjugate pair differs by exactly one H⁺.'},
+ {q:'HCO₃⁻ + H₂O ⇌ CO₃²⁻ + H₃O⁺. Which reactant is the <b>base</b>?',o:['H₂O','HCO₃⁻','CO₃²⁻','H₃O⁺'],a:0,w:'H₂O accepts H⁺ and becomes H₃O⁺.'},
+ {q:'An <b>Arrhenius base</b> is a substance that…',o:['produces OH⁻ ions in water','accepts an electron pair','donates H⁺','produces H⁺ ions in water'],a:0,w:'Arrhenius: base → OH⁻ in water.'},
+ {q:'Which acid is <b>diprotic</b>?',o:['H₂SO₄','HCl','CH₃COOH','H₃PO₄'],a:0,w:'H₂SO₄ has two ionizable H atoms.'},
+ {q:'Which model of acids and bases is the <b>broadest</b>?',o:['Lewis','Brønsted–Lowry','Arrhenius','they are all the same'],a:0,w:'Every Arrhenius and Brønsted–Lowry acid is also a Lewis acid.'}];
+function mkQuiz(L,exit){return {L:L,exit:!!exit,name:'',ord:null};}
+function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.ord=Q.L.map(function(q){return shuffle(q.o.map(function(_,k){return k;}));});}
+function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
+function qzHtml(Q){if(!Q.ord)qzStart(Q);var N=Q.L.length;
+ if(Q.done){var pct=Q.score/N,msg=pct>=.8?'Excellent! You have got this objective.':(pct>=.6?'Good work. Look at the ones you missed, then try again.':'Go back through the steps in this tab, then try again.');
+  if(Q.exit)msg=pct>=.8?'Excellent work today!':(pct>=.6?'Good effort. Review the questions you missed.':'Review this lesson again before the next class.');
+  var d=new Date(),ds=d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  return '<div class="qz qzend">'+(Q.exit?'<div class="ticket"><div class="lbl">Exit ticket · Chapter 18.1 Introduction to acids and bases</div><div class="tname">'+(esc(Q.name)||'Name: ____________')+'</div><div class="small">'+ds+'</div><div class="qzbig">'+Q.score+' / '+N+'</div><div>'+msg+'</div>'+qzDots(Q)+'<div class="small">Show this screen to your teacher.</div></div>':'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q))+
+   '<div class="qzrev">'+Q.L.map(function(q,k){return '<div class="'+(Q.hist[k]?'ok':'no')+'">'+(Q.hist[k]?'✓':'✗')+' <b>'+(k+1)+'.</b> '+q.q.replace(/<span class="small">.*<\/span>/,'')+' → <b>'+q.o[q.a]+'</b></div>';}).join('')+'</div>'+
+   '<div class="stepbar" style="justify-content:center"><button class="btn fill" id="qzR">Try again</button></div></div>';}
+ var q=Q.L[Q.i],ans=Q.pick!==null;
+ var h='<div class="qz">'+(Q.exit?'<div class="namerow"><label>Your name: <input id="qzName" autocomplete="off" value="'+esc(Q.name)+'"></label></div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div>';
+ h+='<div class="qzq">'+q.q+'</div>'+(q.pic?'<div class="qzpic">'+q.pic+'</div>':'');
+ h+='<div class="qzopts">'+Q.ord[Q.i].map(function(k,j){var cls=ans?(k===q.a?' right':(k===Q.pick?' wrong':'')):'';return '<button class="qzb'+cls+'" data-k="'+k+'"'+(ans?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
+ if(ans)h+='<div class="qzfb '+(Q.pick===q.a?'ok':'no')+'"><b>'+(Q.pick===q.a?'Correct!':'Not quite.')+'</b> '+(Q.pick===q.a?'':'The answer is <b>'+q.o[q.a]+'</b>. ')+q.w+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(Q.i<N-1?'Next question ▶':'See my score ▶')+'</button></div>';
+ return h+'</div>';}
+function qzRender(Q){$('panel').innerHTML=qzHtml(Q);qzBind(Q);}
+function qzBind(Q){each('.qzb',function(b){b.onclick=function(){if(Q.pick!==null)return;var q=Q.L[Q.i];Q.pick=+b.getAttribute('data-k');var ok=Q.pick===q.a;if(ok)Q.score++;Q.hist[Q.i]=ok;qzRender(Q);};});
+ var n=$('qzN');if(n)n.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;}else{Q.done=true;renderSteps();}qzRender(Q);};
+ var r=$('qzR');if(r)r.onclick=function(){qzStart(Q);renderSteps();qzRender(Q);};
+ var nm=$('qzName');if(nm)nm.oninput=function(){Q.name=nm.value;};}
+function quizScene(Q,title,think){return {title:title,q:think,canvas:false,quiz:Q,html:function(){return qzHtml(Q);},bindHtml:function(){qzBind(Q);},
+ reads:function(){if(!Q.ord)qzStart(Q);return [['Question',Math.min(Q.i+1,Q.L.length)+' / '+Q.L.length],['Score',Q.score]];}};}
+var QZ1=mkQuiz(Q1),QZ2=mkQuiz(Q2),QZ3=mkQuiz(Q3),QZX=mkQuiz(QX,true);
+
+/* ================= navigation ================= */
+var TABS=[
+ {n:'1 · Properties',c:TEAL,hash:'properties',obj:'Identify the physical and chemical properties of acids and bases.',
+  rule:['Acids: <b>sour</b>, turn <b>blue litmus red</b>, react with <b>metals → H₂</b> and <b>carbonates → CO₂</b>','Bases: <b>bitter</b>, <b>slippery</b>, turn <b>red litmus blue</b>','Indicators change color in acids and bases','Acids and bases <b>conduct electricity</b>: <b>more ions → more conduction</b>'],
+  steps:[['Litmus',SC_L1],['Indicators',SC_L2],['Acids + metals',SC_L3],['Acids + carbonates',SC_L4],['Conductivity',SC_L5],['Summary',SC_L6],['Quiz me',quizScene(QZ1,'Quiz me: properties of acids and bases','Answer each question without looking back. Then read the explanation.')]]},
+ {n:'2 · Acidic, basic or neutral?',c:BLUE,hash:'classify',obj:'Classify solutions as acidic, basic or neutral.',
+  rule:['Water self-ionizes: <b>H₂O + H₂O ⇌ H₃O⁺ + OH⁻</b>','<b>[H₃O⁺] > [OH⁻]</b> → acidic','<b>[OH⁻] > [H₃O⁺]</b> → basic','<b>[H₃O⁺] = [OH⁻]</b> → neutral'],
+  steps:[['Water ionizes',SC_W1],['H₃O⁺ vs OH⁻',SC_W2],['Classify it',SC_W3],['Quiz me',quizScene(QZ2,'Quiz me: acidic, basic or neutral?','Compare H₃O⁺ and OH⁻ before you choose.')]]},
+ {n:'3 · Three models',c:PLUM,hash:'models',obj:'Compare the Arrhenius, Brønsted–Lowry and Lewis models of acids and bases.',
+  rule:['<b>Arrhenius</b>: acid → H⁺ in water · base → OH⁻ in water','<b>Brønsted–Lowry</b>: acid = H⁺ <b>donor</b> · base = H⁺ <b>acceptor</b>','<b>Lewis</b>: acid = electron-pair <b>acceptor</b> · base = electron-pair <b>donor</b>','Conjugate base = acid − H⁺ · conjugate acid = base + H⁺'],
+  steps:[['Arrhenius',SC_M1],['Brønsted–Lowry',SC_M2]].concat(PBL.map(function(p){return [p.chip,blProbScene(p)];})).concat([['Mono- & polyprotic',SC_M4],['Lewis',SC_M5],['Anhydrides',SC_M6],['Compare models',SC_M7],['Quiz me',quizScene(QZ3,'Quiz me: the three models','Which model does each question use: Arrhenius, Brønsted–Lowry or Lewis?')]])},
+ {n:'Exit ticket',c:CORAL,hash:'exit-ticket',obj:'Show what you learned today: 10 questions from all three objectives.',
+  rule:['Type your name first','One try per question: think before you click','At the end, show your score to your teacher'],
+  steps:[['Exit ticket',quizScene(QZX,'Exit ticket: Introduction to acids and bases','Read each question carefully. Which objective is it testing?')]]}];
+function mixFields(P){(P.fields||[]).forEach(function(f){if(f.t!=='c'||f.keep||P.keep)return;var idx=shuffle(f.opts.map(function(_,i){return i;})),o=f.opts;f.opts=idx.map(function(i){return o[i];});f.ok=idx.indexOf(f.ok);if(f.bad){var nb={};Object.keys(f.bad).forEach(function(k){nb[idx.indexOf(+k)]=f.bad[k];});f.bad=nb;}});}
+hoP.keep=true;PBL.forEach(function(p){p.keep=true;});
+TABS.forEach(function(t){t.steps.forEach(function(s){if(s[1].prob)mixFields(s[1].prob);});});
+var tabI=0,stepI=0,cur=null,lastReads='';
+TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].prob){s[1].prob.next=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
+function renderTabs(){$('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+t.n+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'),0);};});}
+function renderSteps(){$('steps').innerHTML=TABS[tabI].steps.map(function(s,i){var p=s[1].prob,done=(p&&p.solved)||(s[1].quiz&&s[1].quiz.done);return '<button class="step'+(i===stepI?' on':'')+(done?' done':'')+'" data-i="'+i+'"><b>'+(done?'✓':(i+1))+'</b>'+s[0]+'</button>';}).join('');
+ Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.getAttribute('data-i'));};});}
+function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.documentElement.style.setProperty('--accent',T.c);
+ renderTabs();renderSteps();$('obj').innerHTML='<b>'+(t<3?'Objective '+(t+1):'Exit ticket')+'</b><span>'+T.obj+'</span>';
+ $('stitle').textContent=cur.title;$('q').innerHTML=cur.q;$('rule').innerHTML=(cur.rule||T.rule).map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('cv').style.display=cur.canvas?'':'none';$('controls').innerHTML='';$('controls').style.display=cur.canvas?'':'none';$('panel').innerHTML='';lastReads='';
+ if(cur.enter)cur.enter();
+ if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();if(cur.bindHtml)cur.bindHtml();}
+ $('vids').innerHTML=cur.vids?vidHtml(cur.vids):'';if(cur.vids)vidBind();
+ try{history.replaceState(null,'','#'+T.hash);}catch(e){}if(window.scrollY>200)window.scrollTo(0,0);}
+function solvedIn(t){var a=TABS[t].steps.filter(function(s){return s[1].prob&&s[1].prob.chip;});return [a.filter(function(s){return s[1].prob.solved;}).length,a.length];}
+function reads(){var r=cur.reads?cur.reads():[];if(cur.prob&&!cur.canvas&&!cur.reads){var s=solvedIn(tabI);r=[['Problems solved',s[0]+' / '+s[1]],['Mode',cur.prob.mode==='try'?'My turn':'Show me']];}
+ if(!r.length)r=[['Step',(stepI+1)+' of '+TABS[tabI].steps.length]];
+ var h=r.map(function(x){return '<div class="rd"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+var hi=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+window.addEventListener('hashchange',function(){var k=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));if(k>=0&&k!==tabI)go(k,0);});
+var last=performance.now(),rt=0;
+function loop(now){var dt=clamp((now-last)/1000,0,.04);last=now;try{if(cur.canvas&&cur.frame)cur.frame(dt);rt+=dt;if(rt>.2){rt=0;reads();}}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+reads();
+})();
+</script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

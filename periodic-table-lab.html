@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Periodic Table Lab · Study with Ms. Mirna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eaf0f8; --grid:#dbe4f1; --ink:#18233a; --muted:#56637d;
+    --card:#ffffff; --border:#c9d4e6; --shadow:#c3cfe3;
+    --teal:#0f8b8d; --blue:#2b59c3; --plum:#8a4fbf; --amber:#e8962a; --coral:#e2708a; --red:#d4486e;
+    --good:#23915a; --goodbg:#dcf3e6; --bad:#d14343; --badbg:#fbe3e3;
+    --tealbg:#dcf2f2; --bluebg:#e3ebfb; --amberbg:#fdf0dc; --plumbg:#efe5f8;
+    --metal:#a9dceb; --metalloid:#a8d17e; --nonmetal:#f9d96a;
+    --disp:"Fredoka",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background-color:var(--bg);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:28px 28px;
+    color:var(--ink);
+    font-family:"Atkinson Hyperlegible",Arial,sans-serif;
+    font-size:16px; line-height:1.45;
+  }
+  button{font:inherit;color:inherit}
+  button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .wrap{max-width:1240px;margin:0 auto;padding:18px 16px 40px}
+  header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+  .logo{width:58px;height:58px;flex:none}
+  .brand{font-family:"Caveat",cursive;font-size:22px;color:var(--muted);line-height:1}
+  .brand b{font-family:"Pacifico",cursive;font-weight:400;font-size:20px;color:var(--teal)}
+  h1{font-family:var(--disp);font-weight:700;font-size:34px;margin:2px 0 0;line-height:1.1}
+  .sub{color:var(--muted);margin:2px 0 0}
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+  .tab{-webkit-appearance:none;appearance:none;font-family:var(--disp);font-size:16px;font-weight:600;color:var(--ink);
+    background:#fff;border:2px solid var(--border);border-radius:16px;padding:9px 14px;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+  .tab .n{display:inline-flex;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:14px}
+  .tab.active{border-color:var(--ink);transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
+  .steps{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+  .step{-webkit-appearance:none;appearance:none;font-family:var(--disp);font-weight:600;font-size:15px;background:#fff;border:2px solid var(--border);border-radius:12px;padding:7px 12px;cursor:pointer;color:var(--ink)}
+  .step.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .step.done::after{content:" \2713";color:var(--good)}
+  .step.on.done::after{color:#9be3b8}
+  .grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+  .stack{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+  .grid>*,.stack>*{min-width:0}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:2px solid var(--border);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+  .btn{-webkit-appearance:none;appearance:none;font-family:var(--disp);font-size:15px;font-weight:600;color:#fff;background:var(--teal);border:none;border-radius:14px;padding:9px 14px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.18);line-height:1.1}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .btn[disabled]{opacity:.4;cursor:not-allowed}
+  .btn.blue{background:var(--blue)} .btn.plum{background:var(--plum)} .btn.amber{background:var(--amber)} .btn.coral{background:var(--red)} .btn.go{background:var(--good)}
+  .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--border);box-shadow:0 4px 0 var(--shadow)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+  .chip{-webkit-appearance:none;appearance:none;font-family:var(--disp);font-size:15px;font-weight:600;color:var(--ink);background:#fff;border:2px solid var(--border);border-radius:12px;padding:7px 11px;cursor:pointer;line-height:1.1;display:inline-flex;align-items:center;gap:6px}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip i{display:inline-block;width:14px;height:14px;border-radius:4px;border:1.5px solid rgba(0,0,0,.25)}
+  h2{font-family:var(--disp);font-size:24px;margin:0 0 4px}
+  h3{font-family:var(--disp);font-size:17px;margin:14px 0 6px;color:var(--teal)}
+  .panel p{margin:6px 0}
+  .panel ol,.panel ul{margin:4px 0;padding-left:22px}
+  .panel li{margin:4px 0}
+  .bigq{font-family:var(--disp);font-weight:500;font-size:19px;line-height:1.35;background:#f2f6fb;border:2px solid #e2e9f4;border-radius:16px;padding:12px 14px;margin:10px 0 10px}
+  .bigq span{display:block;font-size:14px;font-weight:600;color:var(--teal);margin-bottom:4px}
+  .ans{display:none;margin-top:8px;font-family:"Atkinson Hyperlegible",Arial,sans-serif;font-size:16px;background:#fff;border-left:4px solid var(--teal);padding:6px 10px;border-radius:0 10px 10px 0}
+  .ans.show{display:block}
+  .rule{display:none;margin-top:12px;border:2.5px dashed #c00000;border-radius:16px;padding:10px 12px;background:#fff6f6}
+  .rule.show{display:block}
+  .rule strong{font-family:var(--disp);color:#c00000;font-size:17px;display:block;margin-bottom:2px}
+  .readout{font-family:var(--disp);font-weight:500;background:#f2f6fb;border:2px solid #e2e9f4;border-radius:12px;padding:8px 12px;margin-top:12px;font-size:15px;min-height:42px}
+  .readout.good{background:var(--goodbg);border-color:var(--good)}
+  .readout.bad{background:var(--badbg);border-color:var(--bad)}
+  .hidden{display:none !important}
+  .note{font-size:14px;color:var(--muted)}
+
+  /* ---------- sorting boards ---------- */
+  .tray{display:flex;flex-wrap:wrap;gap:8px;min-height:70px;padding:10px;border:2px dashed var(--border);border-radius:16px;background:#f7f9fd}
+  .tray .empty{color:var(--muted);font-size:14px;align-self:center}
+  .ocard,.ecard{-webkit-appearance:none;appearance:none;background:#fff;border:2px solid var(--border);border-radius:14px;cursor:pointer;text-align:center;padding:6px 4px;line-height:1.15;transition:transform .08s,border-color .15s,background .15s;color:var(--ink)}
+  .ocard{width:112px}
+  .ocard svg{width:46px;height:46px;display:block;margin:0 auto 2px}
+  .ocard b{display:block;font-family:var(--disp);font-weight:600;font-size:14px}
+  .ocard em{display:block;font-style:normal;font-family:var(--disp);font-weight:700;color:var(--blue);font-size:15px}
+  .ocard:hover,.ecard:hover{transform:translateY(-2px);border-color:var(--blue)}
+  .ocard.sel,.ecard.sel{border-color:var(--amber);background:var(--amberbg);box-shadow:0 0 0 3px rgba(232,150,42,.25)}
+  .ocard.right,.ecard.right{border-color:var(--good);background:var(--goodbg)}
+  .ocard.wrong,.ecard.wrong{border-color:var(--bad);background:var(--badbg)}
+  .ocard.gapfill{border-color:var(--plum);background:var(--plumbg);animation:pop .4s ease-out}
+  .board{display:grid;gap:8px;margin-top:12px}
+  .board.obj{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .slot{min-height:112px;border:2px dashed var(--border);border-radius:14px;background:#f7f9fd;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;padding:4px}
+  .slot.hot{border-color:var(--amber);background:#fffaf0}
+  .slot .ocard,.slot .ecard{width:100%;position:relative;z-index:1}
+  .slot .lbl{position:absolute;top:4px;left:8px;font-family:var(--disp);font-weight:600;font-size:12px;color:#9aa6bd}
+  .rowlbl{font-family:var(--disp);font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center}
+  .board.el{grid-template-columns:repeat(7,minmax(0,1fr));min-width:620px}
+  .board.el .slot{min-height:128px}
+  .ecard{width:118px;padding:6px 5px}
+  .ecard .sy{font-family:var(--disp);font-weight:700;font-size:28px;line-height:1}
+  .ecard .ms{font-family:var(--disp);font-weight:700;color:var(--blue);font-size:15px}
+  .ecard .nm{font-size:12px;color:var(--muted)}
+  .ecard .pr{font-size:12px;margin-top:3px}
+  .ecard .fm{font-family:var(--disp);font-weight:600;font-size:13px;color:var(--plum)}
+  .board.el.cols .slot.c0{outline:3px dashed #c00000;outline-offset:2px}
+  .board.el.cols .slot.cx{outline:3px solid var(--teal);outline-offset:2px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .opt{-webkit-appearance:none;appearance:none;display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2px solid var(--border);border-radius:14px;padding:10px 12px;min-height:50px;cursor:pointer;color:var(--ink)}
+  .opt .k{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-family:var(--disp);font-weight:700;background:var(--bluebg);color:var(--blue)}
+  .opt:hover:not(:disabled){border-color:var(--blue)}
+  .opt.right{border-color:var(--good);background:var(--goodbg)} .opt.right .k{background:var(--good);color:#fff}
+  .opt.wrong{border-color:var(--bad);background:var(--badbg)} .opt.wrong .k{background:var(--bad);color:#fff}
+  .opt:disabled{cursor:default}
+  @media (max-width:560px){.opts{grid-template-columns:1fr}}
+
+  /* octave */
+  .oct{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin-top:10px}
+  .oct .ec{border:2px solid var(--border);border-radius:12px;background:#fff;text-align:center;padding:6px 2px;transition:all .2s}
+  .oct .ec b{display:block;font-family:var(--disp);font-size:26px;line-height:1.1}
+  .oct .ec small{font-family:var(--disp);color:var(--blue);font-weight:600}
+  .oct .ec.lit{border-color:var(--amber);background:var(--amberbg);transform:translateY(-4px)}
+  .oct .ec.same{border-color:var(--teal);background:var(--tealbg)}
+  .keys{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin-top:8px}
+  .key{height:120px;border:2px solid var(--ink);border-radius:0 0 12px 12px;background:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;font-family:var(--disp);font-weight:700;font-size:18px;transition:background .15s;cursor:pointer;-webkit-appearance:none;appearance:none;color:var(--ink)}
+  .key.lit{background:#ffe7b8}
+  .key.same{background:var(--tealbg)}
+  .octrows{margin-top:16px;display:grid;grid-template-columns:70px repeat(7,minmax(0,1fr));gap:6px;align-items:stretch}
+  .octrows .h{font-family:var(--disp);font-weight:600;color:var(--muted);font-size:14px;display:flex;align-items:center}
+  .octrows .c{border:2px solid var(--border);border-radius:10px;text-align:center;background:#fff;padding:4px 0}
+  .octrows .c b{font-family:var(--disp);font-size:20px;display:block;line-height:1.1}
+  .octrows .c small{font-family:var(--disp);font-weight:600;color:var(--plum);font-size:13px}
+  .octrows .c.bad{border-color:#c00000;border-style:dashed}
+  .octrows .note{grid-column:1 / -1}
+
+  /* ---------- periodic tables ---------- */
+  .ptwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .pt{display:grid;grid-template-columns:24px repeat(18,minmax(34px,1fr));gap:3px;min-width:700px;position:relative}
+  .pt .gl,.pt .pl{font-family:var(--disp);font-weight:600;font-size:12px;color:var(--muted);display:flex;align-items:flex-end;justify-content:center}
+  .pt .pl{align-items:center}
+  .pt .sp{height:10px}
+  .cell{-webkit-appearance:none;appearance:none;position:relative;aspect-ratio:1/1.08;border:1.5px solid #b9c6da;border-radius:7px;background:#fff;cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;transition:background .2s,opacity .2s,box-shadow .2s;color:var(--ink);min-width:0}
+  .cell .z{position:absolute;top:2px;left:3px;font-size:9px;font-weight:700;color:#56637d}
+  .cell .s{font-family:var(--disp);font-weight:700;font-size:clamp(12px,1.35vw,18px)}
+  .cell.dim{opacity:.22}
+  .cell.sel{box-shadow:0 0 0 3px var(--ink);z-index:2}
+  .cell.hlp{background:#d9e4fb !important}
+  .cell.hlg{background:#c9eeee !important}
+  .cell.hlb{background:#c9eeee !important;box-shadow:0 0 0 3px var(--teal);z-index:1}
+  .cell.c-metal{background:var(--metal)} .cell.c-metalloid{background:var(--metalloid)} .cell.c-nonmetal{background:var(--nonmetal)}
+  .cell.t-rep{background:#bfe8e6} .cell.t-tr{background:#fbe6a6} .cell.t-in{background:#f6d0dc}
+  .cell.bR{border-right:4px solid #111} .cell.bT{border-top:4px solid #111} .cell.bL{border-left:4px solid #111}
+  .cell.qright{background:var(--goodbg) !important;box-shadow:0 0 0 3px var(--good);z-index:2}
+  .cell.qwrong{background:var(--badbg) !important;box-shadow:0 0 0 3px var(--bad);z-index:2}
+  .fam-alk{background:#f7b6b6} .fam-ae{background:#fbd3a2} .fam-tm{background:#fbe6a6} .fam-itm{background:#f3c7e4} .fam-hal{background:#b9e6b0} .fam-ng{background:#d4c6f3} .fam-onm{background:#fff1b8} .fam-om{background:#cfdcf5} .fam-md{background:#a8d17e}
+  .infobox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px;background:#f2f6fb;border:2px solid #e2e9f4;border-radius:14px;padding:10px 12px;min-height:92px}
+  .ebox{width:84px;height:84px;border:2px solid #b08a00;border-radius:8px;background:var(--nonmetal);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;flex:none}
+  .ebox .z{font-family:var(--disp);font-weight:600;font-size:13px}
+  .ebox .s{font-family:var(--disp);font-weight:700;font-size:30px}
+  .ebox .n{font-size:11px;font-weight:700}
+  .ebox .m{font-size:12px;font-weight:700}
+  .infobox .ebox.cell{aspect-ratio:auto;cursor:default;border:2px solid #8a95aa;border-radius:8px;width:84px;height:84px}
+  .infobox .ebox .z{position:static;font-size:13px;color:#18233a}
+  .infobox .txt{flex:1;min-width:200px;font-size:16px}
+  .infobox .txt b.big{font-family:var(--disp);font-size:20px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  /* element key (labels line up with the box) */
+  .key4{display:grid;grid-template-columns:120px auto;gap:0 10px;align-items:stretch;margin:10px 0}
+  .key4 .bx{grid-row:1 / 5;border:2px solid #b08a00;background:var(--nonmetal);border-radius:8px;display:grid;grid-template-rows:repeat(4,1fr);text-align:center}
+  .key4 .bx div{display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1}
+  .key4 .bx .a{font-family:var(--disp);font-size:18px;color:#444}
+  .key4 .bx .b{font-family:var(--disp);font-size:40px}
+  .key4 .bx .c{font-size:14px}
+  .key4 .bx .d{font-size:15px}
+  .key4 .lb{display:flex;align-items:center;gap:6px;font-family:var(--disp);font-weight:600;color:var(--teal);height:38px;opacity:0;transform:translateX(-6px);transition:all .3s}
+  .key4 .lb.show{opacity:1;transform:none}
+  .key4 .lb::before{content:"";width:26px;height:0;border-top:2.5px solid var(--teal)}
+
+  /* history board */
+  .hb{position:relative;width:100%;min-width:700px}
+  .oct,.keys{min-width:0}
+  @media (max-width:560px){.board.obj .ocard svg{width:34px;height:34px}.board.obj .ocard b{font-size:12px}.key{height:90px;font-size:14px}.oct .ec b{font-size:18px}.octrows{grid-template-columns:50px repeat(7,minmax(0,1fr))}}
+  .hb .hc{position:absolute;border-radius:8px;border:1.5px solid #b9c6da;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;transition:left .9s ease,top .9s ease,opacity .6s,background .4s,border-color .4s;cursor:pointer;-webkit-appearance:none;appearance:none;padding:0;color:var(--ink)}
+  .hb .hc .s{font-family:var(--disp);font-weight:700;font-size:clamp(13px,1.5vw,20px)}
+  .hb .hc .v{font-size:clamp(8px,.8vw,11px);font-weight:700;color:var(--blue);margin-top:2px}
+  .hb .hc .y{position:absolute;bottom:-1px;right:-1px;font-size:9px;font-weight:700;background:var(--plum);color:#fff;border-radius:6px 0 7px 0;padding:1px 3px}
+  .hb .hc.gap{border:2px dashed var(--plum);background:var(--plumbg)}
+  .hb .hc.gap .s{color:var(--plum)}
+  .hb .hc.new{background:#f3ecfb;border-color:var(--plum)}
+  .hb .hc.ng{background:#e9e2fb;border-color:#8a4fbf}
+  .hb .hc.off{opacity:0;pointer-events:none}
+  .hb .hc.bad{background:var(--badbg);border:2.5px solid var(--bad)}
+  .hb .hc.fix{background:var(--goodbg);border:2.5px solid var(--good)}
+  .hb .hc.sel{box-shadow:0 0 0 3px var(--ink);z-index:3}
+  .hb .colt{position:absolute;font-family:var(--disp);font-weight:600;font-size:11px;text-align:center;color:var(--muted);line-height:1.1;transition:opacity .5s}
+  .predict{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px}
+  .predict th,.predict td{border:2px solid #e2e9f4;padding:5px 6px;text-align:center}
+  .predict th{background:#f2f6fb;font-family:var(--disp);font-weight:600}
+  .timeline{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .timeline span{font-family:var(--disp);font-weight:600;font-size:13px;background:var(--plumbg);color:var(--plum);border-radius:8px;padding:3px 8px}
+
+  /* ---------- quiz (Periodic Table Quest style) ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(24,35,58,.45);display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto;z-index:20;-webkit-overflow-scrolling:touch}
+  .qwrap{width:100%;max-width:780px}
+  .hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .stage,.stat{font-family:var(--disp);font-weight:600;font-size:15px;background:#fff;border:2px solid var(--border);border-radius:12px;padding:4px 12px;display:inline-flex;align-items:center;gap:6px}
+  .stat.hot{border-color:var(--amber);color:var(--amber)}
+  .hud .grow{flex:1}
+  .pbar{height:12px;background:#fff;border:2px solid var(--border);border-radius:99px;overflow:hidden;margin-bottom:14px}
+  .pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));width:0;transition:width .4s}
+  .qcard{background:#fff;border:2px solid var(--border);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:22px 22px 20px;display:grid;gap:16px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tag{font-family:var(--disp);font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;border-radius:8px;padding:3px 9px}
+  .tag.skill{background:var(--tealbg);color:var(--teal)} .tag.type{background:var(--plumbg);color:var(--plum)}
+  .qnum{font-family:var(--disp);color:var(--muted);font-weight:600;margin-left:auto;font-size:14px}
+  .prompt{font-size:21px;font-weight:700;line-height:1.35}
+  .tf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tf .opt{justify-content:center;font-family:var(--disp);font-size:22px;font-weight:700;min-height:70px}
+  .pool{display:flex;flex-wrap:wrap;gap:8px;min-height:50px;padding:10px;border:2px dashed var(--border);border-radius:14px}
+  .qchip{-webkit-appearance:none;appearance:none;background:#fff;border:2px solid var(--border);border-radius:12px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:var(--disp);font-size:17px;color:var(--ink)}
+  .qchip.sel{border-color:var(--amber);background:var(--amberbg)}
+  .qchip.right{border-color:var(--good);background:var(--goodbg)} .qchip.wrong{border-color:var(--bad);background:var(--badbg)}
+  .buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .bucket{-webkit-appearance:none;appearance:none;border:2px solid var(--border);border-radius:16px;padding:10px;min-height:100px;display:flex;flex-direction:column;gap:8px;background:var(--bg);text-align:left;cursor:pointer;color:var(--ink)}
+  .bucket h4{font-family:var(--disp);font-size:16px;margin:0}
+  .bucket .in{display:flex;flex-wrap:wrap;gap:6px}
+  .bucket.ready{border-color:var(--amber);border-style:dashed}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .qbtn{-webkit-appearance:none;appearance:none;font-family:var(--disp);font-weight:600;font-size:18px;border:none;border-radius:14px;padding:11px 22px;background:var(--blue);color:#fff;box-shadow:0 4px 0 #1b3a86;cursor:pointer}
+  .qbtn:disabled{opacity:.45;cursor:not-allowed}
+  .qbtn.go{background:var(--good);box-shadow:0 4px 0 #166b40}
+  .qbtn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:2px solid var(--border);font-size:15px;padding:8px 14px}
+  .fb{border-radius:14px;padding:12px 14px;display:grid;gap:4px}
+  .fb.good{background:var(--goodbg);border:2px solid var(--good)} .fb.bad{background:var(--badbg);border:2px solid var(--bad)}
+  .fb b.t{font-family:var(--disp);font-size:19px} .fb.good b.t{color:var(--good)} .fb.bad b.t{color:var(--bad)}
+  .pts{font-family:var(--disp);color:var(--amber);font-weight:700}
+  .hintbtn{-webkit-appearance:none;appearance:none;justify-self:start;display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:600;font-size:15px;color:#9a5b05;background:var(--amberbg);border:2px dashed var(--amber);border-radius:12px;padding:7px 14px;cursor:pointer}
+  .hintbox{background:#fff8e1;border:2px solid var(--amber);border-radius:14px;padding:10px 14px;font-size:16px}
+  .hintbox b{font-family:var(--disp);color:#9a5b05;margin-right:4px}
+  .big{font-family:var(--disp);font-size:56px;font-weight:700;color:var(--teal);line-height:1}
+  .best{font-family:var(--disp);color:var(--muted)}
+  .miss{display:grid;gap:8px}
+  .miss div{border-left:4px solid var(--bad);padding:6px 10px;background:var(--bg);border-radius:0 10px 10px 0;font-size:15px}
+  .fields{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+  @media (max-width:520px){.fields{grid-template-columns:1fr}}
+  .field{display:grid;gap:6px}
+  .field label{font-family:var(--disp);font-weight:600;font-size:15px}
+  .field input,.field select{font:inherit;font-size:18px;padding:10px 14px;border-radius:12px;border:2px solid var(--border);background:var(--bg);color:var(--ink)}
+  .field input{-webkit-appearance:none;appearance:none}
+  .field input.err,.field select.err{border-color:var(--bad)}
+  .errmsg{color:var(--bad);font-size:14px;min-height:1em}
+  .cert{border:3px solid var(--teal);border-radius:18px;padding:14px 16px;background:var(--tealbg);display:grid;gap:4px}
+  .cert .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px}
+  .cert b.nm{font-family:var(--disp);font-size:24px}
+  .cert code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;letter-spacing:.08em}
+  .sendst{font-size:15px;color:var(--muted)} .sendst.ok{color:var(--good);font-weight:700} .sendst.err{color:var(--bad);font-weight:700}
+  .qpt{max-width:980px;margin:0 auto}
+  .qpt .pt{min-width:620px}
+  .qpt .cell{aspect-ratio:1/.84}
+  .cell.ro{cursor:default}
+  .qpt .cell .s{font-size:clamp(11px,1.2vw,15px)}
+  @keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .shake{animation:shake .3s}
+  .enter{animation:pop .25s ease-out}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="2" y="2" width="60" height="60" rx="16" fill="#fff" stroke="#c9d4e6" stroke-width="2"/>
+      <g stroke="#3b3550" stroke-width="2" stroke-linejoin="round">
+        <rect x="9" y="12" width="10" height="10" rx="2" fill="#e2708a"/><rect x="45" y="12" width="10" height="10" rx="2" fill="#c9b6ef"/>
+        <rect x="9" y="22" width="10" height="10" rx="2" fill="#e2708a"/><rect x="19" y="22" width="10" height="10" rx="2" fill="#fbd3a2"/>
+        <rect x="35" y="22" width="10" height="10" rx="2" fill="#fff3a8"/><rect x="45" y="22" width="10" height="10" rx="2" fill="#c9b6ef"/>
+        <rect x="9" y="32" width="10" height="10" rx="2" fill="#e2708a"/><rect x="19" y="32" width="10" height="10" rx="2" fill="#fbd3a2"/>
+        <rect x="35" y="32" width="10" height="10" rx="2" fill="#a8d17e"/><rect x="45" y="32" width="10" height="10" rx="2" fill="#c9b6ef"/>
+        <rect x="19" y="44" width="26" height="8" rx="2" fill="#58d0c9"/>
+      </g>
+    </svg>
+    <div>
+      <div class="brand">Study with <b>Ms. Mirna</b></div>
+      <h1>Periodic Table Lab</h1>
+      <p class="sub">Sort, discover the pattern, follow the history, then explore the modern periodic table.</p>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+  <div id="main"></div>
+</div>
+
+<script>
+/* ---------- shared data (lab page + printable cards) ---------- */
+var OBJECTS=[
+  {id:'paperclip',name:'Paper clip',kind:'Stationery',mass:1},
+  {id:'pencil',name:'Pencil',kind:'Stationery',mass:6},
+  {id:'ruler',name:'Ruler',kind:'Stationery',mass:30},
+  {id:'notebook',name:'Notebook',kind:'Stationery',mass:200},
+  {id:'grape',name:'Grape',kind:'Fruit',mass:5},
+  {id:'strawberry',name:'Strawberry',kind:'Fruit',mass:12},
+  {id:'banana',name:'Banana',kind:'Fruit',mass:120,missing:true},
+  {id:'watermelon',name:'Watermelon',kind:'Fruit',mass:3000},
+  {id:'pingpong',name:'Ping-pong ball',kind:'Ball',mass:3},
+  {id:'golf',name:'Golf ball',kind:'Ball',mass:46},
+  {id:'tennis',name:'Tennis ball',kind:'Ball',mass:58},
+  {id:'football',name:'Football',kind:'Ball',mass:430},
+  {id:'spoon',name:'Teaspoon',kind:'Kitchen',mass:20},
+  {id:'cup',name:'Cup',kind:'Kitchen',mass:250},
+  {id:'plate',name:'Plate',kind:'Kitchen',mass:400},
+  {id:'pot',name:'Cooking pot',kind:'Kitchen',mass:1500}
+];
+var CARDS14=[
+  {s:'H', n:'Hydrogen', m:1,  p:'Colourless gas. The lightest element.', f:'H₂O'},
+  {s:'Li',n:'Lithium',  m:7,  p:'Soft, shiny metal. Reacts fast with water.', f:'Li₂O'},
+  {s:'Be',n:'Beryllium',m:9,  p:'Hard, light grey metal.', f:'BeO'},
+  {s:'B', n:'Boron',    m:11, p:'Hard, dark solid.', f:'B₂O₃'},
+  {s:'C', n:'Carbon',   m:12, p:'Black solid (graphite).', f:'CO₂'},
+  {s:'N', n:'Nitrogen', m:14, p:'Colourless gas.', f:'NH₃'},
+  {s:'O', n:'Oxygen',   m:16, p:'Colourless gas. Needed for burning.', f:'H₂O'},
+  {s:'F', n:'Fluorine', m:19, p:'Pale yellow gas. Extremely reactive.', f:'HF'},
+  {s:'Na',n:'Sodium',   m:23, p:'Soft, shiny metal. Reacts fast with water.', f:'Na₂O'},
+  {s:'Mg',n:'Magnesium',m:24, p:'Light, shiny grey metal.', f:'MgO'},
+  {s:'Al',n:'Aluminium',m:27, p:'Light, shiny metal.', f:'Al₂O₃'},
+  {s:'Si',n:'Silicon',  m:28, p:'Hard, shiny grey solid.', f:'SiO₂'},
+  {s:'P', n:'Phosphorus',m:31,p:'Waxy solid. Catches fire in air.', f:'PH₃'},
+  {s:'S', n:'Sulfur',   m:32, p:'Yellow solid.', f:'H₂S'}
+];
+
+var ICONS={"grape": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'><path d='M32 6 C33 10 33 12 32 16' fill='none'/><path d='M33 11 C38 6 45 7 47 11 C42 14 37 14 33 11Z' fill='#7fc26b'/><g fill='#9b6bd3'><circle cx='24' cy='22' r='7'/><circle cx='38' cy='22' r='7'/><circle cx='31' cy='31' r='7'/><circle cx='18' cy='33' r='7'/><circle cx='44' cy='33' r='7'/><circle cx='25' cy='42' r='7'/><circle cx='38' cy='42' r='7'/><circle cx='31' cy='52' r='7'/></g></g><g fill='#fff' opacity='.7'><circle cx='21' cy='19' r='1.8'/><circle cx='35' cy='19' r='1.8'/><circle cx='28' cy='28' r='1.8'/><circle cx='22' cy='39' r='1.8'/><circle cx='35' cy='39' r='1.8'/></g></svg>", "strawberry": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'><path d='M32 58 C18 50 10 36 13 26 C15 19 23 17 32 20 C41 17 49 19 51 26 C54 36 46 50 32 58Z' fill='#e2585f'/><path d='M20 20 L26 12 L30 18 L34 10 L38 18 L44 13 L46 21 C40 24 26 24 20 20Z' fill='#6fb85a'/></g><g fill='#fff3a8'><ellipse cx='24' cy='31' rx='1.4' ry='2'/><ellipse cx='33' cy='30' rx='1.4' ry='2'/><ellipse cx='42' cy='32' rx='1.4' ry='2'/><ellipse cx='27' cy='40' rx='1.4' ry='2'/><ellipse cx='37' cy='40' rx='1.4' ry='2'/><ellipse cx='32' cy='49' rx='1.4' ry='2'/><ellipse cx='20' cy='38' rx='1.4' ry='2'/><ellipse cx='44' cy='40' rx='1.4' ry='2'/></g></svg>", "banana": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'><path d='M48 10 L52 8 L54 13 C56 34 44 54 20 56 C13 56 9 53 10 50 C30 50 46 36 48 14Z' fill='#f7d64a'/><path d='M14 52 C32 48 44 36 49 18' fill='none' stroke='#d9a81e'/><path d='M8 49 L11 52' fill='none'/></g></svg>", "watermelon": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><path d='M4 24 H60 C60 42 48 56 32 56 C16 56 4 42 4 24Z' fill='#4fa65a'/><path d='M9 24 H55 C55 39 45 50 32 50 C19 50 9 39 9 24Z' fill='#f5f0d0' stroke='none'/><path d='M12 24 H52 C52 37 43 47 32 47 C21 47 12 37 12 24Z' fill='#ef5d6b'/></g><g fill='#3b3550'><ellipse cx='22' cy='31' rx='1.5' ry='2.4'/><ellipse cx='32' cy='35' rx='1.5' ry='2.4'/><ellipse cx='42' cy='31' rx='1.5' ry='2.4'/><ellipse cx='27' cy='41' rx='1.5' ry='2.4'/><ellipse cx='37' cy='41' rx='1.5' ry='2.4'/></g></svg>", "pingpong": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2'><circle cx='32' cy='33' r='18' fill='#ffa94d'/></g><circle cx='26' cy='27' r='5' fill='#fff' opacity='.7'/></svg>", "golf": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><path d='M28 44 H36 L34 58 H30Z' fill='#e8962a'/><circle cx='32' cy='28' r='16' fill='#ffffff'/></g><g fill='#c9d4e6'><circle cx='26' cy='22' r='2'/><circle cx='34' cy='20' r='2'/><circle cx='40' cy='27' r='2'/><circle cx='24' cy='30' r='2'/><circle cx='32' cy='28' r='2'/><circle cx='29' cy='36' r='2'/><circle cx='38' cy='35' r='2'/></g></svg>", "tennis": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2'><circle cx='32' cy='32' r='20' fill='#d4e84a'/></g><g fill='none' stroke='#fff' stroke-width='3' stroke-linecap='round'><path d='M17 18 C26 26 26 38 17 46'/><path d='M47 18 C38 26 38 38 47 46'/></g></svg>", "football": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><circle cx='32' cy='32' r='25' fill='#ffffff'/><polygon points='32,22 41,28 38,38 26,38 23,28' fill='#3b3550'/><path d='M32 22 V8 M41 28 L54 22 M38 38 L46 50 M26 38 L18 50 M23 28 L10 22' fill='none'/></g><g fill='#3b3550'><path d='M27 8 L32 7 L37 8 L35 12 L29 12Z'/><path d='M53 27 L56 32 L55 37 L51 35 L51 29Z'/><path d='M9 27 L12 29 L12 35 L8 37 L7 32Z'/><path d='M42 52 L47 50 L49 54 L44 56Z'/><path d='M22 52 L17 50 L15 54 L20 56Z'/></g></svg>", "paperclip": "<svg viewBox='0 0 64 64'><path d='M24 50 V16 C24 9 36 9 36 16 V44 C36 49 29 49 29 44 V20' fill='none' stroke='#3b3550' stroke-width='6' stroke-linecap='round'/><path d='M24 50 V16 C24 9 36 9 36 16 V44 C36 49 29 49 29 44 V20' fill='none' stroke='#9fb3cf' stroke-width='2.6' stroke-linecap='round'/></svg>", "pencil": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><g transform='rotate(-40 32 32)'><rect x='8' y='26' width='8' height='12' rx='2' fill='#f39ab0'/><rect x='16' y='26' width='4' height='12' fill='#c9d4e6'/><rect x='20' y='26' width='26' height='12' fill='#f7c93e'/><path d='M46 26 L58 32 L46 38Z' fill='#f4dcb8'/><path d='M54 30 L58 32 L54 34Z' fill='#3b3550'/></g></g></svg>", "ruler": "<svg viewBox='0 0 64 64'><g transform='rotate(-30 32 32)'><rect x='4' y='24' width='56' height='16' rx='2' fill='#a8d8ea' stroke='#3b3550' stroke-width='2.2'/><g stroke='#3b3550' stroke-width='1.8'><path d='M10 24 V32 M16 24 V29 M22 24 V32 M28 24 V29 M34 24 V32 M40 24 V29 M46 24 V32 M52 24 V29'/></g></g></svg>", "notebook": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><rect x='14' y='8' width='38' height='48' rx='3' fill='#2b59c3'/><rect x='20' y='8' width='32' height='48' rx='2' fill='#5b86e5'/><rect x='26' y='18' width='20' height='8' rx='1.5' fill='#fff'/></g><g fill='none' stroke='#3b3550' stroke-width='2.2' stroke-linecap='round'><path d='M10 14 H18 M10 24 H18 M10 34 H18 M10 44 H18'/></g></svg>", "spoon": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><g transform='rotate(40 32 32)'><ellipse cx='32' cy='14' rx='8' ry='10' fill='#d7dfea'/><rect x='30' y='23' width='4' height='34' rx='2' fill='#d7dfea'/></g></g></svg>", "cup": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><path d='M44 24 C54 24 54 40 44 40' fill='none' stroke-width='4'/><path d='M14 18 H46 V44 C46 50 41 54 35 54 H25 C19 54 14 50 14 44Z' fill='#e2708a'/><path d='M14 18 H46' fill='none'/></g><path d='M22 8 C20 11 24 12 22 15 M30 6 C28 10 32 11 30 14' fill='none' stroke='#9fb3cf' stroke-width='2' stroke-linecap='round'/></svg>", "plate": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2'><ellipse cx='32' cy='36' rx='27' ry='14' fill='#ffffff'/><ellipse cx='32' cy='35' rx='16' ry='7.5' fill='#eaf0f8'/></g><path d='M10 36 C14 44 50 44 54 36' fill='none' stroke='#58d0c9' stroke-width='2.4'/></svg>", "pot": "<svg viewBox='0 0 64 64'><g stroke='#3b3550' stroke-width='2.2' stroke-linejoin='round'><path d='M12 30 H52 V48 C52 53 48 56 43 56 H21 C16 56 12 53 12 48Z' fill='#8a9bb8'/><path d='M6 32 H12 M52 32 H58' fill='none' stroke-width='4' stroke-linecap='round'/><path d='M10 28 C14 18 50 18 54 28Z' fill='#b5c3d9'/><rect x='28' y='14' width='8' height='6' rx='2' fill='#3b3550'/></g></svg>"};
+</script>
+<script>
+(function(){
+"use strict";
+function $(id){return document.getElementById(id);}
+function h(html){var t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstChild;}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+
+/* ======================= ELEMENT DATA ======================= */
+var RAW="H Hydrogen 1.008|He Helium 4.003|Li Lithium 6.94|Be Beryllium 9.012|B Boron 10.81|C Carbon 12.01|N Nitrogen 14.01|O Oxygen 16.00|F Fluorine 19.00|Ne Neon 20.18|Na Sodium 22.99|Mg Magnesium 24.31|Al Aluminium 26.98|Si Silicon 28.09|P Phosphorus 30.97|S Sulfur 32.07|Cl Chlorine 35.45|Ar Argon 39.95|K Potassium 39.10|Ca Calcium 40.08|Sc Scandium 44.96|Ti Titanium 47.87|V Vanadium 50.94|Cr Chromium 52.00|Mn Manganese 54.94|Fe Iron 55.85|Co Cobalt 58.93|Ni Nickel 58.69|Cu Copper 63.55|Zn Zinc 65.38|Ga Gallium 69.72|Ge Germanium 72.63|As Arsenic 74.92|Se Selenium 78.97|Br Bromine 79.90|Kr Krypton 83.80|Rb Rubidium 85.47|Sr Strontium 87.62|Y Yttrium 88.91|Zr Zirconium 91.22|Nb Niobium 92.91|Mo Molybdenum 95.95|Tc Technetium (98)|Ru Ruthenium 101.1|Rh Rhodium 102.9|Pd Palladium 106.4|Ag Silver 107.9|Cd Cadmium 112.4|In Indium 114.8|Sn Tin 118.7|Sb Antimony 121.8|Te Tellurium 127.6|I Iodine 126.9|Xe Xenon 131.3|Cs Cesium 132.9|Ba Barium 137.3|La Lanthanum 138.9|Ce Cerium 140.1|Pr Praseodymium 140.9|Nd Neodymium 144.2|Pm Promethium (145)|Sm Samarium 150.4|Eu Europium 152.0|Gd Gadolinium 157.3|Tb Terbium 158.9|Dy Dysprosium 162.5|Ho Holmium 164.9|Er Erbium 167.3|Tm Thulium 168.9|Yb Ytterbium 173.0|Lu Lutetium 175.0|Hf Hafnium 178.5|Ta Tantalum 180.9|W Tungsten 183.8|Re Rhenium 186.2|Os Osmium 190.2|Ir Iridium 192.2|Pt Platinum 195.1|Au Gold 197.0|Hg Mercury 200.6|Tl Thallium 204.4|Pb Lead 207.2|Bi Bismuth 209.0|Po Polonium (209)|At Astatine (210)|Rn Radon (222)|Fr Francium (223)|Ra Radium (226)|Ac Actinium (227)|Th Thorium 232.0|Pa Protactinium 231.0|U Uranium 238.0|Np Neptunium (237)|Pu Plutonium (244)|Am Americium (243)|Cm Curium (247)|Bk Berkelium (247)|Cf Californium (251)|Es Einsteinium (252)|Fm Fermium (257)|Md Mendelevium (258)|No Nobelium (259)|Lr Lawrencium (266)|Rf Rutherfordium (267)|Db Dubnium (270)|Sg Seaborgium (269)|Bh Bohrium (270)|Hs Hassium (277)|Mt Meitnerium (278)|Ds Darmstadtium (281)|Rg Roentgenium (282)|Cn Copernicium (285)|Nh Nihonium (286)|Fl Flerovium (289)|Mc Moscovium (290)|Lv Livermorium (293)|Ts Tennessine (294)|Og Oganesson (294)";
+var METALLOIDS=['B','Si','Ge','As','Sb','Te','At'];
+var NONMETALS=['H','He','C','N','O','F','Ne','P','S','Cl','Ar','Se','Br','Kr','I','Xe','Rn','Ts','Og'];
+var EL=RAW.split('|').map(function(r,i){
+  var p=r.split(' '),Z=i+1,per,g=null,frow=0,col;
+  if(Z<=2)per=1;else if(Z<=10)per=2;else if(Z<=18)per=3;else if(Z<=36)per=4;else if(Z<=54)per=5;else if(Z<=86)per=6;else per=7;
+  if(per===1)g=(Z===1?1:18);
+  else if(per<=3){var st=per===2?3:11;var k=Z-st;g=k<2?k+1:k+11;}
+  else if(per<=5){g=Z-(per===4?18:36);}
+  else{var b=per===6?55:87;var k2=Z-b;
+    if(k2<3)g=k2+1; else if(k2<=16){frow=per===6?1:2;} else g=Z-(per===6?68:100);}
+  var row,colv;
+  if(frow){row=frow===1?9:10;colv=(Z-(per===6?58:90))+4;}else{row=per;colv=g;}
+  var cls=METALLOIDS.indexOf(p[0])>=0?'metalloid':(NONMETALS.indexOf(p[0])>=0?'nonmetal':'metal');
+  var type=frow?'in':((g<=2||g>=13)?'rep':'tr');
+  var fam;
+  if(frow)fam='itm'; else if(g===1&&Z>1)fam='alk'; else if(g===2)fam='ae'; else if(g>=3&&g<=12)fam='tm';
+  else if(g===17)fam='hal'; else if(g===18)fam='ng'; else if(cls==='metalloid')fam='md'; else if(cls==='nonmetal')fam='onm'; else fam='om';
+  return {Z:Z,s:p[0],n:p[1],m:p[2],mv:parseFloat(p[2].replace(/[()]/g,'')),per:per,g:g,row:row,col:colv,frow:frow,cls:cls,type:type,fam:fam};
+});
+var BY={};EL.forEach(function(e){BY[e.s]=e;});
+var FAM={alk:'Alkali metals',ae:'Alkaline earth metals',tm:'Transition metals',itm:'Inner transition metals',hal:'Halogens',ng:'Noble gases',onm:'Other nonmetals',om:'Other metals',md:'Metalloids'};
+var CLSN={metal:'metal',metalloid:'metalloid',nonmetal:'nonmetal'};
+var TYPEN={rep:'representative element',tr:'transition element',in:'transition element (inner transition metal)'};
+function where(e){
+  if(e.frow) return 'period '+e.per+', '+(e.frow===1?'lanthanide':'actinide')+' series';
+  return 'period '+e.per+', group '+e.g;
+}
+
+/* ======================= TABS ======================= */
+var TABS=[{n:'Sorting',c:'#0f8b8d'},{n:'History on the table',c:'#8a4fbf'},{n:'Modern table',c:'#2b59c3'},{n:'Exit ticket',c:'#e8962a'}];
+var cur=0;
+function drawTabs(){
+  $('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===cur?' active':'')+'" data-i="'+i+'"><span class="n" style="background:'+t.c+'">'+(i+1)+'</span>'+t.n+'</button>';}).join('');
+  [].forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i);};});
+}
+function go(i){cur=i;drawTabs();stopAudio();[renderSorting,renderHistory,renderModern,renderExit][i]();window.scrollTo({top:0,behavior:'smooth'});}
+
+/* ======================= 1. SORTING ======================= */
+var sortStep=0,sortDone=[false,false,false];
+function renderSorting(){
+  var steps=['A. Everyday objects','B. Element cards','C. The law of octaves'];
+  $('main').innerHTML='<div class="steps" id="ss">'+steps.map(function(s,i){return '<button class="step'+(i===sortStep?' on':'')+(sortDone[i]?' done':'')+'" data-i="'+i+'">'+s+'</button>';}).join('')+'</div><div id="sbody"></div>';
+  [].forEach.call($('ss').children,function(b){b.onclick=function(){sortStep=+b.dataset.i;renderSorting();};});
+  [sortObjects,sortElements,octaves][sortStep]();
+}
+function nextSortStep(){sortDone[sortStep]=true;if(sortStep<2){sortStep++;renderSorting();}else go(1);window.scrollTo({top:0,behavior:'smooth'});}
+
+function objCard(o){return '<button class="ocard" data-id="'+o.id+'">'+ICONS[o.id]+'<b>'+o.name+'</b><em>'+o.mass+' g</em></button>';}
+
+/* generic tap-to-place board */
+function Placer(opts){
+  // opts: trayEl, boardEl, items[{id,html}], slots(n), slotClass(i), onChange
+  var place={},sel=null,self=this;
+  this.place=place;
+  function render(){
+    var inBoard={};Object.keys(place).forEach(function(k){inBoard[place[k]]=k;});
+    var tray=opts.items.filter(function(it){return !(it.id in inBoard);});
+    opts.trayEl.innerHTML=tray.length?tray.map(function(it){return it.html;}).join(''):'<span class="empty">All cards placed. Tap a placed card to send it back.</span>';
+    var html='';
+    for(var i=0;i<opts.slots;i++){
+      var id=place[i];var it=id?opts.items.filter(function(x){return x.id===id;})[0]:null;
+      html+=(opts.before?opts.before(i):'')+'<div class="slot '+(opts.slotClass?opts.slotClass(i):'')+'" data-slot="'+i+'">'+(opts.label?'<span class="lbl">'+opts.label(i)+'</span>':'')+(it?it.html:'')+'</div>';
+    }
+    opts.boardEl.innerHTML=html;
+    [].forEach.call(opts.trayEl.querySelectorAll('[data-id]'),function(b){
+      if(b.dataset.id===sel)b.classList.add('sel');
+      b.onclick=function(){sel=(sel===b.dataset.id?null:b.dataset.id);render();};
+    });
+    [].forEach.call(opts.boardEl.querySelectorAll('.slot'),function(s){
+      if(sel)s.classList.add('hot');
+      s.onclick=function(){
+        var i=+s.dataset.slot;
+        if(sel){ if(place[i])delete place[i]; place[i]=sel; sel=null; }
+        else if(place[i]){ delete place[i]; }
+        render(); if(opts.onChange)opts.onChange();
+      };
+    });
+  }
+  this.render=render;
+  this.reset=function(){Object.keys(place).forEach(function(k){delete place[k];});sel=null;render();};
+  this.mark=function(fn){[].forEach.call(opts.boardEl.querySelectorAll('.slot'),function(s){var i=+s.dataset.slot;var c=s.querySelector('[data-id]');if(c){c.classList.remove('right','wrong');c.classList.add(fn(i,place[i])?'right':'wrong');}});};
+  render();
+}
+
+function sortObjects(){
+  var items=OBJECTS.filter(function(o){return !o.missing;});
+  $('sbody').innerHTML='<div class="grid"><div class="card">'+
+    '<h2>Sort the objects</h2><p class="note">Tap a card, then tap a box. Tap a placed card to send it back.</p>'+
+    '<div class="tray" id="otray"></div><div class="board obj" id="oboard"></div>'+
+    '<div class="controls"><button class="btn" id="ochk">Check my table</button><button class="btn ghost" id="oshow">Show me</button><button class="btn ghost" id="oreset">Start again</button></div>'+
+    '<div class="readout" id="ored">15 cards to place.</div></div>'+
+    '<div class="card panel"><h2>Warm-up: make a table</h2>'+
+    '<div class="bigq"><span>Your task</span>Arrange the 15 objects in a table so that similar objects are easy to find.</div>'+
+    '<ol><li>Put the <b>same kind</b> of object in the <b>same column</b>.</li><li>In each column, go <b>from lightest (top) to heaviest (bottom)</b>.</li><li>Each row is a "size level": row 1 has the lightest object of each kind, row 4 the heaviest.</li><li>One kind has only <b>3</b> objects. Leave a gap where the missing one should go!</li></ol>'+
+    '<div id="ogap" class="hidden"><h3>Predict the missing object</h3><p>Look at the gap. Which object belongs there?</p><div class="opts" id="gopts"></div><div id="gfb"></div></div>'+
+    '<div class="rule" id="orule"><strong>Our rule</strong>Putting similar things in columns and in order of mass makes a pattern. A gap in the pattern lets us <b>predict</b> a missing object, even its mass! Chemists did the same thing with the elements.</div>'+
+    '<div class="controls hidden" id="onext"><button class="btn blue" id="onb">Next: element cards &rarr;</button></div></div></div>';
+  var P=new Placer({trayEl:$('otray'),boardEl:$('oboard'),items:shuffle(items).map(function(o){return {id:o.id,html:objCard(o)};}),slots:16,
+    onChange:function(){var n=Object.keys(P.place).length;$('ored').className='readout';$('ored').textContent=(15-n)+' card'+(15-n===1?'':'s')+' left to place.';}});
+  function rank(o){var fam=OBJECTS.filter(function(x){return x.kind===o.kind;}).sort(function(a,b){return a.mass-b.mass;});return fam.indexOf(o);}
+  function O(id){return OBJECTS.filter(function(x){return x.id===id;})[0];}
+  function check(){
+    var n=Object.keys(P.place).length;
+    if(n<15){$('ored').className='readout bad';$('ored').textContent='Place all 15 cards first ('+(15-n)+' left).';return;}
+    // each column must hold one kind
+    var colKind={},okCols=true;
+    for(var c=0;c<4;c++){var kinds={};for(var r=0;r<4;r++){var id=P.place[r*4+c];if(id)kinds[O(id).kind]=1;}var ks=Object.keys(kinds);if(ks.length!==1)okCols=false;colKind[c]=ks.length===1?ks[0]:null;}
+    var allRight=true;
+    P.mark(function(i,id){var o=O(id);var c=i%4,r=Math.floor(i/4);var ok=colKind[c]===o.kind&&rank(o)===r;if(!ok)allRight=false;return ok;});
+    if(allRight){$('ored').className='readout good';$('ored').innerHTML='Great table! Every column is one kind, lightest at the top. Now look at the <b>gap</b>.';showGap();}
+    else{$('ored').className='readout bad';$('ored').textContent=okCols?'Each column is one kind. Now check the order: lightest at the top, and is the gap in the right row?':'Red cards are in the wrong place. Is each column only one kind of object?';}
+  }
+  function gapSlot(){for(var i=0;i<16;i++)if(!P.place[i])return i;return -1;}
+  function showGap(){
+    $('ogap').classList.remove('hidden');
+    var g=gapSlot();var s=$('oboard').querySelector('[data-slot="'+g+'"]');if(s){s.style.borderColor='#8a4fbf';s.style.background='#efe5f8';s.innerHTML='<span style="font-family:Fredoka;font-weight:700;font-size:34px;color:#8a4fbf">?</span>';}
+    var o=[['Banana, 120 g',1],['Tennis ball, 58 g',0],['Grape, 5 g',0],['Pumpkin, 5000 g',0]];
+    var ord=shuffle([0,1,2,3]);
+    $('gopts').innerHTML=ord.map(function(k,n){return '<button class="opt" data-k="'+k+'"><span class="k">'+'ABCD'[n]+'</span><span>'+o[k][0]+'</span></button>';}).join('');
+    [].forEach.call($('gopts').children,function(b){b.onclick=function(){
+      var k=+b.dataset.k;
+      if(o[k][1]){[].forEach.call($('gopts').children,function(x){x.disabled=true;});b.classList.add('right');
+        $('gfb').innerHTML='<p><b>Yes!</b> It must be a <b>fruit</b> (same column) heavier than the strawberry (12 g) and lighter than the watermelon (3000 g).</p>';
+        var s2=$('oboard').querySelector('[data-slot="'+g+'"]');s2.style.borderColor='';s2.style.background='';s2.innerHTML=objCard(O('banana')).replace('class="ocard"','class="ocard gapfill"');
+        $('orule').classList.add('show');$('onext').classList.remove('hidden');sortDone[0]=true;
+      } else {b.classList.add('wrong');b.disabled=true;$('gfb').innerHTML='<p>Not quite. Which <b>column</b> is the gap in? And which row: how heavy should it be?</p>';}
+    };});
+  }
+  $('ochk').onclick=check;
+  $('oreset').onclick=function(){P.reset();$('ogap').classList.add('hidden');$('orule').classList.remove('show');$('onext').classList.add('hidden');$('ored').className='readout';$('ored').textContent='15 cards to place.';};
+  $('oshow').onclick=function(){
+    var kinds=['Stationery','Fruit','Ball','Kitchen'];P.reset();
+    kinds.forEach(function(k,c){OBJECTS.filter(function(o){return o.kind===k;}).sort(function(a,b){return a.mass-b.mass;}).forEach(function(o,r){if(!o.missing)P.place[r*4+c]=o.id;});});
+    P.render();check();
+  };
+  $('onb').onclick=nextSortStep;
+}
+
+function elCard(c,mini){return '<button class="ecard" data-id="'+c.s+'"><div class="sy">'+c.s+'</div><div class="ms">'+c.m+'</div>'+(mini?'':'<div class="nm">'+c.n+'</div><div class="pr">'+c.p+'</div><div class="fm">forms '+c.f+'</div>')+'</button>';}
+function sortElements(){
+  $('sbody').innerHTML='<div class="grid"><div class="card">'+
+    '<h2>14 element cards</h2><p class="note">Each card shows the symbol, the <b style="color:#2b59c3">atomic mass</b> and some properties. Tap a card, then tap a box.</p>'+
+    '<div class="tray" id="etray"></div><div class="ptwrap"><div class="board el" id="eboard"></div></div>'+
+    '<div class="controls"><button class="btn" id="echk">Check the order</button><button class="btn ghost" id="eshow">Show me</button><button class="btn ghost" id="ereset">Start again</button></div>'+
+    '<div class="readout" id="ered">Put the cards in order of increasing atomic mass: box 1 is the lightest.</div></div>'+
+    '<div class="card panel"><h2>Do properties repeat?</h2>'+
+    '<div class="bigq"><span>Your task</span>Put the 14 elements in order of <b>increasing atomic mass</b>, in rows of 7.</div>'+
+    '<div id="eq" class="hidden">'+
+    '<div class="bigq"><span>Predict</span>Will similar properties come back if we keep going in order? How often?</div>'+
+    '<div class="bigq"><span>Observe</span>Look down each column. Which pairs of elements are alike?<button class="btn ghost" id="eobs" style="margin-top:8px;display:block">Show the columns</button><div class="ans" id="eobsA">Li and Na are both soft, very reactive metals. So are the pairs Be/Mg, B/Al, C/Si, N/P and O/S: look at what they <b>form</b>. Only H and F do not match (red).</div></div>'+
+    '<div class="bigq"><span>Explain</span>Count from Li to Na. Which element in the list repeats the properties of Li?<button class="btn ghost" id="eexp" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="eexpA">Na is the <b>8th</b> element counting from Li. Properties repeat every 8th element.</div></div>'+
+    '<div class="rule" id="erule"><strong>Our rule</strong>In order of atomic mass, properties <b>repeat in a regular pattern</b>. A pattern that repeats is called <b>periodic</b>.</div>'+
+    '<div class="controls hidden" id="enext"><button class="btn blue" id="enb">Next: the law of octaves &rarr;</button></div></div></div></div>';
+  var P=new Placer({trayEl:$('etray'),boardEl:$('eboard'),items:shuffle(CARDS14).map(function(c){return {id:c.s,html:elCard(c)};}),slots:14,
+    label:function(i){return i+1;},onChange:function(){$('ered').className='readout';}});
+  var order=CARDS14.map(function(c){return c.s;});
+  function check(){
+    var n=Object.keys(P.place).length;
+    if(n<14){$('ered').className='readout bad';$('ered').textContent='Place all 14 cards first ('+(14-n)+' left).';return;}
+    var all=true;P.mark(function(i,id){var ok=order[i]===id;if(!ok)all=false;return ok;});
+    if(all){$('ered').className='readout good';$('ered').textContent='Correct order! Now answer the questions on the right.';$('eq').classList.remove('hidden');}
+    else {$('ered').className='readout bad';$('ered').textContent='Red cards are out of order. Compare the atomic masses (blue numbers).';}
+  }
+  $('echk').onclick=check;
+  $('eshow').onclick=function(){P.reset();order.forEach(function(s,i){P.place[i]=s;});P.render();check();};
+  $('ereset').onclick=function(){P.reset();$('eq').classList.add('hidden');$('eboard').classList.remove('cols');};
+  $('eobs').onclick=function(){
+    [].forEach.call($('eboard').children,function(s,i){if(s.classList.contains('slot')){s.classList.add(i%7===0?'c0':'cx');}});
+    $('eboard').classList.add('cols');$('eobsA').classList.add('show');};
+  $('eexp').onclick=function(){$('eexpA').classList.add('show');$('erule').classList.add('show');$('enext').classList.remove('hidden');sortDone[1]=true;};
+  $('enb').onclick=nextSortStep;
+}
+
+/* octave with sound */
+var AC=null,audioTimers=[];
+function tone(f,t){try{if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return;AC=new A();}
+  if(AC.state==='suspended')AC.resume();
+  var o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(AC.destination);
+  var n=AC.currentTime;g.gain.setValueAtTime(0.0001,n);g.gain.exponentialRampToValueAtTime(0.25,n+0.02);g.gain.exponentialRampToValueAtTime(0.0001,n+(t||0.45));o.start(n);o.stop(n+(t||0.45)+0.05);}catch(e){}}
+function stopAudio(){audioTimers.forEach(clearTimeout);audioTimers=[];}
+var NOTES=['Do','Re','Mi','Fa','Sol','La','Ti','Do'];
+var FREQ=[261.63,293.66,329.63,349.23,392.00,440.00,493.88,523.25];
+function octaves(){
+  var eight=['Li','Be','B','C','N','O','F','Na'];
+  $('sbody').innerHTML='<div class="grid"><div class="card">'+
+    '<h2>Do, Re, Mi&hellip; with elements</h2><p class="note">Play the notes. Watch what happens on the 8th note.</p>'+
+    '<div class="oct" id="oct">'+eight.map(function(s,i){var c=CARDS14.filter(function(x){return x.s===s;})[0];return '<div class="ec" data-i="'+i+'"><b>'+s+'</b><small>'+c.m+'</small></div>';}).join('')+'</div>'+
+    '<div class="keys" id="keys">'+NOTES.map(function(n,i){return '<button class="key" data-i="'+i+'">'+n+'</button>';}).join('')+'</div>'+
+    '<div class="controls"><button class="btn amber" id="play">Play the octave</button><button class="btn ghost" id="rows">Show both rows</button></div>'+
+    '<div id="orows"></div></div>'+
+    '<div class="card panel"><h2>The law of octaves</h2>'+
+    '<p>In music, the 8 notes Do Re Mi Fa Sol La Ti <b>Do</b> make an <b>octave</b>: the 8th note sounds like the 1st, only higher.</p>'+
+    '<div class="bigq"><span>Think</span>Which element is the "8th note" if lithium is Do? Is it like lithium?<button class="btn ghost" id="oa" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="oaA">Sodium (Na). Like lithium, it is a soft, very reactive metal. The 8th element repeats the properties of the 1st.</div></div>'+
+    '<div class="rule" id="orl"><strong>Our rule: the law of octaves (1864)</strong>When elements are arranged by increasing atomic mass, their properties repeat every <b>8th</b> element, like the notes of a musical scale.</div>'+
+    '<p class="note hidden" id="olim">The pattern worked for the lightest elements but failed for heavier ones. Next, see how scientists found a better way.</p>'+
+    '<div class="controls hidden" id="onx"><button class="btn plum" id="onb2">Next: History on the table &rarr;</button></div></div></div>';
+  function lightK(i,on){var k=$('keys').children[i],c=$('oct').children[i];k.classList.toggle('lit',on);c.classList.toggle('lit',on);}
+  function play(){
+    stopAudio();[].forEach.call($('oct').children,function(c){c.classList.remove('same','lit');});[].forEach.call($('keys').children,function(k){k.classList.remove('same','lit');});
+    for(var i=0;i<8;i++)(function(i){
+      audioTimers.push(setTimeout(function(){tone(FREQ[i]);lightK(i,true);if(i>0)lightK(i-1,false);},i*600));
+    })(i);
+    audioTimers.push(setTimeout(function(){lightK(7,false);[0,7].forEach(function(i){$('oct').children[i].classList.add('same');$('keys').children[i].classList.add('same');});
+      tone(FREQ[0],0.6);tone(FREQ[7],0.6);},8*600));
+  }
+  $('play').onclick=play;
+  [].forEach.call($('keys').children,function(k){k.onclick=function(){var i=+k.dataset.i;tone(FREQ[i]);lightK(i,true);setTimeout(function(){lightK(i,false);},350);};});
+  $('oa').onclick=function(){$('oaA').classList.add('show');$('orl').classList.add('show');$('olim').classList.remove('hidden');$('onx').classList.remove('hidden');sortDone[2]=true;};
+  $('rows').onclick=function(){
+    var r1=['H','Li','Be','B','C','N','O'],r2=['F','Na','Mg','Al','Si','P','S'];
+    function cell(s,i,bad){var c=CARDS14.filter(function(x){return x.s===s;})[0];return '<div class="c'+(bad?' bad':'')+'"><b>'+s+'</b><small>'+c.f+'</small></div>';}
+    $('orows').innerHTML='<div class="octrows"><div class="h">1st&ndash;7th</div>'+r1.map(function(s,i){return cell(s,i,i===0);}).join('')+
+      '<div class="h">8th&ndash;14th</div>'+r2.map(function(s,i){return cell(s,i,i===0);}).join('')+
+      '<div class="note">Each element sits under the one 7 places before it, so it is the <b>8th</b> counting from that element. Li/Na, Be/Mg, B/Al, C/Si, N/P and O/S form compounds with the same pattern. H and F (red) do not fit.</div></div>';
+  };
+  $('onb2').onclick=nextSortStep;
+}
+
+/* ======================= 2. HISTORY ======================= */
+var hStep=0;
+var GAPS={Sc:{eka:'eka-boron',pm:'44',yr:1879},Ga:{eka:'eka-aluminium',pm:'68',yr:1875},Ge:{eka:'eka-silicon',pm:'72',yr:1886},Tc:{eka:'eka-manganese',pm:'100',yr:1937}};
+var NOBLE={He:1895,Ne:1898,Ar:1894,Kr:1898,Xe:1898};
+var SWAPS=['Ar','K','Co','Ni','Te','I'];
+var hState={found:{},noble:false,strict:false,byZ:false,sel:null};
+var HSTEPS=[
+  {t:'1869: by atomic mass',c:'#2b59c3'},
+  {t:'The gaps get filled',c:'#8a4fbf'},
+  {t:'Noble gases added',c:'#8a4fbf'},
+  {t:'Problems with the order',c:'#d4486e'},
+  {t:'Atomic number & the periodic law',c:'#0f8b8d'}];
+function hSetStep(i){
+  hStep=i;
+  if(i===0){hState={found:{},noble:false,strict:false,byZ:false,sel:null};}
+  if(i>=1&&i!==1){['Ga','Sc','Ge','Tc'].forEach(function(s){hState.found[s]=true;});}
+  if(i===1){hState.found={};}
+  hState.noble=i>=3; hState.strict=false; hState.byZ=i>=4;
+  renderHistory();
+}
+function renderHistory(){
+  $('main').innerHTML='<div class="steps" id="hs">'+HSTEPS.map(function(s,i){return '<button class="step'+(i===hStep?' on':'')+'" data-i="'+i+'">'+(i+1)+'. '+s.t+'</button>';}).join('')+'</div>'+
+   '<div class="stack"><div class="card"><div class="ptwrap"><div class="hb" id="hb"></div></div><div class="readout" id="hinfo">Tap any box to learn more about it.</div><div class="controls" id="hctl"></div></div>'+
+   '<div class="card panel" id="hpanel"></div></div>';
+  [].forEach.call($('hs').children,function(b){b.onclick=function(){hSetStep(+b.dataset.i);};});
+  buildHB();hPanel();
+  window.onresize=layoutHB;
+}
+var hbCells={};
+function visibleHist(){return EL.filter(function(e){return e.Z<=54;});}
+function buildHB(){
+  var hb=$('hb');hb.innerHTML='';hbCells={};
+  var labels=[[1,'alkali metals'],[2,'alkaline earth'],[17,'halogens'],[18,'noble gases']];
+  labels.forEach(function(l){var d=h('<div class="colt" data-g="'+l[0]+'">'+l[1]+'</div>');hb.appendChild(d);});
+  visibleHist().forEach(function(e){
+    var b=h('<button class="hc" data-s="'+e.s+'"><span class="s"></span><span class="v"></span></button>');
+    b.onclick=function(){hState.sel=e.s;hInfo(e);[].forEach.call(hb.querySelectorAll('.hc'),function(x){x.classList.toggle('sel',x===b);});};
+    hb.appendChild(b);hbCells[e.s]=b;
+  });
+  layoutHB();
+}
+function hbSlotOf(e){ // returns element whose position this card takes
+  if(!hState.strict)return e;
+  var list=visibleHist().slice().sort(function(a,b){return a.mv-b.mv;});
+  var idx=list.indexOf(e); return EL[idx];
+}
+function layoutHB(){
+  var hb=$('hb');if(!hb)return;
+  var W=hb.clientWidth,gap=4,cw=(W-gap*17)/18,ch=cw*1.08,top=30;
+  hb.style.height=(top+5*(ch+gap))+'px';
+  [].forEach.call(hb.querySelectorAll('.colt'),function(d){var g=+d.dataset.g;d.style.left=((g-1)*(cw+gap))+'px';d.style.width=cw+'px';d.style.top='0px';
+    d.style.opacity=(g===18&&!hState.noble)?0:1;});
+  visibleHist().forEach(function(e){
+    var b=hbCells[e.s],pos=hbSlotOf(e);
+    b.style.left=((pos.col-1)*(cw+gap))+'px';b.style.top=(top+(pos.row-1)*(ch+gap))+'px';b.style.width=cw+'px';b.style.height=ch+'px';
+    var gapEl=GAPS[e.s],isNoble=e.s in NOBLE;
+    var cls='hc';
+    var sTxt=e.s,vTxt=(hState.byZ?'Z = '+e.Z:e.m),yr='';
+    if(isNoble){ if(!hState.noble)cls+=' off'; else {cls+=' ng';yr=NOBLE[e.s];} }
+    if(gapEl){ if(!hState.found[e.s]){cls+=' gap';sTxt='?';vTxt='&asymp; '+gapEl.pm;} else {cls+=' new';yr=gapEl.yr;} }
+    if(hStep===3&&SWAPS.indexOf(e.s)>=0)cls+=hState.strict?' bad':'';
+    if(hStep===4&&SWAPS.indexOf(e.s)>=0)cls+=' fix';
+    if(hState.sel===e.s)cls+=' sel';
+    b.className=cls;
+    b.innerHTML='<span class="s">'+sTxt+'</span><span class="v">'+vTxt+'</span>'+(yr&&hStep<4?'<span class="y">'+yr+'</span>':'');
+  });
+}
+function hInfo(e){
+  var t;
+  if(GAPS[e.s]&&!hState.found[e.s]){var g=GAPS[e.s];t='<b>A gap!</b> Mendeleev left this space empty and called the missing element <b>'+g.eka+'</b>. He predicted its atomic mass would be about <b>'+g.pm+'</b>.';}
+  else if((e.s in NOBLE)&&!hState.noble){t='';}
+  else{t='<b>'+e.n+' ('+e.s+')</b> &middot; atomic mass '+e.m+(hState.byZ?' &middot; atomic number <b>'+e.Z+'</b>':'');
+    if(GAPS[e.s])t+=' &middot; discovered in '+GAPS[e.s].yr+(e.s==='Tc'?' (made in a laboratory)':'')+'. Mendeleev predicted it.';
+    if(e.s in NOBLE)t+=' &middot; a noble gas, discovered in '+NOBLE[e.s]+'.';
+    if(hStep===3&&hState.strict&&SWAPS.indexOf(e.s)>=0)t+=' &middot; <b style="color:#d14343">In strict mass order it lands in the wrong column!</b>';}
+  $('hinfo').innerHTML=t||'Tap any box to learn more about it.';
+}
+function reveal(btnId,ansId,after){$(btnId).onclick=function(){$(ansId).classList.add('show');$(btnId).classList.add('hidden');if(after)after();};}
+function nextH(){return hStep<4?'<div class="controls"><button class="btn blue" id="hnext">Next step &rarr;</button></div>':'<div class="controls"><button class="btn blue" id="hnext">Explore the modern table &rarr;</button></div>';}
+function hPanel(){
+  var p=$('hpanel'),c=$('hctl');c.innerHTML='';
+  var html='';
+  if(hStep===0){
+    html='<h2>1869: elements in order of atomic mass</h2><p>About 60 elements were known. Mendeleev wrote each one on a card with its <b style="color:#2b59c3">atomic mass</b> and properties. He arranged them by <b>increasing atomic mass</b> and put elements with <b>similar properties in the same column</b>. (His table is shown here in today\'s layout.)</p>'+
+      '<div class="bigq"><span>Look</span>Some boxes have a <b style="color:#8a4fbf">?</b>. Why do you think Mendeleev left these spaces empty? Tap a <b style="color:#8a4fbf">?</b> box.<button class="btn ghost" id="h0b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="h0a">No known element had the right mass <b>and</b> properties for that place. Mendeleev said these elements were <b>not yet discovered</b>, and he predicted their properties.</div></div>'+
+      '<div class="rule" id="h0r"><strong>Our rule</strong>Mendeleev ordered the elements by <b>atomic mass</b>, put similar elements in columns and left <b>gaps</b> for elements not yet discovered.</div>'+nextH();
+  } else if(hStep===1){
+    html='<h2>The gaps get filled</h2><p>Mendeleev predicted the properties of the missing elements. Were his predictions right? Tap <b>Discover the next element</b>.</p><div class="timeline" id="tl"></div>'+
+      '<div id="gecmp" class="hidden"><h3>Eka-silicon vs germanium</h3><table class="predict"><tr><th></th><th>Predicted (1871)</th><th>Found (1886)</th></tr><tr><td>Atomic mass</td><td>72</td><td>72.6</td></tr><tr><td>Density</td><td>5.5 g/cm&sup3;</td><td>5.3 g/cm&sup3;</td></tr><tr><td>Oxide</td><td>EsO&#8322;</td><td>GeO&#8322;</td></tr><tr><td>Colour</td><td>dark grey</td><td>grey-white</td></tr></table></div>'+
+      '<div class="bigq hidden" id="h1q"><span>Think</span>Why did these discoveries make chemists trust Mendeleev\'s table?<button class="btn ghost" id="h1b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="h1a">The new elements fitted the gaps, and their properties were very close to his predictions. A good table can <b>predict</b>.</div></div>'+nextH();
+    c.innerHTML='<button class="btn plum" id="disc">Discover the next element</button>';
+  } else if(hStep===2){
+    html='<h2>A whole new group: the noble gases</h2><p>Between 1894 and 1898 scientists found a family of gases that hardly react at all. They did not fit in any column of Mendeleev\'s table.</p>'+
+      '<div class="bigq"><span>Predict</span>Where will these gases go? Tap <b>Add the noble gases</b>.<div class="ans" id="h2a">They form a <b>new column</b> at the right: group 18. Each one has a mass between the halogen before it and the alkali metal after it, so the pattern still works.</div></div>'+
+      '<div class="rule" id="h2r"><strong>Our rule</strong>The noble gases (He, Ne, Ar, Kr, Xe) are extremely <b>unreactive</b>. They were added as a new group.</div>'+nextH();
+    c.innerHTML='<button class="btn plum" id="addng">Add the noble gases</button>';
+  } else if(hStep===3){
+    html='<h2>Problems with the order</h2><p>Now let\'s follow atomic mass <b>exactly</b>. Look at the masses: Ar 39.95 and K 39.10, Co 58.93 and Ni 58.69, Te 127.6 and I 126.9.</p>'+
+      '<div class="bigq"><span>Observe</span>Tap <b>Strict mass order</b>. What goes wrong?<button class="btn ghost hidden" id="h3b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="h3a">Potassium, a very reactive metal, lands under the <b>unreactive noble gases</b>, and argon, a gas, lands with the reactive metals. Iodine lands in group 16 with O and S, not with the halogens. Mendeleev himself put Te before I because of their properties, even though the masses said otherwise.</div></div>'+
+      '<div class="bigq"><span>Think</span>Atomic mass cannot be the best way to order the elements. What else could we use?</div>'+nextH();
+    c.innerHTML='<button class="btn coral" id="strict">Strict mass order</button><button class="btn ghost" id="unstrict">Back to Mendeleev\'s order</button>';
+  } else {
+    html='<h2>1913: ordered by atomic number</h2><p>Moseley found that each element has a unique number of protons: its <b>atomic number</b>. Each box now shows Z.</p>'+
+      '<div class="bigq"><span>Observe</span>Look at Ar (18) and K (19), Co (27) and Ni (28), Te (52) and I (53). Is the order by atomic number a problem?<button class="btn ghost" id="h4b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="h4a">No! In order of atomic number every element lands in the right group: Ar with the noble gases, K with the alkali metals, I with the halogens. The green boxes are fixed.</div></div>'+
+      '<div class="rule show"><strong>The periodic law</strong>When the elements are arranged by increasing <b>atomic number</b>, there is a periodic repetition of their chemical and physical properties.</div>'+
+      '<p class="note">Why did Mendeleev use atomic mass? Atomic number was not discovered until 1913. Today the table has 118 elements in 7 periods and 18 groups.</p>'+nextH();
+  }
+  p.innerHTML=html;
+  if($('h0b'))reveal('h0b','h0a',function(){$('h0r').classList.add('show');});
+  if($('h1b'))reveal('h1b','h1a');
+  if($('h3b'))reveal('h3b','h3a');
+  if($('h4b'))reveal('h4b','h4a');
+  if($('disc')){
+    var order=['Ga','Sc','Ge','Tc'];
+    var tl=function(){$('tl').innerHTML=order.filter(function(s){return hState.found[s];}).map(function(s){return '<span>'+GAPS[s].yr+': '+BY[s].n+'</span>';}).join('');};
+    tl();
+    $('disc').onclick=function(){var nx=order.filter(function(s){return !hState.found[s];})[0];if(!nx)return;hState.found[nx]=true;hState.sel=nx;layoutHB();hInfo(BY[nx]);tl();
+      if(nx==='Ge')$('gecmp').classList.remove('hidden');
+      if(!order.filter(function(s){return !hState.found[s];}).length){$('disc').disabled=true;$('h1q').classList.remove('hidden');}};
+  }
+  if($('addng'))$('addng').onclick=function(){hState.noble=true;layoutHB();$('h2a').classList.add('show');$('h2r').classList.add('show');$('addng').disabled=true;};
+  if($('strict')){
+    $('strict').onclick=function(){hState.strict=true;layoutHB();$('h3b').classList.remove('hidden');$('hinfo').innerHTML='<b style="color:#d14343">Red boxes</b> moved into the wrong columns. Tap them to check.';};
+    $('unstrict').onclick=function(){hState.strict=false;layoutHB();$('hinfo').textContent='Tap any box to learn more about it.';};
+  }
+  $('hnext').onclick=function(){if(hStep<4)hSetStep(hStep+1);else go(2);};
+}
+
+/* ======================= mini periodic table ======================= */
+function ptHTML(opts){
+  opts=opts||{};var html='<div class="pt">';
+  html+='<div></div>';for(var g=1;g<=18;g++)html+='<div class="gl">'+g+'</div>';
+  var cells={};EL.forEach(function(e){cells[e.row+'-'+e.col]=e;});
+  for(var r=1;r<=10;r++){
+    if(r===8){html+='<div class="sp" style="grid-column:1 / -1"></div>';continue;}
+    html+='<div class="pl">'+(r<=7?r:'')+'</div>';
+    for(var c=1;c<=18;c++){var e=cells[r+'-'+c];
+      if(e)html+='<button class="cell" data-s="'+e.s+'"><span class="z">'+e.Z+'</span><span class="s">'+e.s+'</span></button>';
+      else html+='<div></div>';}
+  }
+  return html+'</div>';
+}
+function cellsOf(root){var m={};[].forEach.call(root.querySelectorAll('.cell'),function(c){m[c.dataset.s]=c;});return m;}
+function stairStep(C){
+  var pt=C.H.parentNode; var old=pt.querySelector('.stair'); if(old)old.remove();
+  if(!pt.offsetWidth)return;
+  var P=pt.getBoundingClientRect();
+  function R(s){return C[s].getBoundingClientRect();}
+  function X(c){var a=R(EL[17+c].s),b=R(EL[18+c].s);return (a.right+b.left)/2-P.left;}   // between group c and c+1 (row 4)
+  var col18=['He','Ne','Ar','Kr','Xe','Rn','Og'];
+  function Y(r){if(r>=7)return R('Og').bottom-P.top+1;var a=R(col18[r-1]),b=R(col18[r]);return (a.bottom+b.top)/2-P.top;}
+  var pts=[[X(12),Y(2)],[X(13),Y(2)],[X(13),Y(3)],[X(14),Y(3)],[X(14),Y(4)],[X(15),Y(4)],[X(15),Y(5)],[X(16),Y(5)],[X(16),Y(6)]];
+  var svg='<svg class="stair" width="'+P.width+'" height="'+P.height+'" style="position:absolute;left:0;top:0;pointer-events:none;overflow:visible" aria-hidden="true"><polyline points="'+pts.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' ')+'" fill="none" stroke="#111" stroke-width="4.5" stroke-linejoin="miter" stroke-linecap="square"/></svg>';
+  pt.insertAdjacentHTML('beforeend',svg);
+}
+
+/* ======================= 3. MODERN TABLE ======================= */
+var mPart=0;
+var MPARTS=['1. Periods and groups','2. Representative & transition','3. Metals, nonmetals, metalloids','4. Families'];
+function renderModern(){
+  $('main').innerHTML='<div class="steps" id="ms">'+MPARTS.map(function(s,i){return '<button class="step'+(i===mPart?' on':'')+(quizBest[i]!=null?' done':'')+'" data-i="'+i+'">'+s+'</button>';}).join('')+'</div>'+
+    '<div class="stack"><div class="card"><div class="controls" id="mtool" style="margin-top:0;margin-bottom:10px"></div><div class="ptwrap" id="mpt">'+ptHTML()+'</div><div class="infobox" id="minfo"></div></div>'+
+    '<div class="card panel" id="mpanel"></div></div>';
+  [].forEach.call($('ms').children,function(b){b.onclick=function(){mPart=+b.dataset.i;renderModern();};});
+  var C=cellsOf($('mpt'));
+  var mode={part:mPart,filter:null};
+  function paint(){
+    EL.forEach(function(e){var c=C[e.s];c.className='cell';
+      if(mPart===1)c.classList.add('t-'+e.type);
+      if(mPart===2)c.classList.add('c-'+e.cls);
+      if(mPart===3)c.classList.add('fam-'+e.fam);
+      if(mode.filter){var f=mode.filter;var on=(mPart===1&&e.type===f)||(mPart===2&&e.cls===f)||(mPart===3&&e.fam===f);if(!on)c.classList.add('dim');}
+    });
+    if(mPart===2)stairStep(C);
+  }
+  window.onresize=function(){if(cur===2&&mPart===2&&$('mpt'))stairStep(C);};
+  function info(e){
+    var bcls=mPart===1?'t-'+e.type:mPart===2?'c-'+e.cls:mPart===3?'fam-'+e.fam:'';
+    var COL={'t-rep':'#bfe8e6','t-tr':'#fbe6a6','t-in':'#f6d0dc','c-metal':'#a9dceb','c-metalloid':'#a8d17e','c-nonmetal':'#f9d96a',
+      'fam-alk':'#f7b6b6','fam-ae':'#fbd3a2','fam-tm':'#fbe6a6','fam-itm':'#f3c7e4','fam-hal':'#b9e6b0','fam-ng':'#d4c6f3','fam-onm':'#fff1b8','fam-om':'#cfdcf5','fam-md':'#a8d17e'};
+    var bg=COL[bcls]||'#fff';
+    var box='<div class="ebox cell '+bcls+'" style="background:'+bg+'"><span class="z">'+e.Z+'</span><span class="s">'+e.s+'</span><span class="n">'+e.n+'</span><span class="m">'+e.m+'</span></div>';
+    var t='<b class="big">'+e.n+'</b><br>';
+    if(mPart===0)t+='<b>'+where(e)+'</b>'+(e.frow?' (these two rows belong in periods 6 and 7)':'');
+    if(mPart===1)t+=where(e)+' &middot; <b>'+TYPEN[e.type]+'</b>';
+    if(mPart===2)t+=where(e)+' &middot; <b>'+CLSN[e.cls]+'</b>'+(e.s==='Br'?' (the only liquid nonmetal)':'')+(e.s==='Hg'?' (a liquid metal)':'');
+    if(mPart===3)t+=where(e)+' &middot; <b>'+FAM[e.fam]+'</b>'+(e.s==='H'?' (H is in group 1 but it is a nonmetal, not an alkali metal)':'');
+    $('minfo').innerHTML=box+'<div class="txt">'+t+'</div>';
+  }
+  EL.forEach(function(e){C[e.s].onclick=function(){
+    paint();
+    if(mPart===0){EL.forEach(function(x){if(x.row===e.row&&!e.frow)C[x.s].classList.add('hlp');if(!e.frow&&x.g===e.g&&!x.frow)C[x.s].classList.add('hlg');});}
+    C[e.s].classList.add('sel');info(e);};});
+  var tool=$('mtool'),panel=$('mpanel');
+  var quizBtn='<div class="controls"><button class="btn amber" id="qz">Quiz me</button>'+(quizBest[mPart]!=null?'<span class="note">Your best: '+quizBest[mPart]+' points</span>':'')+(mPart<3?'<button class="btn ghost" id="mnext">Next part &rarr;</button>':'<button class="btn ghost" id="mnext">Exit ticket &rarr;</button>')+'</div>';
+  if(mPart===0){
+    tool.innerHTML='<button class="chip" id="shp">Show a period</button><button class="chip" id="shg">Show a group</button><span class="note">or tap any element</span>';
+    $('minfo').innerHTML='<div class="txt">Tap an element to see its <b>period</b> (row) and <b>group</b> (column).</div>';
+    panel.innerHTML='<h2>Periods and groups</h2><div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)"><div>'+
+      '<h3>Reading an element box</h3><div class="key4" id="k4"><div class="bx"><div class="a">8</div><div class="b">O</div><div class="c">Oxygen</div><div class="d">16.00</div></div>'+
+      '<div class="lb">atomic number</div><div class="lb">symbol</div><div class="lb">name</div><div class="lb">atomic mass</div></div>'+
+      '<button class="btn ghost" id="k4b">Show the labels</button></div><div>'+
+      '<div class="bigq"><span>Q1</span>Moving left &rarr; right along a row, what goes up by 1?<button class="btn ghost" id="m1b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="m1a">The <b>atomic number</b> (one more proton each time).</div></div>'+
+      '<div class="bigq"><span>Q2</span>How many rows and how many columns are there?<button class="btn ghost" id="m2b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="m2a"><b>7</b> rows (periods) and <b>18</b> columns (groups).</div></div>'+
+      '<div class="bigq"><span>Q3</span>Tap Li, Na and K. What do they share?<button class="btn ghost" id="m3b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="m3a">The same column (group 1): they have similar properties (soft, very reactive metals).</div></div>'+
+      '</div></div><div class="rule" id="mr"><strong>Our rule</strong>A row is called a <b>period</b>; a column is called a <b>group</b> (or family). Elements in the same group have <b>similar properties</b>.</div>'+quizBtn;
+    var ki=0;$('k4b').onclick=function(){var l=$('k4').querySelectorAll('.lb');if(ki<4){l[ki].classList.add('show');ki++;}if(ki===4)$('k4b').disabled=true;else $('k4b').textContent='Next label';};
+    reveal('m1b','m1a');reveal('m2b','m2a');reveal('m3b','m3a',function(){$('mr').classList.add('show');});
+    $('shp').onclick=function(){paint();var p=1+Math.floor(Math.random()*7);EL.forEach(function(x){if(x.row===p)C[x.s].classList.add('hlp');});$('minfo').innerHTML='<div class="txt"><b class="big">Period '+p+'</b><br>A period is a horizontal <b>row</b>.</div>';};
+    $('shg').onclick=function(){paint();var g=1+Math.floor(Math.random()*18);EL.forEach(function(x){if(x.g===g&&!x.frow)C[x.s].classList.add('hlg');});$('minfo').innerHTML='<div class="txt"><b class="big">Group '+g+'</b><br>A group is a vertical <b>column</b>.</div>';};
+  }
+  if(mPart===1){
+    tool.innerHTML='<button class="chip" data-f="rep"><i style="background:#bfe8e6"></i>Representative</button><button class="chip" data-f="tr"><i style="background:#fbe6a6"></i>Transition (groups 3&ndash;12)</button><button class="chip" data-f="in"><i style="background:#f6d0dc"></i>Inner transition</button><button class="chip" data-f="">Show all</button>';
+    $('minfo').innerHTML='<div class="txt">Tap a button to highlight one type, or tap any element.</div>';
+    panel.innerHTML='<h2>Representative and transition elements</h2>'+
+      '<div class="bigq"><span>Observe</span>Which groups are <b>representative elements</b>? Which are <b>transition elements</b>?<button class="btn ghost" id="t1b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="t1a">Representative: groups <b>1, 2 and 13&ndash;18</b> (the tall columns). Transition: groups <b>3&ndash;12</b> and the <b>two rows at the bottom</b>.</div></div>'+
+      '<div class="bigq"><span>Why?</span>Representative elements show a wide range of physical and chemical properties. Transition elements are all metals.</div>'+
+      '<div class="rule" id="tr"><strong>Our rule</strong>Groups 1, 2 and 13&ndash;18 are <b>representative elements</b>. Groups 3&ndash;12 are <b>transition elements</b>; the lanthanide and actinide rows are inner transition metals.</div>'+quizBtn;
+    reveal('t1b','t1a',function(){$('tr').classList.add('show');});
+  }
+  if(mPart===2){
+    tool.innerHTML='<button class="chip" data-f="metal"><i style="background:var(--metal)"></i>Metals</button><button class="chip" data-f="nonmetal"><i style="background:var(--nonmetal)"></i>Nonmetals</button><button class="chip" data-f="metalloid"><i style="background:var(--metalloid)"></i>Metalloids</button><button class="chip" data-f="">Show all</button><span class="note">thick black line = stair-step line</span>';
+    $('minfo').innerHTML='<div class="txt">Find the stair-step line from boron (B) down to astatine (At). Tap any element.</div>';
+    panel.innerHTML='<h2>Metals, nonmetals and metalloids</h2>'+
+      '<div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="bigq" style="background:#e6f5fa"><span>Metals</span>Left of the line. Shiny, solid at room temperature (except Hg), good conductors of heat and electricity, malleable and ductile.</div>'+
+      '<div class="bigq" style="background:#eef7e4"><span>Metalloids</span>On the line. Properties of <b>both</b> metals and nonmetals. Si and Ge are used in computer chips and solar cells.</div>'+
+      '<div class="bigq" style="background:#fdf6dc"><span>Nonmetals</span>Right of the line (and H). Gases or dull, brittle solids; poor conductors. Bromine is the only liquid.</div></div>'+
+      '<div class="bigq"><span>Count</span>Are most elements metals or nonmetals?<button class="btn ghost" id="c1b" style="margin-top:8px;display:block">Show answer</button><div class="ans" id="c1a">Most elements are <b>metals</b> (about 3 out of every 4).</div></div>'+
+      '<div class="rule" id="cr"><strong>Our rule</strong><b>Metals</b> are shiny, bend and conduct; <b>nonmetals</b> are dull, brittle and do not conduct; <b>metalloids</b> have properties of both.</div>'+quizBtn;
+    reveal('c1b','c1a',function(){$('cr').classList.add('show');});
+  }
+  if(mPart===3){
+    var fams=['alk','ae','tm','itm','hal','ng','onm','om','md'];
+    tool.innerHTML=fams.map(function(f){return '<button class="chip" data-f="'+f+'"><i class="fam-'+f+'"></i>'+FAM[f]+'</button>';}).join('')+'<button class="chip" data-f="">Show all</button>';
+    $('minfo').innerHTML='<div class="txt">Tap a family to highlight it, or tap any element.</div>';
+    panel.innerHTML='<h2>Families</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">'+
+      '<div class="bigq"><span>Alkali metals</span>Group 1 (not H). Very reactive. Na in table salt, Li in batteries.</div>'+
+      '<div class="bigq"><span>Alkaline earth metals</span>Group 2. Highly reactive. Ca and Mg are minerals your body needs.</div>'+
+      '<div class="bigq"><span>Transition metals</span>Groups 3&ndash;12. Titanium is strong and light: bicycle frames, glasses.</div>'+
+      '<div class="bigq"><span>Inner transition metals</span>The lanthanide and actinide series at the bottom of the table.</div>'+
+      '<div class="bigq"><span>Halogens</span>Group 17. Highly reactive nonmetals. Fluorine compounds in toothpaste.</div>'+
+      '<div class="bigq"><span>Noble gases</span>Group 18. Extremely unreactive: lasers, light bulbs, neon signs.</div></div>'+
+      '<div class="rule show"><strong>Remember</strong>Hydrogen is in group 1 but it is a <b>nonmetal</b>, not an alkali metal.</div>'+quizBtn;
+  }
+  [].forEach.call(tool.querySelectorAll('[data-f]'),function(b){b.onclick=function(){mode.filter=b.dataset.f||null;[].forEach.call(tool.querySelectorAll('[data-f]'),function(x){x.classList.toggle('on',x===b&&!!mode.filter);});paint();};});
+  paint();
+  $('qz').onclick=function(){openQuiz(mPart);};
+  $('mnext').onclick=function(){if(mPart<3){mPart++;renderModern();}else go(3);window.scrollTo({top:0,behavior:'smooth'});};
+}
+
+/* ======================= QUIZ ENGINE ======================= */
+var QTYPE={mcq:'Multiple choice',tf:'True or false',sort:'Sort it',tap:'Tap the table'};
+var QUIZ=[
+ [ // part 1
+  {t:'mcq',skill:'Periods & groups',q:'A horizontal row of the periodic table is called a&hellip;',o:['period','group','family','series'],a:0,h:'Think of the word that also means a length of time in your school day.',x:'Rows are <b>periods</b>; columns are groups (families).'},
+  {t:'tap',skill:'Periods & groups',q:'Tap the element in <b>period 3, group 2</b>.',ok:['Mg'],h:'Find row 3 first, then move to column 2.',x:'Magnesium (Mg) is in period 3, group 2.'},
+  {t:'mcq',skill:'Periods & groups',q:'Which element is in the <b>same group</b> as oxygen, O?',o:['S','N','F','Ne'],a:0,h:'Same group means the same column.',x:'Sulfur (S) is right below oxygen in group 16.'},
+  {t:'mcq',skill:'Periods & groups',q:'Where is chlorine, Cl (atomic number 17)?',o:['period 3, group 17','period 17, group 3','period 2, group 17','period 3, group 7'],a:0,h:'There are only 7 periods.',x:'Cl is in the third row (period 3) and column 17 (group 17).'},
+  {t:'tap',skill:'Periods & groups',q:'Tap the element with <b>atomic number 15</b>.',ok:['P'],h:'The small number in the corner of each box is the atomic number.',x:'Atomic number 15 is phosphorus (P): period 3, group 15.'},
+  {t:'tap',skill:'Periods & groups',q:'Tap the element in <b>period 4, group 17</b>.',ok:['Br'],h:'Row 4, then move right to column 17.',x:'Bromine (Br) is in period 4, group 17.'},
+  {t:'tap',skill:'Periods & groups',q:'Tap the element in the <b>same group as sodium</b>, in <b>period 5</b>.',ok:['Rb'],h:'Find Na first, then go down its column to row 5.',x:'Rubidium (Rb) is in group 1 with Na, in period 5.'},
+  {t:'tf',skill:'Periods & groups',q:'Elements in the same <b>period</b> have similar properties.',a:false,h:'Li, Na and K have similar properties. Are they in a row or a column?',x:'False. Elements in the same <b>group</b> have similar properties.'}
+ ],
+ [ // part 2
+  {t:'mcq',skill:'Element types',q:'Which groups contain the <b>representative elements</b>?',o:['1, 2 and 13&ndash;18','3&ndash;12','1&ndash;12','only 1 and 18'],a:0,h:'They are the tall columns on both sides.',x:'Representative elements are in groups 1, 2 and 13&ndash;18.'},
+  {t:'sort',skill:'Element types',q:'Sort each element.',b:['Representative','Transition'],items:[['Li',0],['Fe',1],['C',0],['Pt',1],['Cl',0],['Cu',1]],h:'Transition elements are in groups 3&ndash;12.',x:'Li (1), C (14), Cl (17): representative. Fe (8), Pt (10), Cu (11): transition.'},
+  {t:'tap',skill:'Element types',q:'Tap any <b>transition element</b> in <b>period 4</b>.',ok:['Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn'],h:'Period 4 is the 4th row. Transition elements are in groups 3&ndash;12.',x:'Sc to Zn are the transition elements of period 4.'},
+  {t:'tap',skill:'Element types',q:'Tap any <b>representative element</b> in <b>period 5</b>.',ok:['Rb','Sr','In','Sn','Sb','Te','I','Xe'],h:'Representative elements are in groups 1, 2 and 13&ndash;18.',x:'In period 5: Rb, Sr, In, Sn, Sb, Te, I and Xe are representative elements.'},
+  {t:'tap',skill:'Element types',q:'Tap any <b>inner transition metal</b>.',ok:EL.filter(function(e){return e.frow;}).map(function(e){return e.s;}),h:'Look at the two rows at the bottom of the table.',x:'The lanthanide and actinide series (the two bottom rows) are inner transition metals.'},
+  {t:'tf',skill:'Element types',q:'Transition elements are in groups 3&ndash;12 and in the two rows at the bottom of the table.',a:true,h:'The two bottom rows are the inner transition metals.',x:'True. The lanthanide and actinide series are inner transition metals.'},
+  {t:'mcq',skill:'Element types',q:'The element with atomic number 20 is&hellip;',o:['calcium, a representative element','calcium, a transition element','scandium, a transition element','potassium, a representative element'],a:0,h:'Find box number 20. Which group is it in?',x:'Z = 20 is calcium (Ca), in group 2: a representative element.'}
+ ],
+ [ // part 3
+  {t:'sort',skill:'Classify',q:'Sort each element.',b:['Metal','Nonmetal','Metalloid'],items:[['Fe',0],['S',1],['Si',2],['Cu',0],['Ne',1],['Ge',2]],h:'Metalloids sit on the stair-step line.',x:'Fe, Cu: metals. S, Ne: nonmetals. Si, Ge: metalloids.'},
+  {t:'mcq',skill:'Classify',q:'Which property is typical of <b>metals</b>?',o:['good conductor of electricity','brittle','dull','gas at room temperature'],a:0,h:'Think of copper wire.',x:'Metals are shiny, malleable and good conductors of heat and electricity.'},
+  {t:'mcq',skill:'Classify',q:'Where are the <b>metalloids</b>?',o:['along the stair-step line','in group 1','in group 18','in the two bottom rows'],a:0,h:'They have properties of both metals and nonmetals, so they sit between them.',x:'Metalloids (B, Si, Ge, As, Sb, Te, At) lie along the stair-step line.'},
+  {t:'tap',skill:'Classify',q:'Tap a <b>nonmetal</b> in <b>period 3</b>.',ok:['P','S','Cl','Ar'],h:'Nonmetals are to the right of the stair-step line.',x:'In period 3, P, S, Cl and Ar are nonmetals.'},
+  {t:'tap',skill:'Classify',q:'Tap the only <b>liquid metal</b>.',ok:['Hg'],h:'It is used in old thermometers.',x:'Mercury (Hg) is the only metal that is a liquid at room temperature.'},
+  {t:'tf',skill:'Classify',q:'Most elements are metals.',a:true,h:'Look at the colours on the table: which colour covers most of it?',x:'True. About three quarters of the elements are metals.'},
+  {t:'tap',skill:'Classify',q:'Tap a <b>metalloid</b>.',ok:['B','Si','Ge','As','Sb','Te','At'],h:'Look along the stair-step line from B down to At.',x:'The metalloids are B, Si, Ge, As, Sb, Te and At.'},
+  {t:'mcq',skill:'Classify',q:'Which nonmetal is a <b>liquid</b> at room temperature?',o:['bromine, Br','mercury, Hg','iodine, I','chlorine, Cl'],a:0,h:'Mercury is a liquid too, but it is a metal.',x:'Bromine is the only liquid nonmetal.'}
+ ],
+ [ // part 4
+  {t:'mcq',skill:'Families',q:'Group 17 elements are called the&hellip;',o:['halogens','noble gases','alkali metals','alkaline earth metals'],a:0,h:'Fluorine and chlorine are in this group.',x:'Group 17 = halogens.'},
+  {t:'mcq',skill:'Families',q:'Which element is an <b>alkali metal</b>?',o:['Na','H','Mg','Cl'],a:0,h:'H is in group 1, but is it a metal?',x:'Sodium (Na) is an alkali metal. Hydrogen is in group 1 but it is a nonmetal.'},
+  {t:'sort',skill:'Families',q:'Put each element in its family.',b:['Alkali metals','Alkaline earth metals','Halogens','Noble gases'],items:[['K',0],['Li',0],['Ca',1],['Mg',1],['Br',2],['F',2],['Ar',3],['He',3]],h:'Group 1, group 2, group 17, group 18.',x:'K, Li: group 1. Ca, Mg: group 2. Br, F: group 17. Ar, He: group 18.'},
+  {t:'tap',skill:'Families',q:'Tap the <b>halogen</b> in <b>period 3</b>.',ok:['Cl'],h:'Halogens are in group 17.',x:'Chlorine (Cl) is the halogen in period 3.'},
+  {t:'tap',skill:'Families',q:'Tap the <b>noble gas</b> in <b>period 2</b>.',ok:['Ne'],h:'Noble gases are in group 18.',x:'Neon (Ne) is the noble gas in period 2.'},
+  {t:'tap',skill:'Families',q:'Tap any <b>alkali metal</b>.',ok:['Li','Na','K','Rb','Cs','Fr'],h:'Group 1, but not hydrogen!',x:'The alkali metals are Li, Na, K, Rb, Cs and Fr (group 1 without H).'},
+  {t:'mcq',skill:'Families',q:'The noble gases are&hellip;',o:['extremely unreactive','very reactive metals','liquids','metalloids'],a:0,h:'They are used in neon signs because they do not react.',x:'Noble gases (group 18) are extremely unreactive.'},
+  {t:'tf',skill:'Families',q:'The lanthanide and actinide series are inner transition metals.',a:true,h:'They are the two rows at the bottom.',x:'True.'},
+  {t:'tap',skill:'Families',q:'Tap the <b>alkaline earth metal</b> in <b>period 4</b>.',ok:['Ca'],h:'Alkaline earth metals are in group 2.',x:'Calcium (Ca): period 4, group 2.'}
+ ]
+];
+var EXIT=[
+  {t:'mcq',skill:'History',q:'Mendeleev arranged the elements in order of increasing&hellip;',o:['atomic mass','atomic number','number of neutrons','date of discovery'],a:0,h:'Protons had not been discovered in 1869.',x:'Mendeleev used <b>atomic mass</b>.'},
+  {t:'mcq',skill:'History',q:'In the law of octaves, properties repeat every&hellip;',o:['8th element','2nd element','18th element','7th element'],a:0,h:'Do Re Mi Fa Sol La Ti&hellip;',x:'Properties repeat every <b>8th</b> element, like a musical octave.'},
+  {t:'mcq',skill:'History',q:'Why did Mendeleev leave <b>gaps</b> in his table?',o:['for elements not yet discovered','because he ran out of cards','for the noble gases','to keep the rows the same length'],a:0,h:'Think of eka-silicon and germanium.',x:'He predicted that undiscovered elements would fill the gaps, and they did (Sc, Ga, Ge).'},
+  {t:'mcq',skill:'History',q:'Argon (39.95) is heavier than potassium (39.10), but argon comes first in the modern table. Why?',o:['argon has a smaller atomic number','argon was discovered first','argon is a gas','potassium is a metal'],a:0,h:'What is the modern table ordered by?',x:'Ar has Z = 18 and K has Z = 19. The modern table is ordered by <b>atomic number</b>.'},
+  {t:'mcq',skill:'Periodic law',q:'Which statement is the <b>periodic law</b>?',o:['When elements are arranged by increasing atomic number, their properties repeat periodically.','When elements are arranged by increasing atomic mass, all their properties are the same.','Every element has the same number of protons and neutrons.','Elements in the same period have similar properties.'],a:0,h:'Moseley, 1913.',x:'The periodic law: arranged by increasing atomic number, the properties repeat periodically.'},
+  {t:'tap',skill:'Modern table',q:'Tap the element in <b>period 4, group 2</b>.',ok:['Ca'],h:'Row 4, column 2.',x:'Calcium (Ca), an alkaline earth metal.'},
+  {t:'tap',skill:'Modern table',q:'Tap the <b>halogen</b> in <b>period 4</b>.',ok:['Br'],h:'Halogens are in group 17.',x:'Bromine (Br), period 4, group 17.'},
+  {t:'tap',skill:'Modern table',q:'Tap any <b>metalloid</b>.',ok:['B','Si','Ge','As','Sb','Te','At'],h:'They sit along the stair-step line.',x:'The metalloids are B, Si, Ge, As, Sb, Te and At.'},
+  {t:'mcq',skill:'Modern table',q:'Iron, Fe, is a&hellip;',o:['transition element','representative element','noble gas','metalloid'],a:0,h:'Fe is in group 8.',x:'Fe is in group 8, so it is a transition element.'},
+  {t:'sort',skill:'Modern table',q:'Classify each element.',b:['Metal','Nonmetal','Metalloid'],items:[['K',0],['Ne',1],['Ge',2],['Al',0],['O',1],['As',2]],h:'Use the stair-step line.',x:'K, Al: metals. Ne, O: nonmetals. Ge, As: metalloids.'},
+  {t:'mcq',skill:'Modern table',q:'Which pair has <b>similar</b> properties?',o:['Li and Na','Li and Be','Na and Cl','O and F'],a:0,h:'Similar properties = same group.',x:'Li and Na are both in group 1 (alkali metals).'},
+  {t:'mcq',skill:'Modern table',q:'Element X is in period 3, group 17. X is&hellip;',o:['chlorine, a halogen','argon, a noble gas','sulfur, a nonmetal','fluorine, a halogen'],a:0,h:'Find row 3, column 17.',x:'Chlorine (Cl) is a halogen: a highly reactive nonmetal.'}
+];
+var quizBest=[null,null,null,null];
+var Z={};
+function closeQuiz(){renderModern();window.scrollTo({top:0});}
+function quizView(back){
+  $('main').innerHTML='<div id="qtop">'+(back?'<div class="controls" style="margin:0 0 12px"><button class="btn ghost" id="qback">&larr; '+back+'</button></div>':'')+
+    '<div class="card"><div class="ptwrap qpt" id="qtable"></div></div><div class="qwrap" id="qw" style="margin:16px auto 0"></div></div>';
+  if($('qback'))$('qback').onclick=closeQuiz;
+  return $('qw');
+}
+function qTable(){$('qtable').innerHTML=ptHTML();[].forEach.call($('qtable').querySelectorAll('.cell'),function(c){c.classList.add('ro');});}
+function openQuiz(part){
+  var root=quizView('Back to '+MPARTS[part].replace(/^\d\.\s*/,''));
+  Z={qs:QUIZ[part],i:0,score:0,streak:0,results:[],hint:false,title:'Quiz: '+MPARTS[part].replace(/^\d\.\s*/,''),part:part,mode:'practice',root:root};
+  qShow();window.scrollTo({top:0});
+}
+function qHud(){
+  return '<div class="hud"><span class="stage">'+Z.title+'</span>'+(Z.player?'<span class="stage">'+esc(Z.player.name)+'</span>':'')+'<span class="grow"></span>'+
+   '<span class="stat">&#9733; <b>'+Z.score+'</b></span><span class="stat'+(Z.streak>=3?' hot':'')+'"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-3-1-6 1-9z" fill="#e8962a"/></svg><b>'+Z.streak+'</b></span>'+
+   '</div>'+
+   '<div class="pbar"><i style="width:'+(Z.i/Z.qs.length*100).toFixed(1)+'%"></i></div>';
+}
+function qShow(){
+  if(Z.i>=Z.qs.length)return qEnd();
+  var q=Z.qs[Z.i];Z.hint=false;qTable();
+  Z.root.innerHTML=qHud()+'<div class="qcard enter" id="qc"><div class="meta"><span class="tag skill">'+q.skill+'</span><span class="tag type">'+QTYPE[q.t]+'</span><span class="qnum">'+(Z.i+1)+' / '+Z.qs.length+'</span></div>'+
+    '<div class="prompt">'+q.q+'</div><div id="qb"></div>'+
+    (q.h?'<div style="display:grid;gap:8px"><button class="hintbtn" id="hb"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#fff3c4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>Need a hint?</button><div class="hintbox hidden" id="hbx"><b>Hint</b> '+q.h+'</div></div>':'')+
+    '<div id="qfb"></div><div class="actions" id="qact"></div></div>';
+  if($('qclose'))$('qclose').onclick=closeQuiz;
+  if($('hb'))$('hb').onclick=function(){Z.hint=true;$('hbx').classList.remove('hidden');$('hb').remove();};
+  RENDER[q.t](q,$('qb'));
+}
+function qDone(ok,q,correct){
+  var gain=0;
+  if(ok){Z.streak++;gain=Z.hint?50:100+(Z.streak>=3?25*Math.min(Z.streak-2,4):0);Z.score+=gain;}
+  else{Z.streak=0;$('qc').classList.add('shake');}
+  Z.results.push({q:q,ok:ok,correct:correct});if($('hb'))$('hb').remove();
+  $('qfb').innerHTML='<div class="fb '+(ok?'good':'bad')+'"><b class="t">'+(ok?'Correct! <span class="pts">+'+gain+(Z.hint?' (hint used)':'')+'</span>':'Not quite')+'</b>'+(!ok&&correct?'<div>Answer: <b>'+correct+'</b></div>':'')+'<div>'+q.x+'</div></div>';
+  $('qact').innerHTML='<button class="qbtn go" id="nx">'+(Z.i+1<Z.qs.length?'Next question &rarr;':'See my results')+'</button>';
+  $('nx').focus({preventScroll:true});
+  $('nx').onclick=function(){Z.i++;qShow();$('qtop').scrollIntoView({block:'start'});};
+  var hh=Z.root.querySelector('.hud'),pb=Z.root.querySelector('.pbar');if(hh)hh.remove();if(pb)pb.remove();Z.root.insertAdjacentHTML('afterbegin',qHud());if($('qclose'))$('qclose').onclick=closeQuiz;
+}
+var RENDER={
+  mcq:function(q,el){
+    var ord=shuffle(q.o.map(function(t,k){return k;}));
+    el.innerHTML='<div class="opts">'+ord.map(function(k,n){return '<button class="opt" data-k="'+k+'"><span class="k">'+'ABCD'[n]+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
+    [].forEach.call(el.querySelectorAll('.opt'),function(b){b.onclick=function(){
+      var k=+b.dataset.k,ok=k===q.a;
+      [].forEach.call(el.querySelectorAll('.opt'),function(x){x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('right');});
+      if(!ok)b.classList.add('wrong');qDone(ok,q,q.o[q.a]);};});
+  },
+  tf:function(q,el){
+    el.innerHTML='<div class="tf"><button class="opt" data-v="1">True</button><button class="opt" data-v="0">False</button></div>';
+    [].forEach.call(el.querySelectorAll('.opt'),function(b){b.onclick=function(){
+      var v=b.dataset.v==='1',ok=v===q.a;
+      [].forEach.call(el.querySelectorAll('.opt'),function(x){x.disabled=true;if((x.dataset.v==='1')===q.a)x.classList.add('right');});
+      if(!ok)b.classList.add('wrong');qDone(ok,q,q.a?'True':'False');};});
+  },
+  sort:function(q,el){
+    var where={},sel=null,locked=false;
+    function draw(){
+      var pool=q.items.filter(function(it){return !(it[0] in where);});
+      el.innerHTML='<div class="pool" id="pool">'+(pool.length?shuffleStable(pool).map(function(it){return '<button class="qchip'+(sel===it[0]?' sel':'')+'" data-c="'+it[0]+'">'+it[0]+'</button>';}).join(''):'<span class="note">All placed. Tap a chip to move it back.</span>')+'</div>'+
+        '<div class="buckets" style="margin-top:10px">'+q.b.map(function(b,k){return '<div class="bucket'+(sel?' ready':'')+'" data-b="'+k+'"><h4>'+b+'</h4><div class="in">'+q.items.filter(function(it){return where[it[0]]===k;}).map(function(it){return '<button class="qchip" data-c="'+it[0]+'" data-in="1">'+it[0]+'</button>';}).join('')+'</div></div>';}).join('')+'</div>';
+      [].forEach.call(el.querySelectorAll('.qchip'),function(c){c.onclick=function(ev){ev.stopPropagation();if(locked)return;
+        if(c.dataset.in){ if(sel){where[sel]=where[c.dataset.c];sel=null;} else delete where[c.dataset.c]; }
+        else sel=(sel===c.dataset.c?null:c.dataset.c);draw();};});
+      [].forEach.call(el.querySelectorAll('.bucket'),function(b){b.onclick=function(){if(locked||!sel)return;where[sel]=+b.dataset.b;sel=null;draw();};});
+      $('qact').innerHTML=locked?$('qact').innerHTML:'<button class="qbtn" id="chk"'+(Object.keys(where).length===q.items.length?'':' disabled')+'>Check</button>';
+      if($('chk'))$('chk').onclick=function(){locked=true;var all=true;
+        [].forEach.call(el.querySelectorAll('.bucket .qchip'),function(c){var it=q.items.filter(function(x){return x[0]===c.dataset.c;})[0];var ok=where[it[0]]===it[1];if(!ok)all=false;c.classList.add(ok?'right':'wrong');});
+        qDone(all,q,q.b.map(function(b,k){return b+': '+q.items.filter(function(it){return it[1]===k;}).map(function(it){return it[0];}).join(', ');}).join(' &middot; '));};
+    }
+    var order=shuffle(q.items.map(function(it){return it[0];}));
+    function shuffleStable(list){return list.slice().sort(function(a,b){return order.indexOf(a[0])-order.indexOf(b[0]);});}
+    draw();
+  },
+  tap:function(q,el){
+    el.innerHTML='<div class="readout" style="margin-top:0">Tap your answer on the periodic table above.</div>';
+    var C=cellsOf($('qtable'));[].forEach.call($('qtable').querySelectorAll('.cell'),function(c){c.classList.remove('ro');});
+    EL.forEach(function(e){C[e.s].onclick=function(){
+      if(Z.tapped)return;Z.tapped=true;var ok=q.ok.indexOf(e.s)>=0;
+      C[e.s].classList.add(ok?'qright':'qwrong');
+      if(!ok)q.ok.forEach(function(s){C[s].classList.add('qright');});
+      qDone(ok,q,q.ok.length>1?q.ok.join(', '):BY[q.ok[0]].n+' ('+q.ok[0]+')');};});
+    Z.tapped=false;
+  }
+};
+function qEnd(){
+  var correct=Z.results.filter(function(r){return r.ok;}).length,n=Z.qs.length;
+  if(Z.mode==='practice'){
+    if(quizBest[Z.part]==null||Z.score>quizBest[Z.part])quizBest[Z.part]=Z.score;
+    var msg=correct===n?'Perfect!':correct>=n-1?'Great work!':correct>=n/2?'Good effort. Try again for a perfect score.':'Explore the table again, then retry.';
+    Z.root.innerHTML='<div class="qcard enter"><div class="meta"><span class="tag skill">Quiz complete</span><span class="tag type">'+Z.title+'</span></div>'+
+      '<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:end"><div><div class="big">'+Z.score+'</div><div class="best">points</div></div><div><div class="big" style="color:var(--blue)">'+correct+'/'+n+'</div><div class="best">correct</div></div></div><h2>'+msg+'</h2>'+
+      missHTML()+'<div class="actions"><button class="qbtn" id="again">Try again</button><button class="qbtn ghost" id="cl">Back to the table</button></div></div>';
+    $('again').onclick=function(){openQuiz(Z.part);};$('cl').onclick=closeQuiz;
+  } else exitEnd(correct,n);
+}
+function missHTML(){var m=Z.results.filter(function(r){return !r.ok;});return m.length?'<h3>Review what you missed</h3><div class="miss">'+m.map(function(r){return '<div><b>Q'+(Z.qs.indexOf(r.q)+1)+'.</b> '+r.q.q+'<br>Answer: <b>'+r.correct+'</b></div>';}).join('')+'</div>':'';}
+
+/* ======================= 4. EXIT TICKET ======================= */
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function renderExit(){
+  $('main').innerHTML='<div class="qwrap" style="margin:0 auto" id="xw"></div>';
+  var w=$('xw');
+  w.innerHTML='<div class="qcard"><div class="meta"><span class="tag skill">Chemistry &middot; Chapter 6</span><span class="qnum">'+EXIT.length+' questions</span></div>'+
+    '<h2 style="font-size:40px">Exit <span style="color:var(--teal)">Ticket</span></h2>'+
+    '<p style="margin:0">Show what you learned today: how the periodic table developed, periods and groups, and metals, nonmetals and metalloids. One question at a time. Correct answers earn 100 points; after a hint they still earn 50.</p>'+
+    '<div class="fields"><div class="field"><label for="xn">Your full name</label><input id="xn" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(store.get('ptl-name')||'')+'"></div>'+
+    '<div class="field"><label for="xc">Class</label><select id="xc"><option value="">Choose&hellip;</option>'+CLASSES.map(function(c){return '<option'+(store.get('ptl-class')===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="errmsg" id="xe" role="alert"></div><div class="actions"><button class="qbtn" id="xgo">Start the exit ticket</button></div></div>';
+  function start(){var n=$('xn'),nm=n.value.trim().replace(/\s+/g,' ');
+    if(nm.length<2){n.classList.add('err');$('xe').textContent='Please write your name before you start.';n.focus();return;}
+    if(!$('xc').value){$('xc').classList.add('err');$('xe').textContent='Please choose your class before you start.';return;}
+    store.set('ptl-name',nm);store.set('ptl-class',$('xc').value);
+    var cls=$('xc').value;w=quizView(null);
+    Z={qs:EXIT,i:0,score:0,streak:0,results:[],hint:false,title:'Exit ticket',mode:'exit',root:w,player:{name:nm,cls:cls},started:Date.now()};
+    qShow();}
+  $('xgo').onclick=start;
+  $('xn').onkeydown=function(e){if(e.key==='Enter')start();};
+}
+function exitEnd(correct,n){
+  var now=new Date(),mins=Math.max(1,Math.round((Date.now()-Z.started)/60000));
+  var when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  var hh=(Z.player.name+'|'+Z.player.cls+'|'+Z.score+'|'+correct+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7);
+  var code='PL-'+hh.toString(36).toUpperCase().padStart(6,'0').slice(-6);
+  var summary='Periodic Table Lab: Exit Ticket (Chemistry Chapter 6)\nName: '+Z.player.name+'\nClass: '+Z.player.cls+'\nScore: '+Z.score+' points\nCorrect: '+correct+'/'+n+'\nTime: '+mins+' min\nDate: '+when+'\nCheck code: '+code;
+  var msg=correct>=n-1?'Excellent!':correct>=n*0.7?'Great work!':correct>=n*0.5?'Good effort. Review the parts you missed.':'Go back through the lab, then try again.';
+  Z.root.innerHTML='<div class="qcard enter"><div class="meta"><span class="tag skill">Exit ticket complete</span></div>'+
+    '<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:end"><div><div class="big">'+Z.score+'</div><div class="best">points</div></div><div><div class="big" style="color:var(--blue)">'+correct+'/'+n+'</div><div class="best">correct</div></div></div><h2>'+msg+'</h2>'+
+    '<div class="cert"><div class="row"><b class="nm">'+esc(Z.player.name)+'</b><span>Class '+esc(Z.player.cls)+'</span></div><div class="row"><span>Periodic Table Lab &middot; Exit ticket</span><span>'+when+'</span></div><div class="row"><span><b>'+Z.score+'</b> points &middot; <b>'+correct+'/'+n+'</b> correct &middot; '+mins+' min</span><span>Check code <code>'+code+'</code></span></div></div>'+
+    '<div class="actions"><span class="sendst" id="sendst">Sending your result to your teacher&hellip;</span><button class="qbtn ghost hidden" id="retry">Try again</button><button class="qbtn go" id="copy">Copy my result</button></div><span class="note" id="copied"></span>'+
+    '<textarea id="sumtxt" readonly aria-label="Result text" style="position:absolute;left:-9999px">'+esc(summary)+'</textarea>'+
+    missHTML()+'<div class="actions"><button class="qbtn" id="again">Back to start</button></div></div>';
+  $('copy').onclick=function(){var ok=function(){$('copied').textContent='Copied! Paste it in your message to your teacher.';};
+    var fb=function(){var t=$('sumtxt');t.style.position='static';t.style.width='100%';t.rows=8;t.focus();t.select();$('copied').textContent='Select the text below and copy it.';};
+    try{navigator.clipboard.writeText(summary).then(ok,fb);}catch(e){fb();}};
+  var payload={game:'Periodic Table Lab: Exit Ticket',chapter:6,name:Z.player.name,cls:Z.player.cls,score:Z.score,correct:correct,total:n,mins:mins,when:when,code:code,
+    missed:Z.results.filter(function(r){return !r.ok;}).map(function(r){return 'Q'+(Z.qs.indexOf(r.q)+1);}).join(' ')};
+  var st=$('sendst'),rt=$('retry');
+  function send(){st.className='sendst';st.textContent='Sending your result to your teacher…';rt.classList.add('hidden');
+    fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
+      .then(function(){st.className='sendst ok';st.textContent='✓ Your result was sent to your teacher.';})
+      .catch(function(){st.className='sendst err';st.textContent='Could not send. Check your internet, then tap Try again.';rt.classList.remove('hidden');});}
+  rt.onclick=send; if(SCORE_URL&&!window.__noSend)send(); else st.textContent='';
+  $('again').onclick=renderExit;
+}
+
+drawTabs();renderSorting();
+})();
+</script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
