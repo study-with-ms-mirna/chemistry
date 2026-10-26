@@ -1,0 +1,1152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Molecular Structures Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;
+--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;padding:10px 18px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;margin-top:14px}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.sel{background:var(--accent);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+input[type=range]:disabled{opacity:.4}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.rd.wide{grid-column:1/-1}
+.bar{height:14px;border-radius:999px;background:#e6ebf3;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:999px;transition:width .15s}
+.reads .rd b{font-size:19px}
+.step.done b{background:#2e9e5b;color:#fff}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;background:#f3f6fb;border:2px solid var(--line);display:none}
+.fb.show{display:block}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b}
+.fb.bad{background:#fdeeee;border-color:#d8434a}
+.fb.hint{background:#fff6e8;border-color:#e8962a}
+.cnt{display:none;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;padding:10px 14px;border-radius:14px;background:#f6f8fc}
+.cnt.show{display:flex}
+.stp{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:17px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:26px;text-align:center;font-size:22px}
+#cv.click{cursor:pointer}
+sub{font-size:.65em}
+.tab{font-size:15.5px;padding:8px 12px}
+/* extra2 */
+/* ===== show me / my turn panels ===== */
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.molbox{display:flex;justify-content:center;align-items:center;background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px}
+.molbox svg{max-width:100%;height:auto}
+.steps3{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;display:none;background:#fff}
+.st.on{display:block;animation:fadein .45s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.st .sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.st .ln{font-size:17px;margin-top:6px;line-height:1.6}
+.st .mth{font-family:Fredoka,sans-serif;font-size:23px;font-weight:600}
+.st .why{font-size:16px;color:var(--muted)}
+.sg{color:#0f8b8d;font-weight:700}.pp{color:#e2708a;font-weight:700}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.feedback{margin-top:10px;font-size:17px}
+.feedback .bad{color:#d8434a;font-family:Fredoka,sans-serif;font-weight:600}.feedback .good{color:#2e9e5b;font-family:Fredoka,sans-serif;font-weight:600}
+.feedback ul{margin:4px 0 0;padding-left:20px}
+.ansrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:12px;font-family:Fredoka,sans-serif;font-size:20px}
+.ansrow input{width:70px;font-family:Fredoka,sans-serif;font-size:22px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ansrow input.ok{border-color:#2e9e5b;background:#e8f6ee}.ansrow input.no{border-color:#d8434a;background:#fdeeee}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:700px){.sumgrid{grid-template-columns:1fr}}
+.sumc{border:2px solid var(--line);border-radius:18px;padding:12px;text-align:center;background:#fff}
+.sumc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;margin:0 0 4px}
+.sumc .res{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;margin-top:4px}
+.sumc svg{width:100%;height:auto;display:block}
+.bigrule{margin-top:12px;border:3px dashed var(--red);border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.qcard{font-size:19px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;gap:12px;flex-wrap:wrap}
+.opt{flex:1 1 180px;border:2px solid var(--line);border-radius:18px;background:#fff;padding:12px;cursor:pointer;text-align:center;font-family:Fredoka,sans-serif;font-size:18px;box-shadow:0 4px 0 var(--shadow);color:var(--ink)}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:#2e9e5b;background:#e8f6ee}.opt.wrong{border-color:#d8434a;background:#fdeeee}
+.opt:disabled{cursor:default}
+.opt svg{display:block;margin:0 auto 4px}
+.opt .val{display:block;font-size:14px;color:var(--muted);margin-top:4px;min-height:18px}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+.dt tr[data-r]{cursor:pointer}
+.dt tr.sel td{background:#fff1cc!important;font-weight:600}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.cmp{display:inline-flex;align-items:center;gap:8px;border:2px solid;border-radius:999px;padding:4px 6px 4px 12px;font-family:Fredoka,sans-serif;font-size:17px;background:#fff}
+.cmp i{font-style:normal;color:#fff;border-radius:999px;padding:2px 10px;font-weight:600}
+.solve{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;margin:6px 0}
+.ladder{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.rung{font-family:Fredoka,sans-serif;font-size:16px;padding:4px 10px;border-radius:10px;background:#eef2f8;color:var(--ink)}
+.rung.hit{color:#fff;font-weight:600;transform:scale(1.08)}
+.solverow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.big2{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin-top:6px}
+.lawbig{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;text-align:center;margin:10px 0;padding:8px;background:#f6f8fc;border-radius:14px}
+.lawsm{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px}
+.center{text-align:center;font-size:18px}
+.mysteq{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;text-align:center;padding:10px;background:#f6f8fc;border-radius:14px;margin-bottom:10px}
+.mysteq sup.q{color:var(--accent);font-size:.7em}
+.runbar,.ansrow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.runbar .lab,.ansrow2 .lab{font-family:Fredoka,sans-serif;font-size:16px;margin-left:6px}
+.ansrow2{font-family:Fredoka,sans-serif;font-size:20px;border-top:2px solid var(--line);padding-top:10px;margin-top:10px}
+.cmpbox{border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:#fff;font-family:Fredoka,sans-serif;font-size:16px}
+.cmpbox .cmp{margin:6px 6px 0 0}
+.warn{margin-top:8px;color:#d8434a;font-weight:600}
+.gsec{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.gsec h4{margin:0 0 6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.gin{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;margin:6px 0}
+.gin input,.gin select{width:80px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.gin select{width:64px}
+.gin input.ok,.gin select.ok{border-color:#2e9e5b;background:#e8f6ee}.gin input.no,.gin select.no{border-color:#d8434a;background:#fdeeee}
+.good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
+.mk{min-width:18px}
+.hintbox .ladder{display:inline-flex}
+
+/* ===== ideal gas law lab ===== */
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:12px 14px;margin-bottom:10px;line-height:1.5}
+.task .src{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--accent);margin-right:8px;vertical-align:2px}
+.frow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.frow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.frow .fb2{flex:1;min-width:0}
+.frow .fl{font-family:Fredoka,sans-serif;font-weight:500;font-size:18px;margin-bottom:6px}
+.chs{display:flex;flex-wrap:wrap;gap:8px}
+.chs button{font-family:Fredoka,sans-serif;font-size:17px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:6px 14px;cursor:pointer;color:var(--ink)}
+.chs button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.chs button.ok{border-color:#2e9e5b;background:#2e9e5b;color:#fff}
+.chs button.no{border-color:#d8434a;background:#d8434a;color:#fff}
+.nin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:19px}
+.nin input{width:120px;font-family:Fredoka,sans-serif;font-size:20px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink)}
+.nin input.ok{border-color:#2e9e5b;background:#e8f6ee}.nin input.no{border-color:#d8434a;background:#fdeeee}
+.fmark{font-weight:700;font-size:20px;min-width:22px;margin-top:2px}
+.mathl{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;margin:6px 0;line-height:1.5}
+.mathl b{font-weight:600}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;color:var(--accent)}
+.tip{font-size:14px;color:var(--muted);margin-top:6px}
+.dtab{border-collapse:separate;border-spacing:0;width:100%;margin-top:6px;font-family:Fredoka,sans-serif;font-size:18px}
+.dtab th{background:var(--accent);color:#fff;font-weight:600;padding:6px 8px}
+.dtab th:first-child{border-radius:10px 0 0 0}.dtab th:last-child{border-radius:0 10px 0 0}
+.dtab td{padding:6px 8px;text-align:center;border-bottom:2px solid #eef1f6}
+.dtab td input{width:90px;font-family:Fredoka,sans-serif;font-size:18px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:3px}
+.dtab td input.ok{border-color:#2e9e5b;background:#e8f6ee}.dtab td input.no{border-color:#d8434a;background:#fdeeee}
+.mapflow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:17px;margin:8px 0}
+.mapflow .bx{border:2px solid var(--line);border-radius:12px;padding:6px 12px;background:#fff;font-weight:600}
+.mapflow .bx.hi{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mapflow .ar{color:var(--accent);font-weight:600;text-align:center;line-height:1.1}
+.mapflow .ar small{display:block;font-size:13px}
+.excards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exc{border:2px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.exc .eh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.exc .eh svg{flex:none}
+.exc h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px;margin:0}
+.exc .tag{display:inline-block;font-family:Fredoka,sans-serif;font-size:13px;padding:2px 10px;border-radius:999px;color:#fff;margin-bottom:6px}
+.exc p{margin:4px 0;font-size:16px}
+.rv{border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;background:#fff}
+.rv .rq{font-size:18px;font-weight:700}
+.rv .ra{display:none;margin-top:8px;background:#e8f6ee;border-radius:12px;padding:8px 12px;font-size:17px}
+.rv.open .ra{display:block}
+.rv .btn{margin-top:8px}
+.bigeq{font-family:Fredoka,sans-serif;font-weight:600;font-size:34px;text-align:center;color:var(--accent);background:#f6f8fc;border-radius:14px;padding:10px;margin:8px 0}
+.ltab{border-collapse:collapse;width:100%;font-size:17px;margin-top:6px}
+.ltab td,.ltab th{border:2px solid #eef1f6;padding:6px 8px;text-align:center}
+.ltab th{background:#f3f6fb;font-family:Fredoka,sans-serif;font-weight:600}
+.subbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.subbar .btn.sel{background:var(--accent);color:#fff}
+.note{font-size:15px;color:var(--muted)}
+
+.hv-chg{background:#fde3cc;color:#b35a0c;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-ask{background:#d6efef;color:#0b6f71;font-weight:700;border-radius:6px;padding:0 4px}
+.hv-cst{border-bottom:3px dashed #8d99b0;font-weight:700;padding:0 2px}
+
+.tfhead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:18px;margin-bottom:4px}
+.tfrow{display:flex;align-items:flex-start;gap:10px;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin-top:10px;background:#fff}
+.tfrow.good{border-color:#2e9e5b;background:#f3fbf6}.tfrow.bad{border-color:#d8434a;background:#fdf4f4}
+.tfrow .fn{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;flex:none;margin-top:2px}
+.tfq{flex:1;font-size:18px;line-height:1.45}
+.tfx{font-size:16px;margin-top:6px;color:var(--ink)}
+.tfb{display:flex;gap:8px;flex:none}
+.tfbtn{width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;cursor:pointer;color:var(--ink)}
+.tfbtn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.tfbtn:disabled{cursor:default;opacity:.55}
+.tfbtn.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff;opacity:1}
+.tfbtn.wrong{background:#d8434a;border-color:#d8434a;color:#fff;opacity:1}
+
+/* ===== shared lab styles ===== */
+.objbar{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-left:8px solid var(--accent);border-radius:14px;padding:8px 14px;margin-bottom:12px;font-size:17px}
+.objbar b{font-family:Fredoka,sans-serif;font-weight:600;color:var(--accent);white-space:nowrap}
+.vhead{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;color:var(--accent);margin:18px 0 10px}
+.vhead svg{flex:none}
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.vid{border:2px solid var(--line);border-radius:18px;padding:8px 8px 10px;background:#fff;box-shadow:0 4px 0 var(--shadow)}
+.vbox{position:relative;width:100%;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#18233a}
+.vbox>button,.vbox>iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;padding:0;margin:0}
+.vbox>button{cursor:pointer;background:#18233a}
+.vbox img{width:100%;height:100%;object-fit:cover;display:block}
+.vplay{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(24,35,58,.78);border:3px solid #fff}
+.vplay:after{content:"";position:absolute;left:21px;top:15px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}
+.vdur{position:absolute;right:8px;bottom:8px;background:rgba(24,35,58,.85);color:#fff;font-family:Fredoka,sans-serif;font-size:14px;padding:2px 8px;border-radius:8px}
+.vt{font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;margin:8px 2px 2px}
+.vw{font-size:15px;color:var(--muted);margin:0 2px}
+.vlink{display:inline-block;margin:6px 2px 0;font-family:Fredoka,sans-serif;font-size:14px;color:var(--accent);text-decoration:none}
+.vlink:hover{text-decoration:underline}
+.qz{border:2px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+.qzh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:18px}
+.qzdots{display:flex;gap:6px;flex-wrap:wrap}
+.qzdots i{width:13px;height:13px;border-radius:50%;background:var(--line);display:block}
+.qzdots i.cur{background:var(--accent)}.qzdots i.ok{background:#2e9e5b}.qzdots i.no{background:#d8434a}
+.qzq{font-size:21px;font-weight:700;margin:12px 0 10px;line-height:1.4}
+.qzpic{display:flex;justify-content:center;margin:4px 0 12px}
+.qzopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:700px){.qzopts{grid-template-columns:1fr}}
+.qzb{display:flex;align-items:flex-start;gap:10px;text-align:left;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:18px;line-height:1.35;border:2px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 var(--shadow);color:var(--ink)}
+.qzb:hover:not(:disabled){border-color:var(--accent)}
+.qzb:disabled{cursor:default}
+.qzb .L{flex:none;width:28px;height:28px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.qzb.right{border-color:#2e9e5b;background:#e8f6ee}.qzb.right .L{background:#2e9e5b;color:#fff}
+.qzb.wrong{border-color:#d8434a;background:#fdeeee}.qzb.wrong .L{background:#d8434a;color:#fff}
+.qzfb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.qzfb.ok{background:#e8f6ee;border-color:#2e9e5b}.qzfb.no{background:#fdeeee;border-color:#d8434a}
+.qzend{text-align:center}
+.qzbig{font-family:Fredoka,sans-serif;font-weight:700;font-size:48px;color:var(--accent);line-height:1.1;margin:6px 0}
+.qzend .qzdots{justify-content:center;margin:10px 0}
+.qzrev{text-align:left;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.qzrev div{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.qzrev div.ok{border-color:#2e9e5b;background:#f3fbf6}.qzrev div.no{border-color:#d8434a;background:#fdf4f4}
+.ticket{border:3px dashed var(--accent);border-radius:18px;padding:12px;margin-bottom:10px}
+.ticket .tname{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px}
+.namerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-family:Fredoka,sans-serif;font-size:18px}
+.namerow input{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;min-width:220px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.ptab{border-collapse:separate;border-spacing:0;width:100%;font-size:17px;border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.ptab th{font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;padding:8px;color:#fff}
+.ptab td{padding:8px 10px;border-top:1px solid #e3e9f2;vertical-align:middle}
+.ptab td:first-child{font-family:Fredoka,sans-serif;font-weight:600;background:#f6f8fc;width:24%}
+.sw{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:-3px;margin:0 2px;border:1px solid rgba(24,35,58,.25)}
+.safe{margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.namerow select{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;min-width:140px;-webkit-appearance:none;appearance:none;background:#fff;color:var(--ink)}
+.namerow label{min-width:120px}
+.namerow input.no,.namerow select.no{border-color:#d8434a;background:#fdeeee}
+.exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
+.sendst{font-family:Fredoka,sans-serif;font-size:16px;color:var(--muted)}.sendst.ok{color:#2e9e5b;font-weight:600}.sendst.err{color:#d8434a;font-weight:600}
+/* ===== molecular structures lab ===== */
+#cvwrap{position:relative}
+#ov{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.wbin{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;width:6.4%;min-width:34px;font-family:Fredoka,sans-serif;font-weight:600;font-size:clamp(13px,1.8vw,20px);text-align:center;border:2px solid #8d99b0;border-radius:9px;padding:3px 2px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none;margin:0}
+.wbin.tot{border-color:var(--accent);border-width:3px;width:7.4%}
+#wbPairs{width:8%}
+.wbin.ok{border-color:#2e9e5b;background:#e8f6ee}.wbin.no{border-color:#d8434a;background:#fdeeee}
+.wbin:focus{outline:3px solid rgba(232,150,42,.45)}
+.sixsteps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media (max-width:700px){.sixsteps{grid-template-columns:1fr}}
+.ss{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:#fff;font-size:15px;line-height:1.35;transition:border-color .3s,background .3s}
+.ss>b{flex:none;width:28px;height:28px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.ss.on{border-color:var(--accent);background:#f3f8fb;box-shadow:0 0 0 3px rgba(15,139,141,.12)}.ss.on>b{background:var(--accent);color:#fff}
+.ss.done>b{background:#2e9e5b;color:#fff}
+.sst{display:block;font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;color:var(--ink)}
+.ssd{display:block;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <text x="29" y="35" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="16" fill="#d8434a">O</text>
+      <text x="12.5" y="35" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="13" fill="#5a6780">H</text>
+      <text x="45.5" y="35" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="13" fill="#5a6780">H</text>
+      <path d="M17 29.5 H23 M35 29.5 H41" stroke="#18233a" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="26.5" cy="17.5" r="1.8" fill="#18233a"/><circle cx="31.5" cy="17.5" r="1.8" fill="#18233a"/>
+      <circle cx="26.5" cy="41" r="1.8" fill="#18233a"/><circle cx="31.5" cy="41" r="1.8" fill="#18233a"/>
+    </svg>
+    <div><h1>Molecular Structures Lab</h1><div class="sub">Chapter 8 · Section 3 · Lewis structures in six steps · resonance · exceptions to the octet rule</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="objbar" id="obj"></div>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <div id="cvwrap"><canvas id="cv" width="800" height="500"></canvas><div id="ov"></div></div>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+      <div id="vids"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.globalAlpha=o.al==null?1:o.al;ctx.fillText(s,x,y);var w=ctx.measureText(s).width;ctx.globalAlpha=1;return w;}
+function tw(s,size,w){ctx.font=(w||600)+' '+size+'px Fredoka, sans-serif';return ctx.measureText(s).width;}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function card(x,y,w,h,fill,stroke){rr(x,y,w,h,14);ctx.fillStyle=fill||'#fff';ctx.fill();ctx.strokeStyle=stroke||LINE;ctx.lineWidth=2;ctx.stroke();}
+function ball(x,y,r,c,edge){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();if(r>2.5){ctx.strokeStyle=edge||'rgba(24,35,58,.45)';ctx.lineWidth=r>6?2:1.2;ctx.stroke();}
+ if(r>5){ctx.fillStyle='rgba(255,255,255,.45)';ctx.beginPath();ctx.arc(x-r*.35,y-r*.35,r*.3,0,Math.PI*2);ctx.fill();}}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),s=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+var rnd=Math.random;
+function gauss(){var u=1-rnd(),v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(6.283185*v);}
+
+/* ================= particle engine ================= */
+/* box: {x0,y0,x1,y1}; particle {x,y,vx,vy,r,a,w,k} */
+function mkParts(n,r,box,v,kind){var P=[],tries=0;while(P.length<n&&tries<6000){tries++;var x=lerp(box.x0+r,box.x1-r,rnd()),y=lerp(box.y0+r,box.y1-r,rnd());
+  if(P.every(function(q){return (x-q.x)*(x-q.x)+(y-q.y)*(y-q.y)>(r+q.r+3)*(r+q.r+3);})){var a=rnd()*6.283;P.push({x:x,y:y,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:rnd()*6.283,w:(rnd()-.5)*3,k:kind||0});}}
+ return P;}
+function addPart(P,r,box,v,kind){var p=mkParts(1,r,box,v,kind)[0];if(!p){var a=rnd()*6.283;p={x:lerp(box.x0+r,box.x1-r,rnd()),y:box.y0+r+2,vx:v*Math.cos(a),vy:v*Math.sin(a),r:r,a:0,w:(rnd()-.5)*3,k:kind||0};}P.push(p);return p;}
+/* o: e (restitution), att (attraction accel), rng (range factor), g (gravity), vt (target rms speed), kT (thermostat rate), coll (bool), hit(fn) */
+function stepParts(P,box,dt,o){o=o||{};var e=o.e==null?1:o.e,n=P.length,coll=o.coll!==false,sub=Math.max(1,Math.ceil(dt/0.008)),h=dt/sub;
+ for(var s=0;s<sub;s++){
+  if(o.att){for(var i=0;i<n;i++)for(var j=i+1;j<n;j++){var a=P[i],b=P[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy),lim=a.r+b.r;
+    if(d>lim&&d<lim*(o.rng||2)){var f=o.att*h/d;a.vx+=f*dx;a.vy+=f*dy;b.vx-=f*dx;b.vy-=f*dy;}}}
+  for(i=0;i<n;i++){var p=P[i],gg=p.g!=null?p.g:o.g;if(gg)p.vy+=gg*h;p.x+=p.vx*h;p.y+=p.vy*h;p.a+=p.w*h;var r=p.r,ew=o.ew==null?1:o.ew;
+   if(p.x<box.x0+r){p.x=box.x0+r;p.vx=Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'l');}
+   if(p.x>box.x1-r){p.x=box.x1-r;p.vx=-Math.abs(p.vx)*ew;if(o.hit)o.hit(p,'r');}
+   if(p.y<box.y0+r){p.y=box.y0+r;p.vy=Math.abs(p.vy)*ew+(box.vy0||0);if(o.hit)o.hit(p,'t');}
+   if(p.y>box.y1-r){p.y=box.y1-r;p.vy=-Math.abs(p.vy)*(gg?ew*.8:ew);if(o.hit)o.hit(p,'b');}}
+  if(coll){for(i=0;i<n;i++)for(j=i+1;j<n;j++){a=P[i];b=P[j];dx=b.x-a.x;dy=b.y-a.y;d=Math.sqrt(dx*dx+dy*dy);lim=a.r+b.r;
+    if(d>0&&d<lim){var nx=dx/d,ny=dy/d,ma=a.m||1,mb=b.m||1,rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+     if(rv<0){var J=-(1+e)*rv/(1/ma+1/mb);a.vx-=J*nx/ma;a.vy-=J*ny/ma;b.vx+=J*nx/mb;b.vy+=J*ny/mb;if(o.bump)o.bump(a,b);}
+     var ov=(lim-d)/2;a.x-=ov*nx;a.y-=ov*ny;b.x+=ov*nx;b.y+=ov*ny;}}}}
+ if(o.lang&&o.vt!=null){var gm=o.lang,sg=Math.sqrt(gm*o.vt*o.vt*dt);P.forEach(function(p){p.vx+=-gm*p.vx*dt+sg*gauss();p.vy+=-gm*p.vy*dt+sg*gauss();});return;}
+ if(o.vt!=null&&n){var ke=0;P.forEach(function(p){ke+=p.vx*p.vx+p.vy*p.vy;});ke=Math.sqrt(ke/n);var sc=1+(o.kT||2)*dt*(o.vt/Math.max(ke,1)-1);sc=clamp(sc,.9,1.1);P.forEach(function(p){p.vx*=sc;p.vy*=sc;});}}
+function near(P,f){var out=[];for(var i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j];if(Math.hypot(b.x-a.x,b.y-a.y)<(a.r+b.r)*f)out.push([a,b]);}return out;}
+/* ================= number helpers ================= */
+var SUPS={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-'};
+function parseNum(s){if(s==null)return null;s=String(s).trim();if(s==='')return null;s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]/g,function(c){return SUPS[c];}).replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');
+ s=s.replace(/[×xX*]10\^?(-?\d+)/,'e$1');var v=Number(s);if(isNaN(v))v=parseFloat(s);return isNaN(v)?null:v;}
+function okNum(x,f){if(x===null)return false;if(f.tolA!=null)return Math.abs(x-f.want)<=f.tolA;return Math.abs(x-f.want)<=Math.abs(f.want)*(f.tol||.012);}
+function nearV(x,v,tol){return x!==null&&Math.abs(x-v)<=Math.abs(v)*(tol||.02);}
+
+/* ================= practice engine ================= */
+/* problem: {src,q,show:[[title,html]],fields:[{t:'c',lab,opts,ok,why,bad:{i:msg}} | {t:'n',lab,pre,unit,want,tol,tolA,alt:[[v,msg]],why}],ans,sense,mode,hint} */
+function fieldHtml(f,k){var h='<div class="frow" id="fr'+k+'"><span class="fn">'+(k+1)+'</span><div class="fb2"><div class="fl">'+f.lab+'</div>';
+ if(f.t==='c')h+='<div class="chs" data-k="'+k+'">'+f.opts.map(function(o,i){return '<button data-i="'+i+'">'+o+'</button>';}).join('')+'</div>';
+ else h+='<div class="nin">'+(f.pre||'')+'<input id="fi'+k+'" inputmode="decimal" autocomplete="off" placeholder="?"> '+(f.unit||'')+'</div>';
+ return h+'</div><span class="fmark" id="fm'+k+'"></span></div>';}
+function probUI(P){if(P.custom&&(P.mode||'show')==='try'){P.tryUI();return;}if(P.custom){var ov0=$('ov');if(ov0)ov0.innerHTML='';$('controls').innerHTML='';cv.style.touchAction='';}var mode=P.mode||'show',st=P.st||0,h='';
+ h+='<div class="modebar"><div class="seg"><button id="mShow"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mTry"'+(mode==='try'?' class="on"':'')+'>My turn</button></div><span class="small">'+(mode==='show'?'Step by step. Press Next step.':'Answer each part, then press Check.')+'</span></div>';
+ h+='<div class="task"><span class="src">'+P.src+'</span>'+P.q+'</div>';
+ if(mode==='show'){var N=P.show.length;
+  h+='<div class="steps3">'+P.show.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+  h+='<div class="stepbar"><button class="btn" id="sBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="sNext">'+(st===0?'Start ▶':'Next step ▶')+'</button>':'<button class="btn fill" id="sTry">Now try it yourself ▶</button>')+'<div class="stepdots">'+P.show.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';}
+ else{h+=(P.fields.some(function(f){return f.t==='n';})?'<div class="tip">Type numbers like 0.0459, 2800 or 2.8e3 (= 2.8 × 10³).</div>':'')+P.fields.map(fieldHtml).join('');
+  h+='<div class="stepbar">'+(P.solved?'':'<button class="btn fill" id="pChk">Check</button><button class="btn" id="pHint">Hint</button><button class="btn" id="pClr">Clear</button>')+(P.next?'<button class="btn fill" id="pNext"'+(P.solved?'':' style="display:none"')+'>Next ▶</button>':'')+'</div>';
+  h+='<div class="hintbox" id="pHint2">'+(P.hint||P.fields.map(function(f){return f.why;}).filter(Boolean).join(' · '))+'</div><div class="feedback" id="pFb">'+(P.solved?solvedMsg(P):'')+'</div>';}
+ $('panel').innerHTML=h;
+ $('mShow').onclick=function(){P.mode='show';P.st=0;probUI(P);};$('mTry').onclick=function(){P.mode='try';probUI(P);};
+ if(mode==='show'){$('sBack').onclick=function(){P.st=st-1;probUI(P);};var n=$('sNext');if(n)n.onclick=function(){P.st=st+1;probUI(P);if(P.onShow)P.onShow(P.st);};var t=$('sTry');if(t)t.onclick=function(){P.mode='try';probUI(P);};}
+ else{if(P.solved){P.fields.forEach(function(f,k){fill(P,f,k);});}
+  Array.prototype.forEach.call(document.querySelectorAll('.chs'),function(g){Array.prototype.forEach.call(g.children,function(b){b.onclick=function(){if(P.solved)return;Array.prototype.forEach.call(g.children,function(x){x.classList.remove('on','ok','no');});b.classList.add('on');};});});
+  var c=$('pChk');if(c){c.onclick=function(){probCheck(P);};$('pHint').onclick=function(){$('pHint2').classList.toggle('on');};$('pClr').onclick=function(){probUI(P);};}
+  var nx=$('pNext');if(nx)nx.onclick=function(){P.next();};}}
+function fill(P,f,k){if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] button[data-i="'+f.ok+'"]');if(b)b.classList.add('ok');}else{var e=$('fi'+k);e.value=f.show||String(f.want);e.classList.add('ok');e.disabled=true;}$('fm'+k).innerHTML='<span class="good2">✓</span>';}
+function solvedMsg(P){return '<span class="good">Well done! '+P.ans+'</span>'+(P.sense?'<div class="small" style="font-size:16px;margin-top:4px">'+P.sense+'</div>':'');}
+function probCheck(P){var msgs=[],all=true;
+ P.fields.forEach(function(f,k){var ok,msg=null,filled=true;
+  if(f.t==='c'){var b=document.querySelector('.chs[data-k="'+k+'"] .on, .chs[data-k="'+k+'"] .ok, .chs[data-k="'+k+'"] .no'),i=b?+b.getAttribute('data-i'):-1;filled=i>=0;ok=i===f.ok;
+   if(b){b.classList.remove('on','ok','no');b.classList.add(ok?'ok':'no');}
+   if(!ok)msg=!filled?'Part '+(k+1)+': choose an answer.':((f.bad&&f.bad[i])||f.why);}
+  else{var e=$('fi'+k),x=parseNum(e.value);filled=x!==null;ok=okNum(x,f);e.classList.toggle('ok',ok);e.classList.toggle('no',!ok&&filled);
+   if(!ok){if(!filled)msg='Part '+(k+1)+': type a number.';else{(f.alt||[]).forEach(function(a){if(!msg&&nearV(x,a[0],a[2]||.02))msg=a[1];});if(!msg)msg=f.why;}}}
+  $('fm'+k).innerHTML=ok?'<span class="good2">✓</span>':'<span class="bad2">✗</span>';
+  if(!ok){all=false;if(msg)msgs.push('<b>Part '+(k+1)+':</b> '+msg.replace(/^Part \d+: /,''));}});
+ if(all){P.solved=true;if(P.onSolve)P.onSolve();renderSteps();probUI(P);return;}
+ $('pFb').innerHTML='<span class="bad">Not yet. Fix the parts marked ✗.</span><ul>'+msgs.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul>';}
+
+/* ================= lesson cards ================= */
+function cardsUI(L){var st=L.st||0,N=L.cards.length,h='<div class="steps3">'+L.cards.map(function(c,k){return '<div class="st'+(st>=k+1?' on':'')+(st===k+1?' cur':'')+'"><div class="sh"><span class="n">'+(k+1)+'</span>'+c[0]+'</div><div class="ln">'+c[1]+'</div></div>';}).join('')+'</div>';
+ h+='<div class="stepbar"><button class="btn" id="cBack"'+(st===0?' disabled':'')+'>◀ Back</button>'+(st<N?'<button class="btn fill" id="cNext">'+(st===0?'Start ▶':'Next ▶')+'</button>':(L.next?'<button class="btn fill" id="cGo">Next ▶</button>':''))+'<div class="stepdots">'+L.cards.map(function(c,k){return '<i class="'+(k<st?'on':'')+'"></i>';}).join('')+'</div></div>';
+ $('panel').innerHTML=h;$('cBack').onclick=function(){L.st=st-1;cardsUI(L);if(L.on)L.on(L.st);};var n=$('cNext');if(n)n.onclick=function(){L.st=st+1;cardsUI(L);if(L.on)L.on(L.st);};var g=$('cGo');if(g)g.onclick=function(){L.next();};
+ if(L.bind)L.bind();}
+function revealUI(items){$('panel').innerHTML=items.map(function(it,k){return '<div class="rv" id="rv'+k+'"><div class="rq">'+it[0]+'</div><div class="ra">'+it[1]+'</div><button class="btn" data-k="'+k+'">Show answer</button></div>';}).join('');
+ Array.prototype.forEach.call(document.querySelectorAll('.rv .btn'),function(b){b.onclick=function(){var r=$('rv'+b.dataset.k);r.classList.toggle('open');b.textContent=r.classList.contains('open')?'Hide answer':'Show answer';};});}
+
+/* ================= controls helpers ================= */
+function ctlButtons(list){$('controls').innerHTML=list.map(function(b,i){return '<button class="btn'+(b.fill?' fill':'')+(b.sel?' sel':'')+'" id="cb'+i+'">'+b.t+'</button>';}).join('');list.forEach(function(b,i){$('cb'+i).onclick=b.f;});}
+function ctlSlider(id,lab,min,max,step,val,fmt,on){return {html:'<label class="ctl">'+lab+' <input type="range" id="'+id+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'"><output id="'+id+'o">'+fmt(val)+'</output></label>',bind:function(){var e=$(id);e.oninput=function(){var v=+e.value;$(id+'o').textContent=fmt(v);on(v);};}};}
+
+/* ================= shared lab drawing ================= */
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function each(sel,f){Array.prototype.forEach.call(document.querySelectorAll(sel),f);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var CLEAR='rgba(176,208,240,.42)',GLASS='#7d8aa3';
+function beakerPath(x,y,w,h){var r=16;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+h-r);ctx.arcTo(x,y+h,x+r,y+h,r);ctx.lineTo(x+w-r,y+h);ctx.arcTo(x+w,y+h,x+w,y+h-r,r);ctx.lineTo(x+w,y);}
+function beaker(x,y,w,h,lvl,liq){var top=y+h*(1-lvl);
+ ctx.save();beakerPath(x,y,w,h);ctx.closePath();ctx.fillStyle='rgba(235,243,252,.25)';ctx.fill();ctx.clip();
+ ctx.fillStyle=liq||CLEAR;ctx.fillRect(x-2,top,w+4,y+h-top+2);ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillRect(x-2,top,w+4,3);ctx.restore();
+ ctx.strokeStyle=GLASS;ctx.lineWidth=3;beakerPath(x,y,w,h);ctx.stroke();seg(x-8,y-5,x,y,GLASS,3);seg(x+w,y,x+w+8,y-5,GLASS,3);
+ for(var i=1;i<=3;i++)seg(x+w-22,y+h-i*h/4.2,x+w-8,y+h-i*h/4.2,'rgba(125,138,163,.55)',2);
+ return top;}
+function tubePath(x,y,w,h){var r=w/2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+h-r);ctx.arc(x+r,y+h-r,r,Math.PI,0,true);ctx.lineTo(x+w,y);}
+function bubStep(B,dt,topY){for(var i=B.length-1;i>=0;i--){var b=B[i];b.y-=b.v*dt;b.x+=Math.sin((b.y+b.p)*.08)*.5;if(b.y<topY+b.r)B.splice(i,1);}}
+function bubDraw(B){ctx.lineWidth=1.5;ctx.strokeStyle='rgba(90,103,128,.8)';ctx.fillStyle='rgba(255,255,255,.75)';B.forEach(function(b){ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.283);ctx.fill();ctx.stroke();});}
+function ionPill(x,y,lab,k,al,size){size=size||14;al=al==null?1:al;var w=tw(lab,size)+14,h=size+11;ctx.globalAlpha=al;rr(x-w/2,y-h/2,w,h,h/2);ctx.fillStyle=k>0?'#fde3e8':(k<0?'#dde7fb':'#eef1f6');ctx.fill();ctx.strokeStyle=k>0?CORAL:(k<0?BLUE:'#8d99b0');ctx.lineWidth=2;ctx.stroke();txt(lab,x,y+1,{s:size,c:k>0?'#b8364f':(k<0?'#22449a':INK),al:al});ctx.globalAlpha=1;return w;}
+function wsm(x,y,a,al){ctx.globalAlpha=al;[-.91,.91].forEach(function(s){ctx.fillStyle='#ffffff';ctx.strokeStyle='rgba(90,103,128,.7)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x+9*Math.cos(a+s),y+9*Math.sin(a+s),4,0,6.283);ctx.fill();ctx.stroke();});
+ ctx.fillStyle='#e98a83';ctx.beginPath();ctx.arc(x,y,6.5,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+function mkWater(n,b){var W=[];for(var i=0;i<n;i++)W.push({x:lerp(b.x0,b.x1,rnd()),y:lerp(b.y0,b.y1,rnd()),vx:(rnd()-.5)*30,vy:(rnd()-.5)*30,a:rnd()*6.28,w:(rnd()-.5)*2});return W;}
+function stepWater(W,b,dt,al){W.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.w*dt;if(p.x<b.x0||p.x>b.x1)p.vx*=-1;if(p.y<b.y0||p.y>b.y1)p.vy*=-1;p.x=clamp(p.x,b.x0,b.x1);p.y=clamp(p.y,b.y0,b.y1);wsm(p.x,p.y,p.a,al==null?.35:al);});}
+function wander(P,b,dt,sp){P.forEach(function(p){p.vx+=gauss()*sp*dt*3;p.vy+=gauss()*sp*dt*3;var v=Math.hypot(p.vx,p.vy);if(v>sp){p.vx*=sp/v;p.vy*=sp/v;}p.x+=p.vx*dt;p.y+=p.vy*dt;
+ if(p.x<b.x0){p.x=b.x0;p.vx=Math.abs(p.vx);}if(p.x>b.x1){p.x=b.x1;p.vx=-Math.abs(p.vx);}if(p.y<b.y0){p.y=b.y0;p.vy=Math.abs(p.vy);}if(p.y>b.y1){p.y=b.y1;p.vy=-Math.abs(p.vy);}});}
+function hexRgb(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function mixHex(a,b,t){var A=hexRgb(a),B=hexRgb(b);return 'rgb('+[0,1,2].map(function(i){return Math.round(lerp(A[i],B[i],t));}).join(',')+')';}
+var LBLUE='#4a74d9',LRED='#e0525f';
+function strip(x,y,s,wet,wc,h,w){h=h||150;w=w||26;var wh=h*.4*wet;ctx.fillStyle='#8d99b0';rr(x-w/2-6,y-14,w+12,16,5);ctx.fill();
+ rr(x-w/2,y,w,h,5);ctx.fillStyle=s==='b'?LBLUE:LRED;ctx.fill();
+ if(wh>0){ctx.save();rr(x-w/2,y,w,h,5);ctx.clip();ctx.fillStyle=wc==='b'?LBLUE:LRED;ctx.fillRect(x-w/2,y+h-wh,w,wh);ctx.fillStyle='rgba(24,35,58,.13)';ctx.fillRect(x-w/2,y+h-wh,w,wh);ctx.restore();}
+ ctx.strokeStyle='rgba(24,35,58,.35)';ctx.lineWidth=1.5;rr(x-w/2,y,w,h,5);ctx.stroke();}
+var ELC={H:['#f4f6fa','#18233a',14],O:['#e25a4f','#fff',21],Cl:['#3fb36b','#fff',24],F:['#8cc63f','#18233a',19],Na:['#8a4fbf','#fff',24],N:['#2b59c3','#fff',21],C:['#3a3f4b','#fff',20],S:['#e8c22a','#18233a',23],P:['#e8962a','#fff',23],B:['#e3a07a','#18233a',20]};
+function atom(x,y,e,al){var d=ELC[e];al=al==null?1:al;ctx.globalAlpha=al;ball(x,y,d[2],d[0],'rgba(24,35,58,.5)');txt(e,x,y+1,{s:d[2]>16?18:14,c:d[1],al:al});ctx.globalAlpha=1;}
+function bondL(x1,y1,x2,y2,ord,al,dash){ctx.globalAlpha=al==null?1:al;if(ord===2){var a=Math.atan2(y2-y1,x2-x1),ox=-Math.sin(a)*4.5,oy=Math.cos(a)*4.5;seg(x1+ox,y1+oy,x2+ox,y2+oy,'#5a6780',4);seg(x1-ox,y1-oy,x2-ox,y2-oy,'#5a6780',4);}else seg(x1,y1,x2,y2,'#5a6780',5,dash);ctx.globalAlpha=1;}
+function badge(x,y,s,c,al){ctx.globalAlpha=al==null?1:al;ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,12,0,6.283);ctx.fill();txt(s,x,y+1,{s:18,c:'#fff',al:al==null?1:al});ctx.globalAlpha=1;}
+
+/* ================= videos ================= */
+var VID={};
+var PLAYICO='<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="4" width="24" height="18" rx="5" fill="currentColor"/><path d="M10.5 8.5 L17.5 13 L10.5 17.5Z" fill="#fff"/></svg>';
+function vidHtml(keys){return '<div class="vhead">'+PLAYICO+'Watch the real experiment</div><div class="vids">'+keys.map(function(k){var v=VID[k];
+ return '<div class="vid"><div class="vbox" id="vb_'+v[0]+'"><button data-v="'+v[0]+'" data-s="'+(v[4]||'')+'" data-e="'+(v[5]||'')+'" aria-label="Play: '+esc(v[2])+'"><img src="https://i.ytimg.com/vi/'+v[0]+'/hqdefault.jpg" alt=""><span class="vplay"></span><span class="vdur">'+v[1]+'</span></button></div><div class="vt">'+v[2]+'</div><div class="vw">'+v[3]+'</div><a class="vlink" href="https://www.youtube.com/watch?v='+v[0]+(v[4]?'&t='+v[4]+'s':'')+'" target="_blank" rel="noopener">Open on YouTube ↗</a></div>';}).join('')+'</div>';}
+function vidBind(){each('.vbox button',function(b){b.onclick=function(){var id=b.getAttribute('data-v'),st=b.getAttribute('data-s'),en=b.getAttribute('data-e');b.parentNode.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1'+(st?'&start='+st:'')+(en?'&end='+en:'')+'" title="Experiment video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';};});}
+
+/* ================= LEWIS ENGINE ================= */
+function ACC(){return TABS[tabI].c;}
+var EL2={H:{v:1,en:2.20,p:1,g:1,n:'hydrogen'},B:{v:3,en:2.04,p:2,g:13,n:'boron'},C:{v:4,en:2.55,p:2,g:14,n:'carbon'},N:{v:5,en:3.04,p:2,g:15,n:'nitrogen'},O:{v:6,en:3.44,p:2,g:16,n:'oxygen'},
+ F:{v:7,en:3.98,p:2,g:17,n:'fluorine'},Si:{v:4,en:1.90,p:3,g:14,n:'silicon'},P:{v:5,en:2.19,p:3,g:15,n:'phosphorus'},S:{v:6,en:2.58,p:3,g:16,n:'sulfur'},Cl:{v:7,en:3.16,p:3,g:17,n:'chlorine'},Xe:{v:8,en:2.60,p:5,g:18,n:'xenon'}};
+var ECOL={H:'#5a6780',B:'#b5651d',C:'#18233a',N:'#2b59c3',O:'#d8434a',F:'#3f8f1f',Si:'#8a6d3b',P:'#c9701a',S:'#a8860a',Cl:'#2e9e5b',Xe:'#8a4fbf'};
+var R3=.866;
+/* a: [symbol, x, y] in bond-length units · e: bonds [i,j] · q: charge · fill: order for lone pairs on end atoms */
+var MOL={
+ NH3:{f:'NH₃',nm:'ammonia',a:[['N',0,0],['H',-1,0],['H',1,0],['H',0,1]],e:[[0,1],[0,2],[0,3]]},
+ H2O:{f:'H₂O',nm:'water',a:[['O',0,0],['H',-1,0],['H',1,0]],e:[[0,1],[0,2]]},
+ CH4:{f:'CH₄',nm:'methane',a:[['C',0,0],['H',0,-1],['H',-1,0],['H',1,0],['H',0,1]],e:[[0,1],[0,2],[0,3],[0,4]]},
+ CO2:{f:'CO₂',nm:'carbon dioxide',a:[['C',0,0],['O',-1,0],['O',1,0]],e:[[0,1],[0,2]]},
+ HCN:{f:'HCN',nm:'hydrogen cyanide',a:[['C',0,0],['H',-1,0],['N',1,0]],e:[[0,1],[0,2]]},
+ N2:{f:'N₂',nm:'nitrogen',a:[['N',-.5,0],['N',.5,0]],e:[[0,1]]},
+ BH3:{f:'BH₃',nm:'borane',a:[['B',0,0],['H',0,-1],['H',-R3,.5],['H',R3,.5]],e:[[0,1],[0,2],[0,3]]},
+ NF3:{f:'NF₃',nm:'nitrogen trifluoride',a:[['N',0,0],['F',-1,0],['F',1,0],['F',0,1]],e:[[0,1],[0,2],[0,3]]},
+ C2H4:{f:'C₂H₄',nm:'ethylene',a:[['C',-.5,0],['C',.5,0],['H',-1.1,-.8],['H',-1.1,.8],['H',1.1,-.8],['H',1.1,.8]],e:[[0,1],[0,2],[0,3],[1,4],[1,5]]},
+ CS2:{f:'CS₂',nm:'carbon disulfide',a:[['C',0,0],['S',-1,0],['S',1,0]],e:[[0,1],[0,2]]},
+ PO4:{f:'PO₄³⁻',nm:'phosphate ion',q:-3,a:[['P',0,0],['O',0,-1],['O',-1,0],['O',1,0],['O',0,1]],e:[[0,1],[0,2],[0,3],[0,4]]},
+ NH4:{f:'NH₄⁺',nm:'ammonium ion',q:1,a:[['N',0,0],['H',0,-1],['H',-1,0],['H',1,0],['H',0,1]],e:[[0,1],[0,2],[0,3],[0,4]]},
+ ClO4:{f:'ClO₄⁻',nm:'perchlorate ion',q:-1,a:[['Cl',0,0],['O',0,-1],['O',-1,0],['O',1,0],['O',0,1]],e:[[0,1],[0,2],[0,3],[0,4]]},
+ OH:{f:'OH⁻',nm:'hydroxide ion',q:-1,a:[['O',-.5,0],['H',.5,0]],e:[[0,1]]},
+ NO3:{f:'NO₃⁻',nm:'nitrate ion',q:-1,a:[['N',0,0],['O',0,-1],['O',-R3,.5],['O',R3,.5]],e:[[0,1],[0,2],[0,3]]},
+ CO3:{f:'CO₃²⁻',nm:'carbonate ion',q:-2,a:[['C',0,0],['O',0,-1],['O',-R3,.5],['O',R3,.5]],e:[[0,1],[0,2],[0,3]]},
+ O3:{f:'O₃',nm:'ozone',a:[['O',0,-.25],['O',-.95,.3],['O',.95,.3]],e:[[0,1],[0,2]]},
+ SO2:{f:'SO₂',nm:'sulfur dioxide',a:[['S',0,-.25],['O',-.95,.3],['O',.95,.3]],e:[[0,1],[0,2]]},
+ NO2m:{f:'NO₂⁻',nm:'nitrite ion',q:-1,a:[['N',0,-.25],['O',-.95,.3],['O',.95,.3]],e:[[0,1],[0,2]]},
+ NO2:{f:'NO₂',nm:'nitrogen dioxide',a:[['N',0,-.25],['O',-.95,.3],['O',.95,.3]],e:[[0,1],[0,2]]},
+ ClO2:{f:'ClO₂',nm:'chlorine dioxide',a:[['Cl',0,-.25],['O',-.95,.3],['O',.95,.3]],e:[[0,1],[0,2]]},
+ BF3:{f:'BF₃',nm:'boron trifluoride',a:[['B',0,0],['F',0,-1],['F',-R3,.5],['F',R3,.5]],e:[[0,1],[0,2],[0,3]]},
+ XeF4:{f:'XeF₄',nm:'xenon tetrafluoride',a:[['Xe',0,0],['F',-.75,-.75],['F',.75,-.75],['F',-.75,.75],['F',.75,.75]],e:[[0,1],[0,2],[0,3],[0,4]]},
+ ClF3:{f:'ClF₃',nm:'chlorine trifluoride',a:[['Cl',0,0],['F',-1,0],['F',1,0],['F',0,1]],e:[[0,1],[0,2],[0,3]]},
+ PCl5:{f:'PCl₅',nm:'phosphorus pentachloride',a:[['P',0,0],['Cl',0,-1],['Cl',-.95,-.31],['Cl',.95,-.31],['Cl',-.59,.81],['Cl',.59,.81]],e:[[0,1],[0,2],[0,3],[0,4],[0,5]]},
+ SF6:{f:'SF₆',nm:'sulfur hexafluoride',a:[['S',0,0],['F',0,-1],['F',-R3,-.5],['F',R3,-.5],['F',-R3,.5],['F',R3,.5],['F',0,1]],e:[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6]]}};
+Object.keys(MOL).forEach(function(k){MOL[k].id=k;});
+function chg(q){if(!q)return '';var n=Math.abs(q);return (n>1?n:'')+(q>0?'+':'−');}
+var LC={};
+/* works out the Lewis structure with the six steps; donor = which end atom gives the first double bond (for resonance) */
+function lewis(m,donor){var key=m.id+'|'+(donor==null?'':donor);if(LC[key])return LC[key];
+ var n=m.a.length,deg=[],nb=[],i;for(i=0;i<n;i++){deg.push(0);nb.push([]);}
+ m.e.forEach(function(b){deg[b[0]]++;deg[b[1]]++;nb[b[0]].push(b[1]);nb[b[1]].push(b[0]);});
+ var val=m.a.reduce(function(s,x){return s+EL2[x[0]].v;},0),ve=val-(m.q||0),pairs=Math.floor(ve/2),odd=ve%2,E=m.e.length;
+ var ord=m.e.map(function(){return 1;}),lp=m.a.map(function(){return 0;}),rem=pairs-E,lpOrder=[],oddAt=-1;
+ var ends=[],cen=[];m.a.forEach(function(x,j){if(x[0]==='H')return;(deg[j]===1&&n>2?ends:cen).push(j);});
+ if(n===2){ends=m.a.map(function(x,j){return j;}).filter(function(j){return m.a[j][0]!=='H';});cen=[];}
+ if(m.fill)ends=m.fill;
+ function bk(x,y){for(var k=0;k<E;k++){var b=m.e[k];if((b[0]===x&&b[1]===y)||(b[0]===y&&b[1]===x))return k;}return -1;}
+ function cnt(x){var s=0;m.e.forEach(function(b,k){if(b[0]===x||b[1]===x)s+=2*ord[k];});return s+2*lp[x]+(oddAt===x?1:0);}
+ ends.forEach(function(j){while(rem>0&&cnt(j)<8){lp[j]++;rem--;lpOrder.push(j);}});
+ cen.forEach(function(j){while(rem>0&&cnt(j)<8){lp[j]++;rem--;lpOrder.push(j);}});
+ while(rem>0){var c0=cen.length?cen[0]:ends[0];lp[c0]++;rem--;lpOrder.push(c0);}
+ if(odd)oddAt=cen.length?cen[0]:ends[ends.length-1];
+ var lp5=lp.slice(),after5=m.a.map(function(x,j){return cnt(j);}),conv=[],firstC=null,guard=0,changed=true;
+ while(changed&&guard++<20){changed=false;
+  var order=cen.concat(ends);
+  for(var oi=0;oi<order.length&&!changed;oi++){var a=order[oi];if(m.a[a][0]==='B'||m.a[a][0]==='H')continue;
+   if(cnt(a)<8&&cnt(a)+2<=8){var cands=nb[a].filter(function(j){return lp[j]>0&&m.a[j][0]!=='H';});
+    cands.sort(function(x,y){return (ord[bk(a,x)]-ord[bk(a,y)])||(lp[y]-lp[x]);});
+    if(!cands.length)continue;
+    if(firstC==null){var c0b=cands[0];firstC={a:a,list:cands.filter(function(j){return m.a[j][0]===m.a[c0b][0]&&ord[bk(a,j)]===ord[bk(a,c0b)]&&lp[j]===lp[c0b];})};}
+    var d=cands[0];if(donor!=null&&conv.length===0&&cands.indexOf(donor)>=0)d=donor;
+    var k=bk(a,d);lp[d]--;ord[k]++;conv.push({d:d,a:a,k:k});changed=true;}}}
+ /* lone-pair directions: as far as possible from the bonds and from each other */
+ var slots=m.a.map(function(x,j){var dirs=nb[j].map(function(o){return Math.atan2(m.a[o][2]-x[2],m.a[o][1]-x[1]);}),need=lp5[j]+(oddAt===j?1:0),out=[];
+  for(var s=0;s<need;s++){var best=null,bd=-1;for(var c=0;c<24;c++){var an=-Math.PI/2+c*Math.PI/12,dm=7;dirs.concat(out).forEach(function(q){var df=Math.abs(((an-q)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI);dm=Math.min(dm,df);});if(dm>bd+1e-6){bd=dm;best=an;}}out.push(best);}
+  return out;});
+ /* which slot each converted lone pair came from (the last free slot of the donor) */
+ var gone={},used=m.a.map(function(){return 0;});conv.forEach(function(c){var s=lp5[c.d]-1-used[c.d];used[c.d]++;c.slot=s;gone[c.d+':'+s]=1;});
+ var fin=m.a.map(function(x,j){return cnt(j);});
+ var L={m:m,ve:ve,val:val,pairs:pairs,odd:odd,E:E,ord:ord,lp:lp,lp5:lp5,lpOrder:lpOrder,oddAt:oddAt,conv:conv,slots:slots,gone:gone,cen:cen,ends:ends,after5:after5,fin:fin,firstC:firstC,deg:deg,nb:nb};
+ L.cnt=fin;LC[key]=L;return L;}
+function resList(m){var L=lewis(m);if(!L.firstC||L.firstC.list.length<2||L.conv.length!==1)return [L];return L.firstC.list.map(function(d){return lewis(m,d);});}
+function centralOf(L){return L.cen.length?L.cen:[];}
+function elGroups(m){var g={},o=[];m.a.forEach(function(x){if(!g[x[0]]){g[x[0]]=0;o.push(x[0]);}g[x[0]]++;});return o.map(function(s){return [s,g[s]];});}
+function veText(L){var m=L.m,t=elGroups(m).map(function(g){return g[0]+' '+(g[1]>1?g[1]+' × '+EL2[g[0]].v:EL2[g[0]].v);}).join(' + ');
+ if(m.q)t+=(m.q<0?' + ':' − ')+Math.abs(m.q)+' ('+chg(m.q)+' charge)';return t+' = '+L.ve+' e⁻';}
+
+/* ---------- drawing ---------- */
+function lpd(x,y,a,d,al,sc,col){sc=sc||1;var px=x+d*Math.cos(a),py=y+d*Math.sin(a),ox=-Math.sin(a)*5*sc,oy=Math.cos(a)*5*sc;ctx.globalAlpha=al==null?1:al;ctx.fillStyle=col||INK;
+ ctx.beginPath();ctx.arc(px+ox,py+oy,3.3*sc,0,6.283);ctx.fill();ctx.beginPath();ctx.arc(px-ox,py-oy,3.3*sc,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+function edot(x,y,sc,col,al){ctx.globalAlpha=al==null?1:al;ctx.fillStyle=col||INK;ctx.beginPath();ctx.arc(x,y,3.4*(sc||1),0,6.283);ctx.fill();ctx.globalAlpha=1;}
+function bondLines(p,q,o,sz,al,col,dash){if(o<=0)return;var a=Math.atan2(q[1]-p[1],q[0]-p[0]),sh=sz*.62,x1=p[0]+sh*Math.cos(a),y1=p[1]+sh*Math.sin(a),x2=q[0]-sh*Math.cos(a),y2=q[1]-sh*Math.sin(a),
+ nx=-Math.sin(a),ny=Math.cos(a),gap=sz*.17,offs=o===1?[0]:(o===2?[-gap/2,gap/2]:[-gap,0,gap]);ctx.globalAlpha=al==null?1:al;
+ offs.forEach(function(f){seg(x1+nx*f,y1+ny*f,x2+nx*f,y2+ny*f,col||INK,Math.max(2,sz*.09),dash);});ctx.globalAlpha=1;}
+function bracket(P,sz,q,al){if(!q)return;var xs=P.map(function(p){return p[0];}),ys=P.map(function(p){return p[1];}),x0=Math.min.apply(0,xs)-sz*1.25,x1=Math.max.apply(0,xs)+sz*1.25,y0=Math.min.apply(0,ys)-sz*1.25,y1=Math.max.apply(0,ys)+sz*1.25;
+ ctx.globalAlpha=al==null?1:al;ctx.strokeStyle=INK;ctx.lineWidth=Math.max(2,sz*.09);[[x0,1],[x1,-1]].forEach(function(s){ctx.beginPath();ctx.moveTo(s[0]+10*s[1],y0);ctx.lineTo(s[0],y0);ctx.lineTo(s[0],y1);ctx.lineTo(s[0]+10*s[1],y1);ctx.stroke();});
+ ctx.globalAlpha=1;txt(chg(q),x1+sz*.45,y0+sz*.1,{s:sz*.62,c:INK,al:al==null?1:al});}
+/* finished structure; o: {al, hl (colour multiple bonds), hide:{'i:s':1}, ring} */
+function drawStatic(L,cx,cy,U,sz,o){o=o||{};var m=L.m,sc=sz/34,P=m.a.map(function(a){return [cx+a[1]*U,cy+a[2]*U];});
+ m.e.forEach(function(b,k){bondLines(P[b[0]],P[b[1]],L.ord[k],sz,o.al,o.hl&&L.ord[k]>1?ORANGE:INK);});
+ m.a.forEach(function(a,i){txt(a[0],P[i][0],P[i][1]+1,{s:sz,c:ECOL[a[0]],al:o.al==null?1:o.al});
+  for(var s=0;s<L.lp5[i];s++){if(L.gone[i+':'+s]||(o.hide&&o.hide[i+':'+s]))continue;lpd(P[i][0],P[i][1],L.slots[i][s],sz*.78,o.al,sc,o.hl&&o.hlLp&&o.hlLp[i]?ORANGE:INK);}
+  if(L.oddAt===i){var an=L.slots[i][L.lp5[i]];edot(P[i][0]+sz*.78*Math.cos(an),P[i][1]+sz*.78*Math.sin(an),sc,o.oddCol||INK,o.al);}});
+ if(o.ring)rings(L,P,sz,L.fin,1);
+ bracket(P,sz,m.q,o.al);return P;}
+function rings(L,P,sz,cnts,al,angs){L.m.a.forEach(function(a,i){var c=cnts[i],h=a[0]==='H',ok=h?c===2:c===8,col=ok?GREEN:(c>8?ORANGE:RED),r=sz*1.08,ba=angs&&angs[i]!=null?angs[i]:badgeAng(L,i);
+ ctx.globalAlpha=al;ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(P[i][0],P[i][1],r,0,6.283);ctx.stroke();ctx.setLineDash([]);
+ var bx=P[i][0]+r*Math.cos(ba),by=P[i][1]+r*Math.sin(ba);ctx.fillStyle=col;ctx.beginPath();ctx.arc(bx,by,11,0,6.283);ctx.fill();txt(String(c),bx,by+1,{s:12,c:'#fff',al:al});ctx.globalAlpha=1;});}
+function badgeAng(L,i){if(!L.nb||!L.m.a[i]||L.m.a[i].length<3)return -Math.PI/4;var x=L.m.a[i],dirs=L.nb[i].map(function(o){return Math.atan2(L.m.a[o][2]-x[2],L.m.a[o][1]-x[1]);}).concat(L.slots[i]||[]),best=-Math.PI/4,bd=-1;
+ [-Math.PI/4,-3*Math.PI/4,Math.PI/4,3*Math.PI/4].forEach(function(an){var dm=7;dirs.forEach(function(q){var df=Math.abs(((an-q)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI);dm=Math.min(dm,df);});if(dm>bd+1e-6){bd=dm;best=an;}});return best;}
+/* picture of a structure for quiz questions */
+function lewisImg(m,donor,w,h,U,sz,o){try{var off=document.createElement('canvas'),k=2;off.width=w*k;off.height=h*k;var keep=ctx;ctx=off.getContext('2d');ctx.setTransform(k,0,0,k,0,0);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
+ drawStatic(lewis(m,donor),w/2,h/2,U,sz,o||{});var url=off.toDataURL('image/png');ctx=keep;return '<img src="'+url+'" width="'+w+'" height="'+h+'" alt="Lewis structure of '+m.f+'" style="border:2px solid #c9d4e6;border-radius:14px;background:#fff">';}catch(e){ctx=keep||ctx;return '';}}
+
+/* ---------- mini periodic table ---------- */
+function miniPT2(x0,y0,s,els,cenEl){for(var r=1;r<=5;r++)for(var c=1;c<=18;c++){if(r===1&&c>1&&c<18)continue;if((r===2||r===3)&&c>2&&c<13)continue;var x=x0+(c-1)*s,y=y0+(r-1)*s;ctx.fillStyle='#e6ebf3';ctx.fillRect(x,y,s-1.5,s-1.5);}
+ els.forEach(function(e){var d=EL2[e],x=x0+(d.g-1)*s,y=y0+(d.p-1)*s;ctx.fillStyle=e===cenEl?ACC():'#8d99b0';ctx.fillRect(x-1,y-1,s+.5,s+.5);txt(e,x+s/2-.5,y+s/2,{s:e.length>1?7:8.5,c:'#fff'});});}
+
+/* ================= 6-STEP BUILDER ================= */
+var STEPN=['Predict the central atom','Count the electrons available for bonding','Find the number of bonding pairs','Place the bonding pairs','Place the lone pairs','Check the octets'];
+function mkBuilder(){return {m:null,L:null,s:0,sub:0,t:0,play:false};}
+function bSet(B,m){B.m=m;B.L=lewis(m);B.s=0;B.sub=0;B.t=9;B.play=false;
+ var L=B.L,el=[];m.a.forEach(function(a,i){for(var j=0;j<EL2[a[0]].v;j++)el.push({i:i,j:j});});
+ B.removed=[];if(m.q>0){var c=L.cen.length?L.cen[0]:0;for(var r=0;r<m.q;r++){var k=-1;el.forEach(function(e,ix){if(e.i===c)k=ix;});B.removed.push(el.splice(k,1)[0]);}}
+ if(m.q<0)for(var x=0;x<-m.q;x++)el.push({i:-1,j:x});B.el=el;
+ B.D2a=.6+.8*m.a.length;var D=[0,1.3,1.3+.09*L.ve,1.2,.7+.32*L.E,.7+.22*(L.lpOrder.length+(L.odd?1:0)),1.4+1.15*L.conv.length];B.D=D;}
+function bGo(B,d){if(d>0){if(B.s===2&&B.sub===0){B.sub=1;B.t=0;return;}if(B.s>=6)return;B.s++;B.sub=0;B.t=0;}
+ else{if(B.s===2&&B.sub===1){B.sub=0;B.t=99;return;}if(B.s<=0)return;B.s--;B.sub=B.s===2?1:0;B.t=99;}}
+function bAll(B){B.s=0;B.sub=0;B.t=9;B.play=true;}
+function bDur(B){return B.s===2&&B.sub===0?B.D2a:B.D[B.s];}
+function perAtom(m){return elGroups(m).map(function(g){return (g[1]>1?'each ':'')+g[0]+' has '+EL2[g[0]].v;}).join(' · ');}
+function stepText(L,s,sub){var m=L.m,cen=L.cen.map(function(i){return m.a[i][0];}),cs=cen.length?cen[0]:null,H=m.a.some(function(a){return a[0]==='H';});
+ if(s===0)return ['Ready to build '+m.f+' ('+m.nm+')','Press Next step ▶ to follow the six steps one at a time.',''];
+ if(s===1)return ['Step 1 of 6 · '+STEPN[0],cs?(cen.length>1?'The '+cen.length+' '+EL2[cs].n+' atoms are central (least attraction for shared electrons); the rest are terminal.':cs+' is the central atom: it has the least attraction for shared electrons (closer to the left of the periodic table).'):'There are only two atoms, so they sit side by side.',H?'Hydrogen is always a terminal atom.':''];
+ if(s===2&&!sub)return ['Step 2 of 6 (part 1 of 2) · Count each atom’s valence electrons',perAtom(L.m),'Count the dots around each atom. Valence electrons: groups 1–2 = group number · groups 13–18 = group number − 10.'];
+ if(s===2)return ['Step 2 of 6 (part 2 of 2) · Add them up',veText(L),m.q?(m.q<0?'Negative ion: add one electron for each negative charge.':'Positive ion: subtract one electron for each positive charge.'):'Each atom brings its valence electrons (its group number).'];
+ if(s===3)return ['Step 3 of 6 · '+STEPN[2],L.ve+' ÷ 2 = '+L.pairs+(L.odd?' pairs and 1 electron left over (odd number!)':' pairs'),L.odd?'An odd number of electrons cannot all be paired: this is an exception.':'Electrons are shared in pairs.'];
+ if(s===4)return ['Step 4 of 6 · '+STEPN[3],L.E+' single bond'+(L.E>1?'s':'')+' use '+L.E+' pair'+(L.E>1?'s':'')+' → '+L.pairs+' − '+L.E+' = '+(L.pairs-L.E)+' pair'+(L.pairs-L.E===1?'':'s')+' left','One bonding pair between the central atom and each terminal atom.'];
+ if(s===5){var onC=0,onT=0;L.lpOrder.forEach(function(i){if(L.cen.indexOf(i)>=0)onC++;else onT++;});
+  return ['Step 5 of 6 · '+STEPN[4],(L.pairs-L.E)+' pairs: '+onT+' on the terminal atoms'+(L.cen.length?', '+onC+' on the central atom':'')+(L.odd?' · the odd electron goes on '+m.a[L.oddAt][0]:''),'Terminal atoms first (never on H) to give them octets; any pairs left go to the central atom.'];}
+ var c=L.cen.length?L.cen[0]:(L.conv.length?L.conv[0].a:0),ce=m.a[c][0],f=L.fin[c];
+ if(L.conv.length){var nd=L.ord.filter(function(o){return o===2;}).length,nt=L.ord.filter(function(o){return o===3;}).length,mb=[];if(nd)mb.push(nd===1?'a double bond':nd+' double bonds');if(nt)mb.push(nt===1?'a triple bond':nt+' triple bonds');
+  var who=m.a[L.conv[0].a][0];return ['Step 6 of 6 · '+STEPN[5],who+' had only '+L.after5[L.conv[0].a]+' e⁻ → '+L.conv.length+' lone pair'+(L.conv.length>1?'s':'')+' moved in to make '+mb.join(' and '),'Now every atom has an octet'+(m.a.some(function(x){return x[0]==='H';})?' (H has 2)':'')+' ✓'];}
+ if(L.odd)return ['Step 6 of 6 · '+STEPN[5],ce+' has only '+f+' electrons: an odd number of electrons.','Exception to the octet rule: no way to give every atom an octet.'];
+ if(f<8&&L.cen.length)return ['Step 6 of 6 · '+STEPN[5],ce+' has only '+f+' electrons, and no lone pair can become a double bond.','Exception: a suboctet (fewer than 8). Boron is happy with 6.'];
+ if(f>8)return ['Step 6 of 6 · '+STEPN[5],ce+' has '+f+' electrons: more than an octet.','Exception: an expanded octet. '+ce+' is in period '+EL2[ce].p+', so it has d orbitals to use.'];
+ return ['Step 6 of 6 · '+STEPN[5],'Every atom has an octet'+(m.a.some(function(a){return a[0]==='H';})?' (H has 2)':'')+' ✓','No changes needed: this is the Lewis structure of '+m.f+'.'];}
+function bDraw(B,dt){var L=B.L,m=B.m,s=B.s;B.t+=dt;if(B.play&&B.t>=bDur(B)+1.2&&s<6){bGo(B,1);s=B.s;}var t=B.t,sub=B.sub;
+ clear();var MX=300,MY=180,many=m.a.length>5,U=many?112:(m.a.length<=3?118:106),sz=34,sc=1;
+ var P=m.a.map(function(a){return [MX+a[1]*U,MY+a[2]*U];}),n=m.a.length,T=m.a.map(function(a,i){return [MX+(i-(n-1)/2)*Math.min(70,440/n),MY];});
+ /* atoms */
+ var u1=s===0?0:(s===1?ease(clamp(t/(B.D[1]*.7),0,1)):1),A=P.map(function(p,i){return [lerp(T[i][0],p[0],u1),lerp(T[i][1],p[1],u1)];});
+ /* bank */
+ card(592,14,194,330,'#fff');
+ function bankE(k){return [612+(k%8)*21,62+Math.floor(k/8)*22];}
+ function bankP(p,h){return [618+(p%4)*44+(h?6:-6),62+Math.floor(p/4)*25];}
+ if(s<=1){txt('Periodic table',689,38,{s:15,c:MUTED,w:500});var els=elGroups(m).map(function(g){return g[0];});miniPT2(598,54,10.4,els,L.cen.length?m.a[L.cen[0]][0]:null);
+  if(s===1){txt('◀ left = less attraction',689,126,{s:12,c:MUTED,w:500});var cs=L.cen.length?m.a[L.cen[0]][0]:null;
+   els.forEach(function(e,k){txt(e+(e===cs?' → central':(e==='H'?' → terminal (always)':' → terminal')),604,150+k*22,{s:13,a:'left',c:e===cs?ACC():INK,w:e===cs?600:500});});}}
+ else{txt('Electron bank',689,36,{s:15,c:MUTED,w:500});}
+ /* bonds and pairs */
+ var E=L.E,np=L.lpOrder.length,slotIdx=[],cntA=m.a.map(function(){return 0;});L.lpOrder.forEach(function(i){slotIdx.push(cntA[i]);cntA[i]++;});
+ var convDone=0,convP=0;if(s===6){var c0=.7;for(var c=0;c<L.conv.length;c++){var pc=clamp((t-c0-c*1.15)/.9,0,1);if(pc>=1)convDone++;else{convP=pc;break;}}}
+ if(s>6)convDone=L.conv.length;
+ var ordNow=m.e.map(function(){return 0;});
+ for(var k=0;k<E;k++){var arrived=s>4||(s===4&&t>=.25+k*.32+.45);if(arrived)ordNow[k]=1;}
+ for(var cc=0;cc<convDone;cc++)ordNow[L.conv[cc].k]++;
+ m.e.forEach(function(b,k){if(ordNow[k])bondLines(A[b[0]],A[b[1]],ordNow[k],sz,1,INK);});
+ /* atoms on top */
+ m.a.forEach(function(a,i){if(s===0){rr(A[i][0]-26,A[i][1]-26,52,52,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}
+  txt(a[0],A[i][0],A[i][1]+1,{s:sz,c:ECOL[a[0]]});});
+ if(s===1){var pulse=.5+.5*Math.sin(performance.now()/260);L.cen.forEach(function(i){ctx.strokeStyle=ACC();ctx.lineWidth=4;ctx.globalAlpha=.5+.5*pulse;ctx.beginPath();ctx.arc(A[i][0],A[i][1],32,0,6.283);ctx.stroke();ctx.globalAlpha=1;});
+  if(u1>=1){L.cen.forEach(function(i){pill('central',A[i][0],A[i][1]-52,ACC(),'#fff',13);});m.a.forEach(function(a,i){if(a[0]==='H'&&i===m.a.findIndex(function(x){return x[0]==='H';}))pill('H: always terminal',A[i][0],A[i][1]+44,MUTED,'#fff',12);});}}
+ /* electrons */
+ var sideCnt=m.a.map(function(a){return EL2[a[0]].v;});
+ function vpos(i,j){var v=sideCnt[i],side=j%4,ang=[-Math.PI/2,0,Math.PI/2,Math.PI][side],paired=v>side+4,off=paired?(j<4?-5:5):0,d=sz*.78;return [A[i][0]+d*Math.cos(ang)-Math.sin(ang)*off,A[i][1]+d*Math.sin(ang)+Math.cos(ang)*off];}
+ var chip=[689,322];
+ if(s===2&&sub===0){var cx0=A.reduce(function(a,p){return a+p[0];},0)/n,cy0=A.reduce(function(a,p){return a+p[1];},0)/n,tot=0;
+  m.a.forEach(function(a,i){var t0=.3+i*.8,v=EL2[a[0]].v;if(t<t0)return;for(var j=0;j<v;j++){if(t>=t0+j*.08){var vp=vpos(i,j),pop=clamp((t-t0-j*.08)/.2,0,1);edot(vp[0],vp[1],.4+.6*pop,INK);}}
+   if(t>=t0+v*.08){tot+=v;var dx=A[i][0]-cx0,dy=A[i][1]-cy0,dl=Math.hypot(dx,dy),ux=dl>1?dx/dl:.7,uy=dl>1?dy/dl:-.7;if(L.cen.indexOf(i)>=0&&n>2){ux=.72;uy=-.72;}pill(a[0]+': '+v,A[i][0]+ux*58,A[i][1]+uy*58,ECOL[a[0]]==='#5a6780'?MUTED:ECOL[a[0]],'#fff',13);}});
+  txt('count the dots',689,228,{s:14,c:MUTED,w:500});txt('then press Next ▶',689,250,{s:14,c:MUTED,w:500});}
+ if(s===2&&sub===1){B.el.forEach(function(e,k){var pk=clamp((t-.3-k*.09)/.8,0,1),st=e.i<0?chip:vpos(e.i,e.j),en=bankE(k),x=lerp(st[0],en[0],ease(pk)),y=lerp(st[1],en[1],ease(pk))-30*Math.sin(Math.PI*pk);edot(x,y,1,e.i<0?ORANGE:INK);});
+  B.removed.forEach(function(e,r){var al=1-clamp((t-.2)/1.2,0,1),p=vpos(e.i,e.j);edot(p[0],p[1],1,RED,al);if(al>0)pill('−1 e⁻ (charge)',p[0]+40,p[1]-26,RED,'#fff',12);});
+  var got=0;B.el.forEach(function(e,k){if(t>=.3+k*.09+.8)got++;});txt(got+' e⁻',689,250,{s:30,c:INK});
+  if(m.q<0){pill(chg(m.q)+' charge: +'+(-m.q)+' e⁻',chip[0],chip[1],ORANGE,'#fff',13);}}
+ if(s===3){var p3=ease(clamp(t/.9,0,1));B.el.forEach(function(e,k){var a=bankE(k),b=(L.odd&&k===L.ve-1)?bankP(L.pairs,0):bankP(Math.floor(k/2),k%2);edot(lerp(a[0],b[0],p3),lerp(a[1],b[1],p3),1,(L.odd&&k===L.ve-1)?RED:INK);});
+  if(p3>=1){txt(L.ve+' ÷ 2 = '+L.pairs+(L.odd?' pairs + 1':' pairs'),689,250,{s:L.odd?20:24,c:INK});}}
+ if(s>=4){var placed=0;
+  for(var p=0;p<L.pairs;p++){var pos=null,fin=null,pr=0,a0=bankP(p,0),a1=bankP(p,1);
+   if(p<E){var b=m.e[p],mid=[(A[b[0]][0]+A[b[1]][0])/2,(A[b[0]][1]+A[b[1]][1])/2];pr=s>4?1:clamp((t-.25-p*.32)/.45,0,1);if(pr>=1){placed++;continue;}fin=[mid,mid];}
+   else{var q=p-E,ai=L.lpOrder[q],si=slotIdx[q];if(L.gone[ai+':'+si]){var cv=null,ci=-1;L.conv.forEach(function(c,ix){if(c.d===ai&&c.slot===si){cv=c;ci=ix;}});
+     if(s===6&&ci>=convDone){var ang=L.slots[ai][si],sp=[A[ai][0]+sz*.78*Math.cos(ang),A[ai][1]+sz*.78*Math.sin(ang)],bb=m.e[cv.k],md=[(A[bb[0]][0]+A[bb[1]][0])/2,(A[bb[0]][1]+A[bb[1]][1])/2],w=ci===convDone?ease(convP):0;
+      if(w>0){ctx.globalAlpha=.25;ctx.fillStyle=ORANGE;ctx.beginPath();ctx.arc(lerp(sp[0],md[0],w),lerp(sp[1],md[1],w),16,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+      lpd(lerp(sp[0],md[0],w),lerp(sp[1],md[1],w),ang,0,1,1,w>0?ORANGE:INK);placed++;continue;}
+     if(s===6){placed++;continue;}}
+    if(s<5){pr=0;}else{pr=s>5?1:clamp((t-.25-q*.22)/.5,0,1);}
+    if(pr>=1){var an2=L.slots[ai][si];lpd(A[ai][0],A[ai][1],an2,sz*.78,1,1);placed++;continue;}
+    var an3=L.slots[ai][si];fin=[[A[ai][0]+sz*.78*Math.cos(an3)-Math.sin(an3)*5,A[ai][1]+sz*.78*Math.sin(an3)+Math.cos(an3)*5],[A[ai][0]+sz*.78*Math.cos(an3)+Math.sin(an3)*5,A[ai][1]+sz*.78*Math.sin(an3)-Math.cos(an3)*5]];}
+   var e1=ease(pr),hop=30*Math.sin(Math.PI*pr);edot(lerp(a0[0],fin[0][0],e1),lerp(a0[1],fin[0][1],e1)-hop,1,pr>0?TEAL:INK);edot(lerp(a1[0],fin[1][0],e1),lerp(a1[1],fin[1][1],e1)-hop,1,pr>0?TEAL:INK);}
+  if(L.odd){var oa=L.oddAt,oan=L.slots[oa][L.lp5[oa]],op=s>5?1:(s===5?clamp((t-.25-np*.22)/.5,0,1):0),ob=bankP(L.pairs,0),ot=[A[oa][0]+sz*.78*Math.cos(oan),A[oa][1]+sz*.78*Math.sin(oan)];
+   edot(lerp(ob[0],ot[0],ease(op)),lerp(ob[1],ot[1],ease(op))-30*Math.sin(Math.PI*op),1,RED);}
+  var left=L.pairs-placed;txt('pairs left: '+Math.max(0,left),689,250,{s:22,c:left?INK:GREEN});}
+ /* step 6: rings */
+ if(s===6){var lpNow=L.lp5.slice();for(var c2=0;c2<convDone;c2++)lpNow[L.conv[c2].d]--;
+  var cnts=m.a.map(function(a,i){var x=0;m.e.forEach(function(b,k){if(b[0]===i||b[1]===i)x+=2*ordNow[k];});return x+2*lpNow[i]+(L.oddAt===i?1:0);});
+  rings(L,A,sz,cnts,clamp(t/.5,0,1));
+  if(t>B.D[6]-.4){bracket(A,sz,m.q,clamp((t-B.D[6]+.4)/.4,0,1));}
+  var allOk=cnts.every(function(c,i){return m.a[i][0]==='H'?c===2:c===8;});
+  txt(allOk?'every atom: 8 ✓':'look at the red / orange rings',689,290,{s:13,c:allOk?GREEN:ORANGE,w:600});}
+ /* step banner */
+ card(14,356,772,132,'#fff');var st=stepText(L,s,sub);
+ for(var d=0;d<6;d++){var x=40+d*22;ctx.fillStyle=d<s?ACC():'#dfe6f2';ctx.beginPath();ctx.arc(x,382,8,0,6.283);ctx.fill();txt(String(d+1),x,382,{s:10,c:d<s?'#fff':MUTED});}
+ txt(st[0],180,382,{s:20,a:'left',c:ACC()});var yy=cwrap(st[1],400,410,736,18,INK,600);if(st[2])cwrap(st[2],400,yy+26,736,15,MUTED,500);}
+function cwrap(str,x,y,mw,size,col,w){ctx.font=w+' '+size+'px Fredoka, sans-serif';var words=String(str).split(' '),lines=[],ln='';words.forEach(function(wd){var t=ln?ln+' '+wd:wd;if(ctx.measureText(t).width>mw&&ln){lines.push(ln);ln=wd;}else ln=t;});if(ln)lines.push(ln);
+ lines.forEach(function(l,i){txt(l,x,y+i*size*1.3,{s:size,c:col,w:w});});return y+(lines.length-1)*size*1.3;}
+
+
+/* ================= TAB 1: SIX STEPS ================= */
+var STEPD=['The atom with the <b>least attraction for shared electrons</b> is central (usually the one closer to the left of the periodic table). All other atoms are terminal. <b>H is always terminal.</b>',
+ 'Add the <b>valence electrons</b> of every atom. For a polyatomic ion: <b>add</b> one electron per negative charge, <b>subtract</b> one per positive charge.',
+ 'Divide the number of electrons by <b>2</b>.',
+ 'Place a <b>single bond</b> (one pair) between the central atom and each terminal atom.',
+ 'Subtract the pairs used in step 4 from step 3. Put <b>lone pairs on the terminal atoms</b> (not H) to give octets; any pairs left go to the <b>central atom</b>.',
+ 'If the central atom has no octet, turn one or two <b>lone pairs</b> on terminal atoms into <b>double or triple bonds</b>. C, N, O and S often form them.'];
+function stepsPanel(B){var s=B.s;return '<div class="sixsteps" id="sixp">'+STEPN.map(function(n,i){return '<div class="ss'+(i+1===s?' on':(i+1<s?' done':''))+'"><b>'+(i+1<s?'✓':i+1)+'</b><span><span class="sst">'+n+'</span><span class="ssd">'+STEPD[i]+'</span></span></div>';}).join('')+'</div>';}
+function builderScene(keys,title,q,o){o=o||{};var B=mkBuilder(),S={title:title,q:q,canvas:true,rule:o.rule,
+ enter:function(){if(!B.m||keys.indexOf(B.m.id)<0)bSet(B,MOL[keys[0]]);ctl();},
+ html:function(){return stepsPanel(B)+(o.note||'');},
+ frame:function(dt){bDraw(B,dt);if(B._ps!==B.s){B._ps=B.s;var el=document.getElementById('sixp');if(el)el.outerHTML=stepsPanel(B);}},
+ reads:function(){var L=B.L;return [['Molecule',B.m.f],['Step',B.s+' of 6'+(B.s===2?(B.sub?' (part 2)':' (part 1)'):'')],['Electrons',(B.s>2||(B.s===2&&B.sub===1))?L.ve:'?'],['Pairs',B.s>=3?L.pairs+(L.odd?' + 1 e⁻':''):'?']];}};
+ function ctl(){$('controls').innerHTML='<div class="subbar" style="margin:0">'+keys.map(function(k){return '<button class="btn'+(B.m.id===k?' sel':'')+'" data-k="'+k+'">'+MOL[k].f+'</button>';}).join('')+'</div>'+
+  '<button class="btn" id="bB">◀ Back</button><button class="btn fill" id="bN">Next step ▶</button><button class="btn" id="bP">Play all 6 ▶▶</button><button class="btn" id="bR">Start again</button>';
+  each('#controls [data-k]',function(b){b.onclick=function(){bSet(B,MOL[b.getAttribute('data-k')]);ctl();};});
+  $('bB').onclick=function(){B.play=false;bGo(B,-1);};$('bN').onclick=function(){B.play=false;bGo(B,1);};$('bP').onclick=function(){bAll(B);};$('bR').onclick=function(){B.play=false;B.s=0;B.sub=0;B.t=9;};}
+ return S;}
+/* practice problems built from the six steps */
+function lewisProb(key,chip,src,q,o){o=o||{};var m=MOL[key],L=lewis(m),c=L.cen.length?L.cen[0]:-1,ce=c>=0?m.a[c][0]:null,els=elGroups(m).map(function(g){return g[0];}),f=[];
+ if(ce)f.push({t:'c',lab:'Step 1: the central atom'+(L.cen.length>1?'s are':' is')+'…',opts:els.map(function(e){return e+' ('+EL2[e].n+')';}),ok:els.indexOf(ce),why:'Least attraction for shared electrons (closer to the left of the periodic table). H is always terminal.'});
+ var alts=[],noMult=els.reduce(function(s,e){return s+EL2[e].v;},0)-(m.q||0);
+ if(m.q){alts.push([L.val,'You forgot the charge: '+(m.q<0?'add ':'subtract ')+Math.abs(m.q)+' electron'+(Math.abs(m.q)>1?'s':'')+'.']);alts.push([L.val+m.q,'Other way round: a negative charge <b>adds</b> electrons, a positive charge <b>subtracts</b>.']);}
+ if(noMult!==L.ve)alts.push([noMult,'Count <b>every</b> atom: multiply each valence number by how many of that atom there are.']);
+ f.push({t:'n',lab:'Step 2: electrons available for bonding =',unit:'e⁻',want:L.ve,tolA:.01,alt:alts,why:'Add the valence electrons of every atom'+(m.q?', then adjust for the charge.':'.')});
+ f.push({t:'n',lab:'Step 3: number of bonding pairs =',unit:'pairs',want:L.pairs,tolA:.01,alt:[[L.ve,'Divide the number of electrons by 2.']],why:'Electrons ÷ 2.'});
+ f.push({t:'n',lab:'Step 4: pairs used for single bonds (one per bond) =',unit:'pairs',want:L.E,tolA:.01,why:'Count the bonds in the skeleton.'});
+ f.push({t:'n',lab:'Step 5: pairs left for lone pairs =',unit:'pairs',want:L.pairs-L.E,tolA:.01,alt:[[L.pairs+L.E,'Subtract: step 3 − step 4.']],why:'Step 3 − step 4.'});
+ var a5=c>=0?Math.min.apply(0,L.cen.map(function(i){return L.after5[i];})):8,big=c>=0?L.after5[c]:8,k6=L.conv.length?1:(a5<8?2:(big>8?3:0));
+ f.push({t:'c',lab:'Step 6: after step 5, the central atom'+(L.cen.length>1?'s have':' has')+'…',opts:['an octet: no changes','fewer than 8: make double or triple bonds','fewer than 8, and nothing can change: a suboctet','more than 8: an expanded octet'],ok:k6,keep:true,why:'Count around the central atom: 2 for each bond + 2 for each lone pair.'});
+ var lpc=L.cen.reduce(function(s,i){return s+L.lp[i];},0);
+ f.push({t:'n',lab:'Lone pairs on the central atom'+(L.cen.length>1?'s (total)':'')+' in the final structure =',unit:'',want:lpc,tolA:.01,why:'Look at your finished structure.'});
+ if(L.conv.length){var nd=L.ord.filter(function(x){return x===2;}).length,nt=L.ord.filter(function(x){return x===3;}).length;
+  f.push({t:'c',lab:'The final structure has…',opts:['single bonds only','one double bond','two double bonds','one triple bond'],ok:nt?3:(nd>=2?2:1),keep:true,why:'Each lone pair that moves in adds one more bond between the same two atoms.'});}
+ var at=elGroups(m).map(function(g){return (g[1]>1?g[1]+' ':'')+EL2[g[0]].n;}).join(', ');
+ var show=[['What do we know?','Formula: <b>'+m.f+'</b> · atoms: '+at+(m.q?' · charge: <b>'+chg(m.q)+'</b>':'')+'<br>Unknown: the Lewis structure.']];
+ for(var s=1;s<=6;s++){if(s===2){var ta=stepText(L,2,0),tb=stepText(L,2,1);show.push(['Step 2 (part 1): count each atom’s valence electrons',ta[1]+'<br><span class="why">'+ta[2]+'</span>']);show.push(['Step 2 (part 2): add them up',tb[1]+'<br><span class="why">'+tb[2]+'</span>']);continue;}var t=stepText(L,s);show.push([STEPN[s-1],t[1]+(t[2]?'<br><span class="why">'+t[2]+'</span>':'')]);}
+ var nd2=L.ord.filter(function(x){return x===2;}).length,nt2=L.ord.filter(function(x){return x===3;}).length;
+ var ans=m.f+': '+(ce?ce+' central, ':'')+(nt2?'one triple bond':(nd2?(nd2===1?'one double bond':nd2+' double bonds'):'single bonds only'))+', '+lpc+' lone pair'+(lpc===1?'':'s')+' on the central atom'+(L.cen.length>1?'s':'')+'.';
+ return {chip:chip,name:o.name||m.nm+' ('+m.f+')',src:src,q:q,m:m,fields:f,show:show,ans:ans,sense:o.sense||''};}
+function lewisProbScene(p,think){var B=mkBuilder();bSet(B,p.m);B.s=0;B.t=9;p.custom=true;p.tryUI=function(){wbUI(p);};
+ var MAP=[[0,0],[0,0],[1,0],[2,0],[2,1],[3,0],[4,0],[5,0],[6,0]];
+ return {title:p.chip.indexOf('Example')===0?p.name:p.chip+': '+p.name,q:think||'Which atom is central? How many electrons and pairs are there?',canvas:true,prob:p,
+  frame:function(dt){if(p.mode==='try'){if(!p.wb)p.wb=wbNew(p);wbDraw(p.wb,dt);return;}var mp=MAP[clamp(p.st||0,0,8)];if(mp[0]!==B.s||mp[1]!==B.sub){B.s=mp[0];B.sub=mp[1];B.t=0;}bDraw(B,dt);},
+  ptr:function(type,x,y){return p.mode==='try'&&p.wb?wbPtr(p.wb,type,x,y):false;},
+  reads:function(){var s=TABS[tabI].steps.filter(function(x){return x[1].prob&&x[1].prob.chip;}),d=s.filter(function(x){return x[1].prob.solved;}).length;return [['Molecule',p.m.f],['Problems solved',d+' / '+s.length],['Mode',p.mode==='try'?'My turn':'Show me']];}};}
+/* ================= MY TURN: WORK IT OUT ON THE MOLECULE ================= */
+function lpAngs(m,i,n){var x=m.a[i],dirs=[];m.e.forEach(function(b){var o=b[0]===i?b[1]:(b[1]===i?b[0]:-1);if(o>=0)dirs.push(Math.atan2(m.a[o][2]-x[2],m.a[o][1]-x[1]));});var out=[];
+ for(var s=0;s<n;s++){var best=null,bd=-1;for(var c=0;c<24;c++){var an=-Math.PI/2+c*Math.PI/12,dm=7;dirs.concat(out).forEach(function(q){var df=Math.abs(((an-q)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI);dm=Math.min(dm,df);});if(dm>bd+1e-6){bd=dm;best=an;}}out.push(best);}return out;}
+function wbNew(p){var m=p.m,L=lewis(m),n=m.a.length,U=n>5?112:(n<=3?118:106),MX=300,MY=180;
+ var W={p:p,m:m,L:L,ph:1,U:U,P:m.a.map(function(a){return [MX+a[1]*U,MY+a[2]*U];}),msg:'',msgC:INK,t:0,at:m.a.map(function(){return -1;}),
+  vOk:m.a.map(function(){return false;}),vT:m.a.map(function(){return 0;}),qOk:!m.q,ord:m.e.map(function(){return 0;}),lp:m.a.map(function(){return 0;}),pool:0,drag:null,log:[],flyT:-1,pairT:-1,solved:false};
+ var order=shuffle(m.a.map(function(a,i){return i;}));
+ W.tiles=order.map(function(ai,k){var hx=632+(k%3)*56,hy=96+Math.floor(k/3)*62;return {e:m.a[ai][0],x:hx,y:hy,hx:hx,hy:hy,slot:-1};});
+ W.slot=m.a.map(function(){return -1;});return W;}
+function wbSay(W,txt0,col){W.msg=txt0;W.msgC=col||INK;W.msgT=0;}
+function wbLog(W,k,txt0){if(W.log[k])return;W.log[k]=txt0;wbPanel(W);}
+function wbCounts(W){var m=W.m;return m.a.map(function(a,i){var c=0;m.e.forEach(function(b,k){if(b[0]===i||b[1]===i)c+=2*W.ord[k];});return c+2*W.lp[i];});}
+function wbBankE(k){return [612+(k%8)*21,98+Math.floor(k/8)*22];}
+function wbBankP(p){return [618+(p%4)*44,98+Math.floor(p/4)*25];}
+/* ---------- step 1: drop atoms into the spaces ---------- */
+function wbCheck1(W){var m=W.m,L=W.L,full=W.slot.every(function(t){return t>=0;});if(!full)return;
+ var bad=[];L.cen.forEach(function(i){var te=W.tiles[W.slot[i]].e;if(te!==m.a[i][0])bad.push(i);});
+ if(bad.length){var i=bad[0],te=W.tiles[W.slot[i]].e,ce=m.a[i][0];
+  wbSay(W,te==='H'?'H is always a terminal atom: it can share only one pair. Try again.':te+' has MORE attraction for shared electrons than '+ce+' (it is further to the right). Try again.',RED);
+  bad.forEach(function(j){var tk=W.slot[j];W.slot[j]=-1;W.tiles[tk].slot=-1;});
+  W.tiles.forEach(function(tl){if(tl.slot<0){tl.tx=tl.hx;tl.ty=tl.hy;}});return;}
+ /* settle each tile on a space of its own element */
+ var used={};m.a.forEach(function(a,i){for(var k=0;k<W.tiles.length;k++){if(!used[k]&&W.tiles[k].e===a[0]){used[k]=1;W.slot[i]=k;W.tiles[k].slot=i;W.tiles[k].tx=W.P[i][0];W.tiles[k].ty=W.P[i][1];break;}}});
+ var cs=L.cen.length?m.a[L.cen[0]][0]:null;
+ wbSay(W,'Correct! '+(cs?(L.cen.length>1?'The '+EL2[cs].n+' atoms are':cs+' is')+' central.':'Two atoms sit side by side.'),GREEN);
+ wbLog(W,1,cs?(L.cen.length>1?'Both '+cs+' atoms are central':cs+' is the central atom')+'; the other atoms are terminal.':'Only two atoms: side by side.');
+ W.ph=2;W.t=0;setTimeout(function(){if(W.p.wb===W&&W.ph===2)wbInputs(W);},700);}
+/* ---------- step 2: one box under each atom ---------- */
+function wbItems(W){var m=W.m,it=[];m.a.forEach(function(a,i){it.push({k:'a',i:i,lab:a[0],want:EL2[a[0]].v});});if(m.q)it.push({k:'q',lab:chg(m.q)+' charge',want:Math.abs(m.q)});it.push({k:'t',lab:'total',want:W.L.ve});
+ var N=it.length,w=Math.min(84,740/N);it.forEach(function(o,j){o.x=400-(N-1)*w/2+j*w;});return it;}
+function wbInputs(W){var ov=$('ov');if(!ov||W.p.mode!=='try'||cur.prob!==W.p)return;var it=wbItems(W);W.items=it;
+ ov.innerHTML=it.map(function(o,j){return '<input class="wbin'+(o.k==='t'?' tot':'')+'" data-j="'+j+'" inputmode="numeric" autocomplete="off" style="left:'+(o.x/8)+'%;top:'+(458/5)+'%">';}).join('');
+ each('#ov .wbin',function(inp){var o=it[+inp.getAttribute('data-j')];
+  function test(final){var v=parseNum(inp.value);if(v===null){inp.classList.remove('ok','no');return;}
+   if(v===o.want){inp.classList.add('ok');inp.classList.remove('no');inp.disabled=true;
+    if(o.k==='a'){W.vOk[o.i]=true;W.vT[o.i]=0;}else if(o.k==='q')W.qOk=true;else wbTotal(W,inp);
+    var nx=inp.nextElementSibling;while(nx&&nx.disabled)nx=nx.nextElementSibling;if(nx&&o.k!=='t')nx.focus();}
+   else if(final){inp.classList.add('no');
+    if(o.k==='a')wbSay(W,o.lab+' is in group '+EL2[o.lab].g+': count its valence electrons again ('+(EL2[o.lab].g>12?'group number − 10':'group number')+').',RED);
+    else if(o.k==='q')wbSay(W,'A '+chg(W.m.q)+' charge means '+Math.abs(W.m.q)+' electron'+(Math.abs(W.m.q)>1?'s':'')+' '+(W.m.q<0?'gained':'lost')+'.',RED);
+    else{var L=W.L;wbSay(W,v===L.val&&W.m.q?'Do not forget the charge.':(v===L.ve*2?'Add the numbers in the boxes: that is the total.':'Add all the boxes'+(W.m.q?' (and the charge)':'')+' again.'),RED);}}}
+  inp.oninput=function(){if(o.k==='t')return;test(false);};inp.onchange=function(){test(true);};inp.onkeydown=function(e){if(e.key==='Enter')test(true);};});
+ each('#ov .wbin',function(inp){var o=it[+inp.getAttribute('data-j')];if((o.k==='a'&&W.vOk[o.i])||(o.k==='q'&&W.qOk&&W.m.q)){inp.value=o.want;inp.classList.add('ok');inp.disabled=true;}});
+ var f=[].filter.call($('ov').querySelectorAll('.wbin'),function(x){return !x.disabled;})[0];if(f)f.focus();}
+function wbTotal(W,inp){var allA=W.vOk.every(Boolean)&&W.qOk;if(!allA){inp.disabled=false;inp.classList.remove('ok');wbSay(W,'Fill in every atom'+(W.m.q?' and the charge':'')+' first.',ORANGE);return;}
+ wbSay(W,'Correct: '+W.L.ve+' electrons go into the electron bank.',GREEN);wbLog(W,2,veText(W.L));W.flyT=0;W.ph=2.5;
+ setTimeout(function(){if(W.p.wb!==W)return;W.ph=3;wbPairInput(W);},1300+40*W.L.ve);}
+function wbPairInput(W){if(W.p.mode!=='try'||cur.prob!==W.p)return;$('ov').innerHTML='<input class="wbin" id="wbPairs" inputmode="numeric" autocomplete="off" style="left:'+(742/8)+'%;top:'+(286/5)+'%">';var pi=$('wbPairs');pi.focus();
+  function tp(final){var v=parseNum(pi.value);if(v===null)return;if(v===W.L.pairs){pi.classList.add('ok');pi.disabled=true;wbSay(W,'Correct: '+W.L.pairs+' pairs. Now drag them onto the molecule.',GREEN);wbLog(W,3,W.L.ve+' ÷ 2 = '+W.L.pairs+' pairs');W.pairT=0;W.ph=3.5;
+    setTimeout(function(){if(W.p.wb!==W)return;$('ov').innerHTML='';W.pool=W.L.pairs;W.ph=4;wbCtl(W);wbPanel(W);},1100);}
+   else if(final){pi.classList.add('no');wbSay(W,v===W.L.ve?'Divide by 2: electrons are shared in PAIRS.':'Electrons ÷ 2 = pairs. Try again.',RED);}}
+  pi.oninput=function(){pi.classList.remove('no');tp(false);};pi.onkeydown=function(e){if(e.key==='Enter')tp(true);};pi.onchange=function(){tp(true);};}
+/* ---------- steps 4-6: drag pairs ---------- */
+function wbZone(W,x,y){var m=W.m,best=null,bd=1e9;m.e.forEach(function(b,k){var mx=(W.P[b[0]][0]+W.P[b[1]][0])/2,my=(W.P[b[0]][1]+W.P[b[1]][1])/2,d=Math.hypot(x-mx,y-my);if(d<30&&d<bd){bd=d;best={k:'b',i:k,x:mx,y:my};}});
+ if(best)return best;m.a.forEach(function(a,i){var d=Math.hypot(x-W.P[i][0],y-W.P[i][1]);if(d<44&&d<bd){bd=d;best={k:'a',i:i,x:W.P[i][0],y:W.P[i][1]};}});return best;}
+function wbStepMsg(W){var m=W.m,needB=W.ord.some(function(o){return o===0;});
+ if(needB)return ['Step 4 of 6 · '+STEPN[3],'Drag ONE pair between the central atom and each terminal atom: it becomes a bonding pair.'];
+ wbLog(W,4,W.L.E+' bonding pair'+(W.L.E>1?'s':'')+' placed → '+(W.L.pairs-W.L.E)+' pair'+(W.L.pairs-W.L.E===1?'':'s')+' left');
+ if(W.pool>0)return ['Step 5 of 6 · '+STEPN[4],'Drag the '+W.pool+' pair'+(W.pool>1?'s':'')+' left onto the TERMINAL atoms first (never on H), then the central atom.'];
+ wbLog(W,5,'All '+W.L.pairs+' pairs placed on the molecule.');
+ return ['Step 6 of 6 · '+STEPN[5],'Every atom needs 8 electrons (H needs 2). Too few? Drag a lone pair from a terminal atom into its bond. Then press Check.'];}
+function wbPtr(W,type,x,y){var m=W.m;
+ if(W.ph===1){if(type==='down'){for(var k=W.tiles.length-1;k>=0;k--){var tl=W.tiles[k];if(Math.abs(x-tl.x)<28&&Math.abs(y-tl.y)<28){if(tl.slot>=0){W.slot[tl.slot]=-1;tl.slot=-1;}W.drag={k:'tile',t:k,dx:x-tl.x,dy:y-tl.y};tl.tx=null;return true;}}return false;}
+  if(!W.drag)return false;var T=W.tiles[W.drag.t];if(type==='move'){T.x=x-W.drag.dx;T.y=y-W.drag.dy;return true;}
+  if(type==='up'){var best=-1,bd=46;W.P.forEach(function(p,i){var d=Math.hypot(T.x-p[0],T.y-p[1]);if(d<bd&&W.slot[i]<0){bd=d;best=i;}});
+   if(best>=0){W.slot[best]=W.drag.t;T.slot=best;T.tx=W.P[best][0];T.ty=W.P[best][1];}else{T.tx=T.hx;T.ty=T.hy;}W.drag=null;W.msg='';wbCheck1(W);return true;}}
+ if(W.ph!==4||W.solved)return false;
+ if(type==='down'){var from=null;
+  if(x>596&&y>80&&y<300&&W.pool>0)from={k:'pool'};
+  else{m.e.forEach(function(b,k){if(from||!W.ord[k])return;var mx=(W.P[b[0]][0]+W.P[b[1]][0])/2,my=(W.P[b[0]][1]+W.P[b[1]][1])/2;if(Math.hypot(x-mx,y-my)<20)from={k:'b',i:k};});
+   if(!from)m.a.forEach(function(a,i){if(from||!W.lp[i])return;lpAngs(m,i,W.lp[i]).forEach(function(an,s){if(from)return;var px=W.P[i][0]+26*Math.cos(an),py=W.P[i][1]+26*Math.sin(an);if(Math.hypot(x-px,y-py)<17)from={k:'a',i:i};});});}
+  if(!from)return false;if(from.k==='pool')W.pool--;else if(from.k==='b')W.ord[from.i]--;else W.lp[from.i]--;W.drag={k:'pair',x:x,y:y,from:from};W.msg='';return true;}
+ if(!W.drag)return false;if(type==='move'){W.drag.x=x;W.drag.y=y;return true;}
+ if(type==='up'){var z=wbZone(W,x,y),ok=false;
+  if(z&&z.k==='b'){if(W.ord[z.i]<3){W.ord[z.i]++;ok=true;}else wbSay(W,'A triple bond is the most two atoms can share.',ORANGE);}
+  else if(z&&z.k==='a'){if(m.a[z.i][0]==='H')wbSay(W,'H can share only ONE pair (its bond). No lone pairs on H.',RED);else if(W.lp[z.i]>=4)wbSay(W,'That atom has no room for more lone pairs.',ORANGE);else{W.lp[z.i]++;ok=true;}}
+  if(!ok)W.pool++;W.drag=null;wbPanel(W);return true;}
+ return false;}
+function wbCheck(W){var m=W.m,L=W.L,c=wbCounts(W),h=[];
+ if(W.ph!==4){wbSay(W,'Finish the steps above first.',ORANGE);return;}
+ if(W.pool>0)h.push('You still have '+W.pool+' pair'+(W.pool>1?'s':'')+' in the bank: every pair must be placed.');
+ if(W.ord.some(function(o){return o===0;}))h.push('Every terminal atom must be bonded to the central atom (step 4).');
+ m.a.forEach(function(a,i){if(c[i]===L.fin[i])return;if(a[0]==='H'){h.push('H can have only 2 electrons (one bond).');return;}
+  if(c[i]<L.fin[i])h.push(a[0]+' has only '+c[i]+' electrons'+(L.conv.length&&L.cen.indexOf(i)>=0?': drag a lone pair from a terminal atom into a bond to make a double bond.':': give it '+(L.fin[i]-c[i])/2+' more pair'+((L.fin[i]-c[i])/2>1?'s':'')+'.'));
+  else h.push(a[0]+' has '+c[i]+' electrons: that is too many'+(L.fin[i]>8?'':' (it needs 8)')+'.');});
+ var so=W.ord.slice().sort().join(),sl=L.ord.slice().sort().join();if(!h.length&&so!==sl)h.push('Share the electrons more evenly: '+(L.ord.filter(function(o){return o===2;}).length>1?'make a double bond to EACH side.':'look at which atoms share extra pairs.'));
+ h=h.filter(function(x,i){return h.indexOf(x)===i;});
+ if(h.length){wbSay(W,h[0],RED);$('pFb').innerHTML='<span class="bad">Not yet.</span><ul>'+h.slice(0,4).map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';return;}
+ W.solved=true;W.p.solved=true;W.t=0;var fin=L.fin[L.cen.length?L.cen[0]:0];
+ wbLog(W,6,L.conv.length?'Lone pairs moved in to make '+(L.ord.some(function(o){return o===3;})?'a triple bond':(L.ord.filter(function(o){return o===2;}).length>1?'double bonds':'a double bond'))+': every atom has an octet ✓':(fin<8&&L.cen.length?'Suboctet: '+m.a[L.cen[0]][0]+' has 6 ✓ (exception)':(fin>8?'Expanded octet: '+m.a[L.cen[0]][0]+' has '+fin+' ✓ (exception)':'Every atom has an octet ✓')));
+ wbSay(W,'Correct! This is the Lewis structure of '+m.f+'.',GREEN);renderSteps();wbPanel(W);wbCtl(W);}
+function wbHint(W){var m=W.m,L=W.L;var t={1:'The central atom is the one closest to the LEFT of the periodic table (never H).',2:'Valence electrons = the group number for groups 1–2, or group number − 10 for groups 13–18. Then add them all'+(m.q?' and adjust for the charge.':'.'),
+ 3:'Electrons are shared in pairs: divide the total by 2.'}[Math.floor(W.ph)];
+ if(!t){var st=wbStepMsg(W);t=st[1];}wbSay(W,'Hint: '+t,BLUE);}
+/* ---------- drawing ---------- */
+function wbDraw(W,dt){W.t+=dt;W.msgT=(W.msgT||0)+dt;var m=W.m,L=W.L,P=W.P,sz=34;clear();
+ card(592,14,194,330,'#fff');txt(m.f,689,38,{s:22});
+ /* skeleton guide */
+ if(W.ph<4){m.e.forEach(function(b){var a=P[b[0]],c=P[b[1]],an=Math.atan2(c[1]-a[1],c[0]-a[0]);seg(a[0]+30*Math.cos(an),a[1]+30*Math.sin(an),c[0]-30*Math.cos(an),c[1]-30*Math.sin(an),'#c9d4e6',3,[4,6]);});}
+ if(W.ph===1){txt('Atoms: drag them onto the board',689,64,{s:12,c:MUTED,w:500});
+  P.forEach(function(p,i){ctx.setLineDash([5,5]);ctx.strokeStyle=W.slot[i]>=0?'#c9d4e6':'#8d99b0';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(p[0],p[1],29,0,6.283);ctx.stroke();ctx.setLineDash([]);});
+  W.tiles.forEach(function(tl,k){if(W.drag&&W.drag.t===k)return;if(tl.tx!=null){tl.x=lerp(tl.x,tl.tx,Math.min(1,dt*10));tl.y=lerp(tl.y,tl.ty,Math.min(1,dt*10));}wbTile(tl,false);});
+  if(W.drag)wbTile(W.tiles[W.drag.t],true);}
+ else{
+  /* bonds */
+  m.e.forEach(function(b,k){if(W.ord[k])bondLines(P[b[0]],P[b[1]],W.ord[k],sz,1,INK);});
+  m.a.forEach(function(a,i){txt(a[0],P[i][0],P[i][1]+1,{s:sz,c:ECOL[a[0]]});});
+  /* step 2: valence dots around each atom */
+  if(W.ph===2||W.ph===2.5){var k2=0;if(W.ph===2.5)W.flyT+=dt;
+   m.a.forEach(function(a,i){var v=EL2[a[0]].v;if(W.ph===2&&W.vOk[i])W.vT[i]+=dt;for(var j=0;j<v;j++){var side=j%4,ang=[-Math.PI/2,0,Math.PI/2,Math.PI][side],paired=v>side+4,off=paired?(j<4?-5:5):0,px=P[i][0]+26*Math.cos(ang)-Math.sin(ang)*off,py=P[i][1]+26*Math.sin(ang)+Math.cos(ang)*off;
+    if(W.ph===2){if(W.vOk[i]&&W.vT[i]>j*.12)edot(px,py,1,INK);}else{var pk=clamp((W.flyT-.2-k2*.04)/.6,0,1),bp=wbBankE(k2);edot(lerp(px,bp[0],ease(pk)),lerp(py,bp[1],ease(pk))-30*Math.sin(Math.PI*pk),1,INK);}k2++;}});
+   if(W.ph===2.5&&m.q<0)for(var q=0;q<-m.q;q++){var pq=clamp((W.flyT-.2-k2*.04)/.6,0,1),bq=wbBankE(k2);edot(lerp(689,bq[0],ease(pq)),lerp(320,bq[1],ease(pq)),1,ORANGE);k2++;}
+   txt(W.ph===2?'Electron bank: empty':'Electron bank',689,64,{s:12,c:MUTED,w:500});}
+  if(W.ph===3||W.ph===3.5){if(W.ph===3.5)W.pairT+=dt;var pr=W.ph===3.5?ease(clamp(W.pairT/.8,0,1)):0;txt('Electron bank',689,64,{s:12,c:MUTED,w:500});
+   for(var e=0;e<L.ve;e++){var a1=wbBankE(e),b1=wbBankP(Math.floor(e/2)),bx=b1[0]+(e%2?6:-6);edot(lerp(a1[0],bx,pr),lerp(a1[1],b1[1],pr),1,INK);}
+   txt(L.ve+' e⁻ ÷ 2 =',650,286,{s:17,c:INK,a:'center'});}
+  if(W.ph===4){txt('Electron bank: drag a pair',689,64,{s:12,c:MUTED,w:500});
+   for(var p=0;p<W.pool;p++){var bp2=wbBankP(p);edot(bp2[0]-6,bp2[1],1,TEAL);edot(bp2[0]+6,bp2[1],1,TEAL);}
+   txt(W.pool+' pair'+(W.pool===1?'':'s')+' left',689,300,{s:18,c:W.pool?INK:GREEN});
+   m.a.forEach(function(a,i){lpAngs(m,i,W.lp[i]).forEach(function(an){lpd(P[i][0],P[i][1],an,sz*.78,1,1);});});
+   var cnt=wbCounts(W);rings(L,P,sz,cnt,W.solved?1:.85);
+   if(W.drag){var z=wbZone(W,W.drag.x,W.drag.y);if(z){ctx.globalAlpha=.3;ctx.fillStyle=AMBER;ctx.beginPath();ctx.arc(z.x,z.y,z.k==='b'?22:40,0,6.283);ctx.fill();ctx.globalAlpha=1;txt(z.k==='b'?'bonding pair':(m.a[z.i][0]==='H'?'no lone pairs on H':'lone pair'),z.x,z.y-(z.k==='b'?30:52),{s:13,c:'#b36b10'});}
+    ctx.globalAlpha=.3;ctx.fillStyle=TEAL;ctx.beginPath();ctx.arc(W.drag.x,W.drag.y,15,0,6.283);ctx.fill();ctx.globalAlpha=1;edot(W.drag.x-6,W.drag.y,1.1,TEAL);edot(W.drag.x+6,W.drag.y,1.1,TEAL);}
+   if(W.solved)bracket(P,sz,m.q,clamp(W.t/.5,0,1));}}
+ /* message */
+ if(W.msg){var al=W.msgC===GREEN?clamp(3-W.msgT,0,1):1;if(al>0)cwrap(W.msg,300,26,560,16,W.msgC,600);}
+ /* step banner */
+ card(14,356,772,132,'#fff');var ph=Math.floor(W.ph),st;
+ if(ph===1)st=['Step 1 of 6 · '+STEPN[0],'Drag each atom into a space on the board. The central space needs the atom with the LEAST attraction for shared electrons. H is always terminal.'];
+ else if(ph===2)st=['Step 2 of 6 · '+STEPN[1],'Type each atom’s valence electrons in its box, then the total.'];
+ else if(ph===3)st=['Step 3 of 6 · '+STEPN[2],'Type the number of pairs on the board (in the electron bank).'];
+ else st=W.solved?['All six steps done ✓','Correct! This is the Lewis structure of '+m.f+'.']:wbStepMsg(W);
+ var dn=W.solved?6:(ph<4?ph-1:(W.ord.some(function(o){return o===0;})?3:(W.pool>0?4:5)));
+ for(var d=0;d<6;d++){var x=40+d*22;ctx.fillStyle=d<dn?ACC():'#dfe6f2';ctx.beginPath();ctx.arc(x,382,8,0,6.283);ctx.fill();txt(String(d+1),x,382,{s:10,c:d<dn?'#fff':MUTED});}
+ txt(st[0],180,382,{s:20,a:'left',c:ACC()});
+ if(ph===2&&W.items){cwrap(st[1],400,404,736,15,MUTED,500);W.items.forEach(function(o,j){txt(o.k==='a'?o.lab:o.lab,o.x,428,{s:o.k==='a'?20:12,c:o.k==='a'?ECOL[o.lab]:MUTED});
+  if(j<W.items.length-1){var sym=W.items[j+1].k==='t'?'=':(W.items[j+1].k==='q'?(W.m.q<0?'+':'−'):'+');if(sym)txt(sym,(o.x+W.items[j+1].x)/2,458,{s:20,c:MUTED});}});}
+ else cwrap(st[1],400,414,736,17,INK,600);}
+function wbTile(tl,lift){var x=tl.x,y=tl.y;if(lift){ctx.globalAlpha=.25;rr(x-26+4,y-26+6,52,52,12);ctx.fillStyle=INK;ctx.fill();ctx.globalAlpha=1;}
+ rr(x-26,y-26,52,52,12);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=lift?ACC():LINE;ctx.lineWidth=2.5;ctx.stroke();txt(tl.e,x,y+1,{s:30,c:ECOL[tl.e]});}
+/* ---------- panel and controls ---------- */
+function wbPanel(W){var el=$('wblog');if(!el)return;var p=W.p;
+ el.innerHTML=STEPN.map(function(n,i){var k=i+1,d=W.log[k];return '<div class="ss'+(d?' done':'')+'"><b>'+(d?'✓':k)+'</b><span><span class="sst">'+n+'</span>'+(d?'<span class="ssd">'+d+'</span>':'')+'</span></div>';}).join('');
+ var fb=$('pFb');if(fb&&W.solved)fb.innerHTML=solvedMsg(p);var nx=$('pNext');if(nx)nx.style.display=W.solved?'':'none';}
+function wbCtl(W){$('controls').innerHTML='<button class="btn fill" id="wbC"'+(W.ph===4&&!W.solved?'':' disabled')+'>Check my structure</button><button class="btn" id="wbH">Hint</button><button class="btn" id="wbR">Start again</button>';
+ $('wbC').onclick=function(){wbCheck(W);};$('wbH').onclick=function(){wbHint(W);};$('wbR').onclick=function(){W.p.wb=wbNew(W.p);W.p.solved=false;W.p.tryUI();renderSteps();};}
+function wbUI(P){if(!P.wb)P.wb=wbNew(P);var W=P.wb;
+ $('panel').innerHTML='<div class="modebar"><div class="seg"><button id="mShow">Show me</button><button id="mTry" class="on">My turn</button></div><span class="small">Work it out on the molecule above, one step at a time.</span></div>'+
+  '<div class="task"><span class="src">'+P.src+'</span>'+P.q+'</div><div class="sixsteps" id="wblog"></div><div class="feedback" id="pFb"></div>'+
+  '<div class="stepbar">'+(P.next?'<button class="btn fill" id="pNext" style="display:none">Next ▶</button>':'')+'</div>';
+ $('mShow').onclick=function(){P.mode='show';P.st=0;$('ov').innerHTML='';$('controls').innerHTML='';cv.style.touchAction='';probUI(P);};
+ $('mTry').onclick=function(){};var nx=$('pNext');if(nx)nx.onclick=function(){P.next();};
+ cv.style.touchAction='none';wbCtl(W);wbPanel(W);$('ov').innerHTML='';if(W.ph===2)wbInputs(W);if(W.ph===3)wbPairInput(W);}
+
+var PL=[lewisProb('NH3','Example: NH₃','Example','Ammonia is a raw material used to make fertilizers, cleaning products and explosives. Draw the Lewis structure for <b>ammonia (NH₃)</b>.',{name:'Single bonds: ammonia (NH₃)',sense:'Each H shares one pair; N shares three pairs and has one lone pair: a stable octet ✓'}),
+ lewisProb('CO2','Example: CO₂','Example','Carbon dioxide is a product of all cellular respiration. Draw the Lewis structure for <b>carbon dioxide (CO₂)</b>.',{name:'Multiple bonds: carbon dioxide (CO₂)',sense:'Both C and O now have an octet ✓'}),
+ lewisProb('BH3','Problem 1','Problem 1','Draw the Lewis structure for <b>BH₃</b>.',{name:'Borane (BH₃)',sense:'B ends with only 6 electrons. You will see why this is allowed in the Exceptions tab.'}),
+ lewisProb('NF3','Challenge 1 ★','Challenge 1','A nitrogen trifluoride molecule contains numerous lone pairs. Draw its Lewis structure (<b>NF₃</b>).',{name:'Nitrogen trifluoride (NF₃)'}),
+ lewisProb('C2H4','Problem 2','Problem 2','Draw the Lewis structure for <b>ethylene, C₂H₄</b>.',{name:'Ethylene (C₂H₄)',sense:'Both carbon atoms are central. The C=C double bond gives each C an octet ✓'}),
+ lewisProb('CS2','Challenge 2 ★','Challenge 2','A molecule of carbon disulfide contains both lone pairs and multiple covalent bonds. Draw its Lewis structure (<b>CS₂</b>).',{name:'Carbon disulfide (CS₂)'}),
+ lewisProb('PO4','Example: PO₄³⁻','Example','Draw the correct Lewis structure for the polyatomic ion <b>phosphate (PO₄³⁻)</b>.',{name:'Polyatomic ion: phosphate (PO₄³⁻)',sense:'All atoms have an octet and the group has a net charge of 3− ✓'}),
+ lewisProb('NH4','Problem 3','Problem 3','Draw the Lewis structure for <b>NH₄⁺</b>.',{name:'Ammonium ion (NH₄⁺)'}),
+ lewisProb('ClO4','Challenge 3 ★','Challenge 3','The <b>ClO₄⁻</b> ion contains numerous lone pairs. Draw its Lewis structure.',{name:'Perchlorate ion (ClO₄⁻)'})];
+var SC_B1=builderScene(['NH3','H2O','CH4','CO2','HCN','N2'],'The six steps, one at a time','Watch where every electron goes. How many pairs end up as bonds, and how many as lone pairs?',
+ {rule:['1 · central atom (least attraction; never H)','2 · count valence electrons','3 · ÷ 2 = bonding pairs','4 · single bonds first','5 · lone pairs: terminal atoms, then central','6 · no octet? lone pairs → double/triple bonds']});
+var SC_B2=builderScene(['OH','NH4','PO4','ClO4'],'Polyatomic ions: add or subtract electrons','For an ion with a 3− charge, do you add or subtract 3 electrons? Why?',
+ {rule:['Atoms in a polyatomic ion are <b>covalently</b> bonded','Negative ion: <b>add</b> one e⁻ per charge','Positive ion: <b>subtract</b> one e⁻ per charge','Draw <b>brackets</b> and write the charge'],note:'<div class="safe" style="background:#e6f4f4;border-color:#0f8b8d">Same six steps as molecules. Only <b>step 2</b> changes: adjust the electrons for the charge, then put the finished structure in <b>[ brackets ]</b> with the charge.</div>'});
+
+/* ================= TAB 2: RESONANCE ================= */
+var RES_K=['NO3','CO3','O3','SO2','NO2m'],RC={k:'NO3',i:0,j:0,u:1,auto:false,at:0};
+function resMorph(m,A,B2,u,cx,cy,U,sz){var P=m.a.map(function(a){return [cx+a[1]*U,cy+a[2]*U];}),sc=sz/34;
+ m.e.forEach(function(b,k){var o1=A.ord[k],o2=B2.ord[k];if(o1===o2)bondLines(P[b[0]],P[b[1]],o1,sz,1,INK);else{bondLines(P[b[0]],P[b[1]],o1,sz,1-u,o1>1?ORANGE:INK);bondLines(P[b[0]],P[b[1]],o2,sz,u,o2>1?ORANGE:INK);}});
+ m.a.forEach(function(a,i){txt(a[0],P[i][0],P[i][1]+1,{s:sz,c:ECOL[a[0]]});
+  for(var s=0;s<A.lp5[i];s++){var g1=A.gone[i+':'+s],g2=B2.gone[i+':'+s],an=A.slots[i][s];if(!g1&&!g2)lpd(P[i][0],P[i][1],an,sz*.78,1,sc);else if(!g1&&g2)lpd(P[i][0],P[i][1],an,sz*.78,1-u,sc);else if(g1&&!g2)lpd(P[i][0],P[i][1],an,sz*.78,u,sc);}});
+ if(u>0&&u<1){A.conv.forEach(function(c){if(B2.gone[c.d+':'+c.slot])return;var b=m.e[c.k],md=[(P[b[0]][0]+P[b[1]][0])/2,(P[b[0]][1]+P[b[1]][1])/2],an=A.slots[c.d][c.slot],sp=[P[c.d][0]+sz*.78*Math.cos(an),P[c.d][1]+sz*.78*Math.sin(an)],w=ease(u);lpd(lerp(md[0],sp[0],w),lerp(md[1],sp[1],w),an,0,1,sc,ORANGE);});
+  B2.conv.forEach(function(c){if(A.gone[c.d+':'+c.slot])return;var b=m.e[c.k],md=[(P[b[0]][0]+P[b[1]][0])/2,(P[b[0]][1]+P[b[1]][1])/2],an=B2.slots[c.d][c.slot],sp=[P[c.d][0]+sz*.78*Math.cos(an),P[c.d][1]+sz*.78*Math.sin(an)],w=ease(u);lpd(lerp(sp[0],md[0],w),lerp(sp[1],md[1],w),an,0,1,sc,ORANGE);});}
+ bracket(P,sz,m.q,1);}
+function resRow(m,y,U,sz,cur,x0,x1){var S=resList(m),n=S.length;x0=x0==null?0:x0;x1=x1==null?800:x1;var w=(x1-x0)/n;
+ S.forEach(function(L,i){var cx=x0+w*(i+.5);if(i===cur){rr(cx-w/2+8,y-U*1.55,w-16,U*3.1,14);ctx.fillStyle='#fff4d6';ctx.fill();}drawStatic(L,cx,y,U,sz,{hl:true});if(i<n-1)txt('⟷',x0+w*(i+1),y,{s:sz*1.1,c:MUTED});});return n;}
+var SC_R1={title:'More than one correct structure',q:'In each drawing, which atoms move? Which electrons move?',canvas:true,
+ enter:function(){var S=resList(MOL[RC.k]);RC.i=0;RC.j=0;RC.u=1;ctlR();},
+ frame:function(dt){var m=MOL[RC.k],S=resList(m),n=S.length;RC.u=Math.min(1,RC.u+dt/1.3);if(RC.auto){RC.at+=dt;if(RC.at>2.6){RC.at=0;RC.i=RC.j;RC.j=(RC.j+1)%n;RC.u=0;}}
+  clear();resRow(m,96,34,20,RC.u>=1?RC.j:-1,40,760);
+  card(110,186,580,256,'#fff');resMorph(m,S[RC.i],S[RC.j],ease(RC.u),400,m.a.length>3?300:290,80,32);
+  txt(RC.u<1?'Only the electrons move: one lone pair moves in, one pair moves out':'Resonance structure '+(RC.j+1)+' of '+n,400,426,{s:16,c:RC.u<1?ORANGE:ACC()});
+  card(40,450,720,44,'#fff');txt('Same atoms in the same places. Only the double bond and lone pairs move. '+n+' resonance structures.',400,472,{s:16,c:INK});},
+ reads:function(){var n=resList(MOL[RC.k]).length;return [['Molecule / ion',MOL[RC.k].f],['Resonance structures',n],['Showing',(RC.j+1)+' of '+n]];}};
+function ctlR(){$('controls').innerHTML='<div class="subbar" style="margin:0">'+RES_K.map(function(k){return '<button class="btn'+(RC.k===k?' sel':'')+'" data-k="'+k+'">'+MOL[k].f+'</button>';}).join('')+'</div><button class="btn fill" id="rN">Move the double bond ▶</button><button class="btn'+(RC.auto?' sel':'')+'" id="rA">Auto play</button>';
+ each('#controls [data-k]',function(b){b.onclick=function(){RC.k=b.getAttribute('data-k');SC_R1.enter();};});
+ $('rN').onclick=function(){var n=resList(MOL[RC.k]).length;RC.i=RC.j;RC.j=(RC.j+1)%n;RC.u=0;};$('rA').onclick=function(){RC.auto=!RC.auto;RC.at=0;ctlR();};}
+/* --- the real molecule (hybrid) --- */
+var RH={k:'NO3',t:0,flip:-1},BLEN={O3:['O–O',148,121,128,'1½'],CO3:['C–O',143,120,129,'1⅓'],NO3:['N–O',0,0,0,'1⅓'],SO2:['S–O',0,0,0,'1½'],NO2m:['N–O',0,0,0,'1½']};
+function hybridDraw(m,cx,cy,U,sz,t){var S=resList(m),L0=S[0],P=m.a.map(function(a){return [cx+a[1]*U,cy+a[2]*U];}),sc=sz/34,rb={};
+ S.forEach(function(L){L.conv.forEach(function(c){rb[c.k]=1;});});var c0=L0.cen[0];
+ /* delocalized cloud */
+ var ks=Object.keys(rb).map(Number),angs=ks.map(function(k){var b=m.e[k],o=b[0]===c0?b[1]:b[0];return Math.atan2(P[o][1]-P[c0][1],P[o][0]-P[c0][0]);}),R=U*.5,path=[];
+ if(ks.length>=3){for(var i=0;i<=60;i++){var a=i/60*6.283;path.push([P[c0][0]+R*Math.cos(a),P[c0][1]+R*Math.sin(a)]);}}
+ else{var a1=angs[0],a2=angs[1],d=((a2-a1+3*Math.PI)%(2*Math.PI))-Math.PI;for(var j=0;j<=40;j++){var aa=a1+d*j/40;path.push([P[c0][0]+R*1.05*Math.cos(aa),P[c0][1]+R*1.05*Math.sin(aa)]);}}
+ ctx.save();ctx.globalAlpha=.2+.08*Math.sin(t*3);ctx.strokeStyle=AMBER;ctx.lineWidth=26;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach(function(p,i){if(i)ctx.lineTo(p[0],p[1]);else ctx.moveTo(p[0],p[1]);});ctx.stroke();ctx.restore();
+ m.e.forEach(function(b,k){bondLines(P[b[0]],P[b[1]],1,sz,1,INK);if(rb[k]){var a=Math.atan2(P[b[1]][1]-P[b[0]][1],P[b[1]][0]-P[b[0]][0]),nx=-Math.sin(a)*sz*.2,ny=Math.cos(a)*sz*.2,sh=sz*.62;
+  seg(P[b[0]][0]+sh*Math.cos(a)+nx,P[b[0]][1]+sh*Math.sin(a)+ny,P[b[1]][0]-sh*Math.cos(a)+nx,P[b[1]][1]-sh*Math.sin(a)+ny,ORANGE,3,[6,6]);}});
+ m.a.forEach(function(a,i){txt(a[0],P[i][0],P[i][1]+1,{s:sz,c:ECOL[a[0]]});for(var s=0;s<L0.lp5[i];s++){var all=S.every(function(L){return !L.gone[i+':'+s];});if(all)lpd(P[i][0],P[i][1],L0.slots[i][s],sz*.78,1,sc);}});
+ /* moving electrons */
+ var N=path.length-1;for(var e=0;e<2;e++){var ph;if(ks.length>=3)ph=((t*.22+e*.5)%1);else{var w=(Math.sin(t*1.6+e*Math.PI)+1)/2;ph=w;}var q=path[Math.round(ph*N)];
+  ctx.fillStyle=ORANGE;ctx.beginPath();ctx.arc(q[0],q[1],5.5,0,6.283);ctx.fill();ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(q[0],q[1],11,0,6.283);ctx.fill();ctx.globalAlpha=1;}
+ bracket(P,sz,m.q,1);return ks.length;}
+var SC_R2={title:'The real molecule: delocalized electrons',q:'If the real ion were flipping between drawings, the bonds would have different lengths. What do scientists measure instead?',canvas:true,
+ enter:function(){RH.t=0;RH.flip=-1;$('controls').innerHTML='<div class="subbar" style="margin:0">'+RES_K.map(function(k){return '<button class="btn'+(RH.k===k?' sel':'')+'" data-k="'+k+'">'+MOL[k].f+'</button>';}).join('')+'</div><button class="btn" id="hF">Does it flip between drawings?</button>';
+  each('#controls [data-k]',function(b){b.onclick=function(){RH.k=b.getAttribute('data-k');SC_R2.enter();};});$('hF').onclick=function(){RH.flip=0;};},
+ frame:function(dt){RH.t+=dt;var m=MOL[RH.k],S=resList(m),n=S.length,bl=BLEN[RH.k];clear();
+  card(20,20,500,400,'#fff');
+  if(RH.flip>=0){RH.flip+=dt;var i=Math.floor(RH.flip/.45)%n;drawStatic(S[i],270,m.a.length>3?225:205,96,34,{hl:true});
+   ctx.strokeStyle=RED;ctx.lineWidth=8;seg(120,80,420,370,RED,8);seg(420,80,120,370,RED,8);txt('✗ No! It does NOT flip back and forth',270,400,{s:18,c:RED});if(RH.flip>3.2)RH.flip=-1;}
+  else{var nb=hybridDraw(m,270,m.a.length>3?225:205,110,36,RH.t);txt('the extra pair is shared by all '+nb+' bonds',270,48,{s:16,c:ORANGE});txt('✓ One real structure: a blend of all '+n+' drawings',270,400,{s:17,c:GREEN});}
+  card(536,20,250,400,'#fff');txt('Bond lengths',661,46,{s:18});
+  var rows=[['single bond',bl[1]||140,ORANGE,bl[1]?bl[1]+' pm':'longer'],['double bond',bl[2]||115,BLUE,bl[2]?bl[2]+' pm':'shorter']];
+  rows.forEach(function(r,k){var y=86+k*56;txt(bl[0]+' '+r[0],552,y,{s:14,a:'left',w:500});var w=(r[1]-100)*3.4;rr(552,y+12,w,14,7);ctx.fillStyle=r[2];ctx.fill();txt(r[3],552+w+8,y+19,{s:13,a:'left',c:MUTED,w:500});});
+  txt('In '+m.f+' (measured):',552,214,{s:14,a:'left',c:TEAL});var nbonds=Object.keys(S.reduce(function(o,L){L.conv.forEach(function(c){o[c.k]=1;});return o;},{})).length,real=bl[3]||127,wr=(real-100)*3.4;
+  for(var k=0;k<nbonds;k++){var y=236+k*26,grow=ease(clamp(RH.t/1.2-k*.15,0,1));rr(552,y,wr*grow,14,7);ctx.fillStyle=TEAL;ctx.fill();}
+  txt(bl[3]?'all '+real+' pm':'all the same length',552,236+nbonds*26+10,{s:14,a:'left',c:TEAL});
+  txt('in between single and double',552,236+nbonds*26+32,{s:13,a:'left',c:MUTED,w:500});txt('bond order '+bl[4],552,236+nbonds*26+56,{s:13,a:'left',c:MUTED,w:500});
+  card(20,432,766,58,'#fff');cwrap('Resonance structures are only drawings. The real '+m.f+' is ONE structure: its extra electron pair is delocalized (spread out).',403,452,730,15,INK,600);},
+ reads:function(){return [['Molecule / ion',MOL[RH.k].f],['Drawings',resList(MOL[RH.k]).length],['Real bonds','all equal']];}};
+/* --- resonance practice --- */
+function resProb(key,chip,src,q){var m=MOL[key],L=lewis(m),S=resList(m),n=S.length,c=L.cen[0],ce=m.a[c][0];
+ return {chip:chip,name:m.nm.charAt(0).toUpperCase()+m.nm.slice(1)+' ('+m.f+')',src:src,q:q,m:m,res:true,
+  fields:[{t:'n',lab:'Electrons available for bonding =',unit:'e⁻',want:L.ve,tolA:.01,alt:m.q?[[L.val,'Remember the charge: '+(m.q<0?'add':'subtract')+' '+Math.abs(m.q)+' e⁻.']]:[],why:'Add the valence electrons'+(m.q?' and adjust for the charge.':'.')},
+   {t:'n',lab:'Number of bonding pairs =',unit:'pairs',want:L.pairs,tolA:.01,alt:[[L.ve,'Divide by 2.']],why:'Electrons ÷ 2.'},
+   {t:'c',lab:'After placing single bonds and lone pairs, '+ce+' has…',opts:['fewer than 8: one lone pair must become a double bond','an octet already','more than 8'],ok:0,keep:true,why:'Count around '+ce+': 2 per bond + 2 per lone pair.'},
+   {t:'n',lab:'The double bond can go to how many different atoms? Resonance structures =',unit:'',want:n,tolA:.01,why:'Count the equivalent places for the double bond.'},
+   {t:'c',lab:'In the real '+m.f+', the bonds to '+ce+' are…',opts:['all the same length, between single and double','switching between single and double','all single bonds','all double bonds'],ok:0,keep:true,why:'The real molecule is a blend: the electrons are delocalized.'}],
+  show:[['What do we know?','Formula: <b>'+m.f+'</b>'+(m.q?' · charge '+chg(m.q):'')+'. Unknown: all its resonance structures.'],
+   ['Steps 1–3',ce+' is central · '+veText(L)+' · '+L.ve+' ÷ 2 = '+L.pairs+' pairs'],
+   ['Steps 4–6: one structure',stepText(L,4)[1]+'. '+stepText(L,6)[1]+'.'],
+   ['Move the double bond','The double bond can go to any of the <b>'+n+'</b> equivalent atoms → <b>'+n+' resonance structures</b>.'],
+   ['The real molecule','All the '+ce+' bonds are identical: between a single and a double bond. The extra pair of electrons is <b>delocalized</b>.']],
+  ans:n+' resonance structures; all bonds identical in the real '+m.f+'.'};}
+function resProbScene(p){return {title:p.chip+': '+p.name,q:'Where else could the double bond go? Are those places equivalent?',canvas:true,prob:p,
+ frame:function(dt){var st=p.mode==='show'?(p.st||0):(p.solved?5:0),m=p.m,S=resList(m);clear();
+  if(st<3){var L=lewis(m);drawStatic(st>=2?L:{m:m,ord:m.e.map(function(){return 1;}),lp5:m.a.map(function(){return 0;}),slots:L.slots,gone:{},oddAt:-1,fin:L.fin},400,230,100,36,{});txt(st<2?'Skeleton of '+m.f:'Steps 1–3: count electrons and pairs',400,40,{s:18,c:MUTED});}
+  else if(st===3){drawStatic(S[0],400,230,100,36,{hl:true});txt('One correct structure',400,40,{s:18,c:ACC()});}
+  else{resRow(m,200,m.a.length>3?52:58,24,-1,20,780);txt(S.length+' resonance structures',400,40,{s:18,c:ACC()});
+   if(st>=5){card(150,330,500,150,'#fff');txt('The real '+m.f+': one blend, all bonds equal',400,352,{s:15,c:GREEN});hybridDraw(m,400,m.a.length>3?415:405,52,22,performance.now()/1000);}}},
+ reads:function(){return [['Molecule / ion',p.m.f],['Mode',p.mode==='try'?'My turn':'Show me']];}};}
+var PR=[resProb('NO2m','Problem 1','Problem 1','Draw the Lewis resonance structures for <b>NO₂⁻</b>.'),resProb('SO2','Problem 2','Problem 2','Draw the Lewis resonance structures for <b>SO₂</b>.'),
+ resProb('O3','Problem 3','Problem 3','Draw the Lewis resonance structures for <b>O₃</b> (ozone).'),resProb('CO3','Challenge ★','Challenge','Draw the three resonance structures for the <b>carbonate ion (CO₃²⁻)</b>. Hint: each structure contains one double bond.')];
+
+/* ================= TAB 3: EXCEPTIONS ================= */
+var SC_X1=builderScene(['NO2','ClO2'],'Exception 1: an odd number of electrons','17 electrons cannot be split into pairs. What happens to the last one?',
+ {rule:['Some molecules have an <b>odd</b> number of valence electrons','They cannot form an exact number of pairs','One atom is left with <b>7</b> electrons','Examples: NO₂, ClO₂'],note:'<div class="safe">Watch <b>step 3</b>: one electron is left over (red). It cannot pair up, so no structure gives every atom an octet.</div>'});
+/* coordinate covalent bond */
+MOL.BF3c={id:'BF3c',f:'BF₃',nm:'boron trifluoride',a:[['B',0,0],['F',-1,0],['F',.5,-R3],['F',.5,R3]],e:[[0,1],[0,2],[0,3]]};
+MOL.NH3c={id:'NH3c',f:'NH₃',nm:'ammonia',a:[['N',0,0],['H',0,-1],['H',0,1],['H',1,0]],e:[[0,1],[0,2],[0,3]]};
+var CC={t:-1};
+var SC_X2={title:'Exception 2: a suboctet and the coordinate covalent bond',q:'BF₃ has a B with only 6 electrons. Which molecule can give it a whole pair?',canvas:true,
+ enter:function(){CC.t=-1;ctlButtons([{t:'React with NH₃ ▶',fill:true,f:function(){CC.t=0;}},{t:'Reset',f:function(){CC.t=-1;}}]);},
+ frame:function(dt){if(CC.t>=0)CC.t+=dt;var t=Math.max(0,CC.t),U=88,sz=32,bx=230,by=200,pa=clamp(t/1.1,0,1),mv=ease(clamp((t-1.3)/1.4,0,1)),done=CC.t>=2.8;clear();
+  var LB=lewis(MOL.BF3c),LN=lewis(MOL.NH3c),nx=lerp(600,bx+U*1.65,mv);
+  var PB=drawStatic(LB,bx,by,U,sz,{}),PN=drawStatic(LN,nx,by,U,sz,{hide:{'0:0':1}});
+  var sp=[nx-sz*.78,by],md=[(bx+nx)/2,by];
+  if(done){bondLines([bx,by],[nx,by],1,sz,1,ORANGE);}
+  else{var w=ease(clamp((t-1.3)/1.4,0,1));lpd(lerp(sp[0],md[0],w),by,Math.PI,0,1,1,CC.t>=0?ORANGE:INK);}
+  if(CC.t>=0&&t<1.3){var x1=nx-sz*.9,x2=bx+sz*.8;ctx.strokeStyle=ORANGE;ctx.lineWidth=3.5;ctx.beginPath();var N=30,k=Math.round(N*pa);for(var i=0;i<=k;i++){var u=i/N,x=lerp(x1,x2,u),y=by-10-110*Math.sin(Math.PI*u);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);}ctx.stroke();
+   if(pa>=1){ctx.fillStyle=ORANGE;ctx.beginPath();ctx.moveTo(x2,by-12);ctx.lineTo(x2+12,by-24);ctx.lineTo(x2+15,by-8);ctx.closePath();ctx.fill();}txt('N gives BOTH electrons of its lone pair',(x1+x2)/2,by-136,{s:15,c:ORANGE});}
+  var cB=done?8:6;rings({m:{a:[['B']]}},[[bx,by]],sz,[cB],1,[-3*Math.PI/4]);if(done)rings({m:{a:[['N']]}},[[nx,by]],sz,[8],1,[-Math.PI/4]);
+  txt(done?'B now has 8 electrons ✓  ·  the orange bond is a coordinate covalent bond':'B has only 6 electrons: a suboctet',done?(bx+nx)/2:bx,by+118,{s:16,c:done?GREEN:RED});
+  txt('lone pair',nx-sz*1.6,by-34,{s:13,c:MUTED,w:500,al:done?0:1});
+  card(20,370,766,120,'#fff');txt('BF₃ + NH₃ → F₃B–NH₃',403,398,{s:22});
+  txt('Suboctet: a stable atom with fewer than 8 electrons (B in BH₃ and BF₃).',403,432,{s:16,c:INK,w:500});
+  txt('Coordinate covalent bond: ONE atom donates BOTH electrons of the shared pair.',403,462,{s:16,c:ORANGE});},
+ reads:function(){return [['Electrons on B',CC.t>=2.8?8:6],['New bond',CC.t>=2.8?'coordinate covalent':'–']];}};
+var SC_X3=builderScene(['XeF4','PCl5','SF6','ClF3'],'Exception 3: the expanded octet','Why can P, S, Cl and Xe hold more than 8 electrons, but N and O cannot?',
+ {rule:['Some central atoms have <b>more than 8</b> electrons','Only elements in <b>period 3 or higher</b>','They have <b>d orbitals</b> to hold the extra pairs','They can form <b>more than four</b> covalent bonds'],note:'<div class="safe" style="background:#f3edf9;border-color:#8a4fbf">Look at the mini periodic table in step 1: every central atom here is in <b>period 3 or lower</b>. N, O and F (period 2) have no d orbitals, so they can never have an expanded octet.</div>'});
+var PX=[lewisProb('XeF4','Example: XeF₄','Example','Xenon is a noble gas that forms a few compounds with nonmetals that strongly attract electrons. Draw the correct Lewis structure for <b>xenon tetrafluoride (XeF₄)</b>.',{name:'Expanded octet: xenon tetrafluoride (XeF₄)',sense:'Xe ends with 12 electrons: an expanded octet. Xenon compounds such as XeF₄ are toxic because they are highly reactive.'}),
+ lewisProb('ClF3','Problem 1','Problem 1','Draw the expanded octet Lewis structure for <b>ClF₃</b>.',{name:'Chlorine trifluoride (ClF₃)'}),
+ lewisProb('PCl5','Problem 2','Problem 2','Draw the expanded octet Lewis structure for <b>PCl₅</b>.',{name:'Phosphorus pentachloride (PCl₅)'}),
+ lewisProb('SF6','Challenge ★','Challenge','Draw the Lewis structure for the molecule formed when <b>six fluorine atoms and one sulfur atom</b> bond covalently.',{name:'Sulfur hexafluoride (SF₆)'})];
+var XOPT=['odd number of valence electrons','suboctet (fewer than 8)','expanded octet (more than 8)'];
+var whichX={chip:'Which exception?',name:'Which exception?',src:'Sort it',mode:'try',q:'Match each molecule with its exception to the octet rule.',
+ fields:[['NO₂',0,'5 + 2 × 6 = 17: an odd number.'],['BCl₃',1,'B has only 6 electrons.'],['PF₅',2,'P (period 3) has 10 electrons.'],['ClO₂',0,'7 + 2 × 6 = 19: an odd number.'],['BH₃',1,'B has only 6 electrons.'],['PCl₅',2,'P has 10 electrons.']].map(function(r){return {t:'c',lab:r[0],opts:XOPT,ok:r[1],keep:true,why:r[2]};}),
+ show:[['Odd number of electrons','Add the valence electrons. If the total is odd (NO₂: 17, ClO₂: 19), one electron cannot pair.'],['Suboctet','B (and Be) are stable with fewer than 8: BH₃, BCl₃, BF₃ have 6 around B.'],['Expanded octet','Central atoms in period 3 or higher (P, S, Cl, Xe) can have 10 or 12: PF₅, PCl₅.']],
+ ans:'Odd: NO₂, ClO₂ · suboctet: BCl₃, BH₃ · expanded: PF₅, PCl₅.'};
+var SC_X4={title:'Which exception?',q:'For each molecule: count the electrons first. Odd total? Fewer than 8 around B? More than 8 around a period-3 atom?',canvas:false,prob:whichX};
+
+/* ================= QUIZZES ================= */
+function pic(k,d,w,h,U,sz,o){return function(){return lewisImg(MOL[k],d,w||220,h||170,U||52,sz||24,o);};}
+var Q1=[{q:'Which step comes <b>first</b> when you draw a Lewis structure?',o:['Predict the central atom','Place the lone pairs','Check the octets','Find the number of bonding pairs'],a:0,w:'Step 1: predict the central and terminal atoms.'},
+ {q:'In a Lewis structure, hydrogen is always…',o:['a terminal atom','the central atom','surrounded by 8 electrons','part of a double bond'],a:0,w:'H can share only one pair, so it is always terminal.'},
+ {q:'How many valence electrons are available in <b>PCl₃</b>?',o:['26','24','8','4'],a:0,w:'5 + 3 × 7 = 26 electrons.'},
+ {q:'How many electrons are available in the ion <b>NO₃⁻</b>?',o:['24','23','22','16'],a:0,w:'5 + 3 × 6 + 1 = 24 (add 1 for the 1− charge).'},
+ {q:'How many electrons are available in the ion <b>NH₄⁺</b>?',o:['8','9','10','5'],a:0,w:'5 + 4 × 1 − 1 = 8 (subtract 1 for the 1+ charge).'},
+ {q:'<b>CF₄</b> has 32 electrons available. How many bonding pairs?',o:['16','32','4','8'],a:0,w:'32 ÷ 2 = 16 pairs.'},
+ {q:'After step 5, the C in CO₂ has only 4 electrons and no pairs are left. What do you do?',o:['Turn lone pairs on the O atoms into double bonds','Add more electrons','Make O the central atom','Remove one O atom'],a:0,w:'Step 6: move lone pairs from terminal atoms into the bonds.'},
+ {q:'This is the Lewis structure of NH₃. How many electrons surround the N atom?',picF:pic('NH3',null,240,200,66,28),o:['8','6','3','2'],a:0,w:'3 bonds × 2 + 1 lone pair × 2 = 8.'}];
+var Q2=[{q:'Resonance occurs when…',o:['more than one valid Lewis structure can be drawn','a molecule has an odd number of electrons','an atom has more than 8 electrons','a molecule has only single bonds'],a:0,w:'Two or more correct structures for one molecule or ion are resonance structures.'},
+ {q:'Here is one structure of NO₃⁻. How many resonance structures does NO₃⁻ have?',picF:pic('NO3',null,260,230,70,26,{hl:true}),o:['3','2','1','4'],a:0,w:'The double bond can go to any of the 3 O atoms.'},
+ {q:'In the real NO₃⁻ ion, the three N–O bonds are…',o:['identical, between a single and a double bond in length','one short double bond and two long single bonds','all single bonds','all double bonds'],a:0,w:'Bond lengths are identical and intermediate between single and double.'},
+ {q:'Does the real NO₃⁻ ion switch back and forth between its resonance structures?',o:['No: it is always one blend of them','Yes, very fast','Yes, but only when heated','Only in water'],a:0,w:'The molecule behaves as though it has only one structure.'},
+ {q:'Which of these has resonance structures?',o:['O₃','CH₄','H₂O','NH₃'],a:0,w:'In O₃ the double bond can be on either side.'},
+ {q:'How many resonance structures does SO₂ have (octet rule)?',o:['2','3','1','4'],a:0,w:'The double bond can be on either O.'},
+ {q:'Between resonance structures, what moves?',o:['Only electrons (bonds and lone pairs)','The atoms','The central atom','The charge'],a:0,w:'Atoms stay in place; only electron pairs move.'},
+ {q:'True or false: in a compound with resonance, <b>all</b> bond lengths are identical.',o:['False: only the bonds that resonate are identical','True: every bond is identical'],a:0,w:'Only the resonating bonds become equal.'}];
+var Q3=[{q:'Which exception to the octet rule does this molecule show?',picF:pic('BH3',null,240,200,66,28),o:['suboctet: fewer than 8 electrons','expanded octet','odd number of electrons','no exception'],a:0,w:'B has only 6 electrons.'},
+ {q:'Which exception does this molecule show?',picF:pic('PCl5',null,280,250,82,24),o:['expanded octet','suboctet','odd number of electrons','coordinate covalent bond'],a:0,w:'P has 10 electrons.'},
+ {q:'NO₂ is an exception because…',o:['it has an odd number of valence electrons (17)','B is central','N has an expanded octet','N is in period 3'],a:0,w:'5 + 2 × 6 = 17: one electron cannot pair.'},
+ {q:'A coordinate covalent bond forms when…',o:['one atom donates both of the shared electrons','each atom gives one electron','electrons are transferred','an atom has an odd electron'],a:0,w:'Like N giving its lone pair to B in BF₃ + NH₃.'},
+ {q:'In the reaction between BF₃ and NH₃, the bond formed is…',o:['a coordinate covalent bond','an ionic bond','an expanded octet','a resonance bond'],a:0,w:'N donates both electrons.'},
+ {q:'An expanded octet is possible because the atom uses its…',o:['d orbitals','p orbitals','s orbital only','neutrons'],a:0,w:'Only elements in period 3 or higher have d orbitals.'},
+ {q:'Which atom can have an expanded octet?',o:['S','O','N','C'],a:0,w:'S is in period 3.'},
+ {q:'How many electrons surround Xe in XeF₄?',o:['12','8','10','16'],a:0,w:'4 bonds (8) + 2 lone pairs (4) = 12.'}];
+var QX=[{q:'Step 2 of drawing a Lewis structure is to…',o:['count the electrons available for bonding','place the lone pairs','predict the central atom','check the octets'],a:0,w:'Step 2: count the valence electrons (adjust for an ion\'s charge).'},
+ {q:'How many electrons are available in the sulfate ion, <b>SO₄²⁻</b>?',o:['32','30','34','24'],a:0,w:'6 + 4 × 6 + 2 = 32.'},
+ {q:'Which atom is central in <b>CO₂</b>?',o:['C','O','either O atom','none'],a:0,w:'C has the least attraction for shared electrons.'},
+ {q:'N₂ has 10 valence electrons. To give both N atoms an octet, they share…',o:['a triple bond','a double bond','a single bond','no electrons'],a:0,w:':N≡N: with one lone pair on each N.'},
+ {q:'How many lone pairs are on the central atom of <b>H₂O</b>?',o:['2','1','0','4'],a:0,w:'8 electrons: 2 bonds + 2 lone pairs on O.'},
+ {q:'How many resonance structures does the carbonate ion CO₃²⁻ have?',o:['3','2','1','4'],a:0,w:'The double bond can go to any of the 3 O atoms.'},
+ {q:'In ozone, O₃, the two O–O bonds are…',o:['the same length, between single and double','one single and one double','both single','both double'],a:0,w:'Resonance makes them identical.'},
+ {q:'BH₃ is an example of…',o:['a suboctet','an expanded octet','an odd number of electrons','resonance'],a:0,w:'B has only 6 electrons.'},
+ {q:'In SF₆, sulfur has…',o:['12 electrons: an expanded octet','8 electrons','6 electrons','7 electrons'],a:0,w:'6 bonds × 2 = 12; S is in period 3.'},
+ {q:'ClO₂ has 19 valence electrons, so it…',o:['has an odd number of electrons','has a suboctet','has resonance only','obeys the octet rule'],a:0,w:'19 is odd: one electron cannot pair.'}];
+
+var QZ1=mkQuiz(Q1),QZ2=mkQuiz(Q2),QZ3=mkQuiz(Q3),QZX=mkQuiz(QX,true);
+
+/* ================= navigation ================= */
+var TABS=[
+ {n:'1 · Lewis structures',c:TEAL,hash:'lewis',obj:'Use the six basic steps to draw Lewis structures for molecules and polyatomic ions.',
+  rule:['1 · central atom (least attraction; never H)','2 · count the valence electrons','3 · ÷ 2 = bonding pairs','4 · single bonds first','5 · lone pairs: terminal atoms, then central','6 · no octet? lone pairs → double/triple bonds'],
+  steps:[['The six steps',SC_B1]].concat(PL.slice(0,6).map(function(p){return [p.chip,lewisProbScene(p)];})).concat([['Polyatomic ions',SC_B2]]).concat(PL.slice(6).map(function(p){return [p.chip,lewisProbScene(p,'Do you add or subtract electrons for this charge?')];})).concat([['Quiz me',quizScene(QZ1,'Quiz me: drawing Lewis structures','Say the six steps in order before you start.')]])},
+ {n:'2 · Resonance',c:BLUE,hash:'resonance',obj:'Explain why resonance occurs and draw resonance structures.',
+  rule:['<b>Resonance</b>: more than one valid Lewis structure','Atoms stay put; only <b>electrons</b> move','The real molecule is <b>one blend</b> of the structures','Its resonating bonds are <b>identical</b>: between single and double'],
+  steps:[['More than one structure',SC_R1],['The real molecule',SC_R2]].concat(PR.map(function(p){return [p.chip,resProbScene(p)];})).concat([['Quiz me',quizScene(QZ2,'Quiz me: resonance','Where can the double bond go?')]])},
+ {n:'3 · Exceptions',c:PLUM,hash:'exceptions',obj:'Identify molecules that are exceptions to the octet rule and explain why they occur.',
+  rule:['<b>Odd</b> number of electrons: NO₂, ClO₂','<b>Suboctet</b> (fewer than 8): BH₃, BF₃','<b>Coordinate covalent bond</b>: one atom gives both electrons','<b>Expanded octet</b> (more than 8): period 3 or higher, d orbitals'],
+  steps:[['Odd electrons',SC_X1],['Suboctet',SC_X2],['Expanded octet',SC_X3]].concat(PX.map(function(p){return [p.chip,lewisProbScene(p,'Is the central atom in period 3 or lower? How many electrons does it end with?')];})).concat([['Which exception?',SC_X4],['Quiz me',quizScene(QZ3,'Quiz me: exceptions to the octet rule','Count the electrons around the central atom first.')]])},
+ {n:'Exit ticket',c:CORAL,hash:'exit-ticket',obj:'Show what you learned today: 10 questions from all three objectives.',
+  rule:['Type your full name and choose your class','One try per question: think before you click','Your result is sent to your teacher at the end'],
+  steps:[['Exit ticket',quizScene(QZX,'Exit ticket: Molecular structures','Read each question carefully. Which objective is it testing?')]]}];
+function mixFields(P){(P.fields||[]).forEach(function(f){if(f.t!=='c'||f.keep||P.keep)return;var idx=shuffle(f.opts.map(function(_,i){return i;})),o=f.opts;f.opts=idx.map(function(i){return o[i];});f.ok=idx.indexOf(f.ok);if(f.bad){var nb={};Object.keys(f.bad).forEach(function(k){nb[idx.indexOf(+k)]=f.bad[k];});f.bad=nb;}});}
+TABS.forEach(function(t){t.steps.forEach(function(s){if(s[1].prob)mixFields(s[1].prob);});});
+
+function mkQuiz(L,exit){return {L:L,exit:!!exit,ord:null,player:null};}
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.sent=false;Q.started=Date.now();Q.ord=Q.L.map(function(q){return shuffle(q.o.map(function(_,k){return k;}));});}
+function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
+function exStartHtml(Q){var me={};try{me=JSON.parse(lsGet('msm-student')||'{}')||{};}catch(e){}var nm=Q.player?Q.player.name:(me.name||''),cl=Q.player?Q.player.cls:(me.cls||'');
+ return '<div class="qz"><div class="lbl">Exit ticket · Chapter 8.3</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions from all three objectives. One try per question.</div>'+
+  '<div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div>'+
+  '<div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
+  '<div class="exerr" id="exErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="exGo">Start the exit ticket ▶</button></div></div>';}
+function exResult(Q){var N=Q.L.length,now=new Date(),mins=Math.max(1,Math.round((Date.now()-Q.started)/60000)),
+ when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+ hh=(Q.player.name+'|'+Q.player.cls+'|'+Q.score*100+'|'+Q.score+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7),
+ code='MS-'+('000000'+hh.toString(36).toUpperCase()).slice(-6);
+ Q.res={when:when,code:code,payload:{game:'Molecular Structures Lab: Exit Ticket',chapter:8,name:Q.player.name,cls:Q.player.cls,score:Q.score*100,correct:Q.score,total:N,mins:mins,when:when,code:code,
+  missed:Q.hist.map(function(h,k){return h?'':'Q'+(k+1);}).filter(Boolean).join(' ')}};}
+function exSend(Q){var st=$('exSt'),rt=$('exRetry');if(!st)return;st.className='sendst';st.textContent='Sending your result to your teacher…';if(rt)rt.style.display='none';
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Q.res.payload)})
+  .then(function(){Q.sent=true;var s2=$('exSt');if(s2){s2.className='sendst ok';s2.textContent='✓ Your result was sent to your teacher.';}})
+  .catch(function(){var s2=$('exSt'),r2=$('exRetry');if(s2){s2.className='sendst err';s2.textContent='Could not send. Check your internet, then tap Send again.';}if(r2)r2.style.display='';});}
+function qzHtml(Q){if(Q.exit&&!Q.player)return exStartHtml(Q);if(!Q.ord)qzStart(Q);var N=Q.L.length;
+ if(Q.done){var pct=Q.score/N,msg=pct>=.8?'Excellent! You have got this objective.':(pct>=.6?'Good work. Look at the ones you missed, then try again.':'Go back through the steps in this tab, then try again.');
+  if(Q.exit)msg=pct>=.8?'Excellent work today!':(pct>=.6?'Good effort. Review the questions you missed.':'Review this lesson again before the next class.');
+  return '<div class="qz qzend">'+(Q.exit?'<div class="ticket"><div class="lbl">Exit ticket · Chapter 8.3 Molecular structures</div><div class="tname">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div><div class="small">'+Q.res.when+' · check code '+Q.res.code+'</div><div class="qzbig">'+Q.score+' / '+N+'</div><div>'+msg+'</div>'+qzDots(Q)+
+   '<div class="stepbar" style="justify-content:center"><span class="'+(Q.sent?'sendst ok':'sendst')+'" id="exSt">'+(Q.sent?'✓ Your result was sent to your teacher.':'Sending your result to your teacher…')+'</span><button class="btn" id="exRetry" style="display:none">Send again</button></div></div>':'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q))+
+   '<div class="qzrev">'+Q.L.map(function(q,k){return '<div class="'+(Q.hist[k]?'ok':'no')+'">'+(Q.hist[k]?'✓':'✗')+' <b>'+(k+1)+'.</b> '+q.q.replace(/<span class="small">.*<\/span>/,'')+' → <b>'+q.o[q.a]+'</b></div>';}).join('')+'</div>'+
+   '<div class="stepbar" style="justify-content:center"><button class="btn fill" id="qzR">'+(Q.exit?'Start again':'Try again')+'</button></div></div>';}
+ var q=Q.L[Q.i],ans=Q.pick!==null;
+ var h='<div class="qz">'+(Q.exit?'<div class="small" style="margin-bottom:6px">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div>';
+ if(q.picF&&!q.pic)q.pic=q.picF();h+='<div class="qzq">'+q.q+'</div>'+(q.pic?'<div class="qzpic">'+q.pic+'</div>':'');
+ h+='<div class="qzopts">'+Q.ord[Q.i].map(function(k,j){var cls=ans?(k===q.a?' right':(k===Q.pick?' wrong':'')):'';return '<button class="qzb'+cls+'" data-k="'+k+'"'+(ans?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
+ if(ans)h+='<div class="qzfb '+(Q.pick===q.a?'ok':'no')+'"><b>'+(Q.pick===q.a?'Correct!':'Not quite.')+'</b> '+(Q.pick===q.a?'':'The answer is <b>'+q.o[q.a]+'</b>. ')+q.w+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(Q.i<N-1?'Next question ▶':'See my score ▶')+'</button></div>';
+ return h+'</div>';}
+function qzRender(Q){$('panel').innerHTML=qzHtml(Q);qzBind(Q);}
+function qzBind(Q){each('.qzb',function(b){b.onclick=function(){if(Q.pick!==null)return;var q=Q.L[Q.i];Q.pick=+b.getAttribute('data-k');var ok=Q.pick===q.a;if(ok)Q.score++;Q.hist[Q.i]=ok;qzRender(Q);};});
+ var n=$('qzN');if(n)n.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;qzRender(Q);}else{Q.done=true;if(Q.exit)exResult(Q);renderSteps();qzRender(Q);if(Q.exit)exSend(Q);}};
+ var r=$('qzR');if(r)r.onclick=function(){if(Q.exit){Q.ord=null;Q.done=false;var keep=Q.player;Q.player=null;Q.last=keep;qzRender(Q);return;}qzStart(Q);renderSteps();qzRender(Q);};
+ var rt=$('exRetry');if(rt)rt.onclick=function(){exSend(Q);};
+ var go=$('exGo');if(go){var nm=$('exName'),cl=$('exCls');if(Q.last&&!nm.value){nm.value=Q.last.name;cl.value=Q.last.cls;}
+  var start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exErr');nm.classList.toggle('no',v.length<2);cl.classList.toggle('no',!c);
+   if(v.length<2||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}
+   if(!c){er.textContent='Please choose your class.';cl.focus();return;}
+   Q.player={name:v,cls:c};qzStart(Q);renderSteps();qzRender(Q);};
+  go.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}}
+function quizScene(Q,title,think){return {title:title,q:think,canvas:false,quiz:Q,html:function(){return qzHtml(Q);},bindHtml:function(){qzBind(Q);},
+ reads:function(){if(Q.exit&&!Q.player)return [['Status','enter name and class']];if(!Q.ord)qzStart(Q);return [['Question',Math.min(Q.i+1,Q.L.length)+' / '+Q.L.length],['Score',Q.score]];}};}
+var tabI=0,stepI=0,cur=null,lastReads='';
+TABS.forEach(function(t,ti){t.steps.forEach(function(s,si){if(s[1].prob){s[1].prob.next=function(){if(si+1<t.steps.length)go(ti,si+1);else if(ti+1<TABS.length)go(ti+1,0);};}});});
+function renderTabs(){$('tabs').innerHTML=TABS.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+t.n+'</button>';}).join('');
+ Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.getAttribute('data-i'),0);};});}
+function renderSteps(){$('steps').innerHTML=TABS[tabI].steps.map(function(s,i){var p=s[1].prob,done=(p&&p.solved)||(s[1].quiz&&s[1].quiz.done);return '<button class="step'+(i===stepI?' on':'')+(done?' done':'')+'" data-i="'+i+'"><b>'+(done?'✓':(i+1))+'</b>'+s[0]+'</button>';}).join('');
+ Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.getAttribute('data-i'));};});}
+function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.documentElement.style.setProperty('--accent',T.c);
+ renderTabs();renderSteps();$('obj').innerHTML='<b>'+(t<3?'Objective '+(t+1):'Exit ticket')+'</b><span>'+T.obj+'</span>';
+ $('stitle').textContent=cur.title;$('q').innerHTML=cur.q;$('rule').innerHTML=(cur.rule||T.rule).map(function(r){return '<li>'+r+'</li>';}).join('');
+ $('cv').style.display=cur.canvas?'':'none';$('controls').innerHTML='';$('controls').style.display=cur.canvas?'':'none';$('panel').innerHTML='';$('ov').innerHTML='';cv.style.touchAction='';lastReads='';
+ if(cur.enter)cur.enter();
+ if(cur.prob){if(cur.prob.mode==null)cur.prob.mode='show';probUI(cur.prob);}else if(cur.cards){cur.cards.st=cur.cards.st||0;cardsUI(cur.cards);}else if(cur.html){$('panel').innerHTML=cur.html();if(cur.bindHtml)cur.bindHtml();}
+ $('vids').innerHTML=cur.vids?vidHtml(cur.vids):'';if(cur.vids)vidBind();
+ try{history.replaceState(null,'','#'+T.hash);}catch(e){}if(window.scrollY>200)window.scrollTo(0,0);}
+function solvedIn(t){var a=TABS[t].steps.filter(function(s){return s[1].prob&&s[1].prob.chip;});return [a.filter(function(s){return s[1].prob.solved;}).length,a.length];}
+function reads(){var r=cur.reads?cur.reads():[];if(cur.prob&&!cur.canvas&&!cur.reads){var s=solvedIn(tabI);r=[['Problems solved',s[0]+' / '+s[1]],['Mode',cur.prob.mode==='try'?'My turn':'Show me']];}
+ if(!r.length)r=[['Step',(stepI+1)+' of '+TABS[tabI].steps.length]];
+ var h=r.map(function(x){return '<div class="rd"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+function cvXY(e){var r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*800,(e.clientY-r.top)/r.height*500];}
+['down','move','up','cancel'].forEach(function(k){cv.addEventListener('pointer'+k,function(e){if(!cur||!cur.ptr)return;var q=cvXY(e),used=cur.ptr(k==='cancel'?'up':k,q[0],q[1]);if(used&&k==='down'){try{cv.setPointerCapture(e.pointerId);}catch(x){}}if(used&&k!=='up')e.preventDefault();});});
+var hi=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+window.addEventListener('hashchange',function(){var k=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));if(k>=0&&k!==tabI)go(k,0);});
+var last=performance.now(),rt=0;
+function loop(now){var dt=clamp((now-last)/1000,0,.04);last=now;try{if(cur.canvas&&cur.frame)cur.frame(dt);rt+=dt;if(rt>.2){rt=0;reads();}}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+reads();
+})();
+</script>
+<script src="student-visits.js"></script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
