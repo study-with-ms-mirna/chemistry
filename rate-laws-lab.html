@@ -156,6 +156,116 @@ sub{font-size:.65em}
 .good2{color:#2e9e5b;font-weight:700}.bad2{color:#d8434a;font-weight:700}
 .mk{min-width:18px}
 .hintbox .ladder{display:inline-flex}
+/* ===== live session ===== */
+.wrap{padding-bottom:90px}
+.step.lock{opacity:.45}
+.qz{border:2px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+.lv-head{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin-bottom:10px;font-family:Fredoka,sans-serif;font-size:17px}
+.lv-badge{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--accent);border-radius:999px;padding:4px 12px}
+.lv-pts{margin-left:auto;font-weight:600;color:var(--accent)}
+.qzdots{display:flex;gap:6px;flex-wrap:wrap}
+.qzdots i{width:13px;height:13px;border-radius:50%;background:var(--line);display:block}
+.qzdots i.cur{background:var(--accent)}.qzdots i.ok{background:#2e9e5b}.qzdots i.no{background:#d8434a}
+.lv-q{font-size:20px;font-weight:700;line-height:1.45;margin:8px 0 10px}
+.lv-q .dt{font-weight:400;max-width:520px}
+.lv-eq{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;text-align:center;background:#f6f8fc;border-radius:12px;padding:8px;margin:8px 0}
+.lv-f{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:21px;margin:8px 0}
+.lv-f input{width:90px;font-family:Fredoka,sans-serif;font-size:21px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:5px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.lv-f input:focus{outline:none;border-color:var(--accent)}
+.lv-f input.ok{border-color:#2e9e5b;background:#e8f6ee}.lv-f input.no{border-color:#d8434a;background:#fdeeee}
+.lv-f input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
+.lv-ch{display:inline-flex;gap:6px;flex-wrap:wrap}
+.lv-ch .btn{min-width:46px;font-size:19px;padding:6px 12px}
+.btn.right{background:#2e9e5b;border-color:#2e9e5b;color:#fff}.btn.wrong{background:#d8434a;border-color:#d8434a;color:#fff}
+.lv-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.lv-opts.tf{max-width:420px}
+.lv-opts.one{grid-template-columns:1fr}
+.lv-opts>.qzb{min-width:0}
+.qzb>span:last-child{min-width:0;overflow-wrap:anywhere}
+@media (max-width:700px){.lv-opts{grid-template-columns:1fr}}
+.qzb{display:flex;align-items:flex-start;gap:10px;text-align:left;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:18px;line-height:1.5;border:2px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;box-shadow:0 3px 0 var(--shadow);color:var(--ink)}
+.qzb:hover:not(:disabled){border-color:var(--accent)}
+.qzb:disabled{cursor:default}
+.qzb .L{flex:none;width:28px;height:28px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.qzb.pick{border-color:var(--accent);background:#eef3fc}.qzb.pick .L{background:var(--accent);color:#fff}
+.qzb.right{border-color:#2e9e5b;background:#e8f6ee}.qzb.right .L{background:#2e9e5b;color:#fff}
+.qzb.wrong{border-color:#d8434a;background:#fdeeee}.qzb.wrong .L{background:#d8434a;color:#fff}
+.lvfb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.lvfb.ok{background:#e8f6ee;border-color:#2e9e5b;animation:pop .4s}.lvfb.no{background:#fdeeee;border-color:#d8434a}
+@keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.03);opacity:1}100%{transform:none;opacity:1}}
+.five{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:8px;margin:10px 0}
+.five div{border:2px solid var(--line);border-radius:14px;padding:6px 9px;background:#fff;font-size:14px;line-height:1.25;display:flex;flex-direction:column;gap:3px}
+.five .th{display:flex;align-items:center;gap:6px;font-style:normal;font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;color:var(--muted)}
+.five .on .th{color:var(--accent)}
+.five b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-family:Fredoka,sans-serif;font-size:13px}
+.five .on{border-color:var(--accent);background:#eef3fc}.five .on b{background:var(--accent);color:#fff}
+.five .done b{background:#2e9e5b;color:#fff}
+.five span{min-width:0;overflow-wrap:break-word}
+.work{border:2px dashed var(--accent);border-radius:16px;padding:10px 14px;margin-top:12px;background:#fbfcfe}
+.work .wl{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid #e6ebf3;font-family:Fredoka,sans-serif;font-size:19px;animation:fadein .45s ease}
+.work .lbl+.wl{border-top:none}
+.work .wl>span{flex:none;font-size:13px;color:var(--muted);width:76px}
+.x{text-decoration:line-through;text-decoration-color:#d8434a;-webkit-text-decoration-color:#d8434a;text-decoration-thickness:2px;color:#8f9bb0}
+.boxed{border:2px solid var(--accent);border-radius:8px;padding:0 8px}
+.lvrev{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.lvrev div{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.lvrev div.ok{border-color:#2e9e5b;background:#f3fbf6}.lvrev div.no{border-color:#d8434a;background:#fdf4f4}
+.sendst{font-family:Fredoka,sans-serif;font-size:14px;color:var(--muted)}.sendst.ok{color:#2e9e5b}.sendst.err{color:#d8434a}
+.namerow{display:flex;flex-direction:column;gap:4px;margin:10px 0;max-width:380px}
+.namerow label{font-family:Fredoka,sans-serif;font-weight:600}
+.namerow input,.namerow select{font:inherit;font-size:18px;padding:8px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.namerow .no{border-color:#d8434a}
+.exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
+.lv-big{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;line-height:1.15;margin:2px 0 6px}
+.lv-hero,.lv-congrats{display:flex;gap:14px;align-items:center}
+.lv-hero svg,.lv-congrats svg{flex:none}
+.lv-congrats{background:#e8f6ee;border:2px solid #2e9e5b;border-radius:16px;padding:12px 14px;margin-bottom:14px;animation:pop .5s}
+.lv-congrats .lv-big{font-size:24px}
+.lv-plan{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+@media (max-width:760px){.lv-plan{grid-template-columns:1fr 1fr}}
+.lv-plan div{border:2px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.lv-plan b{font-family:Fredoka,sans-serif;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center}
+.lv-plan span{font-family:Fredoka,sans-serif;font-weight:600;font-size:17px}.lv-plan i{font-style:normal;font-size:14px;color:var(--muted)}
+.lv-rules{margin:6px 0 10px;padding-left:20px;font-size:17px}
+.lv-rules li{margin:3px 0}
+.lv-timer{display:inline-flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-size:18px;background:#f3f6fb;border-radius:999px;padding:6px 14px 6px 8px;margin:4px 0 8px}
+.lv-end{text-align:center}
+.qzbig{font-family:Fredoka,sans-serif;font-weight:700;font-size:52px;color:var(--accent);line-height:1.1;margin:6px 0 0}
+.lv-stars{display:flex;justify-content:center;gap:8px;margin:8px 0}
+.lv-stars svg{animation:pop .5s both}
+.lv-msg{font-size:19px;margin:10px 0;font-weight:700}
+.lv-end .dt{max-width:640px;margin:12px auto}
+.lv-end .stepbar{justify-content:center}
+#lvChip{position:fixed;right:14px;bottom:14px;z-index:9998;display:none;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 8px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px)}
+#lvChip svg{flex:none}
+#lvChip .lvc-t{display:flex;flex-direction:column;line-height:1.1;min-width:96px}
+#lvChip .lvc-t span{font-size:13px;color:var(--muted)}
+#lvChip .lvc-t b{font-size:20px;font-weight:600;color:#2b59c3}
+#lvChip.warn{border-color:#e8962a}#lvChip.warn .lvc-t b{color:#e8962a}
+#lvChip.over{border-color:#d8434a;animation:lvpulse 1s infinite}#lvChip.over .lvc-t b{color:#d8434a}
+@keyframes lvpulse{50%{transform:scale(1.05)}}
+#lvChip .btn{padding:6px 12px;font-size:14px;border-color:#2b59c3;background:#2b59c3;color:#fff}
+.lvc-m{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+#lvChip .lvc-c{border-color:#2b59c3}#lvChip .lvc-c.on{background:#eef3fc}
+#calc{position:fixed;right:14px;bottom:76px;z-index:9997;width:272px;max-width:calc(100vw - 28px);background:#fff;border:2px solid var(--line);border-radius:20px;box-shadow:0 6px 0 var(--shadow),0 10px 30px rgba(24,35,58,.15);padding:10px;display:none;font-family:Fredoka,sans-serif;outline:none}
+#calc.on{display:block;animation:pop .25s}
+.calc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.calc-h b{font-weight:600;font-size:16px;color:#2b59c3}
+#calcX{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:#fff;font-family:Fredoka,sans-serif;font-size:18px;line-height:1;cursor:pointer;padding:0;color:var(--ink)}
+.calc-d{background:#f3f6fb;border-radius:12px;padding:6px 10px;text-align:right;margin-bottom:8px}
+#calcExpr{font-size:13px;color:var(--muted);min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#calcMain{font-size:26px;font-weight:600;white-space:nowrap;overflow-x:auto;min-height:36px}
+#calcMain.err{color:#d8434a}
+.calc-k{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.calc-k button{font-family:Fredoka,sans-serif;font-size:17px;font-weight:500;height:40px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;padding:0;box-shadow:0 2px 0 var(--shadow)}
+.calc-k button:active{transform:translateY(2px);box-shadow:none}
+.calc-k .op{background:#eef3fc;border-color:#c6d4f2;color:#2b59c3}
+.calc-k .fn{background:#f3f6fb;font-size:15px}
+.calc-k .eq{background:#2b59c3;border-color:#2b59c3;color:#fff}
+.calc-k .clr{color:#d8434a}
+.calc-tip{font-size:12.5px;color:var(--muted);margin-top:8px;font-family:'Atkinson Hyperlegible',sans-serif;line-height:1.35}
+#lvConf{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:transparent;border-radius:0}
+.qz .st.on{animation:none}
 </style>
 </head>
 <body>
@@ -290,23 +400,23 @@ var T2={name:'Two reactants',c:CORAL,steps:RX.map(function(r){return r.lab;}),fa
   this.reset();
   setQ(['Double [A], then run. Then try doubling [B] instead. Is it the same?','This reaction is second order in A. Predict: double [A], how many times more products?','Zero order in A: double or triple [A]. Why does the After beaker not speed up?','Which has the bigger effect here: doubling [A] or doubling [B]?'][s]);
   setRule(['The <b>order</b> belongs to the reaction: it is found by experiment','The beaker only changes the <b>concentration</b>','rate change = (A change)<sup>m</sup> × (B change)<sup>n</sup>']);},
- mk:function(x0,fa,fb){var p=[];for(var i=0;i<3*fa+3*fb;i++){var a=Math.random()*Math.PI*2;p.push({x:x0+25+Math.random()*270,y:105+Math.random()*165,vx:Math.cos(a)*60,vy:Math.sin(a)*60,A:i<3*fa});}return p;},
+ mk:function(x0,fa,fb){var p=[];for(var i=0;i<3*fa+3*fb;i++){var a=Math.random()*Math.PI*2;p.push({x:x0+25+Math.random()*270,y:105+Math.random()*135,vx:Math.cos(a)*60,vy:Math.sin(a)*60,A:i<3*fa});}return p;},
  reset:function(){this.t=0;this.running=false;this.B=[{x0:30,fa:1,fb:1,p:this.mk(30,1,1),n:0,acc:0,fl:[]},{x0:420,fa:this.fa,fb:this.fb,p:this.mk(420,this.fa,this.fb),n:0,acc:0,fl:[]}];},
  frame:function(dt){var me=this,R=this.R;clear();
-  var f=Math.pow(this.fa,R.m)*Math.pow(this.fb,R.n);
+  var f=Math.pow(this.fa,R.m)*Math.pow(this.fb,R.n),cap=Math.max(8,Math.floor(this.BASE*f*this.DUR+1e-9));
   if(this.running){this.t=Math.min(this.DUR,this.t+dt);if(this.t>=this.DUR)this.running=false;}
   this.B.forEach(function(b,k){var rate=me.BASE*(k?f:1),x0=b.x0;
    panel(x0-10,20,350,330);txt(k?'After':'Before',x0+165,44,{s:18,c:k?GREEN:MUTED});
    txt('[A] ×'+b.fa+'   [B] ×'+b.fb,x0+165,68,{s:15,c:INK,w:500});
-   ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0+12,88);ctx.lineTo(x0+12,272);ctx.quadraticCurveTo(x0+12,285,x0+25,285);ctx.lineTo(x0+305,285);ctx.quadraticCurveTo(x0+318,285,x0+318,272);ctx.lineTo(x0+318,88);ctx.stroke();
-   ctx.fillStyle='rgba(43,89,195,.06)';ctx.fillRect(x0+14,98,302,185);
-   b.p.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<x0+25||p.x>x0+305)p.vx*=-1;if(p.y<108||p.y>272)p.vy*=-1;p.x=clamp(p.x,x0+25,x0+305);p.y=clamp(p.y,108,272);dotc(p.x,p.y,9,p.A?CORAL:BLUE);});
+   ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0+12,88);ctx.lineTo(x0+12,242);ctx.quadraticCurveTo(x0+12,255,x0+25,255);ctx.lineTo(x0+305,255);ctx.quadraticCurveTo(x0+318,255,x0+318,242);ctx.lineTo(x0+318,88);ctx.stroke();
+   ctx.fillStyle='rgba(43,89,195,.06)';ctx.fillRect(x0+14,98,302,155);
+   b.p.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<x0+25||p.x>x0+305)p.vx*=-1;if(p.y<108||p.y>242)p.vy*=-1;p.x=clamp(p.x,x0+25,x0+305);p.y=clamp(p.y,108,242);dotc(p.x,p.y,9,p.A?CORAL:BLUE);});
    if(me.t>0){var target=Math.floor(rate*me.t+1e-9);while(b.n<target){b.n++;var A=b.p.filter(function(q){return q.A;}),Bq=b.p.filter(function(q){return !q.A;}),pa=A[Math.floor(Math.random()*A.length)],pb=Bq[Math.floor(Math.random()*Bq.length)];b.fl.push({x:(pa.x+pb.x)/2,y:(pa.y+pb.y)/2,t:0});}}
    b.fl.forEach(function(q){q.t+=dt;var a=1-q.t/.6;if(a>0){ctx.globalAlpha=a;ctx.strokeStyle=GREEN;ctx.lineWidth=3;ctx.beginPath();ctx.arc(q.x,q.y,10+q.t*30,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}});b.fl=b.fl.filter(function(q){return q.t<.6;});
    /* product tray */
-   txt('Products made',x0+80,310,{s:14,c:MUTED,w:500});
-   var shown=Math.min(b.n,40);for(var i=0;i<shown;i++){dotc(x0+150+(i%20)*8.5,302+Math.floor(i/20)*12,4.5,GREEN);}
-   pill(String(b.n),x0+318,312,GREEN,'#fff',18);});
+   /* product tray: one dot per product, sized so the full run fits (same size in both beakers) */
+   txt('Products made',x0+4,272,{s:14,c:MUTED,w:500,a:'left'});pill(String(b.n),x0+300,272,GREEN,'#fff',16);
+   trayDots(b.n,Math.max(cap,b.n),x0+2,286,326,58);});
   /* timer bar */
   rr(30,365,740,14,7);ctx.fillStyle='#e6ebf3';ctx.fill();rr(30,365,Math.max(14,740*this.t/this.DUR),14,7);ctx.fillStyle=AMBER;ctx.fill();txt(this.t.toFixed(1)+' s',780,372,{s:13,c:MUTED,a:'right',w:500});
   /* prediction vs measurement */
@@ -317,6 +427,10 @@ var T2={name:'Two reactants',c:CORAL,steps:RX.map(function(r){return r.lab;}),fa
   txt(this.t>=this.DUR?'Measured:  '+b1+' ÷ '+b0+'  =  ×'+(b0?Math.round(b1/b0*10)/10:'?'):(this.running?'Measuring…':'Press Run to measure'),470,456,{s:20,c:GREEN});
   setReads([['Reaction',R.lab,1],['After: [A]','×'+this.fa],['After: [B]','×'+this.fb],['Products before',b0],['Products after',b1],['Predicted change','×'+f,1]]);}
 };
+/* product tray: n dots in a w×h box, sized so cap dots would fill it */
+function trayDots(n,cap,x,y,w,h){var cols=Math.max(1,Math.ceil(Math.sqrt(cap*w/h))),rows=Math.ceil(cap/cols);while(rows*(w/cols)>h){cols++;rows=Math.ceil(cap/cols);}
+ var c=Math.min(w/cols,h/rows),r=Math.min(8,c*.4);
+ for(var i=0;i<n;i++){var cx=x+c*(i%cols)+c/2,cy=y+c*Math.floor(i/cols)+c/2;if(r>=4)dotc(cx,cy,r,GREEN);else{ctx.fillStyle=GREEN;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();}}}
 /* ---------- shared helpers for HTML panels ---------- */
 function sci(v){if(v===0)return '0';var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(2)+' × 10<sup>'+String(e).replace('-','−')+'</sup>';}
 function supH(n){return '<sup>'+n+'</sup>';}
@@ -455,17 +569,349 @@ var T4={name:'Practice: find the order',c:AMBER,steps:PP.map(function(p,i){retur
  frame:function(){}
 };
 
+/* =========================================================
+   TAB 5  Live session: use the lab, two challenges, exit ticket.
+   Every answer is sent to the teacher's sheet as soon as it is submitted.
+   ========================================================= */
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function plain(h){return String(h).replace(/<sup>(.*?)<\/sup>/g,'^$1').replace(/<br\s*\/?>/g,' / ').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();}
+function each(sel,fn){Array.prototype.forEach.call(document.querySelectorAll(sel),fn);}
+function mmss(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+('0'+s%60).slice(-2);}
+function parseNum(s){s=String(s).replace(/[×x*\s]/gi,'').replace(/,/g,'.').replace(/−/g,'-');var m=s.match(/^(-?\d*\.?\d+)\/(\d*\.?\d+)$/);if(m)return parseFloat(m[1])/parseFloat(m[2]);return /^-?\d*\.?\d+$/.test(s)?parseFloat(s):NaN;}
+function E(a,b){return 'k[A<sub>'+a+'</sub>]<sup>m</sup>[B<sub>'+b+'</sub>]<sup>n</sup>';}
+var O4=['0','1','2','3'];
+var FIVE=['Write the rate equations','Compare the rates','Substitute','Compare the concentrations','Substitute and simplify'];
+var CHD=[[0.10,0.30,7.20e-3],[0.10,0.60,1.44e-2],[0.20,0.90,8.64e-2]];
+var X7T='<table class="dt"><tr><th>Trial</th><th>[A] (M)</th><th>[B] (M)</th></tr><tr><td>1</td><td>0.10</td><td>0.10</td></tr><tr><td>2</td><td>0.20</td><td>0.10</td></tr><tr><td>3</td><td>0.20</td><td>0.20</td></tr></table>';
+var PARTS=[
+ {id:'start',name:'Start'},
+ {id:'warm',name:'Warm-up',secs:300,
+  intro:'A quick warm-up to refresh your memory before the challenges. Each question has a small simulation already set up for you: press <b>Run</b>, watch, then answer.',
+  items:[
+  {id:'w1',sim:'graph',q:'[A] is <b>tripled</b>, from 1.00 M to 3.00 M. Press Run and read the rate before and after. How many times bigger is the rate, and what is the order in A?',f:[{t:'n',pre:'rate ×',want:9},{t:'c',pre:'order in A =',opts:O4,want:2}],hint:'Divide: rate after ÷ rate before. Then find the power: 3<sup>?</sup> = your answer.',why:'2.25 ÷ 0.25 = 9, and 3<sup>2</sup> = 9, so the order in A is 2.'},
+  {id:'w2',sim:'beakers',q:'Rate = k[A]<sup>2</sup>[B]. In the After beaker, [A] is <b>doubled</b> and [B] is <b>tripled</b>. Press Run and compare the products. How many times faster is the After beaker?',f:[{t:'n',pre:'rate ×',want:12}],hint:'Divide: products after ÷ products before. Check it with (2)<sup>2</sup> × (3)<sup>1</sup>.',why:'96 ÷ 8 = 12, and (2)<sup>2</sup> × (3)<sup>1</sup> = 4 × 3 = 12.'},
+  {id:'w3',sim:'flaskA',q:'Two trials of a mystery reaction. Only <b>[A]</b> changes. Press Run to measure both rates.',f:[{t:'n',pre:'rate ×',want:4},{t:'c',pre:'so m =',opts:O4,want:2}],hint:'[A] ×2. Divide the two rates, then find the power: 2<sup>0</sup> = 1, 2<sup>1</sup> = 2, 2<sup>2</sup> = 4.',why:'8.00 × 10<sup>−3</sup> ÷ 2.00 × 10<sup>−3</sup> = 4, and 2<sup>2</sup> = 4, so m = 2.'},
+  {id:'w4',sim:'flaskB',q:'The same mystery reaction. Now only <b>[B]</b> changes. Press Run to measure both rates.',f:[{t:'n',pre:'rate ×',want:1},{t:'c',pre:'so n =',opts:O4,want:0}],hint:'[B] ×3. If the rate stays the same, it changed ×1. Which power of 3 equals 1?',why:'The rate did not change (×1). 3<sup>0</sup> = 1, so n = 0: zero order in B.'}]},
+ {id:'c1',name:'Challenge 1',secs:420,trials:[0,1],track:FIVE,
+  intro:'Find <b>n</b>, the order in B, by comparing <b>trials 1 and 2</b>. Follow the 5 steps from class: each step unlocks the next, and your working builds up underneath as you go.',
+  task:'Determine <b>n</b> by comparing <b>trials 1 and 2</b>.',
+  items:[
+  {id:'c1s1',st:0,q:'Write the rate equations for trials 1 and 2.',f:[{t:'m',want:2,opts:['Rate 1 = k[A<sub>1</sub>][B<sub>1</sub>]<br>Rate 2 = k[A<sub>2</sub>][B<sub>2</sub>]','Rate 1 = '+E(1,2)+'<br>Rate 2 = '+E(2,1),'Rate 1 = '+E(1,1)+'<br>Rate 2 = '+E(2,2),'Rate 1 = k[A<sub>1</sub>]<sup>m</sup> + [B<sub>1</sub>]<sup>n</sup><br>Rate 2 = k[A<sub>2</sub>]<sup>m</sup> + [B<sub>2</sub>]<sup>n</sup>']}],hint:'Start from Rate = k[A]<sup>m</sup>[B]<sup>n</sup>. Every concentration gets the number of its own trial.',why:'Each trial uses the general rate law with its own concentrations.',work:['Rate 1 = '+E(1,1)+' &nbsp;&nbsp; Rate 2 = '+E(2,2)]},
+  {id:'c1s2',st:1,q:'Compare Rate 2 with Rate 1. Use the initial rate data.',f:[{t:'n',pre:'Rate 2 =',post:'× Rate 1',want:2}],hint:'Divide: Rate 2 ÷ Rate 1. Keep the powers of 10!',why:'1.44 × 10<sup>−2</sup> ÷ 7.20 × 10<sup>−3</sup> = 2',work:['Rate 2 = 2 Rate 1']},
+  {id:'c1s3',st:2,q:'Substitute the rate equations from step 1 into the equation from step 2.',f:[{t:'m',want:0,opts:[E(2,2)+' = 2'+E(1,1),'2'+E(2,2)+' = '+E(1,1),E(2,2)+' = '+E(1,1)+' + 2',E(1,1)+' = 2'+E(2,2)]}],hint:'Write step 2 again, then replace “Rate 2” and “Rate 1” with their equations from step 1.',why:'Rate 2 = 2 Rate 1 becomes '+E(2,2)+' = 2'+E(1,1)+'.',work:[E(2,2)+' = 2'+E(1,1)]},
+  {id:'c1s4',st:3,q:'Compare the concentrations of each reactant in trial 2 and trial 1. Use the concentration data.',f:[{t:'n',pre:'[A<sub>2</sub>] =',post:'[A<sub>1</sub>]',want:1},{t:'n',pre:'[B<sub>2</sub>] =',post:'[B<sub>1</sub>]',want:2}],hint:'Divide the trial 2 concentration by the trial 1 concentration. If it did not change, the factor is 1.',why:'[A]: 0.10 ÷ 0.10 = 1 (no change). [B]: 0.60 ÷ 0.30 = 2.',work:['[A<sub>2</sub>] = [A<sub>1</sub>] &nbsp;&nbsp; [B<sub>2</sub>] = 2[B<sub>1</sub>]']},
+  {id:'c1s5',st:4,q:'Substitute step 4 into step 3 and simplify. Cancel everything that is the same on both sides. What is left?',f:[{t:'n',pre:'(',post:')<sup>n</sup>',want:2},{t:'n',pre:'=',want:2,same:1},{t:'c',pre:'so n =',opts:O4,want:1}],hint:'k, [A<sub>1</sub>]<sup>m</sup> and [B<sub>1</sub>]<sup>n</sup> are on both sides, so they cancel. Then find the power.',why:'2<sup>n</sup> = 2, and 2<sup>1</sup> = 2, so n = 1: first order in B.',work:['<span class="x">k[A<sub>1</sub>]<sup>m</sup></span>(2<span class="x">[B<sub>1</sub>]</span>)<sup>n</sup> = 2<span class="x">k[A<sub>1</sub>]<sup>m</sup>[B<sub>1</sub>]<sup>n</sup></span>','2<sup>n</sup> = 2 &nbsp;⟹&nbsp; <span class="boxed">n = 1</span>']}]},
+ {id:'c2',name:'Challenge 2',secs:540,trials:[1,2],track:FIVE.concat(['Write the rate law']),
+  intro:'The hardest one! Find <b>m</b>, the order in A, by comparing <b>trials 2 and 3</b>. Careful: this time <b>both</b> concentrations change, so you will need your answer from Challenge 1.',
+  task:'Determine <b>m</b> by comparing <b>trials 2 and 3</b>.',
+  items:[
+  {id:'c2s1',st:0,q:'Write the rate equations for trials 2 and 3.',f:[{t:'m',want:1,opts:['Rate 2 = '+E(1,1)+'<br>Rate 3 = '+E(2,2),'Rate 2 = '+E(2,2)+'<br>Rate 3 = '+E(3,3),'Rate 2 = '+E(2,3)+'<br>Rate 3 = '+E(3,2),'Rate 2 = k[A<sub>2</sub>][B<sub>2</sub>]<br>Rate 3 = k[A<sub>3</sub>][B<sub>3</sub>]']}],hint:'Same as Challenge 1, but now the trials are 2 and 3. We do not know m and n yet, so keep the letters.',why:'Each trial uses the general rate law with its own concentrations.',work:['Rate 2 = '+E(2,2)+' &nbsp;&nbsp; Rate 3 = '+E(3,3)]},
+  {id:'c2s2',st:1,q:'Compare Rate 3 with Rate 2. Use the initial rate data.',f:[{t:'n',pre:'Rate 3 =',post:'× Rate 2',want:6}],hint:'Divide: Rate 3 ÷ Rate 2. Check the powers of 10 first.',why:'8.64 × 10<sup>−2</sup> ÷ 1.44 × 10<sup>−2</sup> = 6',work:['Rate 3 = 6 Rate 2']},
+  {id:'c2s3',st:2,q:'Substitute the rate equations from step 1 into the equation from step 2.',f:[{t:'m',want:3,opts:['6'+E(3,3)+' = '+E(2,2),E(3,3)+' = 2'+E(2,2),E(3,3)+' = 6 + '+E(2,2),E(3,3)+' = 6'+E(2,2)]}],hint:'Write step 2 again, then replace each rate with its equation from step 1.',why:'Rate 3 = 6 Rate 2 becomes '+E(3,3)+' = 6'+E(2,2)+'.',work:[E(3,3)+' = 6'+E(2,2)]},
+  {id:'c2s4',st:3,q:'Compare the concentrations of each reactant in trial 3 and trial 2. Use the concentration data.',f:[{t:'n',pre:'[A<sub>3</sub>] =',post:'[A<sub>2</sub>]',want:2},{t:'n',pre:'[B<sub>3</sub>] =',post:'[B<sub>2</sub>]',want:1.5}],hint:'Divide the trial 3 concentration by the trial 2 concentration. A decimal answer is fine.',why:'[A]: 0.20 ÷ 0.10 = 2. [B]: 0.90 ÷ 0.60 = 1.5. Both changed!',work:['[A<sub>3</sub>] = 2[A<sub>2</sub>] &nbsp;&nbsp; [B<sub>3</sub>] = 1.5[B<sub>2</sub>]']},
+  {id:'c2s5',st:4,lab:'Step 5a',q:'Substitute step 4 into step 3:<div class="lv-eq">k(2[A<sub>2</sub>])<sup>m</sup>(1.5[B<sub>2</sub>])<sup>n</sup> = 6k[A<sub>2</sub>]<sup>m</sup>[B<sub>2</sub>]<sup>n</sup></div>[B] changed too, so the 1.5 does not cancel. Use your answer from Challenge 1.',f:[{t:'c',pre:'n =',opts:O4,want:1},{t:'n',pre:'so (1.5)<sup>n</sup> =',want:1.5}],hint:'You found n in Challenge 1. Any number to the power 1 is itself.',why:'n = 1 (from Challenge 1), so (1.5)<sup>1</sup> = 1.5.',work:['<span class="x">k</span>(2<span class="x">[A<sub>2</sub>]</span>)<sup>m</sup>(1.5<span class="x">[B<sub>2</sub>]</span>)<sup>1</sup> = 6<span class="x">k[A<sub>2</sub>]<sup>m</sup>[B<sub>2</sub>]<sup>1</sup></span> &nbsp;<span class="small">(n = 1 from Challenge 1)</span>','2<sup>m</sup> × 1.5 = 6']},
+  {id:'c2s6',st:4,lab:'Step 5b',q:'Now simplify:<div class="lv-eq">2<sup>m</sup> × 1.5 = 6</div>',f:[{t:'n',pre:'2<sup>m</sup> =',want:4},{t:'c',pre:'so m =',opts:O4,want:2}],hint:'Divide both sides by 1.5. Then find the power: 2<sup>0</sup> = 1, 2<sup>1</sup> = 2, 2<sup>2</sup> = 4, 2<sup>3</sup> = 8.',why:'6 ÷ 1.5 = 4, and 2<sup>2</sup> = 4, so m = 2: second order in A.',work:['2<sup>m</sup> = 6 ÷ 1.5 = 4 &nbsp;⟹&nbsp; <span class="boxed">m = 2</span>']},
+  {id:'c2s7',st:5,lab:'Rate law',q:'Put it together: m from this challenge and n from Challenge 1. Which is the rate law, and what is the overall order?',f:[{t:'m',want:2,opts:['Rate = k[A][B]<sup>2</sup>','Rate = k[A][B]','Rate = k[A]<sup>2</sup>[B]','Rate = k[A]<sup>2</sup>[B]<sup>2</sup>']},{t:'n',pre:'overall order =',want:3}],hint:'Put m on [A] and n on [B]. Overall order = m + n.',why:'Rate = k[A]<sup>2</sup>[B]; overall order = 2 + 1 = 3.',work:['<span class="boxed">Rate = k[A]<sup>2</sup>[B]</span> &nbsp; overall order = 2 + 1 = 3']}]},
+ {id:'exit',name:'Exit ticket',secs:360,tries:1,
+  intro:'10 quick questions: multiple choice, true or false, and type the number. <b>One try each</b>, so read carefully. Go!',
+  items:[
+  {id:'x1',q:'Doubling [A] doubles the rate. What is the order in A?',f:[{t:'m',want:1,opts:['Zero order','First order','Second order','Third order']}],why:'2<sup>1</sup> = 2: first order.'},
+  {id:'x2',q:'<b>True or false?</b> The order of a reactant can be read from the coefficients in the balanced equation.',f:[{t:'m',want:1,tf:1,opts:['True','False']}],why:'False: orders are found only from experimental data.'},
+  {id:'x3',q:'Rate = k[A]<sup>2</sup>[B]. Type the <b>overall</b> order.',f:[{t:'n',pre:'overall order =',want:3}],why:'2 + 1 = 3.'},
+  {id:'x4',q:'Tripling [B] makes the rate 9 times faster. What is the order in B?',f:[{t:'m',want:2,opts:['0','1','2','3']}],why:'3<sup>2</sup> = 9, so the order in B is 2.'},
+  {id:'x5',q:'<b>True or false?</b> For a zero-order reactant, changing its concentration does not change the rate.',f:[{t:'m',want:0,tf:1,opts:['True','False']}],why:'True: [A]<sup>0</sup> = 1, whatever [A] is.'},
+  {id:'x6',q:'Doubling [X] has <b>no effect</b> on the rate. Type the order in X.',f:[{t:'n',pre:'order in X =',want:0}],why:'2<sup>0</sup> = 1: no change, so zero order.'},
+  {id:'x7',q:'Which two trials should you compare to find the order in A?'+X7T,f:[{t:'m',want:0,opts:['Trials 1 and 2','Trials 2 and 3','Trials 1 and 3','Any two trials']}],why:'In trials 1 and 2 only [A] changes; [B] stays the same.'},
+  {id:'x8',q:'<b>True or false?</b> For Rate = k[A][B], doubling <b>both</b> [A] and [B] makes the rate 4 times faster.',f:[{t:'m',want:0,tf:1,opts:['True','False']}],why:'True: 2<sup>1</sup> × 2<sup>1</sup> = 4.'},
+  {id:'x9',q:'Rate = k[NO]<sup>2</sup>[H<sub>2</sub>]. If [NO] is doubled, how many times faster is the reaction?',f:[{t:'n',pre:'rate ×',want:4}],why:'2<sup>2</sup> = 4.'},
+  {id:'x10',q:'In Rate = k[A]<sup>m</sup>[B]<sup>n</sup>, the exponents m and n are found…',f:[{t:'m',want:2,opts:['from the balanced equation','from the value of k','from experimental data','from the molar masses']}],why:'Rate law exponents always come from experiments.'}]},
+ {id:'end',name:'Finish'}];
+PARTS.forEach(function(p){(p.items||[]).forEach(function(it,k){if(!it.lab)it.lab=p.track?'Step '+(it.st+1):'Q'+(k+1);it.tag=p.name+' '+it.lab;});});
+
+/* ---- saved progress (survives a refresh on the same device) ---- */
+var LVK='rl-live-v2';
+function lvNew(){return {player:null,code:'',t0:0,part:0,idx:0,res:{},ps:{},done:false,q:[],mute:false,streak:0};}
+var LV=lvNew();try{var saved=JSON.parse(localStorage.getItem(LVK)||'null');if(saved&&saved.res&&saved.q)LV=saved;}catch(e){}
+function lvSave(){try{localStorage.setItem(LVK,JSON.stringify(LV));}catch(e){}}
+function R(it){return LV.res[it.id]||(LV.res[it.id]={tries:0,hint:false,ok:null,pts:0});}
+function partStats(p){var o={c:0,pts:0,n:(p.items||[]).length,ans:0};(p.items||[]).forEach(function(it){var r=LV.res[it.id];if(r&&r.ok!==null){o.ans++;if(r.ok)o.c++;o.pts+=r.pts;}});return o;}
+function totals(){var o={pts:0,c:0,ans:0,n:0};PARTS.forEach(function(p){if(!p.items)return;var s=partStats(p);o.pts+=s.pts;o.c+=s.c;o.ans+=s.ans;o.n+=s.n;});o.max=o.n*100;return o;}
+function partTime(p){var t=LV.ps[p.id];return t&&t.start?((t.end||Date.now())-t.start)/1000:null;}
+function firstName(){return LV.player.name.split(' ')[0];}
+
+/* ---- sending: every submission becomes one row in the teacher's sheet ---- */
+var flushing=false,sendFail=false;
+function lvWhen(){return new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+function lvSend(row){LV.q.push({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),p:{game:'Rate Laws Live: '+row.game,chapter:16,name:LV.player.name,cls:LV.player.cls,score:row.score,correct:row.correct,total:row.total,
+ mins:Math.round((Date.now()-LV.t0)/6000)/10,when:lvWhen(),code:LV.code,missed:row.missed}});lvSave();lvFlush();}
+function lvFlush(){if(flushing||!LV.q.length){lvSentUI();return;}flushing=true;var job=LV.q[0];lvSentUI();
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(job.p)})
+  .then(function(){LV.q=LV.q.filter(function(j){return j.id!==job.id;});lvSave();flushing=false;sendFail=false;lvFlush();})
+  .catch(function(){flushing=false;sendFail=true;lvSentUI();setTimeout(lvFlush,8000);});}
+function lvSentUI(){var e=$('lvSent');if(!e||!LV.player)return;if(!LV.q.length&&!T5.showSent&&!LV.done){e.textContent='';return;}
+ e.className='sendst'+(LV.q.length?(sendFail?' err':''):' ok');e.textContent=LV.q.length?(sendFail?'Not sent yet: check your internet. It will try again by itself.':'Sending to your teacher…'):'✓ Sent to your teacher';}
+function ansText(it,ans){return it.f.map(function(f,k){var a=ans[k];if(f.t==='n')return plain((f.pre||'')+' '+a+' '+(f.post||''));if(f.t==='c')return plain(f.pre+' '+f.opts[a]);return 'ABCD'.charAt(a)+') '+plain(f.opts[a]).slice(0,80);}).join('; ');}
+function wantHtml(it){return it.f.map(function(f,k){var s=f.t==='n'?(f.pre||'')+' '+f.want+' '+(f.post||''):f.t==='c'?f.pre+' '+f.opts[f.want]:f.opts[f.want];return (k?(f.same?' ':' &nbsp;·&nbsp; '):'')+s;}).join('');}
+
+/* ---- sound effects (Web Audio, no files) ---- */
+var AC=null;
+function ac(){if(LV.mute)return null;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!AC||AC.state==='closed')AC=new C();if(AC.state!=='running'){var p=AC.resume();if(p&&p.catch)p.catch(function(){});}}catch(e){return null;}return AC;}
+/* browsers pause page audio (switching windows, idle tabs); wake it on every click or key press */
+function audioWake(){if(LV.mute)return;try{if(AC&&AC.state==='interrupted'){AC.close();AC=null;}var a=ac();if(!a)return;var b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0);}catch(e){}}
+['pointerdown','touchend','keydown'].forEach(function(ev){document.addEventListener(ev,audioWake,true);});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&AC&&AC.state!=='running'){try{AC.resume();}catch(e){}}});
+function tone(f,t0,d,type,vol){var a=ac();if(!a)return;var t=a.currentTime+t0,o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.2,t+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+0.05);}
+var SFX={good:function(){tone(784,0,.15);tone(1175,.1,.35);},bad:function(){tone(233,0,.22,'triangle',.18);tone(175,.13,.32,'triangle',.15);},
+ tick:function(){tone(1100,0,.05,'square',.04);},buzz:function(){tone(150,0,.7,'sawtooth',.07);},go:function(){tone(523,0,.12);tone(784,.12,.3);},
+ part:function(){[659,784,988,1319].forEach(function(f,i){tone(f,i*.1,.28,'triangle',.16);});},
+ fan:function(){[523,659,784,1047].forEach(function(f,i){tone(f,i*.14,.35,'triangle',.18);});tone(1047,.6,.9,'sine',.2);tone(1319,.6,.9,'sine',.12);tone(1568,.6,.9,'sine',.08);}};
+
+/* ---- confetti ---- */
+var CF=null,CP=[],cfOn=false,CFC=[TEAL,BLUE,PLUM,AMBER,CORAL,GREEN];
+function cfSize(){if(!CF)return;var d=window.devicePixelRatio||1;CF.width=innerWidth*d;CF.height=innerHeight*d;CF.getContext('2d').setTransform(d,0,0,d,0,0);}
+function cfCanvas(){if(!CF){CF=document.createElement('canvas');CF.id='lvConf';document.body.appendChild(CF);cfSize();window.addEventListener('resize',cfSize);}return CF;}
+function cfAdd(x,y,vx,vy){CP.push({x:x,y:y,vx:vx,vy:vy,a:Math.random()*6.3,va:(Math.random()-.5)*12,w:7+Math.random()*6,h:5+Math.random()*5,c:CFC[Math.floor(Math.random()*CFC.length)],t:0});}
+function burst(el,n){cfCanvas();var r=el&&el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},x=r.left+r.width/2,y=r.top+Math.min(r.height/2,24);
+ for(var i=0;i<(n||45);i++){var a=-Math.PI/2+(Math.random()-.5)*2.4,s=260+Math.random()*360;cfAdd(x,y,Math.cos(a)*s,Math.sin(a)*s);}cfRun();}
+function rain(n){cfCanvas();for(var i=0;i<n;i++)cfAdd(Math.random()*innerWidth,-20-Math.random()*innerHeight*.7,(Math.random()-.5)*120,60+Math.random()*160);cfRun();}
+function cfRun(){if(cfOn)return;cfOn=true;var last=performance.now();(function st(now){var dt=Math.min(.04,Math.max(0,(now-last)/1000)),g=CF.getContext('2d');last=now;g.clearRect(0,0,innerWidth,innerHeight);
+ CP.forEach(function(p){p.t+=dt;p.vy=Math.min(p.vy+520*dt,300);p.vx*=.985;p.x+=p.vx*dt+Math.sin(p.t*4+p.a)*0.6;p.y+=p.vy*dt;p.a+=p.va*dt;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.a*1.3))+1);g.restore();});
+ CP=CP.filter(function(p){return p.y<innerHeight+30&&p.t<8;});if(CP.length)requestAnimationFrame(st);else{cfOn=false;g.clearRect(0,0,innerWidth,innerHeight);}})(last);}
+
+/* ---- drawn icons ---- */
+function swIcon(s){return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 38 38" aria-hidden="true"><rect x="15" y="1" width="8" height="5" rx="2" fill="#18233a"/><circle cx="19" cy="22" r="14" fill="#fff" stroke="#2b59c3" stroke-width="4"/><path d="M19 22 V13" stroke="#18233a" stroke-width="3" stroke-linecap="round"/><path d="M19 22 L25 25" stroke="#e2708a" stroke-width="3" stroke-linecap="round"/></svg>';}
+var TROPHY='<svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 20 H16 C16 34 22 40 30 41 M68 20 H80 C80 34 74 40 66 41" fill="none" stroke="#18233a" stroke-width="3" stroke-linecap="round"/><path d="M28 14 H68 V38 C68 52 58 60 48 60 C38 60 28 52 28 38 Z" fill="#e8962a" stroke="#18233a" stroke-width="3"/><rect x="43" y="60" width="10" height="12" fill="#e8962a" stroke="#18233a" stroke-width="3"/><rect x="30" y="72" width="36" height="10" rx="3" fill="#2b59c3" stroke="#18233a" stroke-width="3"/><path d="M48 24 L51 31 L58 31 L52.5 35.5 L54.5 42.5 L48 38.5 L41.5 42.5 L43.5 35.5 L38 31 L45 31 Z" fill="#fff"/></svg>';
+var MEDAL='<svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><path d="M18 4 L28 22 L38 4" fill="none" stroke="#e2708a" stroke-width="6"/><circle cx="28" cy="34" r="16" fill="#2e9e5b" stroke="#18233a" stroke-width="3"/><path d="M20 34 L26 40 L37 28" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function star(on,d){return '<svg width="48" height="48" viewBox="0 0 24 24" style="animation-delay:'+d+'s" aria-hidden="true"><path d="M12 2 L14.9 8.6 L22 9.2 L16.6 13.9 L18.2 21 L12 17.3 L5.8 21 L7.4 13.9 L2 9.2 L9.1 8.6 Z" fill="'+(on?'#e8962a':'#dfe6f2')+'" stroke="#18233a" stroke-width="1.2" stroke-linejoin="round"/></svg>';}
+function spk(on){return '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="#18233a"/>'+(on?'<path d="M15.5 9 C17.5 11 17.5 13 15.5 15 M18 6.5 C21.5 10 21.5 14 18 17.5" fill="none" stroke="#18233a" stroke-width="2" stroke-linecap="round"/>':'<path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="#d8434a" stroke-width="2.4" stroke-linecap="round"/>')+'</svg>';}
+
+/* ---- encouraging words ---- */
+var PRAISE=['Brilliant!','Spot on!','You nailed it!','Great thinking!','Exactly right!','Superb!','Fantastic work!','Chemistry star!'];
+function praise(r){if(r.tries>1)return 'Well done for sticking with it!';if(r.hint)return 'Correct! The hint helped, and so did you.';var p=PRAISE[Math.floor(Math.random()*PRAISE.length)];return LV.streak>=3?p+' '+LV.streak+' in a row!':p;}
+function cheer(st){var r=st.n?st.c/st.n:0;return r>=.8?'Amazing! Keep that energy going.':r>=.5?'Good job! Keep pushing, you are getting stronger.':'Every step makes you stronger. Let’s go!';}
+
+/* ---- screens ---- */
+function dotsHtml(p){return '<div class="qzdots">'+p.items.map(function(it,k){var r=LV.res[it.id];return '<i class="'+(r&&r.ok===true?'ok':r&&r.ok===false?'no':(k===LV.idx?'cur':''))+'"></i>';}).join('')+'</div>';}
+function chTable(hi){return '<table class="dt"><tr><th>Trial</th><th>Initial [A] (M)</th><th>Initial [B] (M)</th><th>Initial rate (mol/(L·s))</th></tr>'+CHD.map(function(r,i){return '<tr class="'+(hi.indexOf(i)>=0?'sel':'')+'"><td>'+(i+1)+'</td><td>'+r[0].toFixed(2)+'</td><td>'+r[1].toFixed(2)+'</td><td>'+sci(r[2])+'</td></tr>';}).join('')+'</table>';}
+function trackHtml(p,cur){return '<div class="five'+(p.track.length>5?' six':'')+'">'+p.track.map(function(n,k){var dn=p.items.filter(function(it){return it.st===k;}).every(function(it){var r=LV.res[it.id];return r&&r.ok!==null;});
+ return '<div class="'+(k===cur?'on':(dn?'done':''))+'"><i class="th"><b>'+(dn&&k!==cur?'✓':k+1)+'</b>'+(k<5?'Step '+(k+1):'Last step')+'</i><span>'+n+'</span></div>';}).join('')+'</div>';}
+function workHtml(p,all){var L=[];p.items.forEach(function(it){var r=LV.res[it.id];if(all||(r&&r.ok!==null))(it.work||[]).forEach(function(w,j){L.push([j?'':it.lab,w]);});});
+ return '<div class="work"><div class="lbl">My working</div>'+(L.length?L.map(function(l){return '<div class="wl"><span>'+l[0]+'</span><div>'+l[1]+'</div></div>';}).join(''):'<div class="small">Your working appears here as you finish each step.</div>')+'</div>';}
+function fieldHtml(it,r,k,f,lock){var m=r.marks?r.marks[k]:null,a=r.ans?r.ans[k]:null,fin=lock||m===true,pk=T5.pk[k],shown=r.ok===false;
+ if(f.t==='n')return (f.pre?'<span>'+f.pre+'</span>':'')+'<input id="lf'+k+'" class="'+(m===true?'ok':m===false?'no':'')+'" inputmode="decimal" autocomplete="off" value="'+(a==null?'':esc(a))+'"'+(fin?' disabled':'')+'>'+(f.post?'<span>'+f.post+'</span>':'');
+ function cls(i,base,selC){return base+(pk===i?(m===true?' right':m===false?' wrong':' '+selC):'')+(shown&&i===f.want&&pk!==i?' right':'');}
+ if(f.t==='c')return '<span>'+f.pre+'</span><span class="lv-ch">'+f.opts.map(function(o,i){return '<button class="'+cls(i,'btn lvc','sel')+'" data-f="'+k+'" data-o="'+i+'"'+(fin?' disabled':'')+'>'+o+'</button>';}).join('')+'</span>';
+ return '<div class="lv-opts'+(f.tf?' tf':'')+(f.opts.some(function(o){return plain(o).length>26;})?' one':'')+'">'+f.opts.map(function(o,i){return '<button class="'+cls(i,'qzb lvc','pick')+'" data-f="'+k+'" data-o="'+i+'"'+(fin?' disabled':'')+'><span class="L">'+'ABCD'.charAt(i)+'</span><span>'+o+'</span></button>';}).join('')+'</div>';}
+function fieldsHtml(it,r,lock){var rows=[];it.f.forEach(function(f,k){var h=fieldHtml(it,r,k,f,lock);if(f.same&&rows.length)rows[rows.length-1]+=h;else rows.push(h);});return rows.map(function(x){return '<div class="lv-f">'+x+'</div>';}).join('');}
+function fbHtml(it,r){if(r.ok===true)return '<div class="lvfb ok" id="lvFb"><b>'+r.msg+'</b> +'+r.pts+' points. '+(it.why||'')+'</div>';
+ if(r.ok===false)return '<div class="lvfb no" id="lvFb"><b>'+r.msg+'</b> The answer is <b>'+wantHtml(it)+'</b>. '+(it.why||'')+'</div>';
+ if(r.tries>0)return '<div class="lvfb no" id="lvFb"><b>Not quite.</b> Fix what is marked in red'+(it.hint?' (the hint can help)':'')+' and submit again. You can do it!</div>';
+ return '<div id="lvFb"></div>';}
+function lvStartHtml(){var me={};try{me=JSON.parse(localStorage.getItem('msm-student')||'{}')||{};}catch(e){}
+ return '<div class="qz"><div class="lv-hero">'+swIcon(60)+'<div><div class="lbl">Live session · Chapter 16.3</div><div class="lv-big">Rate laws: can you beat the clock?</div></div></div>'+
+  '<div class="lv-plan">'+PARTS.filter(function(p){return p.secs;}).map(function(p,i){return '<div><b>'+(i+1)+'</b><span>'+p.name+'</span><i>'+p.items.length+(p.track?' steps':' questions')+' · '+mmss(p.secs)+'</i></div>';}).join('')+'</div>'+
+  '<ul class="lv-rules"><li>Every answer you submit goes straight to your teacher.</li><li><b>100 points</b> when you are right the first time, <b>50 points</b> after a hint or a second try. The exit ticket is one try only.</li><li>Each part has its own timer. Beat the clock!</li><li>Need a calculator? Press the calculator button next to the timer in the corner.</li></ul>'+
+  '<div class="namerow"><label for="lvName">Your full name</label><input id="lvName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(me.name||'')+'"></div>'+
+  '<div class="namerow"><label for="lvCls">Class</label><select id="lvCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===me.cls?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
+  '<div class="exerr" id="lvErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="lvStart">Start the live session ▶</button></div></div>';}
+function lvWelcomeHtml(){var t=totals();return '<div class="qz"><div class="lv-hero">'+swIcon(60)+'<div><div class="lbl">Live session · Chapter 16.3</div><div class="lv-big">Welcome back, '+esc(firstName())+'!</div><div>'+esc(LV.player.name)+' · '+esc(LV.player.cls)+' · '+t.pts+' points so far</div></div></div>'+
+ '<div class="stepbar"><button class="btn fill" id="lvCont">'+(LV.done?'See my results ▶':'Continue: '+PARTS[LV.part].name+' ▶')+'</button><button class="btn" id="lvReset">Not you? Start over</button></div></div>';}
+function lvIntroHtml(p){var i=PARTS.indexOf(p),prev=PARTS[i-1],h='<div class="qz">';
+ if(prev&&prev.secs&&LV.just===prev.id){var st=partStats(prev),tm=partTime(prev),beat=tm<=prev.secs;
+  h+='<div class="lv-congrats">'+MEDAL+'<div><div class="lv-big">'+prev.name+' complete!</div><div>'+st.c+' / '+st.n+' correct · +'+st.pts+' points · '+mmss(tm)+(beat?' · <b class="good2">You beat the clock!</b>':' · a little over time, so speed up in the next part!')+'</div><div class="small">'+cheer(st)+'</div></div></div>';}
+ return h+'<div class="lbl">Part '+i+' of 4</div><div class="lv-big">'+p.name+'</div><p style="font-size:18px;margin:6px 0 10px">'+p.intro+'</p><div class="lv-timer">'+swIcon(30)+'<b>'+mmss(p.secs)+'</b> on the clock · '+p.items.length+(p.track?' steps':' questions')+'</div>'+
+  '<div class="stepbar"><button class="btn fill" id="lvGo">I am ready: start the clock ▶</button></div></div>';}
+function lvItemHtml(p){var it=p.items[LV.idx],r=R(it),fin=r.ok!==null,maxT=p.tries||2;
+ if(T5.pkFor!==it.id){T5.pkFor=it.id;T5.pk={};T5.hintOn=false;if(r.ans)it.f.forEach(function(f,k){if(f.t!=='n')T5.pk[k]=r.ans[k];});}
+ var h='<div class="lv-head"><span class="lv-badge">'+p.name+'</span><b>'+(p.track?it.lab+' of the challenge':'Question '+(LV.idx+1)+' of '+p.items.length)+'</b>'+dotsHtml(p)+'<span class="lv-pts">'+totals().pts+' points</span></div>';
+ if(p.track)h+='<div class="task">Use the data to find the order of the reaction for each reactant. Assume the rate law is Rate = k[A]<sup>m</sup>[B]<sup>n</sup>.<br>'+p.task+'</div>'+chTable(p.trials)+trackHtml(p,it.st);
+ h+='<div class="st on cur"><div class="sh"><span class="n">'+(p.track?Math.min(it.st+1,6):LV.idx+1)+'</span>'+(p.track?it.lab+': '+p.track[it.st]:it.lab)+'</div><div class="lv-q">'+it.q+'</div>';
+ if(it.sim)h+='<canvas id="mini" width="640" height="260" style="margin:2px 0 8px"></canvas><div class="stepbar" style="margin:0 0 6px"><button class="btn fill" id="miniRun">▶ Run</button><span class="small" id="miniNote"></span></div>';
+ h+=fieldsHtml(it,r,fin)+'<div class="stepbar">'+(fin?'<button class="btn fill" id="lvNext">'+(LV.idx<p.items.length-1?'Next ▶':'Finish '+p.name+' ▶')+'</button>':
+  '<button class="btn fill" id="lvSub">Submit</button>'+(it.hint?'<button class="btn" id="lvHint">'+(T5.hintOn?'Hide hint':'Hint')+'</button>':'')+'<span class="small">'+(maxT>1?'Try '+(r.tries+1)+' of '+maxT:'One try only')+'</span>')+'<span class="sendst" id="lvSent"></span></div>';
+ if(it.hint&&!fin)h+='<div class="hintbox'+(T5.hintOn?' on':'')+'" id="lvHintBox"><b>Hint</b> (now worth 50 points): '+it.hint+'</div>';
+ h+=fbHtml(it,r)+'</div>';if(p.track)h+=workHtml(p,false);
+ return '<div class="qz">'+h+'</div>';}
+function lvReviewHtml(p){var st=partStats(p),tm=partTime(p);
+ return '<div class="qz"><div class="lv-head"><span class="lv-badge">'+p.name+'</span><b>Finished</b><span class="lv-pts">'+st.c+' / '+st.n+' correct · '+st.pts+' points'+(tm==null?'':' · '+mmss(tm))+'</span></div>'+
+  (p.track?'<div class="task">'+p.task+'</div>'+chTable(p.trials)+workHtml(p,true):'')+
+  '<div class="lvrev">'+p.items.map(function(it){var r=LV.res[it.id]||{};return '<div class="'+(r.ok?'ok':'no')+'">'+(r.ok?'✓':'✗')+' <b>'+it.lab+'</b> '+(r.ans?'You: '+esc(ansText(it,r.ans)):'')+(r.ok?'':' → <b>'+wantHtml(it)+'</b>')+'</div>';}).join('')+'</div>'+
+  '<div class="stepbar"><button class="btn fill" id="lvCont">Back to '+(LV.done?'my results':PARTS[LV.part].name)+' ▶</button></div></div>';}
+function lvEndHtml(){var t=totals(),pct=t.max?t.pts/t.max:0,ns=pct>=.85?3:pct>=.6?2:1;
+ var msg=pct>=.85?'Outstanding! You are a rate-law master.':pct>=.6?'Great work today! A little more practice and you will have it all.':'You finished, and that counts! Go over the steps in tab 4 and try the practice problems again.';
+ return '<div class="qz lv-end">'+TROPHY+'<div class="lv-big">Congratulations, '+esc(firstName())+'!</div><div class="small">'+esc(LV.player.name)+' · '+esc(LV.player.cls)+' · check code '+LV.code+'</div>'+
+  '<div class="lv-stars">'+[0,1,2].map(function(i){return star(i<ns,.3+i*.25);}).join('')+'</div><div class="qzbig">'+t.pts+'</div><div>points out of '+t.max+' · '+t.c+' / '+t.n+' correct</div><div class="lv-msg">'+msg+'</div>'+
+  '<table class="dt"><tr><th>Part</th><th>Correct</th><th>Points</th><th>Time</th><th>Clock</th></tr>'+PARTS.filter(function(p){return p.secs;}).map(function(p){var s=partStats(p),tm=partTime(p);
+   return '<tr><td>'+p.name+'</td><td>'+s.c+' / '+s.n+'</td><td>'+s.pts+'</td><td>'+(tm==null?'–':mmss(tm))+'</td><td>'+(tm!=null&&tm<=p.secs?'<span class="good2">Beat it!</span>':'<span class="small">over</span>')+'</td></tr>';}).join('')+'</table>'+
+  '<div class="stepbar"><span class="sendst" id="lvSent"></span></div><div class="stepbar"><button class="btn" id="lvReset">Start a new session</button></div></div>';}
+
+/* ---- actions ---- */
+function lvSubmit(p){var it=p.items[LV.idx],r=R(it),ans=[],miss=false,maxT=p.tries||2;
+ it.f.forEach(function(f,k){if(f.t==='n'){var e=$('lf'+k),v=e?e.value.trim():'';ans.push(v);if(v==='')miss=true;}else{var c=T5.pk[k];ans.push(c==null?null:c);if(c==null)miss=true;}});
+ if(miss){$('lvFb').outerHTML='<div class="lvfb no" id="lvFb"><b>Answer every part first.</b></div>';return;}
+ var marks=it.f.map(function(f,k){if(f.t!=='n')return ans[k]===f.want;var v=parseNum(ans[k]);return isFinite(v)&&Math.abs(v-f.want)<=Math.max(Math.abs(f.want)*.03,1e-3);}),ok=marks.every(Boolean);
+ r.tries++;r.ans=ans;r.marks=marks;var fin=ok||r.tries>=maxT;
+ if(ok){LV.streak++;r.ok=true;r.pts=(r.tries===1&&!r.hint)?100:50;r.msg=praise(r);}
+ else{LV.streak=0;if(fin){r.ok=false;r.pts=0;r.msg=maxT>1?'Good try! Read the answer, then keep going.':'Not this time, but keep going!';}}
+ T5.showSent=true;
+ lvSend({game:it.tag,score:fin?r.pts:0,correct:ok?1:0,total:1,missed:'Try '+r.tries+(ok?' ✓ correct':' ✗ wrong')+(r.hint?' (used hint)':'')+' · answer: '+ansText(it,ans)+(fin&&!ok?' · correct: '+plain(wantHtml(it)):'')});
+ T5.render();if(ok){SFX.good();burst($('lvFb'),40);}else SFX.bad();}
+function lvFinish(){LV.done=true;LV.celebrate=true;var t=totals(),missed=[];
+ PARTS.forEach(function(p){(p.items||[]).forEach(function(it){var r=LV.res[it.id];if(!r||!r.ok)missed.push(it.tag);});});
+ lvSend({game:'FINAL',score:t.pts,correct:t.c,total:t.n,missed:(missed.length?'Missed: '+missed.join(', '):'Nothing missed!')+' · times: '+PARTS.filter(function(p){return p.secs;}).map(function(p){var tm=partTime(p);return p.name+' '+(tm==null?'–':mmss(tm))+(tm!=null&&tm<=p.secs?' (beat)':'');}).join(', ')});}
+function lvNext(p){LV.idx++;T5.pk={};T5.pkFor=null;T5.showSent=false;
+ if(LV.idx<p.items.length){lvSave();T5.render();return;}
+ LV.ps[p.id].end=Date.now();LV.idx=0;LV.part++;LV.just=p.id;
+ if(PARTS[LV.part].id==='end')lvFinish();else{SFX.part();rain(140);}
+ lvSave();go(4,LV.part);}
+function lvReset(){if(!window.confirm('Start over? Your answers on this device will be cleared.'))return;var m=LV.mute,q=LV.q;LV=lvNew();LV.mute=m;LV.q=q;lvSave();go(4,0);}
+
+var T5={name:'Live session',c:BLUE,steps:PARTS.map(function(p){return p.name;}),pk:{},pkFor:null,hintOn:false,
+ mark:function(i){return LV.player&&(i<LV.part||LV.done)?'✓':i+1;},
+ lock:function(i){return i>(LV.player?LV.part:0);},
+ fix:function(s){return Math.min(s,LV.player?LV.part:0);},
+ title:function(s){return ['Live session: get ready','Warm-up: refresh your memory','Challenge 1: find n by comparing trials 1 and 2','Challenge 2: find m by comparing trials 2 and 3','Exit ticket','Well done!'][s];},
+ enter:function(s){this.s=s;$('cv').style.display='none';$('controls').innerHTML='';this.render();},
+ render:function(){var s=this.s,p=PARTS[s],h;
+  if(!LV.player)h=lvStartHtml();else if(p.id==='start')h=lvWelcomeHtml();else if(p.id==='end')h=lvEndHtml();
+  else if(s<LV.part)h=lvReviewHtml(p);else if(!LV.ps[p.id]||!LV.ps[p.id].start)h=lvIntroHtml(p);else h=lvItemHtml(p);
+  $('panel').innerHTML=h;this.bind(p);lvSentUI();renderSteps();
+  setQ(!LV.player?'Type your full name and choose your class, then press Start. Your teacher sees every answer as soon as you submit it.':
+   {start:'Ready when you are!',warm:'Press Run on each simulation, watch carefully, then answer.',c1:'Follow the steps in order. Your working builds up underneath, just like in your notebook.',c2:'Both concentrations change this time. Which answer from Challenge 1 will you need?',exit:'One try per question. Read carefully!',end:'Well done for finishing! Look at your results.'}[p.id],'Live session');
+  setRule(p.track?FIVE.map(function(n,i){return '<b>Step '+(i+1)+'</b> '+n;}):p.id==='warm'?['Press Run, watch, then answer','rate change = (concentration change)<sup>order</sup>','×2 → rate ×1, ×2, ×4 means order 0, 1, 2']:
+   p.id==='exit'?['×2 → rate ×1, ×2, ×4 means order 0, 1, 2','Overall order = sum of the orders','Orders come from experiments, not the equation']:['100 points: right the first time','50 points: after a hint or a second try','Beat the clock in every part!']);
+  if(p.id==='end'&&LV.celebrate){LV.celebrate=false;lvSave();setTimeout(function(){rain(280);SFX.fan();},150);}},
+ bind:function(p){var me=this;
+  each('.lvc',function(b){b.onclick=function(){var k=+b.getAttribute('data-f');me.pk[k]=+b.getAttribute('data-o');each('.lvc[data-f="'+k+'"]',function(x){x.classList.remove('sel','pick','wrong','right');});b.classList.add(b.classList.contains('qzb')?'pick':'sel');};});
+  each('.lv-f input',function(e){e.oninput=function(){e.classList.remove('no');};e.onkeydown=function(ev){if(ev.key==='Enter'&&$('lvSub'))lvSubmit(p);};});
+  var b;
+  if((b=$('lvSub')))b.onclick=function(){lvSubmit(p);};
+  if((b=$('lvNext')))b.onclick=function(){lvNext(p);};
+  if($('mini'))miniInit(p.items[LV.idx]);
+  if((b=$('lvHint')))b.onclick=function(){var r=R(p.items[LV.idx]);me.hintOn=!me.hintOn;if(me.hintOn&&!r.hint){r.hint=true;lvSave();}$('lvHintBox').classList.toggle('on',me.hintOn);b.textContent=me.hintOn?'Hide hint':'Hint';};
+  if((b=$('lvGo')))b.onclick=function(){LV.ps[p.id]={start:Date.now()};LV.just=null;lvSave();SFX.go();me.render();};
+  if((b=$('lvCont')))b.onclick=function(){go(4,LV.part);};
+  if((b=$('lvReset')))b.onclick=lvReset;
+  if((b=$('lvStart'))){var nm=$('lvName'),cl=$('lvCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('lvErr');nm.classList.remove('no');cl.classList.remove('no');
+    if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}
+    if(!c){er.textContent='Please choose your class.';cl.classList.add('no');cl.focus();return;}
+    var m=LV.mute,q=LV.q;LV=lvNew();LV.mute=m;LV.q=q;LV.player={name:v,cls:c};LV.t0=Date.now();LV.part=1;
+    LV.code='RL-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    lvSend({game:'Joined',score:0,correct:0,total:0,missed:'Started the live session'});SFX.go();go(4,1);};
+   b.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}},
+ frame:function(dt){miniFrame(dt);if(!LV.player){setReads([['Status','Type your name to start',1]]);return;}var t=totals(),p=PARTS[LV.part],ps=p&&LV.ps[p.id],left=p&&p.secs&&ps&&ps.start?p.secs-(Date.now()-ps.start)/1000:null;
+  setReads([['Points',t.pts+' / '+t.max],['Correct',t.c+' / '+t.ans],['Now',LV.done?'Finished':p.name,1],['Time left',left==null?'–':(left>=0?mmss(Math.ceil(left)):'over by '+mmss(-left)),1]]);}
+};
+
+/* ---- warm-up mini simulations, drawn inside the question ---- */
+var MDUR={graph:1.6,beakers:6,flaskA:4,flaskB:4};
+var FL={flaskA:{tr:[[0.10,0.10,2e-3],[0.20,0.10,8e-3]],ch:0},flaskB:{tr:[[0.10,0.10,2e-3],[0.10,0.30,2e-3]],ch:1}};
+function ease(x){x=clamp(x,0,1);return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
+function miniReset(ms){ms.t=0;ms.bub=[[],[],0,0];
+ if(ms.kind==='beakers')ms.B=[{x0:12,fa:1,fb:1,cnt:8},{x0:332,fa:2,fb:3,cnt:96}].map(function(b){b.p=[];for(var i=0;i<3*b.fa+3*b.fb;i++){var a=Math.random()*Math.PI*2;b.p.push({x:b.x0+20+Math.random()*256,y:66+Math.random()*82,vx:Math.cos(a)*55,vy:Math.sin(a)*55,A:i<3*b.fa});}return b;});}
+function miniInit(it){var ms=T5.ms;if(!ms||ms.id!==it.id){ms=T5.ms={id:it.id,kind:it.sim,run:false,done:false};miniReset(ms);}
+ var c=$('mini'),d=window.devicePixelRatio||1;c.width=640*d;c.height=260*d;ms.cv=c;ms.g=c.getContext('2d');ms.g.setTransform(d,0,0,d,0,0);
+ $('miniRun').onclick=function(){miniReset(ms);ms.run=true;ms.done=false;miniBtn();};miniBtn();}
+function miniBtn(){var ms=T5.ms,b=$('miniRun'),n=$('miniNote');if(!ms||!b)return;b.disabled=ms.run;b.textContent=ms.run?'Running…':ms.done?'↺ Run again':'▶ Run';
+ n.textContent=ms.run?'Watch closely…':ms.done?'Done! Now answer below.':'Press Run and watch.';}
+function miniFrame(dt){var ms=T5.ms;if(!ms||!ms.cv||!document.body.contains(ms.cv))return;
+ if(ms.run){ms.t+=dt;if(ms.t>=MDUR[ms.kind]){ms.t=MDUR[ms.kind];ms.run=false;ms.done=true;miniBtn();}}
+ var old=ctx;ctx=ms.g;try{ctx.clearRect(0,0,640,260);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,640,260);(ms.kind==='graph'?miniGraphSim:ms.kind==='beakers'?miniBeakers:miniFlasks)(ms,dt);}catch(e){console.error(e);}finally{ctx=old;}}
+function miniGraphSim(ms){var x0=60,x1=400,y0=222,y1=26,X=function(v){return x0+v/3.5*(x1-x0);},Y=function(v){return y0-v/3*(y0-y1);},f=function(x){return .25*x*x;},v,i;
+ var pr=ms.done?1:ms.run?ease(ms.t/MDUR.graph):0,xa=1+2*pr,ya=f(xa),moved=ms.run||ms.done;
+ panel(8,6,414,248);
+ for(v=1;v<=3;v++){seg(X(v),y0,X(v),y1,'#eef2f8',1);seg(x0,Y(v),x1,Y(v),'#eef2f8',1);txt(String(v),X(v),y0+14,{s:12,c:MUTED,w:500});txt(String(v),x0-12,Y(v),{s:12,c:MUTED,w:500});}
+ seg(x0,y0,x1+8,y0,INK,2.5);seg(x0,y0,x0,y1-6,INK,2.5);txt('[A] (M)',x1+8,y0+14,{s:13,c:INK,a:'right'});
+ ctx.save();ctx.translate(26,(y0+y1)/2);ctx.rotate(-Math.PI/2);txt('rate (×10⁻³ mol/(L·s))',0,0,{s:13});ctx.restore();
+ ctx.strokeStyle=PLUM;ctx.lineWidth=4;ctx.beginPath();for(i=0;i<=120;i++){var x=3.45*i/120;if(i)ctx.lineTo(X(x),Y(f(x)));else ctx.moveTo(X(x),Y(f(x)));}ctx.stroke();
+ function mark(x,col,lab){var Xp=X(x),Yp=Y(f(x));seg(Xp,Yp,Xp,y0,col,2,[6,5]);seg(Xp,Yp,x0,Yp,col,2,[6,5]);dotc(Xp,Yp,8,col);txt(lab,Xp+12,Yp-14,{s:14,c:col,a:'left'});}
+ mark(1,MUTED,'Before');if(moved)mark(xa,CORAL,ms.done?'After':'');
+ panel(432,6,200,248);txt('Before',532,30,{s:15,c:MUTED});txt('[A] = 1.00 M',532,56,{s:18});txt('rate = 0.25',532,82,{s:18,c:PLUM});
+ seg(448,104,616,104,LINE,2);txt('After',532,128,{s:15,c:CORAL});txt('[A] = '+(moved?xa.toFixed(2):'?')+' M',532,154,{s:18});txt('rate = '+(moved?ya.toFixed(2):'?'),532,180,{s:18,c:PLUM});
+ txt('rate in ×10⁻³ mol/(L·s)',532,226,{s:12,c:MUTED,w:500});}
+function miniBeakers(ms,dt){var T=MDUR.beakers,tt=ms.done?T:ms.run?ms.t:0;
+ ms.B.forEach(function(b,k){var x0=b.x0,n=ms.run||ms.done?Math.floor(b.cnt*tt/T+1e-9):0;
+  panel(x0-6,6,304,248);txt(k?'After':'Before',x0+146,24,{s:16,c:k?GREEN:MUTED});txt('[A] ×'+b.fa+'    [B] ×'+b.fb,x0+146,44,{s:14,w:500});
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0+6,56);ctx.lineTo(x0+6,148);ctx.quadraticCurveTo(x0+6,158,x0+16,158);ctx.lineTo(x0+276,158);ctx.quadraticCurveTo(x0+286,158,x0+286,148);ctx.lineTo(x0+286,56);ctx.stroke();
+  ctx.fillStyle='rgba(43,89,195,.06)';ctx.fillRect(x0+8,64,276,92);
+  b.p.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<x0+18||p.x>x0+274)p.vx*=-1;if(p.y<72||p.y>148)p.vy*=-1;p.x=clamp(p.x,x0+18,x0+274);p.y=clamp(p.y,72,148);dotc(p.x,p.y,7,p.A?CORAL:BLUE);});
+  txt('Products made',x0+2,176,{s:13,c:MUTED,w:500,a:'left'});pill(String(n),x0+268,176,GREEN,'#fff',15);trayDots(n,96,x0,190,288,60);});
+ var nt=$('miniNote');if(ms.run&&nt)nt.textContent='t = '+tt.toFixed(1)+' s of '+T+' s';}
+function miniFlasks(ms,dt){var S=FL[ms.kind],live=ms.run||ms.done;
+ function hw(y){return y<106?14:14+(y-106)/94*56;}
+ S.tr.forEach(function(tr,k){var cx=160+320*k,bs=ms.bub[k];
+  panel(cx-152,6,304,248);txt('Trial '+(k+1),cx,26,{s:16,c:MUTED});
+  ['A','B'].forEach(function(r,j){var lab='['+r+'] = '+tr[j].toFixed(2)+' M',x=cx+(j?66:-66);if(k===1&&S.ch===j)pill(lab,x,52,AMBER,'#fff',14);else txt(lab,x,52,{s:15});});
+  ctx.fillStyle='rgba(15,139,141,.18)';ctx.beginPath();ctx.moveTo(cx-hw(140),140);ctx.lineTo(cx+hw(140),140);ctx.lineTo(cx+70,200);ctx.lineTo(cx-70,200);ctx.closePath();ctx.fill();
+  if(live){ms.bub[2+k]+=tr[2]/2e-3*2.5*dt;while(ms.bub[2+k]>=1){ms.bub[2+k]--;bs.push({x:cx+(Math.random()-.5)*110,y:196,r:3+Math.random()*3,v:45+Math.random()*30,ph:Math.random()*6});}}
+  for(var i=bs.length-1;i>=0;i--){var b=bs[i];b.y-=b.v*dt;b.ph+=dt*5;var lim=hw(b.y)-b.r-3;b.x=clamp(b.x+Math.sin(b.ph)*.4,cx-lim,cx+lim);if(b.y<143){bs.splice(i,1);continue;}
+   ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=TEAL;ctx.lineWidth=1.8;ctx.stroke();}
+  ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(cx-14,70);ctx.lineTo(cx-14,106);ctx.lineTo(cx-70,200);ctx.lineTo(cx+70,200);ctx.lineTo(cx+14,106);ctx.lineTo(cx+14,70);ctx.stroke();
+  if(ms.done)pill('rate = '+(tr[2]*1e3).toFixed(2)+' × 10⁻³ mol/(L·s)',cx,228,GREEN,'#fff',15);
+  else txt(ms.run?'measuring…':'rate = ?',cx,228,{s:15,c:MUTED});});}
+
+/* ---- calculator: students cannot leave the page during the session ---- */
+var CALC_ICON='<svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true"><rect x="1.5" y="1" width="15" height="18" rx="3" fill="#fff" stroke="#2b59c3" stroke-width="2"/><rect x="4" y="3.5" width="10" height="4" rx="1" fill="#2b59c3"/><circle cx="5.5" cy="11" r="1.3" fill="#18233a"/><circle cx="9" cy="11" r="1.3" fill="#18233a"/><circle cx="12.5" cy="11" r="1.3" fill="#18233a"/><circle cx="5.5" cy="15" r="1.3" fill="#18233a"/><circle cx="9" cy="15" r="1.3" fill="#18233a"/><circle cx="12.5" cy="15" r="1.3" fill="#e2708a"/></svg>';
+var CALC={x:'',res:null,ans:0,just:false};
+var CKEYS=[['C','C','clr'],['⌫','BS','fn'],['(','(','fn'],[')',')','fn'],['÷','/','op'],['7','7'],['8','8'],['9','9'],['×10ⁿ','E','fn'],['×','*','op'],['4','4'],['5','5'],['6','6'],['xʸ','^','fn'],['−','-','op'],['1','1'],['2','2'],['3','3'],['√','√','fn'],['+','+','op'],['0','0'],['.','.'],['x²','SQ','fn'],['Ans','A','fn'],['=','=','eq']];
+function calcShow(x){return x.replace(/E/g,'×10^').replace(/\*/g,'×').replace(/\//g,'÷').replace(/-/g,'−').replace(/A/g,'Ans');}
+function calcParse(str){var i=0;function pk(){return str[i];}
+ function num(){var m=str.slice(i).match(/^(\d+\.?\d*|\.\d+)(E-?\d+)?/);if(!m)throw 0;i+=m[0].length;return parseFloat(m[0].replace('E','e'));}
+ function prim(){var c=pk();if(c==='('){i++;var v=expr();if(pk()===')')i++;return v;}if(c==='A'){i++;return CALC.ans;}if(c==='√'){i++;return Math.sqrt(unary());}return num();}
+ function pow(){var b=prim();if(pk()==='^'){i++;return Math.pow(b,unary());}return b;}
+ function unary(){if(pk()==='-'){i++;return -unary();}if(pk()==='+'){i++;return unary();}return pow();}
+ function term(){var v=unary();while(pk()==='*'||pk()==='/'){var o=str[i++],r=unary();v=o==='*'?v*r:v/r;}return v;}
+ function expr(){var v=term();while(pk()==='+'||pk()==='-'){var o=str[i++],r=term();v=o==='+'?v+r:v-r;}return v;}
+ var v=expr();if(i<str.length)throw 0;return v;}
+function calcFmt(v){if(v===0)return '0';var a=Math.abs(v);if(a>=1e7||a<1e-3){var e=Math.floor(Math.log10(a)),m=v/Math.pow(10,e);if(Math.abs(m)>=9.99995){m/=10;e++;}return parseFloat(m.toFixed(4))+' × 10<sup>'+String(e).replace('-','−')+'</sup>';}return String(parseFloat(v.toPrecision(10)));}
+function calcKey(k){if(k==='C'){CALC.x='';CALC.res=null;CALC.just=false;}
+ else if(k==='BS'){if(CALC.just){CALC.just=false;CALC.res=null;}else{CALC.res=null;CALC.x=CALC.x.slice(0,-1);}}
+ else if(k==='='){if(!CALC.x)return;try{var v=calcParse(CALC.x);if(!isFinite(v))throw 0;CALC.res=v;CALC.ans=v;CALC.just=true;}catch(e){CALC.res='err';}}
+ else{if(CALC.just){CALC.x=['+','-','*','/','^','SQ'].indexOf(k)>=0?'A':'';CALC.just=false;}CALC.res=null;CALC.x+=k==='SQ'?'^2':k;}
+ calcRender();}
+function calcRender(){var m=$('calcMain');if(!m)return;$('calcExpr').textContent=CALC.just?calcShow(CALC.x)+' =':'';m.className=CALC.res==='err'?'err':'';
+ m.innerHTML=CALC.res==='err'?'Error: check your brackets and signs':CALC.just?calcFmt(CALC.res):esc(calcShow(CALC.x)||'0');m.scrollLeft=m.scrollWidth;}
+function calcOpen(on){var c=$('calc'),b=$('lvcCalc');if(!c)return;c.classList.toggle('on',on);if(b)b.classList.toggle('on',on);if(on){calcRender();try{c.focus({preventScroll:true});}catch(e){c.focus();}}}
+function calcBuild(){var c=document.createElement('div');c.id='calc';c.setAttribute('tabindex','-1');c.setAttribute('role','dialog');c.setAttribute('aria-label','Calculator');
+ c.innerHTML='<div class="calc-h"><b>Calculator</b><button id="calcX" aria-label="Close the calculator">×</button></div><div class="calc-d"><div id="calcExpr"></div><div id="calcMain">0</div></div>'+
+  '<div class="calc-k">'+CKEYS.map(function(k){return '<button class="'+(k[2]||'')+'" data-ck="'+k[1]+'">'+k[0]+'</button>';}).join('')+'</div>'+
+  '<div class="calc-tip">For 7.20 × 10<sup>−3</sup> press: 7.20 &nbsp;×10ⁿ&nbsp; − &nbsp;3</div>';
+ document.body.appendChild(c);
+ each('#calc [data-ck]',function(b){b.onclick=function(){calcKey(b.getAttribute('data-ck'));};});
+ $('calcX').onclick=function(){calcOpen(false);};$('lvcCalc').onclick=function(){calcOpen(!$('calc').classList.contains('on'));};
+ c.onkeydown=function(e){var k=e.key,m={'Enter':'=','=':'=','Backspace':'BS','Delete':'C','x':'*','X':'*','e':'E','E':'E'};
+  if(k==='Escape'){calcOpen(false);return;}var v=m[k]||(/^[0-9.+\-*\/^()]$/.test(k)?k:null);if(v){e.preventDefault();calcKey(v);}};}
+
+/* ---- floating timer: visible on every tab while the session runs ---- */
+var lastTick=-1;
+function lvChip(){var c=document.createElement('div');c.id='lvChip';
+ c.innerHTML='<svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><rect x="15" y="0" width="8" height="5" rx="2" fill="#18233a"/><circle cx="19" cy="22" r="14" fill="#fff" stroke="#e6ebf3" stroke-width="4"/><circle id="lvRing" cx="19" cy="22" r="14" fill="none" stroke="#2b59c3" stroke-width="4" stroke-linecap="round" transform="rotate(-90 19 22)" stroke-dasharray="88 88"/><path d="M19 22 V14" stroke="#18233a" stroke-width="2.5" stroke-linecap="round"/></svg>'+
+  '<div class="lvc-t"><span id="lvcPart"></span><b id="lvcTime"></b></div><button class="btn" id="lvcBack">Back to my questions</button><button class="lvc-m lvc-c" id="lvcCalc" title="Calculator" aria-label="Open the calculator">'+CALC_ICON+'</button><button class="lvc-m" id="lvcMute" title="Sound on or off" aria-label="Sound on or off"></button>';
+ document.body.appendChild(c);$('lvcBack').onclick=function(){go(4,LV.part);window.scrollTo(0,0);};
+ calcBuild();
+ $('lvcMute').onclick=function(){LV.mute=!LV.mute;lvSave();this.innerHTML=spk(!LV.mute);if(!LV.mute)SFX.go();};$('lvcMute').innerHTML=spk(!LV.mute);}
+function lvTick(){var c=$('lvChip'),on=!!(LV.player&&!LV.done);c.style.display=on?'flex':'none';if(!on){calcOpen(false);return;}
+ var p=PARTS[LV.part],t=LV.ps[p.id],ring=$('lvRing');$('lvcBack').style.display=tabI===4&&stepI===LV.part?'none':'';$('lvcPart').textContent=p.name;
+ if(!p.secs||!t||!t.start){$('lvcTime').textContent='Ready?';c.className='';ring.setAttribute('stroke-dashoffset','0');return;}
+ var left=p.secs-(Date.now()-t.start)/1000;
+ if(left>=0){var sec=Math.ceil(left);$('lvcTime').textContent=mmss(sec)+' left';c.className=left<=60?'warn':'';ring.setAttribute('stroke','#'+(left<=60?'e8962a':'2b59c3'));ring.setAttribute('stroke-dashoffset',String(88*(1-left/p.secs)));
+  if(sec<=10&&sec>0&&sec!==lastTick){lastTick=sec;SFX.tick();}}
+ else{$('lvcTime').textContent='Time’s up +'+mmss(-left);c.className='over';ring.setAttribute('stroke','#d8434a');ring.setAttribute('stroke-dashoffset','88');if(!t.buzz){t.buzz=1;lvSave();SFX.buzz();}}}
+
 /* ---------- shell ---------- */
-var TAB=[T1,T2,T3,T4],tabI=0,stepI=0;
+var TAB=[T1,T2,T3,T4,T5],tabI=0,stepI=0;
 function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. '+t.name+'</button>';}).join('');
   Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
-function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk2=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk2==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk2+'</b>'+l+'</button>';}).join('');
+function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk2=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk2==='✓'?' done':'')+(t.lock&&t.lock(i)?' lock':'')+'" data-i="'+i+'"><b>'+mk2+'</b>'+l+'</button>';}).join('');
   Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
-var HASH=['orders','two-reactants','mystery','practice'];
-function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('panel').innerHTML='';$('cnt').className='cnt';$('fb').className='fb';
+var HASH=['orders','two-reactants','mystery','practice','live'];
+function go(t,s){tabI=t;stepI=s||0;if(TAB[t].fix)stepI=TAB[t].fix(stepI);document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('panel').innerHTML='';$('cnt').className='cnt';$('fb').className='fb';
   renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);
   try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
-var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,hi===4?LV.part:0);
+lvChip();lvTick();setInterval(lvTick,250);lvFlush();
 var last=performance.now();
 function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
