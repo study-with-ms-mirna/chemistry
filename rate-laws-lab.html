@@ -900,18 +900,201 @@ function lvTick(){var c=$('lvChip'),on=!!(LV.player&&!LV.done);c.style.display=o
   if(sec<=10&&sec>0&&sec!==lastTick){lastTick=sec;SFX.tick();}}
  else{$('lvcTime').textContent='Time’s up +'+mmss(-left);c.className='over';ring.setAttribute('stroke','#d8434a');ring.setAttribute('stroke-dashoffset','88');if(!t.buzz){t.buzz=1;lvSave();SFX.buzz();}}}
 
+/* =========================================================
+   TAB 6  Misconception check: predict, test, explain.
+   Six short checks, each aimed at one common mistake. Every finished check
+   is sent to the teacher's sheet as "Rate Laws Check: ...".
+   ========================================================= */
+var CK=[
+ {id:'k1',name:'Doubled?',title:'Does doubling a concentration always double the rate?',eq:'A ⟶ products',re:[{s:'A',f:2}],rf:4,lawQ:'rate = k[A]ᵐ',lawA:'rate = k[A]²',
+  think:'Doubling [A] does <b>not</b> always double the rate. What decides how much the rate changes?',
+  pre:{q:'[A] will be <b>doubled</b>. Before you test it: what will happen to the rate?',opts:['It will double (×2)','It will be 4 times faster (×4)','It will stay the same','We can’t know until we measure it'],want:3},
+  ask:[{pre:'The rate changed by',opts:['×1','×2','×4','×8'],want:2},{pre:'So the order in A is',opts:['0','1','2','3'],want:2}],
+  trap:{'0:1':'Read the rate bars again: the After bar is more than twice as tall.','1:1':'Order 1 would only double the rate. Which power of 2 gives 4?','1:3':'2<sup>3</sup> = 8, not 4.'},
+  rule:'(2)² = 4   ⟹   second order in A',
+  why:'[A] ×2 and rate ×4. Since 2<sup>2</sup> = 4, the order in A is <b>2</b>. The rate only doubles when the order is 1, so we can’t know until we measure.'},
+ {id:'k2',name:'Tripled',title:'Tripled concentration, 9 times faster: what is the order?',eq:'A + B ⟶ products',re:[{s:'A',f:1},{s:'B',f:3}],rf:9,lawQ:'rate = k[A]ᵐ[B]ⁿ',lawA:'order in B:  n = 2',
+  think:'Which number is the <b>change in concentration</b>, and which number is the <b>order</b>?',
+  pre:{q:'A classmate says: “Tripling [B] makes the rate 9 times faster, so the order in B is 3, because [B] was tripled.” Do you agree?',opts:['Yes, I agree','No, I disagree'],want:1},
+  ask:[{pre:'The rate changed by',opts:['×3','×6','×9','×27'],want:2},{pre:'So the order in B is',opts:['0','1','2','3'],want:2}],
+  trap:{'1:3':'3 is how much [B] changed, not the order. Ask yourself: 3 to which power gives 9?','1:1':'Order 1 would make the rate ×3 only.','0:0':'Read the After bar again: it is much more than 3 times taller.','0:3':'×27 would be 3<sup>3</sup>. Read the bars again.'},
+  rule:'(3)² = 9   ⟹   n = 2   (not 3!)',
+  why:'[B] ×3 and rate ×9. Since 3<sup>2</sup> = 9, the order in B is <b>2</b>. The 3 is the change in concentration; the order is the <b>power</b>.'},
+ {id:'k3',name:'No change',title:'More reactant, same rate: is that possible?',eq:'A ⟶ products',re:[{s:'A',f:3}],rf:1,lawQ:'rate = k[A]ᵐ',lawA:'rate = k[A]⁰ = k',
+  think:'If the rate does not change at all, what power of 3 gives 1?',
+  pre:{q:'Can adding <b>more</b> of a reactant leave the rate <b>exactly the same</b>?',opts:['No: more reactant always means a faster rate','Yes, it can'],want:1},
+  ask:[{pre:'The rate changed by',opts:['×0','×1','×3','×9'],want:1},{pre:'So the order in A is',opts:['0','1','2','3'],want:0}],
+  trap:{'0:0':'The rate did not become zero: it stayed the same. “No change” means ×1.','0:2':'×3 would mean first order. Look at the bars: are they different?','1:1':'Order 1 would make the rate ×3. Which power of 3 equals 1?'},
+  rule:'(3)⁰ = 1   ⟹   zero order: the rate does not change',
+  why:'[A] ×3 but the rate stayed the same (×1). Any number to the power 0 is 1, so the order in A is <b>0</b>. Zero order does <b>not</b> mean zero rate.'},
+ {id:'k4',name:'Coefficients',title:'Does the coefficient tell us the order?',eq:'2NO + 2H₂ ⟶ N₂ + 2H₂O',re:[{s:'NO',f:1},{s:'H₂',f:2}],rf:2,lawQ:'rate = k[NO]ᵐ[H₂]ⁿ',lawA:'rate = k[NO]²[H₂]  (from experiments)',
+  think:'The coefficient of H₂ is 2. Does the experiment agree that its order is 2?',
+  pre:{q:'2NO + <b>2</b>H₂ ⟶ N₂ + 2H₂O. The coefficient of H₂ is 2. Is the order in H₂ also 2?',opts:['Yes: the coefficient gives the order','Not necessarily: orders come from experiments'],want:1},
+  ask:[{pre:'When [H₂] doubled, the rate changed by',opts:['×1','×2','×4','×8'],want:1},{pre:'So the order in H₂ is',opts:['0','1','2','3'],want:1}],
+  trap:{'1:2':'2 is the coefficient in the equation. The experiment says ×2, and 2<sup>?</sup> = 2.','0:2':'Read the bars again: the After bar is exactly twice as tall.'},
+  rule:'(2)¹ = 2   ⟹   order in H₂ = 1,  but its coefficient is 2',
+  why:'Doubling [H₂] doubled the rate, so the order in H₂ is <b>1</b>, even though its coefficient is 2. The experimental rate law is rate = k[NO]<sup>2</sup>[H<sub>2</sub>]. Orders come from <b>experiments</b>, never from the balanced equation.'},
+ {id:'k5',name:'Both change',title:'Both concentrations change: find m',eq:'A + B ⟶ products',re:[{s:'A',f:2},{s:'B',f:1.5}],rf:6,lawQ:'rate = k[A]ᵐ[B]¹   (n = 1 is known)',lawA:'rate = k[A]²[B]',
+  think:'Both [A] and [B] changed. Which part of the ×6 comes from B?',
+  pre:{q:'Rate ×6 when [A] ×2 and [B] ×1.5, and we already know n = 1. A classmate writes: 2<sup>m</sup> = 6. What do you think?',opts:['That is right','She forgot that [B] changed too: part of the 6 comes from B','She should add: 2 + 1.5 = 6'],want:1},
+  ask:[{pre:'n = 1, so (1.5)<sup>n</sup> =',opts:['1','1.5','2.25','3'],want:1},{pre:'2<sup>m</sup> × 1.5 = 6, so 2<sup>m</sup> =',opts:['3','4','4.5','9'],want:1},{pre:'So m =',opts:['0','1','2','3'],want:2}],
+  trap:{'0:2':'1.5<sup>2</sup> = 2.25 would be for n = 2. Here n = 1.','0:0':'Only a power of 0 gives 1. Here n = 1, so (1.5)<sup>1</sup> = 1.5.','1:0':'6 ÷ 2 = 3 divides by the wrong number. Divide 6 by the B part: 1.5.','1:2':'6 − 1.5 = 4.5 subtracts. The 1.5 is multiplied, so divide: 6 ÷ 1.5.','2:3':'Check: 2<sup>3</sup> = 8, not 4.','2:1':'2<sup>1</sup> = 2, not 4.'},
+  rule:'2ᵐ × (1.5)¹ = 6   ⟹   2ᵐ = 4   ⟹   m = 2',
+  why:'When both change, the rate change is (A change)<sup>m</sup> × (B change)<sup>n</sup>. So 2<sup>m</sup> × 1.5 = 6, then 2<sup>m</sup> = 6 ÷ 1.5 = 4 and <b>m = 2</b>.'},
+ {id:'k6',name:'Overall order',title:'Overall order and changing both reactants',eq:'A + B ⟶ products',re:[{s:'A',f:2},{s:'B',f:2}],rf:8,lawQ:'rate = k[A]²[B]',lawA:'rate = k[A]²[B]   overall order 3',
+  think:'Overall order: do we add or multiply the orders?',
+  pre:{q:'Rate = k[A]<sup>2</sup>[B]. Both [A] and [B] are <b>doubled</b>. Predict the rate change.',opts:['×2','×4','×6','×8'],want:3},
+  ask:[{pre:'The rate changed by',opts:['×4','×6','×8','×16'],want:2},{pre:'Overall order =',opts:['2','3','4','6'],want:1}],
+  trap:{'0:0':'Multiply the effect of each reactant: 2<sup>2</sup> × 2<sup>1</sup>.','0:1':'Multiply the effects, don’t add them: 2<sup>2</sup> × 2<sup>1</sup>.','1:0':'Did you multiply 2 × 1? The overall order is the <b>sum</b>: 2 + 1.','1:3':'The overall order is the sum of the orders (2 + 1).'},
+  rule:'2² × 2¹ = 8      overall order = 2 + 1 = 3',
+  why:'Each reactant multiplies the rate: 2<sup>2</sup> × 2<sup>1</sup> = 8. The overall order is the <b>sum</b> of the orders: 2 + 1 = <b>3</b>.'}];
+var CKK='rl-check-v1',ckBusy=false,ckFail=false;
+function ckNew(){return {player:null,code:'',t0:0,res:{},q:[],done:false};}
+var CS=ckNew();try{var cs0=JSON.parse(localStorage.getItem(CKK)||'null');if(cs0&&cs0.res&&cs0.q)CS=cs0;}catch(e){}
+function ckSave(){try{localStorage.setItem(CKK,JSON.stringify(CS));}catch(e){}}
+function ckR(k){return CS.res[k.id]||(CS.res[k.id]={pred:null,ph:0,pk:[],tries:0,ok:null,pts:0,log:[],bad:{}});}
+function ckMax(){if(!CS.player)return 0;for(var i=0;i<CK.length;i++){var r=CS.res[CK[i].id];if(!r||r.ok===null)return i+1;}return CK.length+1;}
+function ckSend(game,score,correct,total,missed){CS.q.push({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),p:{game:'Rate Laws Check: '+game,chapter:16,name:CS.player.name,cls:CS.player.cls,score:score,correct:correct,total:total,
+ mins:Math.round((Date.now()-CS.t0)/6000)/10,when:lvWhen(),code:CS.code,missed:missed}});ckSave();ckFlush();}
+function ckFlush(){if(ckBusy||!CS.q.length){ckSentUI();return;}ckBusy=true;var job=CS.q[0];ckSentUI();
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(job.p)})
+  .then(function(){CS.q=CS.q.filter(function(j){return j.id!==job.id;});ckSave();ckBusy=false;ckFail=false;ckFlush();})
+  .catch(function(){ckBusy=false;ckFail=true;ckSentUI();setTimeout(ckFlush,8000);});}
+function ckSentUI(){var e=$('ckSent');if(!e||!CS.player)return;e.className='sendst'+(CS.q.length?(ckFail?' err':''):' ok');
+ e.textContent=CS.q.length?(ckFail?'Not sent yet: check your internet. It will try again by itself.':'Sending to your teacher…'):'✓ Sent to your teacher';}
+function ckTotals(){var o={pts:0,c:0,ans:0,pr:0};CK.forEach(function(k){var r=CS.res[k.id];if(r&&r.ok!==null){o.ans++;o.pts+=r.pts;if(r.ok)o.c++;if(r.pred===k.pre.want)o.pr++;}});return o;}
+function ckRate(v){var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);return (Math.round(m*10)/10).toFixed(1)+' × 10'+sup(e);}
+function ckFac(f){return f===1?'same':'×'+f;}
+function ckIcon(s){return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 60 60" aria-hidden="true"><circle cx="25" cy="25" r="17" fill="#fff" stroke="#2e9e5b" stroke-width="5"/><path d="M37 37 L52 52" stroke="#18233a" stroke-width="6" stroke-linecap="round"/><path d="M17 26 L23 32 L34 19" fill="none" stroke="#2e9e5b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+
+var T6={name:'Misconception check',c:GREEN,steps:['Start'].concat(CK.map(function(k){return k.name;})).concat(['Results']),t:0,
+ mark:function(i){if(!CS.player)return i+1;if(i===0)return '✓';if(i<=CK.length){var r=CS.res[CK[i-1].id];return r&&r.ok!==null?'✓':i+1;}return CS.done?'✓':i+1;},
+ lock:function(i){return i>ckMax();},
+ fix:function(s){return Math.min(s,ckMax());},
+ title:function(s){return s===0?'Misconception check: predict, test, explain':s>CK.length?'Your results':'Check '+s+': '+CK[s-1].title;},
+ enter:function(s){this.s=s;this.t=0;$('controls').innerHTML='';$('cv').style.display=(CS.player&&s>=1&&s<=CK.length)?'':'none';
+  setRule(['rate change = (concentration change)<sup>order</sup>','Order 0 → ×1 · order 1 → same factor · order 2 → factor squared','Orders come from experiments, not from coefficients','Overall order = <b>sum</b> of the orders']);
+  if(s>=1&&s<=CK.length&&ckR(CK[s-1]).ph===2)ckR(CK[s-1]).ph=1;
+  if(s>CK.length&&CS.player&&!CS.done&&ckMax()>CK.length){var t=ckTotals();CS.done=true;
+   ckSend('FINAL',t.pts,t.c,CK.length,'Predictions right: '+t.pr+'/'+CK.length+' · '+(t.c===CK.length?'All checks correct':'Missed: '+CK.filter(function(k){return !CS.res[k.id].ok;}).map(function(k){return k.name;}).join(', ')));SFX.fan();rain(120);}
+  this.render();},
+ render:function(){var s=this.s,h;
+  if(!CS.player)h=this.startHtml();else if(s===0)h=this.welcomeHtml();else if(s>CK.length)h=this.endHtml();else h=this.itemHtml(CK[s-1]);
+  $('panel').innerHTML=h;this.bind();ckSentUI();renderSteps();
+  var k=CK[s-1];setQ(CS.player&&k?k.think:'Each check: <b>predict</b> first, then <b>test</b> it, then <b>explain</b> what happened.','Think');},
+ startHtml:function(){var me={};try{me=JSON.parse(localStorage.getItem('msm-student')||'{}')||{};}catch(e){}
+  return '<div class="qz"><div class="lv-hero">'+ckIcon(60)+'<div><div class="lbl">Misconception check · Chapter 16.3</div><div class="lv-big">Six quick checks: predict, test, explain</div></div></div>'+
+  '<div class="lv-plan">'+CK.map(function(k,i){return '<div><b>'+(i+1)+'</b><span>'+k.name+'</span></div>';}).join('')+'</div>'+
+  '<ul class="lv-rules"><li><b>Predict</b> first: there is no penalty for a wrong prediction, so say what you really think.</li><li>Then <b>run the test</b> and read the bars.</li><li>Answer from what you saw: <b>100 points</b> first try, <b>50 points</b> second try.</li><li>Your answers go straight to your teacher.</li></ul>'+
+  '<div class="namerow"><label for="ckName">Your full name</label><input id="ckName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(me.name||'')+'"></div>'+
+  '<div class="namerow"><label for="ckCls">Class</label><select id="ckCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===me.cls?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
+  '<div class="exerr" id="ckErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="ckStart">Start the check ▶</button></div></div>';},
+ welcomeHtml:function(){var t=ckTotals(),n=ckMax();
+  return '<div class="qz"><div class="lv-hero">'+ckIcon(60)+'<div><div class="lbl">Misconception check</div><div class="lv-big">Welcome back, '+esc(CS.player.name.split(' ')[0])+'!</div><div>'+esc(CS.player.name)+' · '+esc(CS.player.cls)+' · '+t.pts+' points so far</div></div></div>'+
+  '<div class="stepbar"><button class="btn fill" id="ckCont">'+(n>CK.length?'See my results ▶':'Continue: check '+n+' ▶')+'</button><button class="btn" id="ckReset">Not you? Start over</button></div><div class="sendst" id="ckSent"></div></div>';},
+ fieldHtml:function(k,r,lock){return k.ask.map(function(f,i){return '<div class="lv-f"><span>'+f.pre+'</span><span class="lv-ch">'+f.opts.map(function(o,j){var c='';
+   if(r.ok!==null){if(j===f.want)c=' right';else if(r.pk[i]===j)c=' wrong';}else if(r.pk[i]===j)c=r.bad[i+':'+j]?' wrong':' sel';
+   return '<button class="btn'+c+'" data-f="'+i+'" data-o="'+j+'">'+o+'</button>';}).join('')+'</span></div>';}).join('');},
+ itemHtml:function(k){var r=ckR(k),i=CK.indexOf(k),h='<div class="qz"><div class="lv-head"><span class="lv-badge">Check '+(i+1)+' of '+CK.length+'</span><div class="qzdots">'+CK.map(function(q,j){var rr2=CS.res[q.id];return '<i class="'+(rr2&&rr2.ok===true?'ok':rr2&&rr2.ok===false?'no':(j===i?'cur':''))+'"></i>';}).join('')+'</div><span class="lv-pts">'+ckTotals().pts+' points</span></div>';
+  /* 1 predict */
+  h+='<div class="lbl">1 · Predict</div><div class="lv-q">'+k.pre.q+'</div><div class="lv-opts'+(k.pre.opts.length===2?' tf':'')+'">'+k.pre.opts.map(function(o,j){var c=r.pred===j?(r.ok!==null?(j===k.pre.want?' right':' wrong'):' pick'):(r.ok!==null&&j===k.pre.want?' right':'');
+   return '<button class="qzb'+c+'" data-p="'+j+'"'+(r.pred!==null?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+o+'</span></button>';}).join('')+'</div>';
+  if(r.pred===null)return h+'<div class="small" style="margin-top:8px">Choose your prediction to unlock the test.</div></div>';
+  /* 2 test */
+  h+='<div class="lbl" style="margin-top:14px">2 · Test</div>';
+  if(r.ph<3)h+='<div class="stepbar" style="margin-top:4px"><button class="btn fill" id="ckRun"'+(r.ph===2?' disabled':'')+'>'+(r.ph===2?'Measuring…':'▶ Run the test')+'</button><span class="small">Watch the rate bars above.</span></div></div>';
+  else{h+='<div class="small">Read the bars above: compare the rate before and after.</div>';
+   /* 3 answer */
+   h+='<div class="lbl" style="margin-top:14px">3 · Answer</div>'+this.fieldHtml(k,r,r.ok!==null);
+   if(r.ok===null)h+='<div class="stepbar"><button class="btn fill" id="ckChk">Check my answer</button><span class="small">'+(r.tries?'Last try!':'Two tries')+'</span></div>';
+   if(r.msg)h+='<div class="lvfb no">'+r.msg+'</div>';
+   /* 4 explain */
+   if(r.ok!==null){var pr=r.pred===k.pre.want;
+    h+='<div class="lvfb '+(r.ok?'ok':'no')+'"><b>'+(r.ok?(r.tries>1?'Well done for sticking with it!':'Correct!'):'Not this time. Here is the answer.')+'</b> '+k.why+'</div>'+
+     '<div class="lbl" style="margin-top:14px">4 · Explain</div><div class="lvrev"><div class="'+(pr?'ok':'no')+'">Your prediction: <b>'+k.pre.opts[r.pred]+'</b> · '+(pr?'you predicted it correctly!':'the test showed something different. That is exactly why we test!')+'</div></div>'+
+     '<div class="stepbar"><button class="btn fill" id="ckNext">'+(i+1<CK.length?'Next check ▶':'See my results ▶')+'</button><span class="sendst" id="ckSent"></span></div>';}
+   h+='</div>';}
+  return h;},
+ endHtml:function(){var t=ckTotals();
+  return '<div class="qz lv-end"><div class="lv-congrats">'+TROPHY+'<div><div class="lv-big">Check complete, '+esc(CS.player.name.split(' ')[0])+'!</div><div>'+t.c+' of '+CK.length+' correct · predictions right: '+t.pr+' of '+CK.length+'</div></div></div>'+
+  '<div class="qzbig">'+t.pts+' / '+(CK.length*100)+'</div>'+
+  '<table class="dt"><tr><th>Check</th><th>Prediction</th><th>Answer</th><th>Points</th></tr>'+CK.map(function(k,i){var r=CS.res[k.id]||{};
+   return '<tr><td>'+(i+1)+'. '+k.name+'</td><td>'+(r.pred===k.pre.want?'✓':'✗')+'</td><td>'+(r.ok?'✓'+(r.tries>1?' (2nd try)':''):'✗')+'</td><td>'+(r.pts||0)+'</td></tr>';}).join('')+'</table>'+
+  '<div class="lv-msg">'+(t.c===CK.length?'You can spot every trap. Excellent!':'Look again at the checks marked ✗: the “Explain” part tells you the rule.')+'</div>'+
+  '<div class="stepbar"><button class="btn" id="ckAgain">Practise again</button><span class="sendst" id="ckSent"></span></div></div>';},
+ bind:function(){var me=this,b,k=CK[this.s-1];
+  if((b=$('ckStart'))){var nm=$('ckName'),cl=$('ckCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('ckErr');nm.classList.remove('no');cl.classList.remove('no');
+    if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}
+    if(!c){er.textContent='Please choose your class.';cl.classList.add('no');cl.focus();return;}
+    try{localStorage.setItem('msm-student',JSON.stringify({name:v,cls:c}));}catch(e){}
+    var q=CS.q;CS=ckNew();CS.q=q;CS.player={name:v,cls:c};CS.t0=Date.now();CS.code='RC-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    ckSend('Joined',0,0,0,'Started the misconception check');SFX.go();go(5,1);};
+   b.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}
+  if((b=$('ckCont')))b.onclick=function(){go(5,ckMax());};
+  if((b=$('ckReset')))b.onclick=function(){var q=CS.q;CS=ckNew();CS.q=q;ckSave();go(5,0);};
+  if((b=$('ckAgain')))b.onclick=function(){var p=CS.player,q=CS.q;CS=ckNew();CS.q=q;CS.player=p;CS.t0=Date.now();CS.code='RC-'+Math.random().toString(36).slice(2,6).toUpperCase();
+   ckSend('Joined',0,0,0,'Started the misconception check again');go(5,1);};
+  if(!k)return;var r=ckR(k);
+  each('[data-p]',function(x){x.onclick=function(){if(r.pred!==null)return;r.pred=+x.getAttribute('data-p');r.ph=1;ckSave();me.render();};});
+  if((b=$('ckRun')))b.onclick=function(){r.ph=2;me.t=0;ckSave();me.render();};
+  each('[data-f]',function(x){x.onclick=function(){if(r.ok!==null)return;var f=+x.getAttribute('data-f');r.pk[f]=+x.getAttribute('data-o');me.render();};});
+  if((b=$('ckChk')))b.onclick=function(){var miss=k.ask.filter(function(f,i){return r.pk[i]==null;}).length;if(miss){r.msg='Choose an answer in every row first.';me.render();return;}
+   var wrong=[],tips=[];k.ask.forEach(function(f,i){if(r.pk[i]!==f.want){wrong.push(i);r.bad[i+':'+r.pk[i]]=1;var tp=k.trap[i+':'+r.pk[i]];if(tp&&tips.indexOf(tp)<0)tips.push(tp);}});
+   r.tries++;r.log.push('Try '+r.tries+' '+(wrong.length?'✗':'✓')+' '+k.ask.map(function(f,i){return plain(f.pre)+' '+f.opts[r.pk[i]];}).join('; '));
+   if(!wrong.length){r.ok=true;r.pts=r.tries===1?100:50;r.msg='';SFX.good();}
+   else if(r.tries>=2){r.ok=false;r.pts=0;r.msg='';SFX.bad();}
+   else{r.msg='<b>Not yet.</b> '+(tips.length?tips.join(' '):'Look at the bars again and check the rows marked in red.')+' One more try!';SFX.bad();}
+   if(r.ok!==null)ckSend((CK.indexOf(k)+1)+' '+k.name,r.pts,r.ok?1:0,1,'Prediction '+(r.pred===k.pre.want?'✓':'✗')+': '+plain(k.pre.opts[r.pred])+' · '+r.log.join(' · '));
+   ckSave();me.render();if(r.ok)burst($('ckNext'),40);};
+  if((b=$('ckNext')))b.onclick=function(){go(5,me.s+1);};},
+ frame:function(dt){var s=this.s,k=CK[s-1];
+  if(!CS.player){setReads([['Status','Type your name to start',1]]);return;}
+  if(!k){var t=ckTotals();setReads([['Points',t.pts+' / '+(CK.length*100)],['Correct',t.c+' / '+t.ans],['Predictions right',t.pr+' / '+t.ans,1]]);return;}
+  var r=ckR(k);if(r.ph===2){this.t=Math.min(1,this.t+dt*.6);if(this.t>=1){r.ph=3;ckSave();this.render();}}
+  var tt=r.ph>=3?1:r.ph===2?this.t:0;ckDraw(k,r,tt);
+  var base=2e-3,shown=r.ph>=3;
+  setReads(k.re.map(function(x){return ['['+x.s+'] change',ckFac(x.f)];}).concat([['Rate before',ckRate(base)],['Rate after',shown?ckRate(base*k.rf):'?'],['Rate change',shown?'×'+k.rf:'?',1]]));}
+};
+/* canvas for a check: concentration bars (left), rate bars (right), rule (bottom) */
+function ckDraw(k,r,t){clear();var done=r.ok!==null;
+ panel(20,14,760,70);txt(k.eq,400,38,{s:24});txt(done?k.lawA:k.lawQ,400,66,{s:17,c:done?GREEN:MUTED,w:500});
+ /* concentrations */
+ panel(20,96,360,300);txt('Concentration',200,122,{s:18,c:AMBER});
+ var n=k.re.length,bh=n===1?120:110,y0=n===1?190:150;
+ k.re.forEach(function(x,i){var y=y0+i*bh,col=i?BLUE:CORAL,w0=60,w1=60*x.f;
+  txt('['+x.s+']',48,y+14,{s:20,c:col});
+  txt('Before',122,y-6,{s:13,c:MUTED,w:500,a:'right'});rr(130,y-16,w0,20,8);ctx.fillStyle='#f0d6dd';if(i)ctx.fillStyle='#d4def5';ctx.fill();
+  txt('After',122,y+30,{s:13,c:MUTED,w:500,a:'right'});rr(130,y+20,w1,20,8);ctx.fillStyle=col;ctx.fill();
+  pill(ckFac(x.f),342,y+12,AMBER,'#fff',16);});
+ /* rate bars */
+ panel(400,96,380,300);txt('Initial rate',590,122,{s:18,c:GREEN});
+ var base=370,hmax=200,mx=Math.max(k.rf,1),h0=k.rf===1?110:hmax/mx,h1=k.rf===1?110:hmax,ha=lerp(h0,h1,t),xb=470,xa=640,bw=90;
+ seg(430,base,760,base,INK,2.5);
+ rr(xb,base-h0,bw,h0,10);ctx.fillStyle='#b9dcc7';ctx.fill();txt('Before',xb+bw/2,base+16,{s:14,c:MUTED,w:500});txt(ckRate(2e-3),xb+bw/2,base-h0-14,{s:14,c:INK,w:500});
+ if(t>0){rr(xa,base-ha,bw,ha,10);ctx.fillStyle=GREEN;ctx.fill();}
+ else{ctx.setLineDash([7,6]);rr(xa,base-150,bw,150,10);ctx.strokeStyle=LINE;ctx.lineWidth=2.5;ctx.stroke();ctx.setLineDash([]);txt('?',xa+bw/2,base-75,{s:42,c:LINE});}
+ txt('After',xa+bw/2,base+16,{s:14,c:MUTED,w:500});
+ if(t>=1){txt(ckRate(2e-3*k.rf),xa+bw/2,base-h1-14,{s:14,c:INK,w:500});pill('rate ×'+k.rf,(xb+bw+xa)/2,base-Math.max(h0,h1)/2-10,GREEN,'#fff',17);}
+ /* bottom line */
+ panel(20,408,760,80);
+ if(done)txt(k.rule,400,448,{s:k.rule.length>44?19:24,c:GREEN});
+ else if(r.ph>=3)txt('Use the rate bars to answer: how many times bigger is the After rate?',400,448,{s:17,c:INK,w:500});
+ else if(r.ph===2)txt('Measuring the initial rate…',400,448,{s:18,c:MUTED,w:500});
+ else txt(r.pred===null?'Make your prediction first, then run the test.':'Press “Run the test” to measure the rate.',400,448,{s:17,c:MUTED,w:500});}
+
+
 /* ---------- shell ---------- */
-var TAB=[T1,T2,T3,T4,T5],tabI=0,stepI=0;
+var TAB=[T1,T2,T3,T4,T5,T6],tabI=0,stepI=0;
 function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. '+t.name+'</button>';}).join('');
   Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
 function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk2=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk2==='✓'?' done':'')+(t.lock&&t.lock(i)?' lock':'')+'" data-i="'+i+'"><b>'+mk2+'</b>'+l+'</button>';}).join('');
   Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
-var HASH=['orders','two-reactants','mystery','practice','live'];
+var HASH=['orders','two-reactants','mystery','practice','live','check'];
 function go(t,s){tabI=t;stepI=s||0;if(TAB[t].fix)stepI=TAB[t].fix(stepI);document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('panel').innerHTML='';$('cnt').className='cnt';$('fb').className='fb';
   renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);
   try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
-var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,hi===4?LV.part:0);
-lvChip();lvTick();setInterval(lvTick,250);lvFlush();
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,hi===4?LV.part:hi===5?ckMax():0);
+lvChip();lvTick();setInterval(lvTick,250);lvFlush();ckFlush();
 var last=performance.now();
 function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
