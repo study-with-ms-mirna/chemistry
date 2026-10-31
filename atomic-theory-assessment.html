@@ -347,7 +347,9 @@ const marks={}; const partMax=PARTS.map(()=>0);
 function maxOf(b){return b.type==="mcq"?1:b.type==="sort"?b.items.length:b.type==="match"?b.pairs.length:b.type==="order"?b.keys.length:b.type==="table"?b.rows.length*b.cols.length:b.type==="sim"?CHALLENGES.length:0;}
 PARTS.forEach((p,i)=>p.blocks.forEach(b=>partMax[i]+=maxOf(b)));
 const TOTAL=partMax.reduce((a,b)=>a+b,0);
-function award(part,id,got,max){marks[id]={part,got,max};update();}
+function award(part,id,got,max){const first=!marks[id];marks[id]={part,got,max};update();
+  if(first&&window.MSMLive)MSMLive.row({part:'Part '+(part+1),score:got,correct:got,total:max,missed:got<max?id+' '+got+'/'+max:''});
+  if(first&&Object.values(marks).reduce((a,m)=>a+m.max,0)>=TOTAL&&!sendB.disabled)sendB.click();}
 function partScore(i){let g=0,d=0;for(const m of Object.values(marks))if(m.part===i){g+=m.got;d+=m.max;}return{g,d};}
 
 /* ---------- nav ---------- */
@@ -575,6 +577,7 @@ update();
 })();
 </script>
 <script src="student-visits.js"></script>
+<script src="live-results.js" data-game="Atomic Theory Assessment" data-chapter="" data-watch="0"></script>
 <!-- visit counter (GoatCounter) -->
 <script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
 <script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
