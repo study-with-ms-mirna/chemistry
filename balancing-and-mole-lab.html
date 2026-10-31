@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Balancing &amp; Mole Basics Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;--teal:#0f8b8d;--blue:#2b59c3;--plum:#8a4fbf;--amber:#e8962a;--coral:#e2708a;--red:#d8434a;--green:#2e9e5b;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 34px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:17px;padding:9px 15px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed var(--red);border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:var(--red)}
+.rule ul{margin:0;padding-left:20px}.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.rd.wide{grid-column:1/-1}
+sub,sup{font-size:.65em;line-height:0}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill,.btn.sel{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.bar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid var(--line);background:#f3f6fb}
+.fb.ok{background:#e8f6ee;border-color:var(--green)}.fb.bad{background:#fdeeee;border-color:var(--red)}.fb.hint{background:#fff6e8;border-color:var(--amber)}
+.fb:empty{display:none}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px;flex-wrap:wrap}
+.ctl output{font-weight:600;color:var(--accent);min-width:70px}
+select,.inp{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.inp{width:100px;text-align:center}.inp.e{width:62px}
+.inp.ok,select.ok{border-color:var(--green);background:#e8f6ee}.inp.no,select.no{border-color:var(--red);background:#fdeeee}
+/* equation */
+.eq{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:stretch;background:#f6f8fc;border-radius:16px;padding:14px}
+.sp{background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 10px;text-align:center;min-width:120px;max-width:100%;flex:0 1 auto;display:flex;flex-direction:column;align-items:center}
+.fm{font-family:Fredoka,sans-serif;font-weight:600;font-size:25px;white-space:nowrap}
+.fm em{font-style:normal;color:var(--accent)}
+.opr{align-self:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;color:var(--muted)}
+.stp{display:inline-flex;align-items:center;gap:8px;margin-bottom:4px}
+.stp button{width:32px;height:32px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:24px;font-family:Fredoka,sans-serif;font-size:22px}
+.tray{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:center;margin-top:8px;max-width:270px}
+.tally{width:100%;border-collapse:collapse;margin-top:12px;font-size:16px}
+.tally th{font-family:Fredoka,sans-serif;font-weight:500;color:var(--muted);text-align:center;padding:4px 6px}
+.tally td{padding:5px 6px;border-top:2px solid #eef2f8;text-align:center}
+.tally .cnt{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px}
+.tally .y{color:var(--green)}.tally .n{color:var(--red)}
+.dots{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;min-height:14px;max-width:170px;margin:auto}
+.dots i{width:12px;height:12px;border-radius:50%;display:block;border:1px solid rgba(24,35,58,.35)}
+.ss4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media (max-width:700px){.ss4{grid-template-columns:1fr 1fr}}
+.ss{border:2px solid var(--line);border-radius:14px;padding:8px 10px;font-size:15px;line-height:1.3;background:#fff}
+.ss b{display:block;font-family:Fredoka,sans-serif;font-weight:600;font-size:16px}
+.ss.on{border-color:var(--accent);background:#f3f8fb;box-shadow:0 0 0 3px rgba(15,139,141,.12)}
+.ss.done b{color:var(--green)}
+.ptabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ptabs button{font-family:Fredoka,sans-serif;font-size:15px;border:2px solid var(--line);border-radius:12px;padding:5px 11px;background:#fff;cursor:pointer}
+.ptabs button.on{border-color:var(--accent);color:var(--accent)}
+.ptabs button.done{background:#e8f6ee;border-color:var(--green)}
+/* mole visuals */
+.vis{background:#f6f8fc;border-radius:16px;padding:14px;min-height:150px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
+.pack{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center}
+.pack .g{display:grid;gap:2px;justify-content:center}
+.pack .g i{display:block;border-radius:50%;background:var(--accent)}
+.pack.mole{width:150px;height:110px;display:grid;place-items:center;background:var(--accent);color:#fff;font-family:Fredoka,sans-serif;font-weight:600;border-color:var(--accent);font-size:20px}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.num{background:#f3f6fb;border-radius:14px;padding:10px 12px}
+.num span{display:block;font-size:14px;color:var(--muted)}
+.num b{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px}
+.mrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 10px;border-radius:12px;background:#f6f8fc;margin-top:6px;font-size:18px}
+.mrow.tot{background:var(--accent);color:#fff;font-family:Fredoka,sans-serif;font-weight:600;font-size:21px}
+/* map */
+.map{display:grid;grid-template-columns:1fr 1.1fr 1fr 1.1fr 1fr;gap:6px;align-items:center}
+@media (max-width:760px){.map{grid-template-columns:1fr}}
+.box{border:3px solid var(--line);border-radius:18px;background:#fff;padding:12px 8px;text-align:center}
+.box h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;margin:0 0 4px}
+.box b{font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;display:block}
+.box.mid{border-color:var(--accent);background:#f3f8fb}
+.box.hl{box-shadow:0 0 0 4px rgba(232,150,42,.45);border-color:var(--amber)}
+.arw{display:flex;flex-direction:column;gap:6px}
+.arw button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:4px 6px;cursor:pointer;font-size:14px;font-family:Fredoka,sans-serif;min-height:48px}
+.arw button.on{background:var(--amber);border-color:var(--amber);color:#fff}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;line-height:1.15}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px 1px}
+.fr>span:last-child{padding:1px 4px 0}
+.can{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+.calc{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;background:#f6f8fc;border-radius:14px;padding:12px 14px;margin-top:12px;line-height:1.9}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font-family:Fredoka,sans-serif;font-size:17px;border:2px solid var(--line);border-radius:14px;background:#fff;padding:8px 14px;cursor:pointer}
+.opt.on{border-color:var(--accent);background:#f3f8fb}
+.opt.ok{border-color:var(--green);background:#e8f6ee}.opt.no{border-color:var(--red);background:#fdeeee}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;margin-top:10px;background:#fff}
+.st.cur{border-color:var(--accent)}
+.st .sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;margin-bottom:6px}
+.st .sh i{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;font-style:normal;flex:none}
+.st.dn .sh i{background:var(--green)}
+.fld{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0}
+.ln{font-size:18px;line-height:1.8}
+.why{font-size:16px;color:var(--muted)}
+.scale{display:block;width:100%;max-width:560px;margin:auto}
+table.rec{width:100%;border-collapse:collapse;margin-top:12px;font-size:16px}
+table.rec th,table.rec td{padding:7px;border-bottom:2px solid #eef2f8;text-align:center}
+table.rec th{font-family:Fredoka,sans-serif;font-weight:500;color:var(--muted)}
+.qz .o{display:block;width:100%;text-align:left;margin-top:8px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--line);margin-right:4px}.dot.g{background:var(--green)}.dot.r{background:var(--red)}
+.ss3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:700px){.ss3{grid-template-columns:1fr}}
+.pt{width:100%;max-width:520px;margin:12px auto 0;border-collapse:collapse;font-size:20px}
+.pt th{font-family:Fredoka,sans-serif;font-weight:600;background:#f3f6fb;border:2px solid var(--line);padding:6px}
+.pt td{border:2px solid var(--line);padding:8px 12px;vertical-align:top;width:50%}
+.at{min-height:42px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.at.y b{color:var(--green)}.at.n b{color:var(--red)}
+.mul{color:var(--red);font-weight:700}
+.inp.sm{width:66px;padding:4px 6px}
+.final{text-align:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;margin-top:12px}
+.tris{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;margin:8px 0}
+.trc{text-align:center;flex:1 1 240px}
+.calcrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:12px}.calcrow .calc{flex:1 1 300px;margin-top:0}
+.rbwrap{overflow-x:auto;background:#f6f8fc;border-radius:16px;padding:12px}
+.rb{border-collapse:collapse;margin:auto;font-size:18px}
+.rb th{font-family:Fredoka,sans-serif;font-weight:500;color:var(--muted);text-align:right;padding:8px 12px 8px 0;white-space:nowrap}
+.rb td{text-align:center;padding:8px 6px;white-space:nowrap}
+.rb .eqc{font-family:Fredoka,sans-serif;font-weight:600;font-size:26px}.rb .eqc em{font-style:normal;color:var(--red)}
+.rb .sepc{font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;color:var(--muted)}
+.rb .v{font-family:Fredoka,sans-serif;font-weight:500}.rb .fresh{color:var(--accent);font-weight:600}
+.dock{position:fixed;right:16px;bottom:14px;display:flex;gap:8px;z-index:40}
+.dock .btn{background:#18233a;border-color:#18233a;color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.tool{position:fixed;z-index:50;right:16px;bottom:66px;background:#fff;border:2px solid #18233a;border-radius:18px;box-shadow:0 8px 28px rgba(24,35,58,.3);padding:12px;display:none}
+.tool.on{display:block}
+.tool h3{font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;margin:0;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tool h3 button{border:none;background:none;font-size:24px;line-height:1;cursor:pointer;padding:0 6px}
+#ptool{width:min(980px,calc(100vw - 32px));max-height:calc(100vh - 90px);overflow:auto}
+.pgrid{display:grid;grid-template-columns:repeat(18,minmax(44px,1fr));gap:2px;min-width:820px}
+.pel{border-radius:5px;background:#eef2f8;padding:2px 1px;text-align:center;line-height:1.05;font-size:10px}
+.pel b{display:block;font-family:Fredoka,sans-serif;font-size:15px;font-weight:600}
+.pel.met{background:#dcecf7}.pel.non{background:#fdeed2}.pel.noble{background:#efe3f8}.pel.lan{background:#def3e6}
+#ctool{width:280px}
+#cdisp{width:100%;font-family:Fredoka,sans-serif;font-size:21px;text-align:right;border:2px solid var(--line);border-radius:10px;padding:8px;min-height:64px;overflow-wrap:anywhere;background:#f6f8fc}
+#cdisp small{display:block;color:var(--muted);font-size:14px;min-height:18px}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}
+.cgrid button{font-family:Fredoka,sans-serif;font-size:17px;padding:9px 2px;border:2px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+.cgrid button.o{background:#f3f6fb}.cgrid button.e{background:var(--accent);border-color:var(--accent);color:#fff}
+.wrap{padding-bottom:76px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true"><rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/><path d="M29 12 V40 M19 40 H39 M13 18 H45" stroke="#18233a" stroke-width="2.4" stroke-linecap="round"/><circle cx="13" cy="26" r="6" fill="#d8434a"/><circle cx="45" cy="26" r="6" fill="#0f8b8d"/></svg>
+    <div><h1>Balancing &amp; Mole Basics Lab</h1><div class="sub">Chapters 9–10 · Balancing equations · the mole · molar mass · conversions</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage"><h2 id="stitle"></h2><div id="view"></div></section>
+    <aside class="side">
+      <div class="card"><div class="lbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><div id="rule"></div></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+function $(id){return document.getElementById(id);}
+var NA=6.02e23;
+var AM={H:1.008,He:4.003,C:12.011,N:14.007,O:15.999,F:18.998,Na:22.990,Mg:24.305,Al:26.982,Si:28.086,P:30.974,S:32.06,Cl:35.45,K:39.098,Ca:40.078,Fe:55.845,Cu:63.546,Zn:65.38,Br:79.904,Ag:107.868,Sb:121.76,Ba:137.327,Pt:195.08,Hg:200.59,Pb:207.2};
+var COL={H:'#ffffff',He:'#f4c6d0',C:'#3b3550',N:'#2b59c3',O:'#d8434a',F:'#7cc9c9',Na:'#8a4fbf',Mg:'#e8962a',Al:'#8d99b0',Si:'#7a6a55',P:'#e67e22',S:'#e0c23c',Cl:'#2e9e5b',K:'#b57fe0',Ca:'#c9a227',Fe:'#a0522d',Cu:'#c77b3b',Zn:'#6f8fa8',Br:'#8c3b2e',Ag:'#b8c2cf',Sb:'#9c7a4a',Ba:'#4aa3a3',Pt:'#a9b4c2',Hg:'#7d8794',Pb:'#5b6472'};
+function parse(f){function g(i){var c={},m;while(i<f.length&&f[i]!==')'){if(f[i]==='('){var r=g(i+1);i=r[1]+1;m=/^\d*/.exec(f.slice(i));var n=+(m[0]||1);i+=m[0].length;for(var k in r[0])c[k]=(c[k]||0)+r[0][k]*n;}else{m=/^([A-Z][a-z]?)(\d*)/.exec(f.slice(i));c[m[1]]=(c[m[1]]||0)+ +(m[2]||1);i+=m[0].length;}}return [c,i];}return g(0)[0];}
+function fh(f){return f.replace(/(\d+)/g,'<sub>$1</sub>');}
+var AM2={};function mm2(f){var c=parse(f),t=0;for(var k in c)t+=Math.round(AM[k]*100)/100*c[k];return Math.round(t*100)/100;}
+function mm(f){var c=parse(f),t=0;for(var k in c)t+=AM[k]*c[k];return t;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function sci(x,sf){sf=sf||3;if(x===0)return '0';var e=Math.floor(Math.log10(Math.abs(x))+1e-12);var m=x/Math.pow(10,e);var s=m.toFixed(sf-1);if(+s>=10){e++;s=(m/10).toFixed(sf-1);}return s+' × 10<sup>'+e+'</sup>';}
+function sf(x,n){n=n||3;return Number(x).toPrecision(n).replace(/e\+?(-?\d+)/,function(_,e){return ' × 10<sup>'+e+'</sup>';});}
+function frac(a,b){return '<span class="fr"><span>'+a+'</span><span>'+b+'</span></span>';}
+function esc(s){return String(s);}
+var AV=sci(NA);
+/* ---- triangles ---- */
+var TRI={m:{top:'m',left:'n',right:'M',c:'#2b59c3',name:'mass triangle'},N:{top:'N',left:'n',right:'N<tspan baseline-shift="sub" font-size="62%">A</tspan>',c:'#8a4fbf',name:'particle triangle'}};
+var NAH='N<sub>A</sub>';
+function triEq(k,l){if(k==='m')return l==='top'?'m = n × M':l==='left'?'n = '+frac('m','M'):'M = '+frac('m','n');return l==='top'?'N = n × '+NAH:l==='left'?'n = '+frac('N',NAH):NAH+' = '+frac('N','n');}
+function triSVG(k,cov,id,sz){var T=TRI[k],R={top:'90,8 136.2,88 43.8,88',left:'43.8,88 90,88 90,150 8,150',right:'90,88 136.2,88 172,150 90,150'},P={top:[90,64],left:[58,126],right:[122,126]};var h='<svg width="'+(sz||180)+'" viewBox="0 0 180 158" role="img" aria-label="'+T.name+'" style="max-width:100%;height:auto">';
+ ['top','left','right'].forEach(function(r){h+='<polygon points="'+R[r]+'" fill="'+(cov===r?'#e8962a':'#fff')+'" stroke="'+T.c+'" stroke-width="4" stroke-linejoin="round"'+(id?' data-tk="'+id+'" data-k="'+k+'" data-l="'+r+'" style="cursor:pointer"':'')+'/>';
+  h+='<text x="'+P[r][0]+'" y="'+P[r][1]+'" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="32" fill="'+(cov===r?'#fff':T.c)+'" pointer-events="none">'+(cov===r?'?':T[r])+'</text>';});return h+'</svg>';}
+/* ---- practice engine ---- */
+function practice(cfg){var idx=0,mode=cfg.mode||'try',solved={},st=0,vals={},Sg;function init(){Sg=cfg.list[idx].stages();st=0;vals={};}init();
+ var o={title:cfg.title,q:cfg.q,rule:cfg.rule,reads:function(){return [['Problems solved',Object.keys(solved).length+' / '+cfg.list.length],['Mode',mode==='try'?'My turn':'Show me']];},
+ render:function(el){function field(f,si){var id='f'+si+f.k;
+   if(f.tri){var v=vals[id]||{};return '<div class="fld" style="display:block"><div>'+f.l+'</div><div class="tris">'+f.tris.map(function(k){return '<div>'+triSVG(k,v.k===k?v.l:null,id,150)+'</div>';}).join('')+'</div><div class="ln" style="text-align:center;min-height:44px">'+(v.k?triEq(v.k,v.l):'Click the letter you want to find.')+'</div></div>';}
+   if(f.pick)return '<div class="fld" style="display:block"><div style="margin-bottom:6px">'+f.l+'</div><div class="opts">'+f.pick.map(function(x,j){return '<button class="opt'+(vals[id]===j?' on':'')+'" data-pk="'+id+'" data-j="'+j+'">'+x+'</button>';}).join('')+'</div></div>';
+   var h='<div class="fld"><label for="'+id+'">'+f.l+'</label>';if(f.sel)h+='<select id="'+id+'"><option value="">choose</option>'+f.sel.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select>';else if(f.txt||f.num)h+='<input class="inp" id="'+id+'" autocomplete="off"'+(f.num?' inputmode="decimal"':'')+'>';else h+='<input class="inp" id="'+id+'" inputmode="decimal" autocomplete="off" aria-label="number"><span id="'+id+'x"'+(f.ifSel?' data-ifsel="f'+si+f.ifSel[0]+'" data-ifval="'+f.ifSel[1]+'" style="display:none"':'')+'> × 10 <input class="inp e" id="'+id+'e" inputmode="numeric" autocomplete="off" aria-label="power of ten"></span>';if(f.after)h+=' <span>'+f.after+'</span>';return h+'</div>';}
+  function draw(){var p=cfg.list[idx];var h='<div class="ptabs">'+cfg.list.map(function(_,i){return '<button data-p="'+i+'" class="'+(i===idx?'on ':'')+(solved[i]?'done':'')+'">Problem '+(i+1)+'</button>';}).join('')+'</div>';if(!cfg.noSeg)h+='<div class="bar-row" style="margin:0 0 10px"><div class="seg"><button id="mS"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mT"'+(mode==='try'?' class="on"':'')+'>My turn</button></div></div>';h+='<div class="task"><b>'+p.n+'.</b> '+p.t+'</div>'+(p.head||'');
+   Sg.forEach(function(s,i){if(i>st)return;var dn=i<st||mode==='show';h+='<div class="st '+(dn?'dn':'cur')+'"><div class="sh"><i>'+(dn?'✓':(i+1))+'</i>'+s.t+'</div>';if(dn)h+='<div class="ln">'+s.done+'</div>'+(s.why?'<div class="why">'+s.why+'</div>':'');else{s.fields.forEach(function(f){h+=field(f,i);});h+='<div class="bar-row"><button class="btn fill" id="ck">Check</button></div>';}h+='</div>';});
+   if(mode==='show')h+='<div class="bar-row"><button class="btn" id="bk"'+(st===0?' disabled':'')+'>Back</button><button class="btn fill" id="nx"'+(st>=Sg.length-1?' disabled':'')+'>Next</button></div>';
+   if(mode==='try'&&st>=Sg.length)h+='<div class="fb ok"><b>Solved!</b> '+(idx<cfg.list.length-1?'<button class="btn" id="np">Next problem</button>':'')+'</div>';
+   el.innerHTML=h;
+   el.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){idx=+b.dataset.p;init();draw();refresh();};});
+   if($('mS')){$('mS').onclick=function(){mode='show';init();draw();refresh();};$('mT').onclick=function(){mode='try';init();draw();refresh();};}
+   el.querySelectorAll('[data-ifsel]').forEach(function(sp){var sl=$(sp.dataset.ifsel);sl.onchange=function(){var on=sl.value===sp.dataset.ifval;sp.style.display=on?'':'none';if(!on)sp.querySelector('input').value='';};});
+   el.querySelectorAll('[data-pk]').forEach(function(b){b.onclick=function(){vals[b.dataset.pk]=+b.dataset.j;el.querySelectorAll('[data-pk="'+b.dataset.pk+'"]').forEach(function(x){x.classList.toggle('on',x===b);});};});
+   el.querySelectorAll('[data-tk]').forEach(function(b){b.onclick=function(){var keep={};el.querySelectorAll('.st.cur input,.st.cur select').forEach(function(x){keep[x.id]=x.value;});vals[b.dataset.tk]={k:b.dataset.k,l:b.dataset.l};draw();for(var q in keep)if($(q))$(q).value=keep[q];};});
+   if($('nx')){$('nx').onclick=function(){st++;draw();refresh();};$('bk').onclick=function(){st--;draw();refresh();};}
+   if($('np'))$('np').onclick=function(){idx++;init();draw();refresh();};
+   if($('ck'))$('ck').onclick=function(){var s=Sg[st],ok=true,msg='';s.fields.forEach(function(f){var id='f'+st+f.k,e=$(id),good=false;
+     if(f.tri){var v=vals[id]||{};good=v.k===f.a[0]&&v.l===f.a[1];if(!good)msg=f.miss||'Which letter do you want to find? Hide that one.';}
+     else if(f.sel)good=e.value===f.a;else if(f.pick){good=vals[id]===f.a;if(!good&&!msg)msg=f.miss||'Not this one. Think again.';}
+     else if(f.txt){good=e.value.trim()===f.a;if(!good&&!msg)msg='Check the spelling and capital letters.';}
+     else{var t=f.tol==null?.005:f.tol,v2=parseFloat(e.value);if(f.sci){var x=$(id+'e').value.trim();v2=v2*Math.pow(10,x===''?0:parseInt(x,10));}good=isFinite(v2)&&Math.abs(v2-f.a)<=Math.abs(f.a)*t+1e-12;
+       if(!good&&!msg)msg=f.miss||(isFinite(v2)&&v2&&Math.abs(Math.log10(Math.abs(v2/f.a)))>1?'Check the power of ten. Is the size of your answer sensible?':'Recheck this number. You can use the calculator and the periodic table.');}
+     if(e){e.classList.toggle('no',!good);e.classList.toggle('ok',good);if(f.sci)$(id+'e').classList.toggle('no',!good);}if(!good)ok=false;});
+     if(ok){st++;vals={};if(st>=Sg.length)solved[idx]=1;draw();refresh();}else{var old=el.querySelector('.st.cur .fb');if(old)old.remove();var d=document.createElement('div');d.className='fb bad';d.innerHTML=msg||'Not quite. Read the question again.';el.querySelector('.st.cur').appendChild(d);}};}
+  draw();}};return o;}
+function dual(a,b){var m='show',cur2=a;var o={title:a.title,q:a.q,rule:a.rule,reads:function(){return cur2.reads();},render:function(el){el.innerHTML='<div class="bar-row" style="margin:0 0 12px"><div class="seg"><button id="dS"'+(m==='show'?' class="on"':'')+'>Show me</button><button id="dT"'+(m==='try'?' class="on"':'')+'>My turn</button></div></div><div id="dv"></div>';$('dS').onclick=function(){sw('show');};$('dT').onclick=function(){sw('try');};cur2.render($('dv'));}};function sw(x){m=x;cur2=x==='show'?a:b;o.title=cur2.title;o.q=cur2.q;o.rule=cur2.rule;go(tabI,stepI);}return o;}
+/* ---- atoms ---- */
+function molSVG(f,r){r=r||9;var c=parse(f),L=[];for(var k in c)for(var i=0;i<c[k];i++)L.push(k);var n=L.length;var cols=n<=2?n:n<=4?2:n<=9?3:n<=16?4:6;var s=r*1.65;var rows=Math.ceil(n/cols);var W=(cols-1)*s+2*r+2,H=(rows-1)*s+2*r+2;var h='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">';L.forEach(function(e,i){var x=r+1+(i%cols)*s,y=r+1+Math.floor(i/cols)*s;var dark=!(e==='H'||e==='He'||e==='F'||e==='S'||e==='Ag'||e==='Pt');h+='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+COL[e]+'" stroke="#18233a" stroke-width="1.2"/>';if(r>=8)h+='<text x="'+x+'" y="'+(y+.5)+'" text-anchor="middle" dominant-baseline="central" font-family="Fredoka,sans-serif" font-weight="600" font-size="'+(e.length>1?r*.9:r*1.1)+'" fill="'+(dark?'#fff':'#18233a')+'">'+e+'</text>';});return h+'</svg>';}
+/* ---- balancer ---- */
+function Bal(p,o){o=o||{};var S={coef:p.r.concat(p.p).map(function(){return 1;}),sp:p.r.concat(p.p),nr:p.r.length,hide:false,lock:!!o.lock};
+ S.counts=function(){var R={},P={};S.sp.forEach(function(f,i){var c=parse(f),T=i<S.nr?R:P;for(var k in c)T[k]=(T[k]||0)+c[k]*S.coef[i];});return [R,P];};
+ S.balanced=function(){var c=S.counts();var ok=true;for(var k in c[0])if(c[0][k]!==c[1][k])ok=false;for(var j in c[1])if(c[0][j]!==c[1][j])ok=false;return ok;};
+ S.simple=function(){return S.coef.reduce(gcd)===1;};
+ S.html=function(){var h='<div class="eq">';S.sp.forEach(function(f,i){if(i===S.nr)h+='<div class="opr">→</div>';else if(i>0)h+='<div class="opr">+</div>';
+   var r=S.coef[i]>8||parse(f).length>0&&Object.keys(parse(f)).reduce(function(a,k){return a+parse(f)[k];},0)*S.coef[i]>24?6:9;
+   h+='<div class="sp">'+(S.lock?'':'<div class="stp"><button data-c="'+i+'" data-d="-1" aria-label="less">−</button><b>'+S.coef[i]+'</b><button data-c="'+i+'" data-d="1" aria-label="more">+</button></div>')+'<div class="fm"><em>'+(S.coef[i]>1?S.coef[i]:'')+'</em>'+fh(f)+'</div><div class="tray">';for(var m=0;m<S.coef[i];m++)h+=molSVG(f,r);h+='</div></div>';});h+='</div>';
+   var c=S.counts();h+='<table class="tally"><tr><th>Atom</th><th>Reactants</th><th></th><th>Products</th><th></th></tr>';Object.keys(c[0]).forEach(function(k){var a=c[0][k]||0,b=c[1][k]||0,ok=a===b;function d(n){var s='<div class="dots">';for(var i=0;i<Math.min(n,40);i++)s+='<i style="background:'+COL[k]+'"></i>';return s+'</div>';}
+    h+='<tr><td><b>'+k+'</b></td><td>'+(S.hide?'':d(a))+'</td><td class="cnt '+(S.hide?'':ok?'y':'n')+'">'+(S.hide?'?':a)+'</td><td>'+(S.hide?'':d(b))+'</td><td class="cnt '+(S.hide?'':ok?'y':'n')+'">'+(S.hide?'?':b)+'</td></tr>';});return h+'</table>';};
+ S.eqHtml=function(noC){var h='<div class="eq">';S.sp.forEach(function(f,i){if(i===S.nr)h+='<div class="opr">→</div>';else if(i>0)h+='<div class="opr">+</div>';var tot=Object.keys(parse(f)).reduce(function(a,k){return a+parse(f)[k];},0)*S.coef[i],r=S.coef[i]>8||tot>24?6:9;h+='<div class="sp">'+(S.lock?'':'<div class="stp"><button data-c="'+i+'" data-d="-1" aria-label="less">−</button><b>'+S.coef[i]+'</b><button data-c="'+i+'" data-d="1" aria-label="more">+</button></div>')+'<div class="fm"><em>'+(S.coef[i]>1?S.coef[i]:'')+'</em>'+fh(f)+'</div><div class="tray">';for(var m=0;m<S.coef[i];m++)h+=molSVG(f,r);h+='</div></div>';});return h+'</div>';};
+ S.bind=function(el,cb){el.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){var i=+b.dataset.c,v=S.coef[i]+ +b.dataset.d;if(v<1||v>20)return;S.coef[i]=v;cb();};});};
+ return S;}
+function eqText(S){var h='';S.sp.forEach(function(f,i){if(i===S.nr)h+=' → ';else if(i>0)h+=' + ';h+=(S.coef[i]>1?S.coef[i]:'')+fh(f);});return h;}
+/* ---- 1.1 discover ---- */
+function discover(){var S=Bal({r:['H2','O2'],p:['H2O']}),cheat=false;return{title:'Why do we balance?',
+ q:'Hydrogen burns in oxygen to make water. Use + and − so that every atom on the left also appears on the right.',
+ rule:['Atoms are only rearranged, never created or destroyed.','Each element needs the same count on both sides.','Change <b>coefficients</b> only. Never change a subscript.'],
+ render:function(el){function draw(){var bal=S.balanced();el.innerHTML=S.html()+'<div class="bar-row"><button class="btn" id="ch">'+(cheat?'Put water back':'Shortcut: change the formula instead')+'</button></div><div class="fb '+(cheat?'bad':bal?'ok':'hint')+'">'+(cheat?'The counts can match, but H<sub>2</sub>O<sub>2</sub> is hydrogen peroxide, not water. A subscript changes the <b>substance</b>, so this is a different reaction.':bal?'Balanced: '+eqText(S)+(S.simple()?'':'. It works, but can you use smaller whole numbers?'):'Not yet. Look at the red counts in the table.')+'</div>';S.bind(el,function(){draw();refresh();});$('ch').onclick=function(){cheat=!cheat;S.sp[2]=cheat?'H2O2':'H2O';S.coef=[1,1,1];draw();refresh();};}draw();},
+ reads:function(){return [['Equation',eqText(S),1],['Balanced?',S.balanced()?(cheat?'Wrong substance':'Yes'):'Not yet']];}};}
+/* ---- balancing flow ---- */
+var BP=[
+{r:['P4','O2'],p:['P2O5'],w:[[2,2,'P: 4 on the left, 2 on the right. ×2 is written as the coefficient of P<sub>2</sub>O<sub>5</sub>.'],[1,5,'O: 2 on the left, 10 on the right. ×5 is written as the coefficient of O<sub>2</sub>.']]},
+{r:['Sb','O2'],p:['Sb4O6'],w:[[0,4,'Sb: 1 on the left, 4 on the right. ×4 is written in front of Sb.'],[1,3,'O: 2 on the left, 6 on the right. ×3 is written in front of O<sub>2</sub>.']]},
+{r:['C10H16','Cl2'],p:['C','HCl'],w:[[2,10,'C: 10 on the left, 1 on the right. ×10 in front of C.'],[3,16,'H: 16 on the left, 1 on the right. ×16 in front of HCl.'],[1,8,'Cl: 2 on the left, 16 on the right. ×8 in front of Cl<sub>2</sub>.']]},
+{r:['SiO2','HF'],p:['SiF4','H2O'],w:[[1,4,'F: 1 on the left, 4 on the right. ×4 in front of HF.'],[3,2,'H: 4 on the left, 2 on the right. ×2 in front of H<sub>2</sub>O. O is now fixed too.']]},
+{r:['Al','HCl'],p:['AlCl3','H2'],w:[[2,2,'Try Cl: H<sub>2</sub> needs an even H count, so start with ×2 in front of AlCl<sub>3</sub>. Cl on the right is now 6.'],[1,6,'×6 in front of HCl gives 6 Cl on the left.'],[3,3,'H: 6 on the left, 2 on the right. ×3 in front of H<sub>2</sub>.'],[0,2,'Al: 1 on the left, 2 on the right. ×2 in front of Al.']]},
+{r:['KClO3'],p:['KCl','O2'],w:[[0,2,'O: 3 on the left, 2 on the right. Both can reach 6, so ×2 in front of KClO<sub>3</sub>.'],[2,3,'×3 in front of O<sub>2</sub> gives 6 O on the right.'],[1,2,'K and Cl: 2 on the left, 1 on the right. ×2 in front of KCl.']]},
+{r:['MgO','HCl'],p:['MgCl2','H2O'],w:[[1,2,'Cl: 1 on the left, 2 on the right. ×2 in front of HCl. H is now fixed too.']]},
+{r:['H2','O2'],p:['H2O'],w:[[2,2,'O: 2 on the left, 1 on the right. ×2 in front of H<sub>2</sub>O.'],[0,2,'H: 2 on the left, 4 on the right. ×2 in front of H<sub>2</sub>.']]}];
+var BEX=[{r:['N2','H2'],p:['NH3'],w:[[2,2,'N: 2 on the left, 1 on the right. ×2 is written as the coefficient of NH<sub>3</sub>. H on the right is now 6.'],[1,3,'H: 2 on the left, 6 on the right. ×3 is written as the coefficient of H<sub>2</sub>.']]}];
+function balFlow(cfg){var idx=0,mode=cfg.mode,solved={},S,stage,k,msg,mc,typed;function init(){S=Bal(cfg.list[idx]);stage=0;k=-1;msg='';mc='';typed={};S.lock=true;}init();
+ function els(){var c=S.counts();return Object.keys(c[0]);}
+ function base(i){var sd=i===0?S.sp.slice(0,S.nr):S.sp.slice(S.nr),o={};sd.forEach(function(f){var c=parse(f);for(var e in c)o[e]=(o[e]||0)+c[e];});return o;}
+ function cellB(side,e){var c=S.counts(),now=c[side][e],b=base(side)[e],sd=side===0?[0,S.nr]:[S.nr,S.sp.length],hits=[];for(var i=sd[0];i<sd[1];i++)if(parse(S.sp[i])[e])hits.push(i);var bits='';if(hits.length===1&&S.coef[hits[0]]>1)bits=' <span class="mul">×'+S.coef[hits[0]]+'</span>';else if(now!==b)bits=' <span class="mul">→ '+now+'</span>';var ok=c[0][e]===c[1][e];return '<div class="at '+(ok?'y':'n')+'"><b>'+e+':</b> '+b+bits+(hits.length===1&&S.coef[hits[0]]>1?' <span class="small">= '+now+'</span>':'')+'</div>';}
+ function table(){var E=els(),h='<table class="pt"><tr><th>Reactants</th><th>Products</th></tr><tr>';[0,1].forEach(function(side){h+='<td>';E.forEach(function(e,j){if(stage===0){if(mode==='show'&&k>=0)h+='<div class="at"><b>'+e+':</b></div>';else if(mode==='show')h+='<div class="at">&nbsp;</div>';else h+='<div class="at"><input class="inp sm" id="L'+side+j+'" aria-label="atom" value="'+(typed['L'+side+j]||'')+'" autocomplete="off" autocapitalize="off" spellcheck="false"></div>';}
+   else if(stage===1){var b=base(side)[e];if(mode==='show')h+='<div class="at"><b>'+e+':</b> '+(k>=1?b:'')+'</div>';else h+='<div class="at"><b>'+e+':</b> <input class="inp sm" id="C'+side+j+'" inputmode="numeric" aria-label="number of '+e+' atoms" value="'+(typed['C'+side+j]||'')+'" autocomplete="off"></div>';}
+   else h+=cellB(side,e);});h+='</td>';});return h+'</tr></table>';}
+ function advance(){}
+ var CARDS=[['Step 1: List','Write every atom on both sides.'],['Step 2: Count','Count each atom on both sides.'],['Step 3: Balance','Trial and error: write the multiplier as a coefficient.']];
+ var o={title:cfg.title,q:cfg.q,rule:['Step 1: list the atoms on both sides.','Step 2: count each atom on both sides.','Step 3: trial and error. Multiply where the numbers differ, and write the multiplier as the <b>coefficient</b>.','Recount after every change. Never change a subscript.'],
+ reads:function(){return [['Problems solved',Object.keys(solved).length+' / '+cfg.list.length],['Now on','Step '+Math.min(stage+1,3)]];},
+ render:function(el){function draw(){var P=cfg.list[idx],w=P.w;var h=cfg.list.length>1?'<div class="ptabs">'+cfg.list.map(function(_,i){return '<button data-p="'+i+'" class="'+(i===idx?'on ':'')+(solved[i]?'done':'')+'">Problem '+(i+1)+'</button>';}).join('')+'</div>':'';h+='<div class="bar-row" style="margin:0 0 10px"><div class="seg"><button id="mS"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mT"'+(mode==='try'?' class="on"':'')+'>My turn</button></div></div>';
+   S.lock=mode==='show'||stage<2;h+=S.eqHtml(stage<2);h+='<div class="ss3">'+CARDS.map(function(c,i){return '<div class="ss'+(i===stage?' on':'')+(i<stage?' done':'')+'"><b>'+(i<stage?'✓ ':'')+c[0]+'</b>'+c[1]+'</div>';}).join('')+'</div>'+table();
+   if(stage===2&&(S.balanced()||mode==='show'))h+='<div class="final">⇨ '+eqText(S)+'</div>';
+   if(mode==='show'){var tx;if(stage===0)tx=k<0?'Press Next to list the atoms.':'List every element once in each column.';else if(stage===1)tx=k<1?'Press Next to count.':'Use the subscripts: a subscript counts the atoms in one formula.';else tx=k>=2+w.length?'<b>Recount:</b> every atom matches, so the equation is balanced.':w[k-2][2];var last=stage===2&&k>=2+w.length;h+='<div class="fb hint">'+tx+'</div><div class="bar-row"><button class="btn" id="bk"'+(k<0?' disabled':'')+'>Back</button><button class="btn fill" id="nx"'+(last?' disabled':'')+'>Next</button></div>';}
+   else{h+='<div class="bar-row"><button class="btn fill" id="ck">'+(stage===0?'Check my list':stage===1?'Check my count':'Check my equation')+'</button>'+(stage===2?'<button class="btn" id="rs">Start again</button>':'')+'</div><div class="fb '+mc+'">'+msg+'</div>';}
+   el.innerHTML=h;S.bind(el,function(){msg='';mc='';draw();refresh();});
+   el.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){idx=+b.dataset.p;init();draw();refresh();};});
+   $('mS').onclick=function(){mode='show';init();draw();refresh();};$('mT').onclick=function(){mode='try';init();draw();refresh();};
+   el.querySelectorAll('input.sm').forEach(function(x){x.oninput=function(){typed[x.id]=x.value;};});
+   if(mode==='show'){$('nx').onclick=function(){k++;ap();};$('bk').onclick=function(){k--;ap();};}
+   else{if($('rs'))$('rs').onclick=function(){S.coef=S.sp.map(function(){return 1;});msg='';mc='';draw();refresh();};
+    $('ck').onclick=function(){var E=els();if(stage===0){var bad=false,cs=false;[0,1].forEach(function(sd){var got=E.map(function(_,j){return $('L'+sd+j).value.trim();});var a=got.slice().sort().join(),b=E.slice().sort().join();if(a!==b){bad=true;if(a.toLowerCase()===b.toLowerCase())cs=true;}});if(bad){msg=cs?'Check the capital letters: a symbol starts with one capital, like Cl.':'Look at the formulas again. Each atom should appear once in each column.';mc='bad';}else{stage=1;msg='Good list. Now count them.';mc='ok';}}
+     else if(stage===1){var wrong=[];[0,1].forEach(function(sd){E.forEach(function(e,j){var i=$('C'+sd+j);if(+i.value!==base(sd)[e]||i.value.trim()==='')wrong.push(e+(sd?' (products)':' (reactants)'));});});if(wrong.length){msg='Count again: '+wrong.join(', ')+'.';mc='bad';}else{stage=2;msg='Correct. Where the numbers differ, start trial and error with + and −.';mc='ok';}}
+     else{if(!S.balanced()){var c=S.counts();msg='Not balanced yet. Check: '+E.filter(function(e){return c[0][e]!==c[1][e];}).join(', ')+'.';mc='bad';}else if(!S.simple()){msg='Balanced, but use the smallest whole numbers.';mc='hint';}else{msg='Correct! The multipliers are your coefficients.';mc='ok';solved[idx]=1;}}
+     draw();refresh();};}}
+   function ap(){var w=cfg.list[idx].w;stage=k<1?0:k<2?1:2;if(k===1)stage=1;S.coef=S.sp.map(function(){return 1;});for(var j=2;j<2+w.length&&j<=k;j++)S.coef[w[j-2][0]]=w[j-2][1];draw();refresh();}draw();}};return o;}
+/* ---- 2.1 counting unit ---- */
+function unitLab(){var U=[['pair',2],['dozen',12],['gross',144],['ream',500],['mole',NA]],u=1,n=2;function tot(){return U[u][1]*n;}
+ return{title:'The mole is a counting unit',q:'A dozen always means 12, whatever you count. Try each unit. Why would chemists need a unit as huge as the mole?',
+ rule:['1 mole = '+AV+' particles (Avogadro\'s number).','It counts things, like a dozen, only far bigger.','Atoms are so small that we need a huge counting unit.'],
+ render:function(el){function draw(){var h='<div class="bar-row" style="margin:0 0 12px">'+U.map(function(x,i){return '<button class="btn'+(i===u?' sel':'')+'" data-u="'+i+'">'+x[0]+'</button>';}).join('')+'</div><div class="vis">';
+   for(var i=0;i<n;i++){if(U[u][0]==='mole')h+='<div class="pack mole"><span>'+AV+'</span></div>';else{var v=U[u][1],c=Math.ceil(Math.sqrt(v)),s=v>200?4:v>50?6:v>5?11:18;h+='<div class="pack"><div class="g" style="grid-template-columns:repeat('+c+','+s+'px)">';for(var j=0;j<v;j++)h+='<i style="width:'+s+'px;height:'+s+'px"></i>';h+='</div></div>';}}
+   h+='</div><div class="bar-row"><div class="ctl"><label for="nn">How many '+U[u][0]+'s?</label><input type="range" id="nn" min="1" max="5" value="'+n+'"><output>'+n+'</output></div></div><div class="fb">'+(U[u][0]==='mole'?'Each box stands for '+AV+' particles, too many to draw. Counting one atom every second, one mole would take about 1.9 × 10<sup>16</sup> years.':n+' × '+U[u][1]+' = <b>'+tot()+'</b> items.')+'</div>';el.innerHTML=h;
+   el.querySelectorAll('[data-u]').forEach(function(b){b.onclick=function(){u=+b.dataset.u;draw();refresh();};});$('nn').oninput=function(){n=+this.value;draw();refresh();$('nn').focus();};}draw();},
+ reads:function(){return [['Unit',U[u][0]],['Items',U[u][0]==='mole'?sci(tot()):String(tot())]];}};}
+/* ---- 2.2 particles ---- */
+var SUBS=[['Fe','atom'],['He','atom'],['O2','molecule'],['H2O','molecule'],['CO2','molecule'],['NaCl','formula unit'],['Ba(NO3)2','formula unit']];
+function partLab(){var i=4,n=1.5;return{title:'What are we counting?',q:'Set 1.5 mol CO₂. How many moles of oxygen atoms are inside? How do you get that number from the formula?',
+ rule:['The counted particle can be an <b>atom</b>, a <b>molecule</b> or a <b>formula unit</b>.','Moles of an atom = moles of substance × its subscript.','1 mol of O<sub>2</sub> has 6.02 × 10<sup>23</sup> molecules, but twice as many O atoms.'],
+ render:function(el){function draw(){var f=SUBS[i][0],c=parse(f);var h='<div class="bar-row" style="margin:0 0 12px">'+SUBS.map(function(s,j){return '<button class="btn'+(j===i?' sel':'')+'" data-s="'+j+'">'+fh(s[0])+'</button>';}).join('')+'</div><div class="vis">'+molSVG(f,18)+'<div style="font-family:Fredoka,sans-serif;font-size:19px">One <b>'+SUBS[i][1]+'</b> of '+fh(f)+'</div></div><div class="bar-row"><div class="ctl"><label for="nn">Moles of '+fh(f)+'</label><input type="range" id="nn" min="0.5" max="5" step="0.5" value="'+n+'"><output>'+n.toFixed(1)+' mol</output></div></div><div class="nums"><div class="num"><span>'+SUBS[i][1]+'s of '+fh(f)+'</span><b>'+sci(n*NA)+'</b></div>';for(var k in c)h+='<div class="num"><span>moles of '+k+' atoms</span><b>'+(n*c[k]).toFixed(1)+' mol</b><span>'+n.toFixed(1)+' × '+c[k]+'</span></div>';el.innerHTML=h+'</div>';
+   el.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){i=+b.dataset.s;draw();refresh();};});$('nn').oninput=function(){n=+this.value;draw();refresh();$('nn').focus();};}draw();},
+ reads:function(){return [['Substance',fh(SUBS[i][0])],['Particle',SUBS[i][1]],['Moles',n.toFixed(1)]];}};}
+function pq(f,t,type,atom,n){return {n:'Particles',t:t,stages:function(){var c=parse(f),L=[{t:'Identify the particle',fields:[{k:'p',l:'The representative particle of '+fh(f)+' is:',pick:['atom','molecule','formula unit'],a:['atom','molecule','formula unit'].indexOf(type),miss:'Metal or noble gas alone: atom. Non-metals bonded: molecule. Ionic compound: formula unit.'}],done:'Representative particle: <b>'+type+'</b>.'}];
+ if(atom){L.push({t:'Read the subscript',fields:[{k:'s',l:'Atoms of '+atom+' in one '+type+' of '+fh(f)+':',num:1,a:c[atom],tol:0,miss:'Multiply through any brackets.'}],done:'One '+type+' has <b>'+c[atom]+' '+atom+'</b> atom'+(c[atom]>1?'s':'')+'.'});L.push({t:'Calculate',fields:[{k:'r',l:'Moles of '+atom+' atoms =',num:1,a:n*c[atom],tol:.01,after:'mol'}],done:n+' mol × '+c[atom]+' = <b>'+(n*c[atom]).toFixed(1)+' mol '+atom+'</b>'});}
+ else L.push({t:'Use the triangle',fields:[{k:'r',l:'Number of '+type+'s = n × '+NAH+' =',sci:1,a:n*NA,tol:.012,after:type+'s'}],done:'N = '+n+' mol × '+AV+' = <b>'+sci(n*NA)+' '+type+'s</b>'});return L;}};}
+var PPROB=[pq('Fe','How many atoms are in 2.00 mol Fe?','atom',null,2),pq('H2O','How many molecules are in 0.500 mol H<sub>2</sub>O?','molecule',null,.5),pq('NaCl','How many formula units are in 3.00 mol NaCl?','formula unit',null,3),pq('CO2','How many moles of oxygen atoms are in 1.5 mol CO<sub>2</sub>?','molecule','O',1.5),pq('Ba(NO3)2','How many moles of nitrogen atoms are in 1.0 mol Ba(NO<sub>3</sub>)<sub>2</sub>?','formula unit','N',1),pq('C6H12O6','How many moles of carbon atoms are in 0.5 mol glucose, C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>?','molecule','C',.5),pq('H2SO4','How many moles of hydrogen atoms are in 2.5 mol H<sub>2</sub>SO<sub>4</sub>?','molecule','H',2.5)];
+function mq(f){return {n:'Molar mass',t:'Calculate the molar mass of '+fh(f)+'.',stages:function(){var c=parse(f),K=Object.keys(c),T=mm(f);return [{t:'Count the atoms',fields:K.map(function(e){return {k:'c'+e,l:e+' atoms:',num:1,a:c[e],tol:0,miss:'Use the subscripts, and multiply through any brackets.'};}),done:K.map(function(e){return e+': <b>'+c[e]+'</b>';}).join(' &nbsp; ')},
+ {t:'Look up the atomic masses',fields:K.map(function(e){return {k:'m'+e,l:'Atomic mass of '+e+':',num:1,a:AM[e],tol:.004,after:'g/mol',miss:'Open the periodic table at the bottom of the screen.'};}),done:K.map(function(e){return e+': <b>'+AM[e]+'</b>';}).join(' &nbsp; ')},
+ {t:'Multiply by the number of atoms',fields:K.map(function(e){return {k:'x'+e,l:e+': '+c[e]+' × atomic mass =',num:1,a:c[e]*AM[e],tol:.004,after:'g/mol'};}),done:K.map(function(e){return e+': '+c[e]+' × '+AM[e]+' = <b>'+(c[e]*AM[e]).toFixed(2)+'</b>';}).join(' &nbsp; '),why:'Each atomic mass counts once for every atom of that element.'},
+ {t:'Add them together',fields:[{k:'t',l:'Molar mass =',num:1,a:T,tol:.004,after:'g/mol'}],done:K.map(function(e){return (c[e]*AM[e]).toFixed(2);}).join(' + ')+' = <b>'+T.toFixed(2)+' g/mol</b>'}];}};}
+var MPROB=['H2O','CO2','NaCl','MgCl2','Ca(OH)2','H2SO4','Ba(NO3)2'].map(mq);
+var TQ=[['m','left','Find the moles when you know the mass and molar mass.'],['m','top','Find the mass when you know the moles and molar mass.'],['m','right','Find the molar mass when you know the mass and moles.'],['N','left','Find the moles when you know the number of particles.'],['N','top','Find the number of particles when you know the moles.']];
+function triLab(){var v={m:'left',N:'left'};return {title:'The triangle trick',q:'Click a letter to hide it. What is left is your equation. When is it a division and when is it a multiplication?',rule:['Hide the letter you want to find.','One over the other: <b>divide</b>.','Side by side: <b>multiply</b>.','n = moles, m = mass (g), M = molar mass (g/mol), N = particles, N<sub>A</sub> = 6.02 × 10<sup>23</sup>.'],reads:function(){return [['Mass triangle',triEq('m',v.m).replace(/<span class="fr"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/,'$1 / $2'),1],['Particle triangle',triEq('N',v.N).replace(/<span class="fr"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/,'$1 / $2'),1]];},render:function(el){function draw(){el.innerHTML='<div class="tris big">'+['m','N'].map(function(k){return '<div class="trc"><div class="fm" style="font-size:20px">'+(k==='m'?'n = m / M':'n = N / '+NAH)+'</div>'+triSVG(k,v[k],'x',210)+'<div class="calc" style="text-align:center;margin-top:8px;min-height:74px">'+triEq(k,v[k])+'</div></div>';}).join('')+'</div><div class="nums"><div class="num"><span>n</span><b>moles</b></div><div class="num"><span>m</span><b>mass (g)</b></div><div class="num"><span>M</span><b>molar mass</b></div><div class="num"><span>N</span><b>particles</b></div><div class="num"><span>'+NAH+'</span><b>6.02 × 10<sup>23</sup></b></div></div>';el.querySelectorAll('[data-tk]').forEach(function(b){b.onclick=function(){v[b.dataset.k]=b.dataset.l;draw();refresh();};});}draw();}};}
+function triPractice(){return practice({title:'The triangle trick: my turn',q:'Which triangle do you need? Hide the letter you want to find.',rule:['Hide what you want.','One over the other: divide. Side by side: multiply.'],noSeg:true,list:TQ.map(function(x){return {n:'Hide it',t:x[2],stages:function(){return [{t:'Click the letter to hide',fields:[{k:'t',tri:1,tris:['m','N'],a:[x[0],x[1]],l:'Choose the right triangle and hide the letter you want:'}],done:triEq(x[0],x[1])}];}};})});}
+/* ---- 2.3 molar mass ---- */
+var MMS=['H2O','CO2','NaCl','Ca(OH)2','C6H12O6','Ba(NO3)2'];
+AM.Ca=AM.Ca;
+function massBuild(){var i=0,k=0;return{title:'Building molar mass',q:'Add one element at a time. What does each subscript do to the total?',
+ rule:['Molar mass = the sum of (atomic mass × subscript).','Unit: <b>g/mol</b>.','It is the mass of one mole of the substance.'],
+ render:function(el){function draw(){var f=MMS[i],c=parse(f),K=Object.keys(c);var h='<div class="bar-row" style="margin:0 0 12px">'+MMS.map(function(s,j){return '<button class="btn'+(j===i?' sel':'')+'" data-s="'+j+'">'+fh(s)+'</button>';}).join('')+'</div><div class="vis">'+molSVG(f,14)+'</div>';var t=0;K.forEach(function(e,j){if(j<k){var v=c[e]*AM[e];t+=v;h+='<div class="mrow"><span class="dot" style="background:'+COL[e]+'"></span><b>'+e+'</b> '+c[e]+' × '+AM[e].toFixed(2)+' g/mol = <b>'+v.toFixed(2)+' g/mol</b></div>';}});if(k>=K.length)h+='<div class="mrow tot">Molar mass of '+fh(f)+' = '+t.toFixed(2)+' g/mol</div>';h+='<div class="bar-row"><button class="btn fill" id="ad"'+(k>=K.length?' disabled':'')+'>Add '+(K[k]||'')+'</button><button class="btn" id="rs">Reset</button></div>';el.innerHTML=h;
+   el.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){i=+b.dataset.s;k=0;draw();refresh();};});$('ad').onclick=function(){k++;draw();refresh();};$('rs').onclick=function(){k=0;draw();refresh();};}draw();},
+ reads:function(){return [['Substance',fh(MMS[i])],['Elements added',k+' / '+Object.keys(parse(MMS[i])).length]];}};}
+/* ---- 2.4 balance ---- */
+function scaleLab(){var L=['Cu','H2O','NaCl','He','CO2','Fe','Pb'],a=1,b=0;return{title:'One mole on a balance',q:'Put one mole of different substances on each pan. Do they have the same number of particles? Do they have the same mass?',
+ rule:['One mole of anything has the same number of particles.','One mole of different substances has <b>different masses</b>.'],
+ render:function(el){function draw(){var A=mm(L[a]),B=mm(L[b]),t=Math.max(-14,Math.min(14,(B-A)/6));var rad=t*Math.PI/180,cx=280,cy=60,l=170,ax=cx-l*Math.cos(rad),ay=cy-l*Math.sin(rad),bx=cx+l*Math.cos(rad),by=cy+l*Math.sin(rad);
+   function pan(x,y,f,m){return '<line x1="'+x+'" y1="'+y+'" x2="'+(x-58)+'" y2="'+(y+70)+'" stroke="#5a6780" stroke-width="2"/><line x1="'+x+'" y1="'+y+'" x2="'+(x+58)+'" y2="'+(y+70)+'" stroke="#5a6780" stroke-width="2"/><path d="M'+(x-66)+' '+(y+70)+' H'+(x+66)+' Q'+x+' '+(y+102)+' '+(x-66)+' '+(y+70)+'Z" fill="#c9d4e6" stroke="#18233a" stroke-width="2"/><text x="'+x+'" y="'+(y+52)+'" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="20" fill="#18233a" paint-order="stroke" stroke="#fff" stroke-width="5">1 mol '+f.replace(/\d+/g,function(d){return d.split('').map(function(c){return '₀₁₂₃₄₅₆₇₈₉'[+c];}).join('');})+'</text><text x="'+x+'" y="'+(y+120)+'" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="19" fill="#0f8b8d">'+m.toFixed(2)+' g</text>';}
+   var h='<div class="bar-row" style="margin:0 0 10px"><label>Left pan <select id="sa">'+L.map(function(s,j){return '<option value="'+j+'"'+(j===a?' selected':'')+'>'+s+'</option>';}).join('')+'</select></label><label>Right pan <select id="sb">'+L.map(function(s,j){return '<option value="'+j+'"'+(j===b?' selected':'')+'>'+s+'</option>';}).join('')+'</select></label></div><svg class="scale" viewBox="0 0 560 300" role="img" aria-label="Balance comparing one mole of two substances"><rect x="270" y="60" width="20" height="210" fill="#5a6780"/><rect x="200" y="270" width="160" height="14" rx="7" fill="#18233a"/><line x1="'+ax+'" y1="'+ay+'" x2="'+bx+'" y2="'+by+'" stroke="#18233a" stroke-width="7" stroke-linecap="round"/><circle cx="280" cy="60" r="9" fill="#e8962a" stroke="#18233a" stroke-width="2"/>'+pan(ax,ay,L[a],A)+pan(bx,by,L[b],B)+'</svg><div class="fb">Each pan holds '+AV+' particles. '+(a===b?'Same substance, so same mass.':'Heavier pan: <b>'+fh(A>B?L[a]:L[b])+'</b>, because each of its particles has more mass.')+'</div>';el.innerHTML=h;
+   $('sa').onchange=function(){a=+this.value;draw();refresh();};$('sb').onchange=function(){b=+this.value;draw();refresh();};}draw();},
+ reads:function(){return [['Left',mm(L[a]).toFixed(2)+' g'],['Right',mm(L[b]).toFixed(2)+' g'],['Particles','equal on both pans',1]];}};}
+/* ---- 3.1 map ---- */
+function mapLab(){var L=['Cu','Fe','H2O','CO2','NaCl'],i=0,n=2,on=0;var A=[['Mass → Moles','n = m / M'],['Moles → Mass','m = n × M'],['Moles → Particles','N = n × N<sub>A</sub>'],['Particles → Moles','n = N / N<sub>A</sub>']];
+ return{title:'The conversion map',q:'Press each arrow and look at the hidden letter in the triangle. Can you get from mass to particles without passing through moles?',
+ rule:['Moles is the bridge in the middle.','Mass ↔ moles uses the <b>mass triangle</b>.','Moles ↔ particles uses the <b>particle triangle</b>.','Mass to particles takes two steps.'],
+ render:function(el){function draw(){var f=L[i],M=mm(f),g=n*M,N=n*NA;var cs=['n = '+frac('m','M')+' = '+frac(sf(g)+' g',M.toFixed(2)+' g/mol')+' = <b>'+sf(n)+' mol</b>','m = n × M = '+sf(n)+' mol × '+M.toFixed(2)+' g/mol = <b>'+sf(g)+' g</b>','N = n × '+NAH+' = '+sf(n)+' mol × '+AV+' = <b>'+sci(N)+'</b>','n = '+frac('N',NAH)+' = '+frac(sci(N),AV)+' = <b>'+sf(n)+' mol</b>'];
+   var hi=[[0,1],[1,0],[1,2],[2,1]][on];function bx(k,t,v){return '<div class="box'+(k===1?' mid':'')+'" ><h3>'+t+'</h3><b>'+v+'</b></div>';}
+   var h='<div class="bar-row" style="margin:0 0 12px">'+L.map(function(s,j){return '<button class="btn'+(j===i?' sel':'')+'" data-s="'+j+'">'+fh(s)+'</button>';}).join('')+'</div><div class="map">'+bx(0,'Mass',sf(g)+' g')+'<div class="arw"><button data-a="0" class="'+(on===0?'on':'')+'">'+A[0][1]+' →</button><button data-a="1" class="'+(on===1?'on':'')+'">← '+A[1][1]+'</button></div>'+bx(1,'Moles',sf(n)+' mol')+'<div class="arw"><button data-a="2" class="'+(on===2?'on':'')+'">'+A[2][1]+' →</button><button data-a="3" class="'+(on===3?'on':'')+'">← '+A[3][1]+'</button></div>'+bx(2,'Particles',sci(N))+'</div><div class="bar-row"><div class="ctl"><label for="nn">Moles of '+fh(f)+'</label><input type="range" id="nn" min="0.1" max="5" step="0.1" value="'+n+'"><output>'+n.toFixed(1)+' mol</output></div></div><div class="calc">'+cs[on]+'</div>';el.innerHTML=h;var bs=el.querySelectorAll('.box');bs[hi[0]].classList.add('hl');bs[hi[1]].classList.add('hl');
+   el.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){i=+b.dataset.s;draw();refresh();};});el.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){on=+b.dataset.a;draw();refresh();};});$('nn').oninput=function(){n=+this.value;draw();refresh();$('nn').focus();};}draw();},
+ reads:function(){return [['Path',A[on][0],1],['Molar mass',mm(L[i]).toFixed(2)+' g/mol',1]];}};}
+/* ---- 3.3 practice ---- */
+var CP=[
+{n:'Moles to particles',t:'How many molecules are in 2.25 moles of bromine (Br<sub>2</sub>)?',from:'moles',to:'particles',g:2.25,u:'mol',ans:[1.35e24],un:'molecules Br<sub>2</sub>'},
+{n:'Particles to moles',t:'Calculate the number of moles in a sample of sodium bromide (NaBr) that contains 2.88 × 10<sup>23</sup> formula units.',from:'particles',to:'moles',g:2.88e23,u:'formula units',ans:[0.478],un:'mol NaBr'},
+{n:'Particles to moles',t:'Convert 4.50 × 10<sup>24</sup> atoms of Zn to moles of Zn.',from:'particles',to:'moles',g:4.5e24,u:'atoms',ans:[7.48],un:'mol Zn'},
+{n:'Mass to moles',t:'A roll of copper wire has a mass of 848 g. How many moles of copper are in the roll?',from:'mass',to:'moles',g:848,u:'g',M:63.546,sym:'Cu',ans:[13.3],un:'mol Cu'},
+{n:'Moles to mass',t:'Calculate the mass of 0.625 moles of calcium.',from:'moles',to:'mass',g:.625,u:'mol',M:40.078,sym:'Ca',ans:[25.0],un:'g Ca'},
+{n:'Mass to particles',t:'Calculate the number of atoms in 4.77 g of lead.',from:'mass',to:'particles',g:4.77,u:'g',M:207.2,sym:'Pb',ans:[.0230,1.38e22],un:'atoms Pb'},
+{n:'Particles to mass',t:'How many grams of mercury are in 1.19 × 10<sup>23</sup> atoms of mercury?',from:'particles',to:'mass',g:1.19e23,u:'atoms',M:200.59,sym:'Hg',ans:[.198,39.7],un:'g Hg'},
+{n:'Mass to particles',t:'Calculate the number of atoms in 2.00 g of platinum.',from:'mass',to:'particles',g:2,u:'g',M:195.08,sym:'Pt',ans:[.0103,6.17e21],un:'atoms Pt'}];
+var HOP=[['m','left'],['m','top'],['N','top'],['N','left']];
+function hops(p){var H=[];if(p.from==='mass')H.push(0);if(p.from==='particles')H.push(3);if(p.to==='mass')H.push(1);if(p.to==='particles')H.push(2);return H;}
+function stagesOf(p){var S=[],H=hops(p),gs=p.g>=1e6?sci(p.g):sf(p.g);
+ S.push({t:'Identify the knowns',fields:[{k:'f',l:'Given quantity:',sel:['mass','moles','particles'],a:p.from},{k:'v',l:'Given value:',sci:1,a:p.g,ifSel:['f','particles']},{k:'o',l:'Find:',sel:['mass','moles','particles'],a:p.to}],done:'Given: <b>'+gs+' '+p.u+'</b> ('+p.from+'). Find: <b>'+p.to+'</b>.',why:'Read the question: what number is given, and what is asked?'});
+ H.forEach(function(hp,i){var w=['moles','mass','particles','moles'][hp];S.push({t:H.length>1?(i?'Second triangle':'First triangle'):'Use the triangle',fields:[{k:'t',tri:1,tris:['m','N'],a:HOP[hp],l:(H.length>1?(i?'Now you have moles. ':'Go through moles first. '):'')+'Choose the triangle and hide <b>'+w+'</b>:'}],done:triEq(HOP[hp][0],HOP[hp][1]),why:H.length>1&&i===0?'Moles is the bridge between mass and particles.':''});});
+ if(p.M)S.push({t:'Find the molar mass',fields:[{k:'m',l:'Molar mass of '+p.sym+' from the periodic table:',num:1,a:p.M,tol:.005,after:'g/mol',miss:'Open the periodic table at the bottom of the screen.'}],done:'M of '+p.sym+' = <b>'+p.M+' g/mol</b>.'});
+ p.ans.forEach(function(a,i){var last=i===p.ans.length-1,unit=last?p.un:'mol',hp=H[i],prev=i===0?gs+' '+p.u:'your moles',lhs=['n = m / M','m = n × M','N = n × '+NAH,'n = N / '+NAH][hp],val=[prev+' / '+(p.M||'')+' g/mol',prev+' × '+(p.M||'')+' g/mol',prev+' × '+AV,prev+' / '+AV][hp];
+  S.push({t:last?'Calculate the answer':'Calculate the moles',fields:[a>=1e4?{k:'r',l:lhs+' =',sci:1,a:a,tol:.015,after:unit}:{k:'r',l:lhs+' =',num:1,a:a,tol:.015,after:unit}],done:lhs+' = '+val+' = <b>'+(a>=1e4||a<1e-3?sci(a):sf(a))+' '+unit+'</b>',why:last?'Give 3 significant figures, as in the data.':'Keep this number for the next step.'});});
+ return S;}
+function convPractice(){return practice({title:'Practice: conversions step by step',q:'Before calculating: what is given, what is asked, and how many triangles do you need?',rule:['Knowns first: what is given, what is asked.','Hide what you want in the triangle.','Mass to particles uses both triangles, through moles.','Check that the answer has the right unit and size.'],list:CP.map(function(p){return {n:p.n,t:p.t,stages:function(){return stagesOf(p);}};})});}
+/* ---- 4.1 ratios along the equation ---- */
+var RB=[{r:[['H2',2],['O2',1]],p:[['H2O',2]]},{r:[['N2',1],['H2',3]],p:[['NH3',2]]},{r:[['CH4',1],['O2',2]],p:[['CO2',1],['H2O',2]]},{r:[['KClO3',2]],p:[['KCl',2],['O2',3]]}];
+function ratioBoard(){var idx=0,mode='show',row=0,solved={},bad='';var ROWS=['Ratio','Moles','Molar mass','Mass'];
+ return{title:'Ratios along the equation',q:'Read the coefficients along the equation. What is the mole ratio, and what mass does each mole amount have?',rule:['Coefficients give the ratio, for example 2 : 1 : 2.','The ratio is also in moles: 2 mol : 1 mol : 2 mol.','Mass = moles × molar mass (from n = m / M).','Total mass of reactants = total mass of products.'],
+ reads:function(){return [['Problems solved',Object.keys(solved).length+' / '+RB.length],['Row',ROWS[Math.min(row,3)]]];},
+ render:function(el){function draw(){var x=RB[idx],all=x.r.concat(x.p),nr=x.r.length;function vals(r,a){var n=a[1],M=mm2(a[0]);return r===0?String(n):r===1?n+' mol':r===2?M.toFixed(2)+' g/mol':(n*M).toFixed(2)+' g';}
+   var h='<div class="ptabs">'+RB.map(function(_,i){return '<button data-p="'+i+'" class="'+(i===idx?'on ':'')+(solved[i]?'done':'')+'">Problem '+(i+1)+'</button>';}).join('')+'</div><div class="bar-row" style="margin:0 0 10px"><div class="seg"><button id="mS"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mT"'+(mode==='try'?' class="on"':'')+'>My turn</button></div></div>';
+   h+='<div class="rbwrap"><table class="rb"><tr><th></th>';all.forEach(function(a,j){if(j)h+='<td class="sepc">'+(j===nr?'→':'+')+'</td>';h+='<td class="eqc">'+(a[1]>1?'<em>'+a[1]+'</em>':'')+fh(a[0])+'</td>';});h+='</tr>';
+   [0,1,2,3].forEach(function(r){if(r>row&&!(r===row))return;h+='<tr><th>'+ROWS[r]+'</th>';all.forEach(function(a,j){if(j)h+='<td class="sepc">'+(r<2?':':r===3?(j===nr?'=':'+'):'')+'</td>';var live=mode==='try'&&r===row&&row<4;if(live)h+='<td><input class="inp sm" id="R'+j+'" inputmode="decimal" autocomplete="off" aria-label="'+ROWS[r]+' of '+a[0]+'"></td>';else h+='<td class="v'+(r===row?' fresh':'')+'">'+vals(r,a)+'</td>';});h+='</tr>';});h+='</table></div>';
+   var A=x.r.reduce(function(s,a){return s+a[1]*mm2(a[0]);},0),B=x.p.reduce(function(s,a){return s+a[1]*mm2(a[0]);},0);
+   var T=['<b>Step 1: the ratio.</b> Read the coefficients along the equation. A formula with no number has a coefficient of 1.','<b>Step 2: moles.</b> The same numbers count moles: '+all.map(function(a){return a[1]+' mol';}).join(' : ')+'.','<b>Step 3: molar mass.</b> Work out the molar mass of each substance.','<b>Step 4: mass.</b> Use m = n × M for each substance. Reactants: '+A.toFixed(2)+' g. Products: '+B.toFixed(2)+' g. Mass is conserved.'];
+   var unit=['','mol','g/mol','g'][Math.min(row,3)];
+   if(mode==='show')h+='<div class="fb hint">'+T[row]+'</div><div class="bar-row"><button class="btn" id="bk"'+(row===0?' disabled':'')+'>Back</button><button class="btn fill" id="nx"'+(row>=3?' disabled':'')+'>Next</button></div>';
+   else if(row<4)h+='<div class="fb hint">'+['Write the ratio from the coefficients.','Write the moles of each substance (numbers only).','Find each molar mass, using the periodic table and calculator.','Multiply: mass = moles × molar mass.'][row]+'</div><div class="bar-row"><button class="btn fill" id="ck">Check</button></div><div class="fb bad" id="er">'+bad+'</div>';
+   else h+='<div class="fb ok"><b>Solved!</b> Reactants: '+A.toFixed(2)+' g = Products: '+B.toFixed(2)+' g. Mass is conserved.</div>';
+   el.innerHTML=h;
+   el.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){idx=+b.dataset.p;row=0;bad='';draw();refresh();};});
+   $('mS').onclick=function(){mode='show';row=0;bad='';draw();refresh();};$('mT').onclick=function(){mode='try';row=0;bad='';draw();refresh();};
+   if($('nx')){$('nx').onclick=function(){row++;draw();refresh();};$('bk').onclick=function(){row--;draw();refresh();};}
+   if($('ck'))$('ck').onclick=function(){var ok=true;all.forEach(function(a,j){var e=$('R'+j),v=parseFloat(e.value),t=[a[1],a[1],mm2(a[0]),a[1]*mm2(a[0])][row],tol=row<2?0:.006,g=isFinite(v)&&Math.abs(v-t)<=t*tol+1e-9;e.classList.toggle('no',!g);e.classList.toggle('ok',g);if(!g)ok=false;});if(ok){row++;bad='';if(row>=4)solved[idx]=1;draw();refresh();}else{$('er').textContent='Check the boxes in red.';}};}draw();}};}
+/* ---- 4.2 mass problems ---- */
+var SQ=[{eq:'2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O',rat:'2 : 1 : 2',t:'What mass of water forms from 4.04 g of H<sub>2</sub>?',g:4.04,a:'H2',af:2,b:'H2O',bf:2},{eq:'N<sub>2</sub> + 3H<sub>2</sub> → 2NH<sub>3</sub>',rat:'1 : 3 : 2',t:'What mass of ammonia forms from 28.0 g of N<sub>2</sub>?',g:28,a:'N2',af:1,b:'NH3',bf:2},{eq:'CH<sub>4</sub> + 2O<sub>2</sub> → CO<sub>2</sub> + 2H<sub>2</sub>O',rat:'1 : 2 : 1 : 2',t:'What mass of carbon dioxide forms from 32.1 g of CH<sub>4</sub>?',g:32.1,a:'CH4',af:1,b:'CO2',bf:1},{eq:'2Mg + O<sub>2</sub> → 2MgO',rat:'2 : 1 : 2',t:'What mass of magnesium oxide forms from 12.2 g of Mg?',g:12.2,a:'Mg',af:2,b:'MgO',bf:2}];
+function massProblems(){return practice({title:'From mass to mass, step by step',q:'You are given grams, but the equation counts moles. What must you do first?',rule:['Divide the given mass by its molar mass to get moles.','Use the ratio along the equation.','Multiply by the molar mass of the new substance to get its mass.'],list:SQ.map(function(q){return {n:'Mass to mass',t:q.t,head:'<div class="calc" style="text-align:center;margin:0 0 6px">'+q.eq+'<div class="small">Ratio '+q.rat+'</div></div>',stages:function(){var Ma=mm2(q.a),Mb=mm2(q.b),na=q.g/Ma,nb=na*q.bf/q.af,mb=nb*Mb;return [
+ {t:'Divide by molar mass',fields:[{k:'a',l:'n of '+fh(q.a)+' = m / M =',num:1,a:na,tol:.015,after:'mol'}],done:'n = '+sf(q.g)+' g / '+Ma.toFixed(2)+' g/mol = <b>'+sf(na)+' mol '+fh(q.a)+'</b>'},
+ {t:'Use the ratio',fields:[{k:'b',l:'Moles of '+fh(q.b)+' =',num:1,a:nb,tol:.015,after:'mol'}],done:'Ratio '+fh(q.a)+' : '+fh(q.b)+' = '+q.af+' : '+q.bf+', so <b>'+sf(nb)+' mol '+fh(q.b)+'</b>'},
+ {t:'Multiply by molar mass',fields:[{k:'c',l:'m of '+fh(q.b)+' = n × M =',num:1,a:mb,tol:.015,after:'g'}],done:'m = moles × '+Mb.toFixed(2)+' g/mol = <b>'+sf(mb)+' g '+fh(q.b)+'</b>'}];}};})});}
+/* ---- 4.2 quiz ---- */
+var QZ=[['How many oxygen atoms are shown in 2Al<sub>2</sub>O<sub>3</sub>?',['3','5','6','12'],2,'2 × 3 = 6. The coefficient multiplies the subscript.'],
+['When balancing an equation, what may you change?',['Subscripts','Coefficients','Both','Neither'],1,'Changing a subscript changes the substance.'],
+['What is the coefficient of Fe in the balanced equation for Fe + O<sub>2</sub> → Fe<sub>2</sub>O<sub>3</sub>?',['1','2','3','4'],3,'4Fe + 3O<sub>2</sub> → 2Fe<sub>2</sub>O<sub>3</sub>.'],
+['How many moles of oxygen atoms are in 1.5 mol CO<sub>2</sub>?',['1.5 mol','2.0 mol','3.0 mol','6.0 mol'],2,'1.5 × 2 = 3.0 mol O.'],
+['The representative particle of KCl is the:',['atom','molecule','formula unit','ion'],2,'KCl is an ionic compound, so we count formula units.'],
+['What is the molar mass of CO<sub>2</sub>?',['28.01 g/mol','44.01 g/mol','32.00 g/mol','60.01 g/mol'],1,'12.01 + 2(16.00) = 44.01 g/mol.'],
+['What is the mass of 2.00 mol Na?',['11.5 g','23.0 g','46.0 g','1.20 × 10<sup>24</sup> g'],2,'2.00 mol × 22.99 g/mol = 46.0 g.'],
+['How many moles are in 3.01 × 10<sup>23</sup> atoms of Fe?',['0.500 mol','2.00 mol','1.81 mol','27.9 mol'],0,'3.01 × 10<sup>23</sup> ÷ 6.02 × 10<sup>23</sup> = 0.500 mol.'],
+['To change grams into atoms, you must first change grams into:',['liters','moles','molecules','kilograms'],1,'Moles is the bridge on the map.'],
+['In N<sub>2</sub> + 3H<sub>2</sub> → 2NH<sub>3</sub>, how many moles of H<sub>2</sub> react with 2 mol N<sub>2</sub>?',['2 mol','3 mol','4 mol','6 mol'],3,'The ratio is 1 : 3, so 2 × 3 = 6 mol H<sub>2</sub>.']];
+function quiz(){var i=0,sc=0,pick=null,res=[];return{title:'Quick check',q:'Answer without notes first. Read the explanation after each question.',
+ rule:['Balance by coefficients.','Moles is the bridge.','Hide what you want in the triangle.'],
+ render:function(el){function draw(){if(i>=QZ.length){var pct=sc/QZ.length;el.innerHTML='<div class="vis" style="flex-direction:column"><div style="font-family:Fredoka,sans-serif;font-size:44px;font-weight:600;color:var(--accent)">'+sc+' / '+QZ.length+'</div><div style="font-size:19px">'+(pct>=.8?'Excellent work!':pct>=.6?'Good effort. Review the questions you missed.':'Go back through the lab and try again.')+'</div></div><div class="bar-row"><button class="btn fill" id="rs">Try again</button></div>';$('rs').onclick=function(){i=0;sc=0;pick=null;res=[];draw();refresh();};return;}
+   var q=QZ[i],h='<div class="qz"><div class="small">Question '+(i+1)+' of '+QZ.length+' &nbsp; '+QZ.map(function(_,j){return '<span class="dot'+(res[j]===1?' g':res[j]===0?' r':'')+'"></span>';}).join('')+'</div><div class="task" style="margin-top:8px">'+q[0]+'</div>';q[1].forEach(function(o,j){var c=pick===null?'':j===q[2]?' ok':j===pick?' no':'';h+='<button class="opt o'+c+'" data-o="'+j+'">'+o+'</button>';});if(pick!==null)h+='<div class="fb '+(pick===q[2]?'ok':'bad')+'">'+q[3]+'</div><div class="bar-row"><button class="btn fill" id="nx">'+(i<QZ.length-1?'Next':'See score')+'</button></div>';el.innerHTML=h+'</div>';
+   el.querySelectorAll('[data-o]').forEach(function(b){b.onclick=function(){if(pick!==null)return;pick=+b.dataset.o;var g=pick===q[2];res[i]=g?1:0;if(g)sc++;draw();refresh();};});var n=$('nx');if(n)n.onclick=function(){i++;pick=null;draw();refresh();};}draw();},
+ reads:function(){return [['Question',Math.min(i+1,QZ.length)+' / '+QZ.length],['Score',sc]];}};}
+/* ---- shell ---- */
+var TABS=[
+{n:'Balancing',c:'#0f8b8d',hash:'balancing',steps:[['Why balance?',discover()],['Three steps',balFlow({list:BEX,mode:'show',title:'Balancing in three steps',q:'Follow the three steps. Where does the multiplier end up in the equation?'})],['Practice',balFlow({list:BP,mode:'try',title:'Practice: balance it yourself',q:'List the atoms, count them, then balance by trial and error.'})]]},
+{n:'The Mole',c:'#2b59c3',hash:'mole',steps:[['Counting unit',unitLab()],['Particles',dual(partLab(),practice({title:'Particles: my turn',q:'What is the particle? How does the formula tell you the atoms inside?',rule:['Atom, molecule or formula unit.','Moles of an atom = moles × its subscript.'],noSeg:true,list:PPROB}))],['Molar mass',dual(massBuild(),practice({title:'Molar mass: my turn',q:'Use the periodic table and the calculator. Which number gets multiplied by the subscript?',rule:['Molar mass = the sum of (atomic mass × number of atoms).','Unit: g/mol.'],noSeg:true,list:MPROB}))],['On a balance',scaleLab()]]},
+{n:'Conversions',c:'#8a4fbf',hash:'conversions',steps:[['Triangle trick',dual(triLab(),triPractice())],['The map',mapLab()],['Practice',convPractice()]]},
+{n:'Put It Together',c:'#d9822b',hash:'together',steps:[['Ratios',ratioBoard()],['Mass problems',massProblems()],['Quick check',quiz()]]}];
+var tabI=0,stepI=0,cur;
+function refresh(){var r=cur.reads?cur.reads():[];$('reads').innerHTML=r.map(function(x){return '<div class="rd'+(x[2]?' wide':'')+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join('');}
+function go(t,s){tabI=t;stepI=s||0;var T=TABS[t];cur=T.steps[stepI][1];document.documentElement.style.setProperty('--accent',T.c);
+ $('tabs').innerHTML=TABS.map(function(x,i){return '<button class="tab'+(i===t?' on':'')+'" style="--c:'+x.c+'" data-i="'+i+'"><i></i>'+x.n+'</button>';}).join('');
+ $('tabs').querySelectorAll('button').forEach(function(b){b.onclick=function(){go(+b.dataset.i,0);};});
+ $('steps').innerHTML=T.steps.map(function(x,i){return '<button class="step'+(i===stepI?' on':'')+'" data-i="'+i+'"><b>'+(i+1)+'</b>'+x[0]+'</button>';}).join('');
+ $('steps').querySelectorAll('button').forEach(function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});
+ $('stitle').textContent=cur.title;$('q').textContent=cur.q;
+ $('rule').innerHTML='<button class="btn" id="showRule">I have an idea: show the rule</button>';$('showRule').onclick=function(){$('rule').innerHTML='<ul>'+cur.rule.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>';};
+ cur.render($('view'));refresh();if(location.hash.slice(1)!==T.hash)history.replaceState(null,'','#'+T.hash);}
+var hi=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+window.addEventListener('hashchange',function(){var k=TABS.map(function(t){return t.hash;}).indexOf(location.hash.slice(1));if(k>=0&&k!==tabI)go(k,0);});
+})();
+</script>
+<div class="dock"><button class="btn" id="oP">Periodic table</button><button class="btn" id="oC">Calculator</button></div>
+<div class="tool" id="ptool"><h3>Periodic table <button id="xP" aria-label="close">×</button></h3><div class="pgrid" id="pgrid"></div></div>
+<div class="tool" id="ctool"><h3>Calculator <button id="xC" aria-label="close">×</button></h3><div id="cdisp"><small></small><span>0</span></div><div class="cgrid" id="cgrid"></div></div>
+<script>
+(function(){"use strict";
+var E="H 1.008,He 4.003,Li 6.941,Be 9.012,B 10.811,C 12.011,N 14.007,O 15.999,F 18.998,Ne 20.180,Na 22.990,Mg 24.305,Al 26.982,Si 28.086,P 30.974,S 32.06,Cl 35.45,Ar 39.948,K 39.098,Ca 40.078,Sc 44.956,Ti 47.867,V 50.942,Cr 51.996,Mn 54.938,Fe 55.845,Co 58.933,Ni 58.693,Cu 63.546,Zn 65.38,Ga 69.723,Ge 72.630,As 74.922,Se 78.971,Br 79.904,Kr 83.798,Rb 85.468,Sr 87.62,Y 88.906,Zr 91.224,Nb 92.906,Mo 95.95,Tc (98),Ru 101.07,Rh 102.906,Pd 106.42,Ag 107.868,Cd 112.414,In 114.818,Sn 118.710,Sb 121.760,Te 127.60,I 126.904,Xe 131.293,Cs 132.905,Ba 137.327,La 138.905,Ce 140.116,Pr 140.908,Nd 144.242,Pm (145),Sm 150.36,Eu 151.964,Gd 157.25,Tb 158.925,Dy 162.500,Ho 164.930,Er 167.259,Tm 168.934,Yb 173.045,Lu 174.967,Hf 178.49,Ta 180.948,W 183.84,Re 186.207,Os 190.23,Ir 192.217,Pt 195.08,Au 196.967,Hg 200.59,Tl 204.38,Pb 207.2,Bi 208.980,Po (209),At (210),Rn (222),Fr (223),Ra (226),Ac (227),Th 232.038,Pa 231.036,U 238.029,Np (237),Pu (244),Am (243),Cm (247),Bk (247),Cf (251),Es (252),Fm (257),Md (258),No (259),Lr (262),Rf (267),Db (268),Sg (271),Bh (272),Hs (270),Mt (276),Ds (281),Rg (280),Cn (285),Nh (284),Fl (289),Mc (288),Lv (293),Ts (294),Og (294)".split(',');
+function pos(z){if(z===1)return[1,1];if(z===2)return[1,18];if(z<=4)return[2,z-2];if(z<=10)return[2,z+8];if(z<=12)return[3,z-10];if(z<=18)return[3,z];if(z<=36)return[4,z-18];if(z<=54)return[5,z-36];if(z<=56)return[6,z-54];if(z<=71)return[8,z-54];if(z<=86)return[6,z-68];if(z<=88)return[7,z-86];if(z<=103)return[9,z-86];return[7,z-100];}
+var NON=[1,6,7,8,9,15,16,17,34,35,53],NOB=[2,10,18,36,54,86,118];
+var g=document.getElementById('pgrid'),h='';E.forEach(function(x,i){var z=i+1,p=x.split(' '),c=pos(z),k=NOB.indexOf(z)>=0?'noble':NON.indexOf(z)>=0?'non':(z>=57&&z<=71||z>=89&&z<=103)?'lan':'met';h+='<div class="pel '+k+'" style="grid-row:'+(c[0]>7?c[0]+1:c[0])+';grid-column:'+c[1]+'"><span>'+z+'</span><b>'+p[0]+'</b>'+p[1]+'</div>';});h+='<div style="grid-row:8;grid-column:1/-1;height:8px"></div>';g.innerHTML=h;
+function tog(a,b){return function(){var t=document.getElementById(a);t.classList.toggle('on');if(t.classList.contains('on')&&a==='ptool')document.getElementById('ctool').classList.remove('on');};}
+document.getElementById('oP').onclick=tog('ptool');document.getElementById('oC').onclick=tog('ctool');
+document.getElementById('xP').onclick=function(){document.getElementById('ptool').classList.remove('on');};document.getElementById('xC').onclick=function(){document.getElementById('ctool').classList.remove('on');};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.getElementById('ptool').classList.remove('on');document.getElementById('ctool').classList.remove('on');}});
+/* calculator */
+var ex='',ans=0,fresh=false,hist='';var K=[['7'],['8'],['9'],['÷','o'],['4'],['5'],['6'],['×','o'],['1'],['2'],['3'],['−','o'],['0'],['.'],['×10ⁿ','o'],['+','o'],['(','o'],[')','o'],['⌫','o'],['C','o'],['Nₐ','o'],['Ans','o'],['=','e']];
+var cg=document.getElementById('cgrid');cg.innerHTML=K.map(function(k,i){return '<button class="'+(k[1]||'')+'" data-k="'+i+'"'+(k[0]==='='?' style="grid-column:span 2"':'')+'>'+k[0].replace('Nₐ','N<sub>A</sub>')+'</button>';}).join('');
+function calc(s){var t=s.match(/\d*\.?\d+(?:E[−-]?\d+)?|[+−×÷()]/g)||[],i=0;if(t.join('')!==s)throw 1;function P(){var v=T();while(t[i]==='+'||t[i]==='−'){var o=t[i++],w=T();v=o==='+'?v+w:v-w;}return v;}function T(){var v=F();while(t[i]==='×'||t[i]==='÷'){var o=t[i++],w=F();v=o==='×'?v*w:v/w;}return v;}function F(){if(t[i]==='−'){i++;return -F();}if(t[i]==='('){i++;var v=P();if(t[i++]!==')')throw 1;return v;}if(i>=t.length)throw 1;var n=parseFloat(t[i++].replace('−','-'));if(isNaN(n))throw 1;return n;}var r=P();if(i!==t.length)throw 1;return r;}
+function fmt(x){if(!isFinite(x))return 'Error';if(x===0)return '0';var a=Math.abs(x);if(a>=1e7||a<1e-3){var e=Math.floor(Math.log10(a)),m=x/Math.pow(10,e);return (+m.toFixed(4))+' × 10<sup>'+e+'</sup>';}return String(+x.toPrecision(7));}
+function show(html){var d=document.getElementById('cdisp');d.querySelector('small').innerHTML=hist;d.querySelector('span').innerHTML=html||'0';}
+function pretty(s){return s.replace(/\d+\.\d{7,}/g,function(n){return String(+(+n).toPrecision(6));}).replace(/E(−?-?\d*)/g,' × 10^$1');}
+cg.onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var k=K[+b.dataset.k][0];
+ if(k==='C'){ex='';hist='';show('0');return;}
+ if(k==='⌫'){ex=ex.slice(0,-1);show(pretty(ex));return;}
+ if(k==='='){try{ans=calc(ex);hist=pretty(ex)+' =';show(fmt(ans));ex='';fresh=true;}catch(e){hist='';show('Check your entry');}return;}
+ var numeric=/^[\d.]$/.test(k);if(fresh&&!numeric&&k!=='('&&k!=='Ans'&&k!=='Nₐ'&&k!=='×10ⁿ'){ex=String(ans).replace('e+','E').replace('e-','E−').toUpperCase();}fresh=false;
+ if(k==='×10ⁿ')ex+='E';else if(k==='Nₐ')ex+='6.02E23';else if(k==='Ans')ex+=String(ans).replace('e+','E').replace('e-','E−').toUpperCase();else ex+=k;show(pretty(ex));};
+})();
+</script>
+<script src="student-visits.js"></script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
