@@ -336,7 +336,7 @@ function done(ok,q,correctText){
   let gain=0;
   if(ok){streak++;gain=100+(streak>=3?25*Math.min(streak-2,4):0);score+=gain;}
   else{streak=0;document.getElementById('card').classList.add('shake');}
-  results.push({q,ok,correctText}); if(window.MSMLive)MSMLive.row({part:'Q'+(i+1),score:gain,correct:ok?1:0,total:1,missed:ok?'':String(q.q).replace(/<[^>]+>/g,'').slice(0,120)});
+  results.push({q,ok,correctText}); if(window.MSMLive)MSMLive.row({part:[...STAGES].reverse().find(x=>i>=x.from).n+' | '+q.skill+' | Q'+(i+1)+' '+MSMLive.short(q.q,80),score:gain,correct:ok?1:0,total:1,missed:ok?'':(correctText?'Answer: '+MSMLive.short(correctText,100):'Wrong')});
   document.getElementById('fb').innerHTML=`<div class="fb ${ok?'good':'bad'}"><b class="t">${ok?'Correct!':'Not quite'} ${ok?`<span class="pts">+${gain}</span>`:''}</b>
     ${!ok&&correctText?`<div>Answer: <b>${F(correctText)}</b></div>`:''}<div>${F(q.x)}</div></div>`;
   actions(`<button class="btn go" id="nx">${i+1<Q.length?'Next question →':'See my results'}</button>`);

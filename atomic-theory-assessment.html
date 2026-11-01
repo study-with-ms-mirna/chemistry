@@ -348,7 +348,7 @@ function maxOf(b){return b.type==="mcq"?1:b.type==="sort"?b.items.length:b.type=
 PARTS.forEach((p,i)=>p.blocks.forEach(b=>partMax[i]+=maxOf(b)));
 const TOTAL=partMax.reduce((a,b)=>a+b,0);
 function award(part,id,got,max){const first=!marks[id];marks[id]={part,got,max};update();
-  if(first&&window.MSMLive)MSMLive.row({part:'Part '+(part+1),score:got,correct:got,total:max,missed:got<max?id+' '+got+'/'+max:''});
+  if(first&&window.MSMLive){const bi=+String(id).split('_')[1],bk=PARTS[part].blocks[bi]||{};MSMLive.row({part:'Part '+(part+1)+' '+PARTS[part].key+' | Item '+String(id).replace(/^\d+_/,'')+' '+MSMLive.short(bk.q||bk.title||bk.prompt||'',80),score:got,correct:got,total:max,missed:got<max?got+' of '+max+' marks':''});}
   if(first&&Object.values(marks).reduce((a,m)=>a+m.max,0)>=TOTAL&&!sendB.disabled)sendB.click();}
 function partScore(i){let g=0,d=0;for(const m of Object.values(marks))if(m.part===i){g+=m.got;d+=m.max;}return{g,d};}
 

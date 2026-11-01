@@ -218,7 +218,7 @@ function pick(){
   $('next').disabled=false;
 }
 $('next').addEventListener('click',function(){
-  var lq=st.list[st.i],lok=st.ans[st.i]===lq.c;if(window.MSMLive)MSMLive.row({part:modeName()+' Q'+lq.n,score:lok?100:0,correct:lok?1:0,total:1,missed:lok?'':String(lq.stem).slice(0,120)});
+  var lq=st.list[st.i],lok=st.ans[st.i]===lq.c;if(window.MSMLive)MSMLive.row({part:IND[lq.ind]+' | '+modeName()+' | Q'+lq.n+' '+MSMLive.short(lq.stem,80),score:lok?100:0,correct:lok?1:0,total:1,missed:lok?'':'Chose: '+(st.ans[st.i]==null?'none':'ABCD'[st.ans[st.i]])+' · Answer: '+'ABCD'[lq.c]});
   if(st.i<st.list.length-1){st.i++;show();} else finish(false);
 });
 function finish(timeUp){
