@@ -246,6 +246,8 @@ sub{font-size:.65em}
 @keyframes lvpulse{50%{transform:scale(1.05)}}
 #lvChip .btn{padding:6px 12px;font-size:14px;border-color:#2b59c3;background:#2b59c3;color:#fff}
 .lvc-m{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+#lvChip .btn.lvx{background:#fff;color:#d8434a;border-color:#d8434a}
+@media (max-width:560px){#lvChip{flex-wrap:wrap;justify-content:center;border-radius:20px}}
 #lvChip .lvc-c{border-color:#2b59c3}#lvChip .lvc-c.on{background:#eef3fc}
 #calc{position:fixed;right:14px;bottom:76px;z-index:9997;width:272px;max-width:calc(100vw - 28px);background:#fff;border:2px solid var(--line);border-radius:20px;box-shadow:0 6px 0 var(--shadow),0 10px 30px rgba(24,35,58,.15);padding:10px;display:none;font-family:Fredoka,sans-serif;outline:none}
 #calc.on{display:block;animation:pop .25s}
@@ -731,6 +733,7 @@ function lvStartHtml(){var me={};try{me=JSON.parse(localStorage.getItem('msm-stu
   '<div class="namerow"><label for="lvCls">Class</label><select id="lvCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===me.cls?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
   '<div class="exerr" id="lvErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="lvStart">Start the live session ▶</button></div></div>';}
 function lvWelcomeHtml(){var t=totals();return '<div class="qz"><div class="lv-hero">'+swIcon(60)+'<div><div class="lbl">Live session · Chapter 16.3</div><div class="lv-big">Welcome back, '+esc(firstName())+'!</div><div>'+esc(LV.player.name)+' · '+esc(LV.player.cls)+' · '+t.pts+' points so far</div></div></div>'+
+ (LV.exited?'<div class="task" style="margin-top:12px"><b>You left the live session.</b> The timer has stopped and your answers are saved. You can use the other tabs, then press Continue to pick up with the same time left.</div>':'')+
  '<div class="stepbar"><button class="btn fill" id="lvCont">'+(LV.done?'See my results ▶':'Continue: '+PARTS[LV.part].name+' ▶')+'</button><button class="btn" id="lvReset">Not you? Start over</button></div></div>';}
 function lvIntroHtml(p){var i=PARTS.indexOf(p),prev=PARTS[i-1],h='<div class="qz">';
  if(prev&&prev.secs&&LV.just===prev.id){var st=partStats(prev),tm=partTime(prev),beat=tm<=prev.secs;
@@ -780,12 +783,15 @@ function lvNext(p){LV.idx++;T5.pk={};T5.pkFor=null;T5.showSent=false;
  LV.ps[p.id].end=Date.now();LV.idx=0;LV.part++;LV.just=p.id;
  if(PARTS[LV.part].id==='end')lvFinish();else{SFX.part();rain(140);}
  lvSave();go(LIVE_T,LV.part);}
+/* exit: stop the clock and hide the timer; answers stay saved, and Continue picks up with the same time left */
+function lvExit(){LV.exited=Date.now();lvSave();calcOpen(false);go(LIVE_T,0);window.scrollTo(0,0);}
+function lvResume(){if(!LV.exited)return;var d=Date.now()-LV.exited,p=PARTS[LV.part],ps=LV.ps[p.id];if(ps&&ps.start&&!ps.end)ps.start+=d;LV.t0+=d;LV.exited=null;lvSave();}
 function lvReset(){if(!window.confirm('Start over? Your answers on this device will be cleared.'))return;var m=LV.mute,q=LV.q;LV=lvNew();LV.mute=m;LV.q=q;lvSave();go(LIVE_T,0);}
 
 var T5={name:'Live session',c:BLUE,steps:PARTS.map(function(p){return p.name;}),pk:{},pkFor:null,hintOn:false,
  mark:function(i){return LV.player&&(i<LV.part||LV.done)?'✓':i+1;},
  lock:function(i){return i>(LV.player?LV.part:0);},
- fix:function(s){return Math.min(s,LV.player?LV.part:0);},
+ fix:function(s){return LV.exited?0:Math.min(s,LV.player?LV.part:0);},
  title:function(s){return ['Live session: get ready','Warm-up: refresh your memory','Challenge 1: find n by comparing trials 1 and 2','Challenge 2: find m by comparing trials 2 and 3','Exit ticket','Well done!'][s];},
  enter:function(s){this.s=s;$('cv').style.display='none';$('controls').innerHTML='';this.render();},
  render:function(){var s=this.s,p=PARTS[s],h;
@@ -806,7 +812,7 @@ var T5={name:'Live session',c:BLUE,steps:PARTS.map(function(p){return p.name;}),
   if($('mini'))miniInit(p.items[LV.idx]);
   if((b=$('lvHint')))b.onclick=function(){var r=R(p.items[LV.idx]);me.hintOn=!me.hintOn;if(me.hintOn&&!r.hint){r.hint=true;lvSave();}$('lvHintBox').classList.toggle('on',me.hintOn);b.textContent=me.hintOn?'Hide hint':'Hint';};
   if((b=$('lvGo')))b.onclick=function(){LV.ps[p.id]={start:Date.now()};LV.just=null;lvSave();SFX.go();me.render();};
-  if((b=$('lvCont')))b.onclick=function(){go(LIVE_T,LV.part);};
+  if((b=$('lvCont')))b.onclick=function(){lvResume();go(LIVE_T,LV.part);};
   if((b=$('lvReset')))b.onclick=lvReset;
   if((b=$('lvStart'))){var nm=$('lvName'),cl=$('lvCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('lvErr');nm.classList.remove('no');cl.classList.remove('no');
     if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}
@@ -815,7 +821,7 @@ var T5={name:'Live session',c:BLUE,steps:PARTS.map(function(p){return p.name;}),
     LV.code='RL-'+Math.random().toString(36).slice(2,6).toUpperCase();
     lvSend({game:'Joined',score:0,correct:0,total:0,missed:'Started the live session'});SFX.go();go(LIVE_T,1);};
    b.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}},
- frame:function(dt){miniFrame(dt);if(!LV.player){setReads([['Status','Type your name to start',1]]);return;}var t=totals(),p=PARTS[LV.part],ps=p&&LV.ps[p.id],left=p&&p.secs&&ps&&ps.start?p.secs-(Date.now()-ps.start)/1000:null;
+ frame:function(dt){miniFrame(dt);if(!LV.player){setReads([['Status','Type your name to start',1]]);return;}var t=totals(),p=PARTS[LV.part],ps=p&&LV.ps[p.id],left=!LV.exited&&p&&p.secs&&ps&&ps.start?p.secs-(Date.now()-ps.start)/1000:null;
   setReads([['Points',t.pts+' / '+t.max],['Correct',t.c+' / '+t.ans],['Now',LV.done?'Finished':p.name,1],['Time left',left==null?'–':(left>=0?mmss(Math.ceil(left)):'over by '+mmss(-left)),1]]);}
 };
 
@@ -902,11 +908,11 @@ function calcBuild(){var c=document.createElement('div');c.id='calc';c.setAttrib
 var lastTick=-1;
 function lvChip(){var c=document.createElement('div');c.id='lvChip';
  c.innerHTML='<svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><rect x="15" y="0" width="8" height="5" rx="2" fill="#18233a"/><circle cx="19" cy="22" r="14" fill="#fff" stroke="#e6ebf3" stroke-width="4"/><circle id="lvRing" cx="19" cy="22" r="14" fill="none" stroke="#2b59c3" stroke-width="4" stroke-linecap="round" transform="rotate(-90 19 22)" stroke-dasharray="88 88"/><path d="M19 22 V14" stroke="#18233a" stroke-width="2.5" stroke-linecap="round"/></svg>'+
-  '<div class="lvc-t"><span id="lvcPart"></span><b id="lvcTime"></b></div><button class="btn" id="lvcBack">Back to my questions</button><button class="lvc-m lvc-c" id="lvcCalc" title="Calculator" aria-label="Open the calculator">'+CALC_ICON+'</button><button class="lvc-m" id="lvcMute" title="Sound on or off" aria-label="Sound on or off"></button>';
- document.body.appendChild(c);$('lvcBack').onclick=function(){go(LIVE_T,LV.part);window.scrollTo(0,0);};
+  '<div class="lvc-t"><span id="lvcPart"></span><b id="lvcTime"></b></div><button class="btn" id="lvcBack">Back to my questions</button><button class="btn lvx" id="lvcExit" title="Pause the timer and leave the live session">Exit live session</button><button class="lvc-m lvc-c" id="lvcCalc" title="Calculator" aria-label="Open the calculator">'+CALC_ICON+'</button><button class="lvc-m" id="lvcMute" title="Sound on or off" aria-label="Sound on or off"></button>';
+ document.body.appendChild(c);$('lvcBack').onclick=function(){go(LIVE_T,LV.part);window.scrollTo(0,0);};$('lvcExit').onclick=lvExit;
  calcBuild();
  $('lvcMute').onclick=function(){LV.mute=!LV.mute;lvSave();this.innerHTML=spk(!LV.mute);if(!LV.mute)SFX.go();};$('lvcMute').innerHTML=spk(!LV.mute);}
-function lvTick(){var c=$('lvChip'),on=!!(LV.player&&!LV.done);c.style.display=on?'flex':'none';if(!on)return;
+function lvTick(){var c=$('lvChip'),on=!!(LV.player&&!LV.done&&!LV.exited);c.style.display=on?'flex':'none';if(!on)return;
  var p=PARTS[LV.part],t=LV.ps[p.id],ring=$('lvRing');$('lvcBack').style.display=tabI===LIVE_T&&stepI===LV.part?'none':'';$('lvcPart').textContent=p.name;
  if(!p.secs||!t||!t.start){$('lvcTime').textContent='Ready?';c.className='';ring.setAttribute('stroke-dashoffset','0');return;}
  var left=p.secs-(Date.now()-t.start)/1000;
