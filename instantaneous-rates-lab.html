@@ -99,7 +99,7 @@ sub{font-size:.65em}
 .qb.right{border-color:#2e9e5b;background:#e8f6ee}.qb.right .L{background:#2e9e5b;color:#fff}
 .qb.wrong{border-color:#d8434a;background:#fdeeee}.qb.wrong .L{background:#d8434a;color:#fff}
 .mq{margin-top:12px}
-.mq>b{font-size:18px}
+.qz.mq{margin-top:10px}.qzq.mqq{font-size:18px;font-weight:700;margin:0 0 6px;line-height:1.4}
 .note{margin-top:8px;font-size:16.5px}
 .good{color:#2e9e5b;font-weight:700}.bad{color:#d8434a;font-weight:700}
 .dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
@@ -152,6 +152,11 @@ sub{font-size:.65em}
 .calc-k .clr{color:#d8434a}
 .calc-tip{font-size:12.5px;color:var(--muted);margin-top:8px;font-family:'Atkinson Hyperlegible',sans-serif;line-height:1.35}
 #conf{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:transparent;border-radius:0}
+#xChip{position:fixed;right:14px;top:14px;z-index:9996;display:none;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}
+#xChip span{font-size:13px;color:var(--muted)}#xChip b{font-size:20px;font-weight:600;color:#2b59c3}
+#xChip.warn{border-color:#e8962a}#xChip.warn b{color:#e8962a}
+#xChip.over{border-color:#d8434a}#xChip.over b{color:#d8434a}
+#xChip .btn{padding:4px 10px;font-size:14px}
 </style>
 </head>
 <body>
@@ -237,9 +242,10 @@ function cfRun(){if(cfOn)return;cfOn=true;var last=performance.now();(function s
 
 /* ---- shared question helpers ---- */
 /* multiple choice: M={q,o,a,w}, picks stored on M.p; one try */
-function mqHtml(M,i){var p=M.p;return '<div class="mq"><b>'+M.q+'</b><div class="opts'+(M.one?' one':'')+'">'+M.o.map(function(o,j){var c=p==null?'':(j===M.a?' right':(j===p?' wrong':''));return '<button class="qb'+c+'" data-m="'+i+'" data-o="'+j+'"'+(p==null?'':' disabled')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+o+'</span></button>';}).join('')+'</div>'+
- (p==null?'':'<div class="note">'+(p===M.a?'<span class="good">Correct!</span> ':'<span class="bad">Not quite.</span> ')+M.w+'</div>')+'</div>';}
-function mqBind(L,rerender){each('[data-m]',function(b){b.onclick=function(){var M=L[+b.getAttribute('data-m')],j=+b.getAttribute('data-o');M.p=j;if(j===M.a)SFX.good();else SFX.bad();rerender();};});}
+function mqHtml(M,i){var p=M.p;return '<div class="qz mq"><div class="qzq mqq">'+M.q+'</div><div class="opts'+(M.one?' one':'')+'">'+M.o.map(function(o,j){var c=p==null?'':(j===M.a?' right':(j===p?' wrong':''));return '<button class="qb'+c+'" data-m="'+i+'" data-o="'+j+'"'+(p==null?'':' disabled')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+o+'</span></button>';}).join('')+'</div>'+
+ (p==null?'':'<div class="note">'+(p===M.a?'<span class="good">'+(M.shown?'✓ Right.':'Correct!')+'</span> ':'<span class="bad">'+(M.shown?'✗ Review:':'Not quite.')+'</span> ')+M.w+'</div>')+'</div>';}
+/* answered questions redraw as 'Right' or 'Review', so the results get one row per answer */
+function mqBind(L,rerender){L.forEach(function(M){if(M.p!=null)M.shown=1;});each('[data-m]',function(b){b.onclick=function(){var M=L[+b.getAttribute('data-m')],j=+b.getAttribute('data-o');M.p=j;if(j===M.a)SFX.good();else SFX.bad();rerender();};});}
 /* typed numbers: m × 10^e (the power box may stay empty) */
 function kVal(m,e){var a=String(m).trim().replace(/−/g,'-').replace(/,/g,'.').replace(/\s/g,''),b=String(e==null?'':e).trim().replace(/[−–]/g,'-');
  var v=/^-?\d*\.?\d+(e-?\d+)?$/i.test(a)?parseFloat(a):NaN;if(b==='')b='0';var en=/^-?\d+$/.test(b)?parseInt(b,10):NaN;return v*Math.pow(10,en);}
@@ -513,13 +519,16 @@ var XQ=[{q:'A car’s speedometer reading is most like which rate of a reaction?
  {q:'In a mechanism, Cl reacts in Step 1 and is formed again in Step 3. Cl is…',o:['a catalyst','an intermediate','a product','the rate-determining step'],a:0,w:'A catalyst is used, then re-formed.'},
  {q:'What is the rate-determining step?',o:['The slowest elementary step','The fastest elementary step','The first step','The last step'],a:0,w:'A reaction cannot go faster than its slowest step.'},
  {q:'True or false? A step with a higher activation energy is a faster step.',o:['True','False'],a:1,w:'Higher activation energy → slower step.'}];
+/* the right answer lands on a random letter, never the same letter twice in a row */
+function placeAns(q,prev){var n=q.o.length,pos;do{pos=Math.floor(Math.random()*n);}while(n>1&&pos===prev);var rest=shuffle(q.o.map(function(_,k){return k;}).filter(function(k){return k!==q.a;}));rest.splice(pos,0,q.a);return {ord:rest,pos:pos};}
+function mixL(L){var prev=-1;L.forEach(function(M){var r=placeAns(M,prev);prev=r.pos;M.o=r.ord.map(function(k){return M.o[k];});M.a=r.pos;});}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 var EX={player:null,i:0,score:0,pick:null,hist:[],done:false,sent:false};
-function exStart(){EX.i=0;EX.score=0;EX.pick=null;EX.hist=[];EX.done=false;EX.sent=false;EX.t0=Date.now();EX.ord=XQ.map(function(q){return q.o[1]==='False'?[0,1]:shuffle(q.o.map(function(_,k){return k;}));});}
+function exStart(){EX.i=0;EX.score=0;EX.pick=null;EX.hist=[];EX.done=false;EX.sent=false;EX.t0=Date.now();var prev=-1;EX.ord=XQ.map(function(q){if(q.o[1]==='False')return [0,1];var r=placeAns(q,prev);prev=r.pos;return r.ord;});}
 function exDots(){return '<div class="qzdots">'+XQ.map(function(_,k){var h=EX.hist[k];return '<i class="'+(h===true?'ok':h===false?'no':(k===EX.i&&!EX.done?'cur':''))+'"></i>';}).join('')+'</div>';}
 function exHtml(){var N=XQ.length;
  if(!EX.player){var me={};try{me=JSON.parse(localStorage.getItem('msm-student')||'{}')||{};}catch(e){}var nm=EX.last?EX.last.name:(me.name||''),cl=EX.last?EX.last.cls:(me.cls||'');
-  return '<div class="qz"><div class="lbl">Exit ticket · Chapter 16.4</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+N+' questions. One try per question.</div><div class="namerow"><label for="exN">Your full name</label><input id="exN" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div><div class="namerow"><label for="exC">Class</label><select id="exC"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="exerr" id="exE" role="alert"></div><div class="stepbar"><button class="btn fill" id="exG">Start the exit ticket ▶</button></div></div>';}
+  return '<div class="qz"><div class="lbl">Exit ticket · Chapter 16.4</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+N+' questions. One try per question. You have 15 minutes.</div><div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div><div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="exerr" id="exE" role="alert"></div><div class="stepbar"><button class="btn fill" id="exG">Start the exit ticket ▶</button></div></div>';}
  if(EX.done){var pct=EX.score/N,msg=pct>=.8?'Excellent work today!':pct>=.6?'Good effort. Review the questions you missed.':'Review this lesson again before the next class.';
   return '<div class="qz qzend"><div class="lbl">Exit ticket · Chapter 16.4 Rates and mechanisms</div><div class="big">Congratulations, '+esc(EX.player.name.split(' ')[0])+'!</div><div class="small">'+esc(EX.player.name)+' · '+esc(EX.player.cls)+' · '+EX.res.when+' · check code '+EX.res.code+'</div><div class="qzbig">'+EX.score+' / '+N+'</div><div>'+msg+'</div>'+exDots()+
    '<div class="stepbar"><span class="sendst'+(EX.sent?' ok':'')+'" id="exS">'+(EX.sent?'✓ Your result was sent to your teacher.':'Sending your result to your teacher…')+'</span><button class="btn" id="exRt" style="display:none">Send again</button></div>'+
@@ -543,7 +552,7 @@ function exRender(){$('panel').innerHTML=exHtml();var b;
  if((b=$('exNx')))b.onclick=function(){if(EX.i<XQ.length-1){EX.i++;EX.pick=null;exRender();}else exFinish();};
  if((b=$('exRt')))b.onclick=exSend;
  if((b=$('exA')))b.onclick=function(){EX.last=EX.player;EX.player=null;EX.done=false;exRender();};
- if((b=$('exG'))){var nm=$('exN'),cl=$('exC'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exE');nm.classList.remove('no');cl.classList.remove('no');
+ if((b=$('exG'))){var nm=$('exName'),cl=$('exCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exE');nm.classList.remove('no');cl.classList.remove('no');
    if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}if(!c){er.textContent='Please choose your class.';cl.classList.add('no');cl.focus();return;}EX.player={name:v,cls:c};exStart();exRender();};b.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}}
 var T5={name:'Exit ticket',c:BLUE,steps:['Exit ticket'],mark:function(){return EX.done?'✓':1;},title:function(){return 'Exit ticket: Rates and mechanisms';},
  enter:function(){$('cv').style.display='none';$('readcard').style.display='none';exRender();setQ('Think about the car, the tangent, the rate law, the mechanism and the slowest step.');setRule(['Instantaneous rate: the rate at a specific time','Intermediate: made, then used up','Catalyst: used, then re-formed','Rate-determining step: the slowest step']);},frame:function(){}};
@@ -775,6 +784,8 @@ function toolsBuild(){var t=document.createElement('div');t.id='tools';t.innerHT
  $('tMute').onclick=function(){MUTE=!MUTE;this.innerHTML=spk(!MUTE);};
  c.onkeydown=function(e){var k=e.key,m={'Enter':'=','=':'=','Backspace':'BS','Delete':'C','x':'*','X':'*','e':'E','E':'E'};if(k==='Escape'){calcOpen(false);return;}var v=m[k]||(/^[0-9.+\-*\/^()]$/.test(k)?k:null);if(v){e.preventDefault();calcKey(v);}};}
 
+[CARQ,HQ,MQ,KTQ,FMQ,FNQ,TBQ,ENQ,SQ].forEach(mixL);
+
 /* ---------- shell ---------- */
 var TAB=[T1,T2,T3,T4,TM,TS,T5],tabI=0,stepI=0,HASH=['warm-up','slope','rate-law','practice','mechanisms','slowest-step','exit-ticket'];
 function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. '+t.name+'</button>';}).join('');
@@ -785,12 +796,21 @@ function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('-
  renderTabs();renderSteps();$('stitle').textContent=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
 toolsBuild();
 var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+/* ---- exit ticket timer: 15 minutes from Start; a student who runs over can still finish ---- */
+var XT={secs:900,tick:-1,buzz:0};
+function xStart(){return EX.player&&!EX.done&&EX.t0?EX.t0:0;}
+(function(){var c=document.createElement('div');c.id='xChip';c.innerHTML='<div><span>Exit ticket</span><br><b id="xTime"></b></div><button class="btn" id="xBack">Back to the exit ticket</button>';document.body.appendChild(c);$('xBack').onclick=function(){go(TAB.indexOf(T5),0);window.scrollTo(0,0);};})();
+function xTick(){var c=$('xChip'),st=xStart();if(!st){c.style.display='none';return;}c.style.display='flex';$('xBack').style.display=tabI===TAB.indexOf(T5)?'none':'';
+ var left=XT.secs-(Date.now()-st)/1000;if(left>=0){var sec=Math.ceil(left);$('xTime').textContent=Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' left';c.className=left<=60?'warn':'';if(sec<=10&&sec>0&&sec!==XT.tick){XT.tick=sec;tone(1100,0,.05,'square',.04);}}
+ else{var o=Math.round(-left);$('xTime').textContent='Time’s up +'+Math.floor(o/60)+':'+('0'+o%60).slice(-2);c.className='over';if(XT.buzz!==st){XT.buzz=st;tone(150,0,.7,'sawtooth',.07);}}}
+xTick();setInterval(xTick,250);
 var last=performance.now();
 function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
 })();
 </script>
 <script src="student-visits.js"></script>
+<script src="live-results.js" data-game="Instantaneous Rates and Mechanisms Lab" data-chapter="16"></script>
 <!-- visit counter (GoatCounter) -->
 <script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
 <script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
