@@ -266,6 +266,11 @@
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
   .shake{animation:shake .3s}
   .enter{animation:pop .25s ease-out}
+#xChip{position:fixed;right:14px;top:14px;z-index:9996;display:none;align-items:center;gap:10px;background:#fff;border:2px solid #c9d4e6;border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 #c3cfe3;font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}
+#xChip span{font-size:13px;color:#5a6780}#xChip b{font-size:20px;font-weight:600;color:#2b59c3}
+#xChip.warn{border-color:#e8962a}#xChip.warn b{color:#e8962a}
+#xChip.over{border-color:#d8434a}#xChip.over b{color:#d8434a}
+#xBack{font-family:Fredoka,sans-serif;font-size:14px;padding:4px 10px;border-radius:12px;border:2px solid #2b59c3;background:#fff;color:#2b59c3;cursor:pointer}
 </style>
 </head>
 <body>
@@ -975,11 +980,12 @@ function missHTML(){var m=Z.results.filter(function(r){return !r.ok;});return m.
 var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
 var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
 function renderExit(){
+  Z={};
   $('main').innerHTML='<div class="qwrap" style="margin:0 auto" id="xw"></div>';
   var w=$('xw');
   w.innerHTML='<div class="qcard"><div class="meta"><span class="tag skill">Chemistry &middot; Chapter 6</span><span class="qnum">'+EXIT.length+' questions</span></div>'+
     '<h2 style="font-size:40px">Exit <span style="color:var(--teal)">Ticket</span></h2>'+
-    '<p style="margin:0">Show what you learned today: how the periodic table developed, periods and groups, and metals, nonmetals and metalloids. One question at a time. Correct answers earn 100 points; after a hint they still earn 50.</p>'+
+    '<p style="margin:0">Show what you learned today: how the periodic table developed, periods and groups, and metals, nonmetals and metalloids. One question at a time. You have 15 minutes. Correct answers earn 100 points; after a hint they still earn 50.</p>'+
     '<div class="fields"><div class="field"><label for="xn">Your full name</label><input id="xn" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(store.get('ptl-name')||'')+'"></div>'+
     '<div class="field"><label for="xc">Class</label><select id="xc"><option value="">Choose&hellip;</option>'+CLASSES.map(function(c){return '<option'+(store.get('ptl-class')===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div></div>'+
     '<div class="errmsg" id="xe" role="alert"></div><div class="actions"><button class="qbtn" id="xgo">Start the exit ticket</button></div></div>';
@@ -994,6 +1000,7 @@ function renderExit(){
   $('xn').onkeydown=function(e){if(e.key==='Enter')start();};
 }
 function exitEnd(correct,n){
+  Z.ended=true;
   var now=new Date(),mins=Math.max(1,Math.round((Date.now()-Z.started)/60000));
   var when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   var hh=(Z.player.name+'|'+Z.player.cls+'|'+Z.score+'|'+correct+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7);
@@ -1021,6 +1028,16 @@ function exitEnd(correct,n){
 }
 
 drawTabs();renderSorting();
+
+/* ---- exit ticket timer: 15 minutes from Start; a student who runs over can still finish ---- */
+var XT={secs:900,tick:-1,buzz:0,ac:null};
+function xStart(){return cur===3&&Z.mode==='exit'&&!Z.ended?Z.started:0;}
+function xTone(f,d,type,vol){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!XT.ac)XT.ac=new C();var a=XT.ac,t=a.currentTime,o=a.createOscillator(),g=a.createGain();if(a.state!=='running')a.resume();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
+(function(){var c=document.createElement('div');c.id='xChip';c.innerHTML='<div><span>Exit ticket</span><br><b id="xTime"></b></div>';document.body.appendChild(c);})();
+function xTick(){var c=$('xChip'),st=xStart();if(!st){c.style.display='none';return;}c.style.display='flex';
+ var left=XT.secs-(Date.now()-st)/1000;if(left>=0){var sec=Math.ceil(left);$('xTime').textContent=Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' left';c.className=left<=60?'warn':'';if(sec<=10&&sec>0&&sec!==XT.tick){XT.tick=sec;xTone(1100,.05,'square',.04);}}
+ else{var o=Math.round(-left);$('xTime').textContent='Time’s up +'+Math.floor(o/60)+':'+('0'+o%60).slice(-2);c.className='over';if(XT.buzz!==st){XT.buzz=st;xTone(150,.7,'sawtooth',.07);}}}
+xTick();setInterval(xTick,250);
 })();
 </script>
 <script src="student-visits.js"></script>

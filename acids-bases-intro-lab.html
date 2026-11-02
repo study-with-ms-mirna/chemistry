@@ -284,6 +284,11 @@ sub{font-size:.65em}
 .namerow input.no,.namerow select.no{border-color:#d8434a;background:#fdeeee}
 .exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
 .sendst{font-family:Fredoka,sans-serif;font-size:16px;color:var(--muted)}.sendst.ok{color:#2e9e5b;font-weight:600}.sendst.err{color:#d8434a;font-weight:600}
+#xChip{position:fixed;right:14px;top:14px;z-index:9996;display:none;align-items:center;gap:10px;background:#fff;border:2px solid #c9d4e6;border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 #c3cfe3;font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}
+#xChip span{font-size:13px;color:#5a6780}#xChip b{font-size:20px;font-weight:600;color:#2b59c3}
+#xChip.warn{border-color:#e8962a}#xChip.warn b{color:#e8962a}
+#xChip.over{border-color:#d8434a}#xChip.over b{color:#d8434a}
+#xBack{font-family:Fredoka,sans-serif;font-size:14px;padding:4px 10px;border-radius:12px;border:2px solid #2b59c3;background:#fff;color:#2b59c3;cursor:pointer}
 </style>
 </head>
 <body>
@@ -986,7 +991,7 @@ function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.sent=false;Q.started=Date.now();Q.ord=Q.L.map(function(q){return shuffle(q.o.map(function(_,k){return k;}));});}
 function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
 function exStartHtml(Q){var me={};try{me=JSON.parse(lsGet('msm-student')||'{}')||{};}catch(e){}var nm=Q.player?Q.player.name:(me.name||''),cl=Q.player?Q.player.cls:(me.cls||'');
- return '<div class="qz"><div class="lbl">Exit ticket · Chapter 18.1</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions from all three objectives. One try per question.</div>'+
+ return '<div class="qz"><div class="lbl">Exit ticket · Chapter 18.1</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions from all three objectives. One try per question. You have 15 minutes.</div>'+
   '<div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div>'+
   '<div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'+
   '<div class="exerr" id="exErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="exGo">Start the exit ticket ▶</button></div></div>';}
@@ -1069,6 +1074,16 @@ var last=performance.now(),rt=0;
 function loop(now){var dt=clamp((now-last)/1000,0,.04);last=now;try{if(cur.canvas&&cur.frame)cur.frame(dt);rt+=dt;if(rt>.2){rt=0;reads();}}catch(err){console.error(err);}requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
 reads();
+
+/* ---- exit ticket timer: 15 minutes from Start; a student who runs over can still finish ---- */
+var XT={secs:900,tick:-1,buzz:0,ac:null};
+function xStart(){return QZX.player&&!QZX.done&&QZX.started?QZX.started:0;}
+function xTone(f,d,type,vol){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!XT.ac)XT.ac=new C();var a=XT.ac,t=a.currentTime,o=a.createOscillator(),g=a.createGain();if(a.state!=='running')a.resume();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}catch(e){}}
+(function(){var c=document.createElement('div');c.id='xChip';c.innerHTML='<div><span>Exit ticket</span><br><b id="xTime"></b></div><button id="xBack">Back to the exit ticket</button>';document.body.appendChild(c);$('xBack').onclick=function(){go(TABS.map(function(t){return t.hash;}).indexOf('exit-ticket'),0);window.scrollTo(0,0);};})();
+function xTick(){var c=$('xChip'),st=xStart();if(!st){c.style.display='none';return;}c.style.display='flex';$('xBack').style.display=tabI===TABS.map(function(t){return t.hash;}).indexOf('exit-ticket')?'none':'';
+ var left=XT.secs-(Date.now()-st)/1000;if(left>=0){var sec=Math.ceil(left);$('xTime').textContent=Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' left';c.className=left<=60?'warn':'';if(sec<=10&&sec>0&&sec!==XT.tick){XT.tick=sec;xTone(1100,.05,'square',.04);}}
+ else{var o=Math.round(-left);$('xTime').textContent='Time’s up +'+Math.floor(o/60)+':'+('0'+o%60).slice(-2);c.className='over';if(XT.buzz!==st){XT.buzz=st;xTone(150,.7,'sawtooth',.07);}}}
+xTick();setInterval(xTick,250);
 })();
 </script>
 <script src="student-visits.js"></script>
