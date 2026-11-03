@@ -16,7 +16,7 @@ var realFetch=window.fetch?window.fetch.bind(window):null;
 /* 1. remember the student whenever a page sends a result to the sheet */
 if(realFetch){window.fetch=function(u,o){try{if(String(u).indexOf('script.google.com/macros')>=0&&o&&typeof o.body==='string'){var d=JSON.parse(o.body);
   if(d&&d.type!=='visit'&&d.name&&d.cls){var old=student();set(KEY,JSON.stringify({name:String(d.name).slice(0,60),cls:String(d.cls).slice(0,10)}));
-   if(!old||old.name!==d.name||old.cls!==d.cls){del(LAST);setTimeout(function(){logVisit(true);showBadge();},1500);}}}}catch(e){}
+   var changed=!old||old.name!==d.name||old.cls!==d.cls;if(changed)del(LAST);lastKey=get(KEY);setTimeout(function(){logVisit(false);if(changed)showBadge();},1500);}}}catch(e){}
   return realFetch.apply(window,arguments);};}
 
 /* 2. record this page visit (at most once every 30 minutes per page) */
@@ -38,6 +38,10 @@ function showBadge(){if(!top)return;var old=document.getElementById('msm-badge')
  b.appendChild(t);b.appendChild(x);document.body.appendChild(b);
  b.style.transition='opacity .8s';setTimeout(function(){b.style.opacity='0';setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},900);},8000);}
 
-function init(){logVisit(false);showBadge();}
+/* 4. notice a name saved by any other part of the page (for example the Live name bar) and count this page right away */
+var lastKey=null;
+function watch(){var k=get(KEY);if(k===lastKey)return;var before=null;try{before=JSON.parse(lastKey||'null');}catch(e){}lastKey=k;var s=student();if(!s)return;
+ if(before&&before.name&&(before.name!==s.name||before.cls!==s.cls))del(LAST);logVisit(false);showBadge();}
+function init(){lastKey=get(KEY);logVisit(false);showBadge();setInterval(watch,2000);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
