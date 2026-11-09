@@ -93,7 +93,7 @@ function render(){
   body.innerHTML=h;
   body.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>{ans[+b.dataset.k]=+b.dataset.n;
     const y=window.scrollY; render(); window.scrollTo(0,y);});
-  const c=document.getElementById('chk'); if(c) c.onclick=()=>{const fresh=ks.filter(k=>ans[k]!==undefined&&!checked[k]),got=fresh.filter(k=>ans[k]===Q[k].a).length; if(window.MSMLive&&fresh.length)MSMLive.row({part:'Page '+(pg+1)+' | Q'+(fresh[0]+1)+'-Q'+(fresh[fresh.length-1]+1),score:got*100,correct:got,total:fresh.length,missed:'Wrong: '+(fresh.filter(k=>ans[k]!==Q[k].a).map(k=>'Q'+(k+1)+'='+'ABCD'[ans[k]]+' (answer '+'ABCD'[Q[k].a]+')').join(', ')||'none')+' | Right: '+(fresh.filter(k=>ans[k]===Q[k].a).map(k=>'Q'+(k+1)).join(' ')||'none')}); ks.forEach(k=>{if(ans[k]!==undefined)checked[k]=true;}); const y=window.scrollY; render(); window.scrollTo(0,y);};
+  const c=document.getElementById('chk'); if(c) c.onclick=()=>{const fresh=ks.filter(k=>ans[k]!==undefined&&!checked[k]),got=fresh.filter(k=>ans[k]===Q[k].a).length; if(window.MSMLive)fresh.forEach(k=>{const ok=ans[k]===Q[k].a,ot=n=>{const o=Q[k].o[n];return MSMLive.short(o&&o.t?o.t:'picture '+'ABCD'[n],60);};MSMLive.row({part:'Page '+(pg+1)+' | Q'+(k+1)+' '+MSMLive.short(Q[k].q,80),score:ok?100:0,correct:ok?1:0,total:1,missed:ok?'':'Chose: '+ot(ans[k])+' · correct: '+ot(Q[k].a)});}); ks.forEach(k=>{if(ans[k]!==undefined)checked[k]=true;}); const y=window.scrollY; render(); window.scrollTo(0,y);};
   const nx=document.getElementById('next'); if(nx) nx.onclick=()=>{pg++; render(); window.scrollTo({top:0,behavior:'smooth'});};
   const bk=document.getElementById('back'); if(bk) bk.onclick=()=>{pg--; render(); window.scrollTo({top:0,behavior:'smooth'});};
 }
@@ -102,10 +102,11 @@ function summary(){
   for(let p=0;p<pages;p++){const from=p*PER,to=Math.min(Q.length,from+PER);let r=0,a=0;
     for(let k=from;k<to;k++) if(checked[k]){a++; if(ans[k]===Q[k].a) r++;}
     tot+=r; att+=a; rows+=`<tr><td>Page ${p+1}</td><td>${a?`${r} / ${a}`:'skipped'}</td></tr>`;}
+  if(window.MSMLive){const sig=tot+'/'+att; if(window._finSig!==sig){window._finSig=sig; const wr=[]; for(let k=0;k<Q.length;k++) if(checked[k]&&ans[k]!==Q[k].a) wr.push('Q'+(k+1));MSMLive.row({part:'FINAL',score:att?Math.round(100*tot/att):0,correct:tot,total:att,missed:'Answered '+att+' of '+Q.length+(wr.length?' · Missed: '+wr.join(' '):'')});}}
   body.innerHTML=`<div class="summary"><div class="pageno" style="text-align:center">Worksheet complete</div><div class="big">${tot} / ${att}</div><p>correct out of the ${att} question${att===1?'':'s'} you checked${att<Q.length?` (${Q.length} in total)`:''}</p><p>${nm.value?nm.value+' · ':''}${dt.value}</p><table><tr><th>Page</th><th>Correct</th></tr>${rows}</table>
     <div class="bar" style="justify-content:center;border:0"><button class="btn ghost" id="review">← Review the last page</button><button class="btn" id="again">Start again</button></div></div>`;
   document.getElementById('review').onclick=()=>{pg=pages-1;render();window.scrollTo({top:0,behavior:'smooth'});};
-  document.getElementById('again').onclick=()=>{for(const k in ans)delete ans[k];for(const k in checked)delete checked[k];pg=0;render();window.scrollTo({top:0,behavior:'smooth'});};
+  document.getElementById('again').onclick=()=>{window._finSig=null;for(const k in ans)delete ans[k];for(const k in checked)delete checked[k];pg=0;render();window.scrollTo({top:0,behavior:'smooth'});};
 }
 render();
 </script>
