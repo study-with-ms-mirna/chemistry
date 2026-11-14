@@ -176,7 +176,7 @@ select.pick{font-family:Fredoka,sans-serif;font-size:16px;padding:8px 12px;borde
       <path d="M34 18 L34 42 L48 42 L48 18" fill="none" stroke="#18233a" stroke-width="2"/><rect x="35" y="25" width="12" height="16" fill="#2b59c3" opacity=".5"/>
       <path d="M25 22 L33 22 M30 19 L33 22 L30 25" stroke="#d8434a" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M33 34 L25 34 M28 31 L25 34 L28 37" stroke="#2b59c3" stroke-width="2" fill="none" stroke-linecap="round"/>
     </svg>
-    <div><h1>Dynamic Balance Lab</h1><div class="sub">Chapter 17 · Section 1 · the Lego room · the two-beaker demo · particles · K<sub>eq</sub></div></div>
+    <div><h1>Dynamic Balance Lab</h1><div class="sub">Chapter 17 · Section 1 · radioactive iodine warm-up · the Lego room · the two-beaker demo · particles · K<sub>eq</sub></div></div>
   </header>
   <nav class="tabs" id="tabs"></nav>
   <div class="steps" id="steps"></div>
@@ -324,6 +324,91 @@ function sup(n){return n>1?String(n).split('').map(function(c){return SUP[c];}).
 function graph(x0,y0,w,h,series,ymax,tmax,labels){panel(x0-10,y0-10,w+20,h+40);seg(x0,y0+h,x0+w,y0+h,INK,2);seg(x0,y0,x0,y0+h,INK,2);
  series.forEach(function(sr){if(sr.pts.length<2)return;ctx.strokeStyle=sr.c;ctx.lineWidth=3;ctx.beginPath();sr.pts.forEach(function(p,k){var x=x0+w*Math.min(1,p[0]/tmax),y=y0+h-h*Math.min(1,p[1]/ymax);if(k)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();});
  (labels||[]).forEach(function(l,k){txt(l[0],x0+8+k*120,y0-2,{s:13,c:l[1],a:'left'});});}
+
+/* ================= Tab 0: warm-up, radioactive iodine ================= */
+var IO={m:[],sol:[],open:0,opening:0,t:0,tOpen:null,hist:[],ev:[],seenEq:false,ruled:0,eqT:0,spd:1,
+ F:[{cx:205,cy:170,side:1},{cx:595,cy:170,side:-1}]};
+var IOR=108,IOTUBE=150,IOV=95,IOGAS=16,IOSOL=8,IOGLOW='#c4ff4a';
+IO.F.forEach(function(f){f.ceil=f.cy+58;f.mouth={x:f.cx+f.side*(IOR-4),y:IOTUBE};
+ f.mound=[];for(var k=0;k<=24;k++){var x=f.cx-IOR+k*(2*IOR/24);f.mound.push([x,f.cy+64+Math.sin(k*1.7+f.side)*5+Math.cos(k*3.1)*3]);}});
+function ioIn(f,x,y){return Math.hypot(x-f.cx,y-f.cy)<IOR-9&&y<f.ceil;}
+function ioPt(f){for(;;){var a=Math.random()*6.283,r=(IOR-14)*Math.sqrt(Math.random()),x=f.cx+r*Math.cos(a),y=f.cy+r*Math.sin(a);if(y<f.ceil-6)return [x,y];}}
+function ioLand(f){var x=f.cx+(Math.random()*2-1)*72;return [x,f.cy+70+Math.random()*16];}
+function ioMol(fi,hot,p){var a=Math.random()*6.283;p=p||ioPt(IO.F[fi]);return {f:fi,hot:hot,x:p[0],y:p[1],vx:IOV*Math.cos(a),vy:IOV*Math.sin(a),spin:Math.random()*6.3,w:(Math.random()<.5?-1:1)*(1+Math.random()*2.5),path:null,s:0};}
+function ioReset(){IO.m=[];IO.sol=[];IO.open=0;IO.opening=0;IO.t=0;IO.tOpen=null;IO.hist=[];IO.ev=[];IO.seenEq=false;IO.eqT=0;
+ for(var fi=0;fi<2;fi++){for(var i=0;i<IOGAS;i++)IO.m.push(ioMol(fi,fi===1));for(var j=0;j<IOSOL;j++){var p=ioLand(IO.F[fi]);IO.sol.push({f:fi,hot:fi===1,x:p[0],y:p[1]});}}
+ if(stepI===0&&tabI===0)ioControls();}
+function ioCount(fi){var n=0;IO.m.forEach(function(m){if(m.f===fi&&m.hot)n++;});IO.sol.forEach(function(s){if(s.f===fi&&s.hot)n++;});return n;}
+function ioGas(fi){return IO.m.filter(function(m){return m.f===fi&&!m.path;}).length;}
+function ioStep(m,dt){m.spin+=m.w*dt;
+ if(m.path){var d=IOV*dt*(m.fast||1);while(m.path&&d>0){var q=m.path[0],L=Math.hypot(q[0]-m.x,q[1]-m.y);if(L<=d){m.x=q[0];m.y=q[1];m.s=q[2];d-=L;m.path.shift();if(!m.path.length){m.path=null;var cb=m.done;m.done=null;if(cb)cb(m);}}else{var u=d/L;m.x+=(q[0]-m.x)*u;m.y+=(q[1]-m.y)*u;m.s+=(q[2]-m.s)*u;d=0;}}return;}
+ var f=IO.F[m.f],nx=m.x+m.vx*dt,ny=m.y+m.vy*dt;
+ /* the open tube: a molecule that reaches the neck goes through to the other flask */
+ if(IO.open&&Math.hypot(nx-f.mouth.x,ny-f.mouth.y)<28&&m.vx*f.side>0){var o=IO.F[1-m.f],ln=(Math.random()*2-1)*5;
+  m.path=[[f.mouth.x,IOTUBE+ln,0],[o.mouth.x,IOTUBE+ln,0],[o.mouth.x-o.side*30,IOTUBE+ln*2,0]];m.done=function(mm){mm.f=1-mm.f;var a=(o.side>0?Math.PI:0)+(Math.random()-.5)*1.4;mm.vx=IOV*Math.cos(a);mm.vy=IOV*Math.sin(a);};
+  IO.ev.push([IO.t,m.f]);return;}
+ if(!ioIn(f,nx,ny)){
+  if(ny>=f.ceil){ /* hits the solid: sometimes it sticks (deposition) and another particle leaves (sublimation) */
+   if(Math.random()<.45){ioDeposit(m);return;}m.vy=-Math.abs(m.vy);}
+  else{var ux=(nx-f.cx),uy=(ny-f.cy),n=Math.hypot(ux,uy);ux/=n;uy/=n;var dot=m.vx*ux+m.vy*uy;m.vx-=2*dot*ux;m.vy-=2*dot*uy;}
+  var th=(Math.random()-.5)*.7,c=Math.cos(th),s=Math.sin(th),vx=m.vx;m.vx=vx*c-m.vy*s;m.vy=vx*s+m.vy*c;nx=m.x+m.vx*dt;ny=m.y+m.vy*dt;if(!ioIn(f,nx,ny)){nx=m.x;ny=m.y;}}
+ m.x=nx;m.y=ny;}
+function ioDeposit(m){var f=IO.F[m.f],p=ioLand(f);m.path=[[p[0],p[1]-6,.6],[p[0],p[1],1]];
+ m.done=function(mm){var mine=IO.sol.filter(function(s){return s.f===mm.f;}),k=mine[Math.floor(Math.random()*mine.length)],old={hot:k.hot,x:k.x,y:k.y};
+  k.hot=mm.hot;k.x=p[0];k.y=p[1];var i=IO.m.indexOf(mm);if(i>=0)IO.m.splice(i,1);
+  var n=ioMol(mm.f,old.hot,[old.x,old.y]);n.s=1;n.path=[[old.x+(Math.random()-.5)*30,f.ceil-12,0]];n.done=function(q){q.vy=-Math.abs(q.vy);};IO.m.push(n);};}
+function ioI2(x,y,a,col,r){var dx=Math.cos(a)*r*.8,dy=Math.sin(a)*r*.8;[[-1],[1]].forEach(function(k){var px=x+k[0]*dx,py=y+k[0]*dy,g=ctx.createRadialGradient(px-r*.35,py-r*.35,r*.15,px,py,r);g.addColorStop(0,'#d9b8ef');g.addColorStop(.35,col);g.addColorStop(1,'#3a1452');ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.fill();});}
+function ioGlow(x,y,r,a){var g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(255,255,215,'+a+')');g.addColorStop(.35,'rgba(196,255,74,'+(a*.9)+')');g.addColorStop(1,'rgba(196,255,74,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
+function ioFlask(f){var g=ctx.createRadialGradient(f.cx-35,f.cy-45,10,f.cx,f.cy,IOR);g.addColorStop(0,'#ffffff');g.addColorStop(1,'#dfe6ee');ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.cx,f.cy,IOR,0,7);ctx.fill();
+ ctx.save();ctx.beginPath();ctx.arc(f.cx,f.cy,IOR-3,0,7);ctx.clip();ctx.fillStyle='#2b2a2f';ctx.beginPath();ctx.moveTo(f.mound[0][0],f.cy+IOR);f.mound.forEach(function(p){ctx.lineTo(p[0],p[1]);});ctx.lineTo(f.cx+IOR,f.cy+IOR);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#4a4850';for(var k=0;k<26;k++){var x=f.cx-80+((k*37)%160),y=f.cy+72+((k*13)%28);ctx.fillRect(x,y,5,3);}ctx.restore();}
+function ioGlass(f){ctx.strokeStyle='#9aa8ba';ctx.lineWidth=3;ctx.beginPath();ctx.arc(f.cx,f.cy,IOR,0,7);ctx.stroke();ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=5;ctx.beginPath();ctx.arc(f.cx,f.cy,IOR-12,3.6,4.4);ctx.stroke();}
+function ioValve(u){var x=400,y=IOTUBE;rr(375,y-16,50,32,8);ctx.fillStyle='#f2d27a';ctx.fill();ctx.strokeStyle='#c9a24a';ctx.lineWidth=2;ctx.stroke();
+ rr(388,y-46,24,32,4);ctx.fillStyle='#2f8fd6';ctx.fill();
+ var a=-Math.PI/2+u*Math.PI/2;ctx.save();ctx.translate(x,y-48);ctx.rotate(a+Math.PI/2);rr(-7,-34,14,34,6);ctx.fillStyle='#45b0f0';ctx.fill();ctx.restore();
+ txt(u>.5?'open':'closed',x,y+30,{s:13,c:u>.5?GREEN:MUTED});}
+function ioMeter(cx,y,frac,lab,col){rr(cx-74,y,148,70,10);ctx.fillStyle='#4e4c6a';ctx.fill();rr(cx-62,y+10,124,46,5);ctx.fillStyle='#fff';ctx.fill();
+ ctx.strokeStyle=INK;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,y+66,40,-Math.PI/2-.7,-Math.PI/2+.7);ctx.stroke();
+ for(var k=0;k<=6;k++){var a=-Math.PI/2-.7+k*1.4/6;seg(cx+36*Math.cos(a),y+66+36*Math.sin(a),cx+44*Math.cos(a),y+66+44*Math.sin(a),INK,1.5);}
+ var a2=-Math.PI/2-.7+1.4*clamp(frac,0,1);ctx.save();ctx.beginPath();ctx.rect(cx-62,y+10,124,46);ctx.clip();ctx.fillStyle='#e8202a';ctx.beginPath();ctx.moveTo(cx+48*Math.cos(a2),y+66+48*Math.sin(a2));ctx.lineTo(cx+6*Math.cos(a2+Math.PI/2),y+66+6*Math.sin(a2+Math.PI/2));ctx.lineTo(cx-6*Math.cos(a2+Math.PI/2),y+66-6*Math.sin(a2+Math.PI/2));ctx.fill();ctx.restore();
+ txt(lab,cx,y+84,{s:13,c:col});}
+function ioFrame(dt){clear();var I=IO;dt*=I.spd;
+ if(I.opening){I.open=Math.min(1,I.open+dt*1.5);if(I.open>=1)I.opening=0;}
+ if(dt>0){I.t+=dt;I.m.slice().forEach(function(m){ioStep(m,dt);});}
+ var nL=ioCount(0),nR=ioCount(1),tot=IOGAS+IOSOL;
+ I.F.forEach(function(f,fi){f.show=f.show==null?(fi?1:0):f.show;f.show+=((fi?nR:nL)/tot-f.show)*Math.min(1,dt*2);});
+ if(dt>0&&(!I.hist.length||I.t-I.hist[I.hist.length-1][0]>.25))I.hist.push([I.t,nL,nR]);
+ /* tube and flasks */
+ rr(300,IOTUBE-13,200,26,8);ctx.fillStyle='#d6e6f0';ctx.fill();ctx.strokeStyle='#9aa8ba';ctx.lineWidth=2;ctx.stroke();
+ I.F.forEach(ioFlask);
+ var pulse=.75+.25*Math.sin(I.t*7);
+ I.sol.forEach(function(s,k){if(s.hot)ioGlow(s.x,s.y,13+2*Math.sin(I.t*6+k),.95*pulse);});
+ I.m.forEach(function(m,k){if(m.s>.98)return;if(m.hot)ioGlow(m.x,m.y,22,(1-m.s*.6)*(.8+.2*Math.sin(I.t*6+k)));
+  var col=m.s>.02?'rgb('+Math.round(128-88*m.s)+','+Math.round(52-14*m.s)+','+Math.round(170-126*m.s)+')':'#80349f';ioI2(m.x,m.y,m.spin,col,7.5);});
+ I.F.forEach(ioGlass);ioValve(I.open);
+ ioMeter(205,300,I.F[0].show,'Left flask: '+nL+' radioactive',PLUM);ioMeter(595,300,I.F[1].show,'Right flask: '+nR+' radioactive',PLUM);
+ /* legend */
+ ioGlow(330,42,18,.9);ioI2(330,42,0,'#80349f',7);txt('radioactive I₂',350,42,{s:14,a:'left'});ioI2(480,42,0,'#80349f',7);txt('ordinary I₂',500,42,{s:14,a:'left'});
+ /* status */
+ var now=I.t,lr=I.ev.filter(function(e){return now-e[0]<6&&e[1]===0;}).length,rl=I.ev.filter(function(e){return now-e[0]<6&&e[1]===1;}).length;I.ev=I.ev.filter(function(e){return now-e[0]<8;});
+ var near=Math.abs(nL-nR)<=3;if(I.open>=1&&near){I.eqT+=dt;}else I.eqT=0;if(I.eqT>4)I.seenEq=true;
+ var msg=!I.open?['Stopcock closed: only the right flask is radioactive',MUTED]:(I.open<1?['The stopcock opens…',TEAL]:(I.seenEq&&near?['Both meters show the same reading: are the molecules still moving?',GREEN]:['Molecules cross both ways: watch the two meters',TEAL]));
+ txt(msg[0],400,14,{s:16,c:msg[1]});
+ graph(70,410,660,48,[{pts:I.hist.map(function(h){return [h[0],h[1]];}),c:PLUM},{pts:I.hist.map(function(h){return [h[0],h[2]];}),c:AMBER}],tot,Math.max(30,I.t),[['left flask',PLUM],['right flask',AMBER]]);
+ txt('Radioactive I₂ in each flask vs time',560,408,{s:12,c:MUTED,w:500});
+ setReads([['Radioactive I₂, left flask',nL+' of '+tot],['Radioactive I₂, right flask',nR+' of '+tot],['Crossing → (last 6 s)',I.open?lr:'–'],['Crossing ← (last 6 s)',I.open?rl:'–'],['Stopcock',I.open>=1?'open':(I.open>0?'opening':'closed')],['Status',!I.open?'closed: nothing can cross':(I.seenEq&&near?'readings constant, molecules still moving':'still changing'),1]]);
+ if(I.seenEq&&!I.ruled){I.ruled=1;ioRuleSet();good($('rule'));}}
+function ioRuleSet(){setRule(IO.seenEq?['Both meters end with the <b>same reading</b>: radioactive I₂ is now in <b>both</b> flasks','The readings stop changing, but molecules keep crossing <b>both ways at the same rate</b>','In each flask, sublimation and deposition also go on at <b>equal rates</b>: this is a <b>dynamic equilibrium</b>, not a static one']:['Open the stopcock and watch until both meters stop changing.']);}
+function ioControls(){$('controls').innerHTML='<button class="btn fill" id="ioO"'+(IO.open?' disabled':'')+'>Open the stopcock</button><button class="btn" id="ioX">Start again</button>'+segHtml('ioS',['Normal speed','Fast'],IO.spd>1?1:0);
+ $('ioO').onclick=function(){if(!IO.open){IO.opening=1;IO.open=.001;IO.tOpen=IO.t;tone(660,0,.08);this.disabled=true;}};$('ioX').onclick=function(){ioReset();ioRuleSet();};segBind('ioS',function(k){IO.spd=k?2.5:1;});}
+var IQ=[{q:'Both meters show the same reading and stop changing. Have the I₂ molecules stopped moving between the flasks?',o:['No: they keep crossing both ways at the same rate','Yes: nothing moves once the readings are equal','Yes: the radioactive molecules are used up','No, but they only move from right to left'],a:0,w:'The readings are constant because the two rates are equal: dynamic equilibrium.'},
+ {q:'How did radioactive I₂ get into the solid in the left flask?',o:['Gas molecules joined the solid (deposition)','The solid moved through the tube','The left solid became radioactive by itself','It did not: only the gas is radioactive'],a:0,w:'Deposition keeps happening, even at equilibrium, while sublimation goes on at the same rate.'},
+ {q:'What would a static (not dynamic) balance look like here?',o:['No molecules crossing and nothing subliming or depositing','The meters showing different readings','Molecules crossing faster to the left','The glowing molecules disappearing'],a:0,w:'Static means nothing moves at all.'}];
+var T0={name:'Warm-up',c:PLUM,steps:['Open the stopcock','Quiz me'],
+ title:function(i){return ['Warm-up: radioactive iodine in two flasks','Quiz: is anything still happening?'][i];},
+ enter:function(i){if(i===0){if(!IO.m.length)ioReset();ioControls();ioRuleSet();setQ('The right flask holds <b>radioactive I₂</b> (it glows), as solid and gas. The left flask holds ordinary I₂. <b>Predict:</b> what will the two meters show after you open the stopcock? Open it and watch until the readings stop changing. Are the molecules still moving?');}
+  else{$('readcard').style.display='none';seqPanel(IQ);setQ('Think about what the glowing molecules were doing at the end.','Explain');setRule(['Same readings: radioactive I₂ in both flasks','Molecules still cross both ways at equal rates: dynamic']);}},
+ frame:function(dt){T+=dt;if(!IO.m.length)ioReset();ioFrame(stepI===0?dt:0);}};
 
 /* ================= Tab 1: the Lego room ================= */
 var LG={floor:40,box:0,km:.25,ks:.25,accM:0,accS:0,fly:[],t:0,hist:[],rM:[],rS:[],stop:false,seenEq:false};
@@ -523,9 +608,9 @@ T3.mark=function(i){return qzMark(T3,i,PQ);};T4.mark=function(i){return qzMark(T
 function spk(on){return '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="#18233a"/>'+(on?'<path d="M15.5 9 C17.5 11 17.5 13 15.5 15 M18 6.5 C21.5 10 21.5 14 18 17.5" fill="none" stroke="#18233a" stroke-width="2" stroke-linecap="round"/>':'<path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="#d8434a" stroke-width="2.4" stroke-linecap="round"/>')+'</svg>';}
 (function(){var t=document.createElement('div');t.id='tools';t.innerHTML='<button class="tb" id="tMute" title="Sound on or off" aria-label="Sound on or off">'+spk(true)+'</button>';document.body.appendChild(t);$('tMute').onclick=function(){MUTE=!MUTE;this.innerHTML=spk(!MUTE);};})();
 
-[LQ,BQ].forEach(mixL);
+[IQ,LQ,BQ].forEach(mixL);
 /* ---------- shell ---------- */
-var TAB=[T1,T2,T3,T4,T5],tabI=0,stepI=0,HASH=['lego-room','two-beakers','particles','keq','exit-ticket'];
+var TAB=[T0,T1,T2,T3,T4,T5],tabI=0,stepI=0,HASH=['warm-up','lego-room','two-beakers','particles','keq','exit-ticket'];
 function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. <span>'+t.name+'</span></button>';}).join('');Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
 function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk+'</b><span>'+l+'</span></button>';}).join('');Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
 function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('readcard').style.display='';$('controls').innerHTML='';$('panel').innerHTML='';renderTabs();renderSteps();$('stitle').innerHTML=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);calcShow(!!(TAB[t].calc&&TAB[t].calc(stepI)));try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
