@@ -303,7 +303,7 @@ function segHtml(id,labels,cur){return '<div class="seg" id="'+id+'">'+labels.ma
 function segBind(id,fn){each('#'+id+' button',function(b){b.onclick=function(){each('#'+id+' button',function(x){x.classList.remove('on');});b.classList.add('on');fn(+b.getAttribute('data-k'));};});}
 function dataTable(cols,rows){return '<table class="dt"><tr>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table>';}
 var SUBS={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
-function fm(f){return f.replace(/(\d)/g,function(d){return SUBS[d];});}
+function fm(f){return f.replace(/([A-Za-z)])(\d+)/g,function(m,a,n){return a+n.replace(/\d/g,function(d){return SUBS[d];});});}
 function beaker(x,y,w,h,liq,lv){if(liq){ctx.fillStyle=liq;ctx.fillRect(x+4,y+h-lv,w-8,lv-2);}ctx.strokeStyle='#5a6780';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+h);ctx.lineTo(x+w,y+h);ctx.lineTo(x+w,y);ctx.stroke();}
 function thermo(x,y,v){rr(x-7,y,14,150,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#5a6780';ctx.lineWidth=2;ctx.stroke();var lv=clamp((v-10)/50,0,1)*130;ctx.fillStyle=RED;ctx.fillRect(x-4,y+140-lv,8,lv);dotc(x,y+152,11,RED);txt(Math.round(v)+' °C',x+38,y+20,{s:15});}
 
@@ -316,8 +316,12 @@ var EXP=[{n:'Baking soda + vinegar',k:'gas',chem:1,sign:'gas bubbles (carbon dio
  {n:'Melting an ice cube',k:'melt',chem:0,sign:'change of state only: still water'},
  {n:'Dissolving salt in water',k:'dis',chem:0,sign:'salt spreads out; no new substance'},
  {n:'Boiling water',k:'boil',chem:0,sign:'bubbles are water vapour: same substance'}];
-var SG={i:0,t:0,run:false,ans:{},parts:[]};
-function sgRun(){SG.t=0;SG.run=true;SG.parts=[];tone(440,0,.06);}
+var EV={gas:['Gas bubbles form (fizzing)','gas bubbles'],ppt:['A solid (precipitate) forms in the liquid','precipitate'],col:['The colour changes','colour change'],light:['Bright light is given off','light given off'],hot:['The temperature rises','temperature rise'],melt:['A solid turns into a liquid (melting)','change of state'],dis:['The solid disappears into the water (dissolving)','dissolving'],boil:['A liquid turns into a gas (boiling)','change of state']};
+EXP[0].ev='gas';EXP[0].ds=['ppt','col','light'];EXP[1].ev='ppt';EXP[1].ds=['gas','light','melt'];EXP[2].ev='light';EXP[2].ds=['gas','ppt','dis'];EXP[3].ev='col';EXP[3].ds=['gas','light','melt'];
+EXP[4].ev='hot';EXP[4].ds=['gas','light','ppt'];EXP[5].ev='melt';EXP[5].ds=['gas','col','ppt'];EXP[6].ev='dis';EXP[6].ds=['gas','ppt','col'];EXP[7].ev='boil';EXP[7].ds=['col','ppt','light'];
+EXP.forEach(function(e){e.ord=shuffle([e.ev].concat(e.ds));});
+var SG={i:0,t:0,run:false,obs:{},ans:{},parts:[]};
+function sgRun(){SG.t=0;SG.run=true;SG.rd=0;SG.parts=[];tone(440,0,.06);if(SG.obs[SG.i]==null)sgPanel();}
 function sgFrame(dt){clear();var e=EXP[SG.i];if(SG.run)SG.t=Math.min(4,SG.t+dt);var u=SG.t/4;
  panel(20,20,500,460);txt(e.n,270,48,{s:18});
  var bx=170,by=150,bw=200,bh=230;
@@ -339,16 +343,22 @@ function sgFrame(dt){clear();var e=EXP[SG.i];if(SG.run)SG.t=Math.min(4,SG.t+dt);
  if(!SG.run)txt('Press Run to start',270,460,{s:14,c:MUTED});
  /* tally */panel(540,20,240,460);txt('Your results',660,46,{s:16});
  EXP.forEach(function(x,j){var y=80+j*48,a=SG.ans[j];txt(x.n.length>20?x.n.slice(0,19)+'…':x.n,555,y,{s:14,a:'left',c:j===SG.i?BLUE:INK});
-  if(a!=null){pill(a===x.chem?'✓':'✗',760,y,a===x.chem?GREEN:RED,'#fff',12);txt(a?'chemical':'physical',555,y+18,{s:13,a:'left',c:MUTED});}});
- var n=Object.keys(SG.ans).length,ok=EXP.filter(function(x,j){return SG.ans[j]===x.chem;}).length;
- setReads([['Experiment',e.n,1],['Observation',SG.t>=1.5?e.sign:(SG.run?'watching…':'not started'),1],['Sorted',n+' of 8'],['Correct',ok]]);
- if(n===8&&!SG.ruled){SG.ruled=1;sgRule();good($('rule'));}}
-function sgRule(){setRule(Object.keys(SG.ans).length===8?['Signs of a <b>chemical</b> reaction: <b>gas</b>, <b>precipitate</b>, <b>colour change</b>, <b>light</b>, <b>temperature change</b>','A chemical reaction makes a <b>new substance</b> with <b>new properties</b>','Melting, dissolving and boiling are <b>physical</b> changes: no new substance']:['Run each experiment, then decide: chemical reaction or physical change?']);}
-function sgPanel(){var j=SG.i,a=SG.ans[j],e=EXP[j];
- $('panel').innerHTML='<div class="qz"><div class="qzq">Is this a <b>chemical reaction</b> or a <b>physical change</b>?</div><div class="opts"><button class="qb'+(a===1?(e.chem?' right':' wrong'):'')+'" id="aC"><span class="L">A</span><span>Chemical reaction: a new substance forms</span></button><button class="qb'+(a===0?(e.chem?' wrong':' right'):'')+'" id="aP"><span class="L">B</span><span>Physical change: no new substance</span></button></div>'+
-  (a!=null?'<p style="margin:8px 4px">'+(a===e.chem?'<b>Correct.</b> ':'<b>Not quite.</b> ')+'Evidence: '+e.sign+'.</p>':'')+'</div>';
- $('aC').onclick=function(){if(SG.t<1.5){$('aC').classList.add('wrong');return;}SG.ans[j]=1;e.chem?SFX.good():SFX.bad();sgPanel();};
- $('aP').onclick=function(){if(SG.t<1.5){$('aP').classList.add('wrong');return;}SG.ans[j]=0;e.chem?SFX.bad():SFX.good();sgPanel();};}
+  var ob=SG.obs[j];if(ob!=null&&a==null)txt(EV[ob][1],555,y+18,{s:13,a:'left',c:MUTED});
+  if(a!=null){var okk=a===x.chem&&ob===x.ev;pill(okk?'✓':'✗',760,y,okk?GREEN:RED,'#fff',12);txt(EV[ob][1]+' → '+(a?'chemical':'physical'),555,y+18,{s:13,a:'left',c:MUTED});}});
+ var n=Object.keys(SG.ans).length,ok=EXP.filter(function(x,j){return SG.ans[j]===x.chem&&SG.obs[j]===x.ev;}).length;
+ setReads([['Experiment',e.n,1],['Observation',SG.t>=1.5?e.sign:(SG.run?'watching…':'not started'),1],['Sorted',n+' of 8'],['Both right',ok]]);
+ sgReady();if(n===8&&!SG.ruled){SG.ruled=1;sgRule();good($('rule'));}}
+function sgRule(){setRule(Object.keys(SG.ans).length===8?['Evidence of a <b>chemical</b> reaction: <b>gas</b>, <b>precipitate</b>, <b>colour change</b>, <b>light</b>, <b>temperature change</b>','A chemical reaction makes a <b>new substance</b> with <b>new properties</b>','Melting, dissolving and boiling are <b>physical</b> changes: no new substance','Open <b>Evidence summary</b> to review the signs']:['1. Run the experiment and <b>observe</b>','2. Decide: <b>chemical reaction</b> or <b>physical change</b>?']);}
+function sgPanel(){var j=SG.i,e=EXP[j],ob=SG.obs[j],a=SG.ans[j],ready=SG.t>=1.5||ob!=null;
+ var h='<div class="qz"><div class="qzq"><b>Question 1:</b> What do you <b>observe</b>?</div><div class="opts">'+e.ord.map(function(k,m){var c=ob==null?'':(k===e.ev?' right':(k===ob?' wrong':''));return '<button class="qb'+c+'" data-ob="'+k+'"'+(ob!=null||!ready?' disabled':'')+'><span class="L">'+'ABCD'.charAt(m)+'</span><span>'+EV[k][0]+'</span></button>';}).join('')+'</div>'+
+  (!ready?'<div class="note" style="color:#5a6780">Press <b>Run</b> and watch the experiment first.</div>':'')+
+  (ob!=null?'<div class="note">'+(ob===e.ev?'<span class="good">Correct!</span> ':'<span class="bad">Not quite.</span> ')+'You can see: '+e.sign+'.</div>':'')+'</div>';
+ if(ob!=null){h+='<div class="qz" style="margin-top:12px"><div class="qzq"><b>Question 2:</b> Is this a <b>chemical reaction</b> or a <b>physical change</b>?</div><div class="opts"><button class="qb'+(a===1?(e.chem?' right':' wrong'):(a===0&&e.chem?' right':''))+'" data-ch="1"'+(a!=null?' disabled':'')+'><span class="L">A</span><span>Chemical reaction: a new substance forms</span></button><button class="qb'+(a===0?(e.chem?' wrong':' right'):(a===1&&!e.chem?' right':''))+'" data-ch="0"'+(a!=null?' disabled':'')+'><span class="L">B</span><span>Physical change: no new substance</span></button></div>'+
+  (a!=null?'<div class="note">'+(a===e.chem?'<span class="good">Correct!</span> ':'<span class="bad">Not quite.</span> ')+(e.chem?'<b>'+EV[e.ev][1].charAt(0).toUpperCase()+EV[e.ev][1].slice(1)+'</b> is evidence that a new substance formed.':'This is a <b>'+EV[e.ev][1]+'</b>: the substance is the same before and after.')+(j<EXP.length-1?' Press <b>Next ▶</b> for the next experiment.':'')+'</div>':'')+'</div>';}
+ $('panel').innerHTML=h;
+ each('[data-ob]',function(b){b.onclick=function(){SG.obs[j]=b.getAttribute('data-ob');SG.obs[j]===e.ev?SFX.good():SFX.bad();sgPanel();};});
+ each('[data-ch]',function(b){b.onclick=function(){SG.ans[j]=+b.getAttribute('data-ch');SG.ans[j]===e.chem?SFX.good():SFX.bad();sgPanel();};});}
+function sgReady(){if(SG.run&&SG.t>=1.5&&!SG.rd){SG.rd=1;if(tabI===0&&stepI===0&&SG.obs[SG.i]==null)sgPanel();}}
 function sgControls(){$('controls').innerHTML='<select class="pick" id="sgSel">'+EXP.map(function(e,j){return '<option value="'+j+'"'+(j===SG.i?' selected':'')+'>'+(j+1)+'. '+e.n+'</option>';}).join('')+'</select><button class="btn" id="sgRun">Run</button><button class="btn" id="sgNext">Next ▶</button>';
  $('sgSel').onchange=function(){SG.i=+this.value;SG.run=false;SG.t=0;SG.parts=[];sgPanel();};$('sgRun').onclick=sgRun;
  $('sgNext').onclick=function(){SG.i=(SG.i+1)%EXP.length;$('sgSel').value=SG.i;SG.run=false;SG.t=0;SG.parts=[];sgPanel();};}
@@ -356,11 +366,34 @@ var SQ=[{q:'Which observation is evidence of a CHEMICAL reaction?',o:['A solid f
  {q:'Water boils and bubbles form. Why is this NOT a chemical reaction?',o:['The bubbles are water vapour: the same substance','Bubbles never show a reaction','Heat was added','The water got hotter'],a:0,w:'No new substance forms.'},
  {q:'A hand warmer gets hot when it is opened. What does this temperature rise show?',o:['A chemical reaction releasing energy','A change of state','Nothing happened','Energy was absorbed'],a:0,w:'Temperature change is a sign of a reaction.'},
  {q:'Which change makes a NEW substance?',o:['Iron rusting','Ice melting','Salt dissolving','Glass breaking'],a:0,w:'Rust has new properties.'}];
-var T1={name:'Signs of a reaction',c:CORAL,steps:['Do the experiments','Quiz me'],
- title:function(i){return ['Chemical reaction or physical change?','Quiz: signs of a reaction'][i];},
- enter:function(i){if(i===0){sgControls();sgPanel();sgRule();setQ('Choose an experiment and press <b>Run</b>. Look for <b>evidence</b>: gas, a solid, a colour change, light or a temperature change. Then decide: chemical or physical?');}
+var SUM=[['gas','Gas bubbles','Baking soda + vinegar'],['ppt','Precipitate (a new solid)','Two clear solutions mixed'],['col','Colour change','Iron rusting: grey → brown'],
+ ['light','Light given off','Burning magnesium'],['hot','Temperature change','Hand warmer gets hot'],['smell','New smell (odour)','Food going bad']];
+function sumIcon(k,x,y){ctx.lineWidth=3;
+ if(k==='gas'){beaker(x-26,y-26,52,52,'rgba(220,235,250,.9)',38);for(var b=0;b<4;b++){var yy=y+20-((T*30+b*13)%40);ctx.strokeStyle='#5a6780';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x-14+b*9,yy,3.5,0,7);ctx.stroke();}}
+ else if(k==='ppt'){beaker(x-26,y-26,52,52,'rgba(220,235,250,.9)',38);ctx.fillStyle='rgba(240,200,40,.95)';for(var b=0;b<14;b++){ctx.beginPath();ctx.arc(x-19+(b%7)*6.3,y+19-Math.floor(b/7)*5,3,0,7);ctx.fill();}}
+ else if(k==='col'){rr(x-44,y-14,30,28,6);ctx.fillStyle='rgb(150,155,165)';ctx.fill();arrow(x-10,y,x+10,y,INK,3);rr(x+14,y-14,30,28,6);ctx.fillStyle='rgb(150,80,40)';ctx.fill();}
+ else if(k==='light'){var g=ctx.createRadialGradient(x,y,2,x,y,30);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.45,'rgba(255,235,120,.95)');g.addColorStop(1,'rgba(255,235,120,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,30+Math.sin(T*5)*3,0,7);ctx.fill();for(var r=0;r<8;r++){var a=r*Math.PI/4;seg(x+Math.cos(a)*20,y+Math.sin(a)*20,x+Math.cos(a)*30,y+Math.sin(a)*30,AMBER,3);}}
+ else if(k==='hot'){rr(x-6,y-28,12,48,6);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#5a6780';ctx.lineWidth=2;ctx.stroke();var lv=18+Math.sin(T*2)*8+8;ctx.fillStyle=RED;ctx.fillRect(x-3,y+16-lv,6,lv);dotc(x,y+22,8,RED);arrow(x+20,y+12,x+20,y-20,RED,3);}
+ else if(k==='smell'){for(var w=0;w<3;w++){ctx.strokeStyle=PLUM;ctx.lineWidth=3;ctx.beginPath();for(var t=0;t<=20;t++){var xx=x-18+w*18+Math.sin(t*.6+T*3)*5,yy=y+24-t*2.4;t?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();}}}
+function sumFrame(){clear();txt('Six signs that a new substance has formed',400,30,{s:22});
+ SUM.forEach(function(c,k){var x=20+(k%3)*257,y=58+Math.floor(k/3)*168,cx=x+120;panel(x,y,243,156);
+  sumIcon(c[0],cx,y+44);txt(c[1],cx,y+96,{s:17});txt('e.g. '+c[2],cx,y+126,{s:13.5,c:MUTED,w:500});});
+ rr(20,400,760,86,14);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=2;ctx.stroke();
+ txt('Careful: physical changes can look similar!',400,422,{s:16,c:'#a3620a'});
+ txt('Boiling water makes bubbles and melting ice changes state, but no new substance forms.',400,449,{s:14.5,w:500});
+ txt('The real test: is a NEW substance with NEW properties made?',400,473,{s:14.5,c:GREEN});}
+var SQ=[{q:'Two clear solutions are mixed and a yellow solid appears. Which evidence of a chemical reaction is this?',o:['A precipitate forms','Gas is given off','Light is given off','The temperature rises'],a:0,w:'A solid that forms when two solutions mix is a precipitate.'},
+ {q:'Which observation is evidence of a CHEMICAL reaction?',o:['A solid forms when two clear solutions are mixed','Ice melts in a warm room','Sugar dissolves in water','Water boils at 100 °C'],a:0,w:'A precipitate is a new substance.'},
+ {q:'Water boils and bubbles form. Why is this NOT a chemical reaction?',o:['The bubbles are water vapour: the same substance','Bubbles never show a reaction','Heat was added','The water got hotter'],a:0,w:'No new substance forms.'},
+ {q:'A hand warmer gets hot when it is opened. What does this temperature rise show?',o:['A chemical reaction releasing energy','A change of state','Nothing happened','Energy was absorbed'],a:0,w:'Temperature change is a sign of a reaction.'},
+ {q:'An iron nail turns from grey to reddish-brown. Which evidence is this?',o:['Colour change','Precipitate','Light given off','Change of state'],a:0,w:'Rust is a new substance with a new colour.'},
+ {q:'Which change makes a NEW substance?',o:['Iron rusting','Ice melting','Salt dissolving','Glass breaking'],a:0,w:'Rust has new properties.'}];
+var T1={name:'Signs of a reaction',c:CORAL,steps:['Do the experiments','Evidence summary','Quiz me'],
+ title:function(i){return ['Observe, then decide: chemical or physical?','Evidence of a chemical change','Quiz: signs of a reaction'][i];},
+ enter:function(i){if(i===0){sgControls();sgPanel();sgRule();setQ('Choose an experiment and press <b>Run</b>.<br><b>Question 1:</b> What do you observe?<br><b>Question 2:</b> Is it a chemical reaction or a physical change?');}
+  else if(i===1){$('readcard').style.display='none';setRule(['Evidence of a chemical change: <b>gas</b>, <b>precipitate</b>, <b>colour change</b>, <b>light</b>, <b>temperature change</b>, <b>new smell</b>','Evidence means a <b>new substance</b> has formed','Always check: is the substance really new?']);setQ('Which of these signs did you see in the experiments? Which experiments showed <b>no</b> evidence of a new substance?');}
   else{$('readcard').style.display='none';seqPanel(SQ);setQ('Look for evidence of a new substance.','Explain');setRule(['Gas, precipitate, colour change, light, temperature change','New substance = chemical reaction']);}},
- frame:function(dt){T+=dt;sgFrame(dt);}};
+ frame:function(dt){T+=dt;if(stepI===1)sumFrame();else sgFrame(dt);}};
 
 /* ================= Tab 2: will it react? before and after ================= */
 var METALS=[{n:'Magnesium',s:'Mg',r:1,c:'#b9bec7'},{n:'Zinc',s:'Zn',r:.5,c:'#9aa3ad'},{n:'Iron',s:'Fe',r:.18,c:'#6f7680'},{n:'Copper',s:'Cu',r:0,c:'#c47a3a'}];
@@ -378,7 +411,7 @@ function maFrame(dt){clear();var m=METALS[MA.i];MA.t+=dt;var sz=MA.size[MA.i]==n
  setReads([['Metal',m.n],['Gas bubbles',m.r?'yes':'none'],['Metal size',Math.round(sz*100)+'%'],['Tested',Object.keys(MA.seen).length+' of 4']]);
  if(Object.keys(MA.seen).length===4&&!MA.ruled){MA.ruled=1;maRule();good($('rule'));}}
 function maRule(){setRule(Object.keys(MA.seen).length===4?['<b>Evidence</b> (bubbles of hydrogen gas, the metal getting smaller) shows a reaction <b>is happening</b>','<b>No evidence</b> (copper) means <b>no reaction</b> takes place','More bubbles = a faster, more vigorous reaction']:['Test all four metals. Which ones react? How can you tell?']);}
-var BA=[{eq:'Na + Cl2 → NaCl',r:[['Sodium (Na)','soft, shiny metal','reacts violently with water','#c7ccd6'],['Chlorine (Cl₂)','green-yellow gas','poisonous','#b9d96a']],p:[['Sodium chloride (NaCl)','white crystals','safe to eat (table salt)','#f2f2f2']]},
+var BA=[{eq:'2Na + Cl2 → 2NaCl',r:[['Sodium (Na)','soft, shiny metal','reacts violently with water','#c7ccd6'],['Chlorine (Cl₂)','green-yellow gas','poisonous','#b9d96a']],p:[['Sodium chloride (NaCl)','white crystals','safe to eat (table salt)','#f2f2f2']]},
  {eq:'2H2 + O2 → 2H2O',r:[['Hydrogen (H₂)','colourless gas','burns with a pop','#e9eef5'],['Oxygen (O₂)','colourless gas','helps things burn','#f7d0cc']],p:[['Water (H₂O)','colourless liquid','puts out fires','#cfe4fa']]},
  {eq:'2Mg + O2 → 2MgO',r:[['Magnesium (Mg)','shiny grey metal','conducts electricity','#c7ccd6'],['Oxygen (O₂)','colourless gas','helps things burn','#f7d0cc']],p:[['Magnesium oxide (MgO)','white powder','does not conduct as a solid','#f4f4f4']]}];
 var BB={i:0};
