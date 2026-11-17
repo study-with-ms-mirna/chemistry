@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Electronegativity and Polarity Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 90px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:15.5px;padding:8px 12px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.step.done b{background:#2e9e5b;color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:14px}
+.controls:empty{display:none}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill,.btn.sel{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed #d8434a;border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:#d8434a}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.rd.wide{grid-column:1/-1}
+sub{font-size:.65em}
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;background:#fff;margin-top:10px;animation:fadein .4s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.03);opacity:1}100%{transform:none;opacity:1}}
+.sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.ln{font-size:18px;margin-top:6px;line-height:1.65}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;border:2px solid var(--accent);border-radius:8px;padding:0 8px;color:var(--accent);white-space:nowrap}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.f{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:19px;margin:9px 0}
+.f input{width:96px;font-family:Fredoka,sans-serif;font-size:19px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.f input.ke{width:60px;font-size:16px;padding:3px}
+.f input:focus{outline:none;border-color:var(--accent)}
+.f input.ok{border-color:#2e9e5b;background:#e8f6ee}.f input.no{border-color:#d8434a;background:#fdeeee}
+.f input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
+.f sup{font-size:.75em;vertical-align:.6em}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b;animation:pop .4s}.fb.no{background:#fdeeee;border-color:#d8434a}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.opts.one{grid-template-columns:1fr}
+@media (max-width:700px){.opts{grid-template-columns:1fr}}
+.qb{display:flex;align-items:flex-start;gap:10px;text-align:left;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:17px;line-height:1.4;border:2px solid var(--line);border-radius:14px;background:#fff;padding:9px 12px;cursor:pointer;box-shadow:0 3px 0 var(--shadow);color:var(--ink);min-width:0}
+.qb:hover:not(:disabled){border-color:var(--accent)}
+.qb:disabled{cursor:default}
+.qb .L{flex:none;width:27px;height:27px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.qb>span:last-child{min-width:0;overflow-wrap:anywhere}
+.qb.right{border-color:#2e9e5b;background:#e8f6ee}.qb.right .L{background:#2e9e5b;color:#fff}
+.qb.wrong{border-color:#d8434a;background:#fdeeee}.qb.wrong .L{background:#d8434a;color:#fff}
+.mq{margin-top:12px}
+.mq>b{font-size:18px}
+.note{margin-top:8px;font-size:16.5px}
+.good{color:#2e9e5b;font-weight:700}.bad{color:#d8434a;font-weight:700}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.bigrule{margin-top:12px;border:3px dashed #d8434a;border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.eqrow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:10px 0;font-family:Fredoka,sans-serif;font-size:21px}
+.eqrow .small{min-width:48px}
+.sp{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;padding:4px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;box-shadow:0 2px 0 var(--shadow);color:var(--ink)}
+.sp.sel{border-color:#d8434a;background:#fdeeee;text-decoration:line-through;text-decoration-color:#d8434a;-webkit-text-decoration-color:#d8434a;text-decoration-thickness:3px}
+.kdone{border:2px solid #2e9e5b;background:#f3fbf6;border-radius:12px;padding:6px 12px;margin-top:8px;font-size:16px}
+.qz{border:2px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+.qzh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:18px}
+.qzdots{display:flex;gap:6px;flex-wrap:wrap}
+.qzdots i{width:13px;height:13px;border-radius:50%;background:var(--line);display:block}
+.qzdots i.cur{background:var(--accent)}.qzdots i.ok{background:#2e9e5b}.qzdots i.no{background:#d8434a}
+.qzq{font-size:21px;font-weight:700;margin:12px 0 10px;line-height:1.4}
+.qzend{text-align:center}
+.qzend .qzdots{justify-content:center;margin:10px 0}
+.qzend .stepbar{justify-content:center}
+.qzbig{font-family:Fredoka,sans-serif;font-weight:700;font-size:48px;color:var(--accent);line-height:1.1;margin:6px 0}
+.big{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;line-height:1.15;margin:4px 0 6px}
+.qzrev{text-align:left;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.qzrev div{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.qzrev div.ok{border-color:#2e9e5b;background:#f3fbf6}.qzrev div.no{border-color:#d8434a;background:#fdf4f4}
+.namerow{display:flex;flex-direction:column;gap:4px;margin:10px 0;max-width:380px}
+.namerow label{font-family:Fredoka,sans-serif;font-weight:600}
+.namerow input,.namerow select{font:inherit;font-size:18px;padding:8px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.namerow .no{border-color:#d8434a}
+.exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
+.sendst{font-family:Fredoka,sans-serif;font-size:15px;color:var(--muted)}.sendst.ok{color:#2e9e5b;font-weight:600}.sendst.err{color:#d8434a;font-weight:600}
+#tools{position:fixed;right:14px;bottom:14px;z-index:9998;display:flex;gap:8px}
+.tb{height:44px;min-width:44px;border-radius:999px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;padding:0 12px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;font-size:15px}
+.tb.on{background:#eef3fc;border-color:#2b59c3}
+#conf{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:transparent;border-radius:0}
+.mqz{margin-top:10px}.mqq{font-size:18px;margin:0 0 6px}
+.note{margin-top:8px}.btn.tiny{padding:5px 9px;font-size:14px;min-width:40px}
+.bchip{display:inline-block;color:#fff;border-radius:7px;padding:1px 9px;font-weight:600}
+#cv{touch-action:pan-y}
+#xChip{position:fixed;right:14px;top:14px;z-index:9996;display:none;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}
+#xChip span{font-size:13px;color:var(--muted)}#xChip b{font-size:20px;font-weight:600;color:#2b59c3}
+#xChip.warn{border-color:#e8962a}#xChip.warn b{color:#e8962a}
+#xChip.over{border-color:#d8434a}#xChip.over b{color:#d8434a}
+#xChip .btn{padding:4px 10px;font-size:14px}
+.dt{border-collapse:collapse;width:100%;font-size:16px;margin-top:4px}
+.dt th{background:var(--accent);color:#fff;font-family:Fredoka,sans-serif;font-weight:500;padding:6px 8px;text-align:center}
+.dt td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:center}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+select.pick{font-family:Fredoka,sans-serif;font-size:16px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer}
+.calc .cdisp{background:#1d2a3a;color:#e9f3ff;border-radius:12px;padding:8px 12px;text-align:right;font-family:Fredoka,sans-serif;margin-bottom:10px;min-height:64px}
+.calc #cExp{font-size:14px;opacity:.8;word-break:break-all;min-height:18px}
+.calc #cOut{font-size:26px;font-weight:600}
+.ckeys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ck{font-family:Fredoka,sans-serif;font-size:16px;padding:9px 0;border-radius:10px;border:2px solid var(--line);background:#f3f6fb;color:var(--ink);cursor:pointer}
+.ck.num{background:#fff}
+.ck.fn{background:#e8962a;border-color:#e8962a;color:#fff;font-weight:600}
+.ck.eq{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ck:active{transform:translateY(2px)}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 4px;line-height:1.25}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+.lvl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.btn.chip{font-size:14px;padding:6px 11px}
+.btn.hold{font-size:18px;padding:11px 22px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
+.btn.hold.down{transform:translateY(3px);box-shadow:0 0 0 var(--shadow);background:#d8434a;border-color:#d8434a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <ellipse cx="34" cy="31" rx="16" ry="10" fill="#f2c94c" opacity=".55"/>
+      <path d="M15 31 H41" stroke="#9aa3b5" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="15" cy="31" r="6" fill="#eef1f6" stroke="#18233a" stroke-width="1.5"/><circle cx="41" cy="31" r="8.5" fill="#2e9e5b"/>
+      <path d="M13 15 H40 M36 11.5 L41 15 L36 18.5 M17 11.5 V18.5" stroke="#e67e22" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div><h1>Electronegativity and Polarity Lab</h1><div class="sub">Chapter 8 · Section 5 · tug of war · bond dipoles · symmetric shapes · ΔEN and bond type · like dissolves like · bending water</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl" id="qlbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card" id="readcard"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function each(sel,fn){Array.prototype.forEach.call(document.querySelectorAll(sel),fn);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(x){x=clamp(x,0,1);return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.fillText(s,x,y);return ctx.measureText(s).width;}
+function tw(t,size){ctx.font='600 '+size+'px Fredoka, sans-serif';return ctx.measureText(t).width;}
+function fitTxt(t,x,y,size,c,w,max){var m=tw(t,size);max=max||690;if(m>max)size*=max/m;txt(t,x,y,{s:size,c:c,w:w});}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function panel(x,y,w,h){rr(x,y,w,h,14);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}
+function dotc(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),z=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-z*Math.cos(a-.45),y2-z*Math.sin(a-.45));ctx.lineTo(x2-z*Math.cos(a+.45),y2-z*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+function sci(v,dp){if(v===0)return '0';var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(dp==null?2:dp)+' × 10<sup>'+String(e).replace('-','−')+'</sup>';}
+var SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+function sciT(v,dp){var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(dp==null?2:dp)+' × 10'+String(e).split('').map(function(c){return SUP[c];}).join('');}
+var lastReads='';
+function setQ(h,lbl){$('q').innerHTML=h;$('qlbl').textContent=lbl||'Think';}
+function setRule(a){$('rule').innerHTML=a.map(function(s){return '<li>'+s+'</li>';}).join('');}
+function setReads(a){var h=a.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+function good(el){SFX.good();burst(el,40);}
+
+/* ---- sound ---- */
+var AC=null,MUTE=false;
+function ac(){if(MUTE)return null;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!AC||AC.state==='closed')AC=new C();if(AC.state!=='running'){var p=AC.resume();if(p&&p.catch)p.catch(function(){});}}catch(e){return null;}return AC;}
+function audioWake(){if(MUTE)return;try{if(AC&&AC.state==='interrupted'){AC.close();AC=null;}var a=ac();if(!a)return;var b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0);}catch(e){}}
+['pointerdown','touchend','keydown'].forEach(function(ev){document.addEventListener(ev,audioWake,true);});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&AC&&AC.state!=='running'){try{AC.resume();}catch(e){}}});
+function tone(f,t0,d,type,vol){var a=ac();if(!a)return;var t=a.currentTime+t0,o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol||.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}
+var SFX={good:function(){tone(784,0,.15);tone(1175,.1,.35);},bad:function(){tone(233,0,.22,'triangle',.18);tone(175,.13,.32,'triangle',.15);},
+ fan:function(){[523,659,784,1047].forEach(function(f,i){tone(f,i*.14,.35,'triangle',.18);});tone(1047,.6,.9,'sine',.2);tone(1319,.6,.9,'sine',.12);}};
+
+/* ---- confetti ---- */
+var CF=null,CP=[],cfOn=false,CFC=[TEAL,BLUE,PLUM,AMBER,CORAL,GREEN];
+function cfSize(){if(!CF)return;var d=window.devicePixelRatio||1;CF.width=innerWidth*d;CF.height=innerHeight*d;CF.getContext('2d').setTransform(d,0,0,d,0,0);}
+function cfCanvas(){if(!CF){CF=document.createElement('canvas');CF.id='conf';document.body.appendChild(CF);cfSize();window.addEventListener('resize',cfSize);}}
+function cfAdd(x,y,vx,vy){CP.push({x:x,y:y,vx:vx,vy:vy,a:Math.random()*6.3,va:(Math.random()-.5)*12,w:7+Math.random()*6,h:5+Math.random()*5,c:CFC[Math.floor(Math.random()*CFC.length)],t:0});}
+function burst(el,n){cfCanvas();var r=el&&el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},x=r.left+r.width/2,y=r.top+Math.min(r.height/2,24);
+ for(var i=0;i<(n||45);i++){var a=-Math.PI/2+(Math.random()-.5)*2.4,s=260+Math.random()*360;cfAdd(x,y,Math.cos(a)*s,Math.sin(a)*s);}cfRun();}
+function rain(n){cfCanvas();for(var i=0;i<n;i++)cfAdd(Math.random()*innerWidth,-20-Math.random()*innerHeight*.7,(Math.random()-.5)*120,60+Math.random()*160);cfRun();}
+function cfRun(){if(cfOn)return;cfOn=true;var last=performance.now();(function st(now){var dt=Math.min(.04,Math.max(0,(now-last)/1000)),g=CF.getContext('2d');last=now;g.clearRect(0,0,innerWidth,innerHeight);
+ CP.forEach(function(p){p.t+=dt;p.vy=Math.min(p.vy+520*dt,300);p.vx*=.985;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.va*dt;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.a*1.3))+1);g.restore();});
+ CP=CP.filter(function(p){return p.y<innerHeight+30&&p.t<8;});if(CP.length)requestAnimationFrame(st);else{cfOn=false;g.clearRect(0,0,innerWidth,innerHeight);}})(last);}
+
+/* ---- shared question helpers ---- */
+/* multiple choice: M={q,o,a,w}, picks stored on M.p; one try */
+/* answered questions redraw as 'Right' or 'Review', so the results get one row per answer */
+function mqBind(L,rerender){L.forEach(function(M){if(M.p!=null)M.shown=1;});each('[data-m]',function(b){b.onclick=function(){var M=L[+b.getAttribute('data-m')],j=+b.getAttribute('data-o');M.p=j;if(j===M.a)SFX.good();else SFX.bad();rerender();};});}
+/* ---- multiple choice with feedback (each one is its own .qz so results can label it) ---- */
+function mqHtml(M,i){var p=M.p;return '<div class="qz mqz"><div class="qzq mqq">'+M.q+'</div><div class="opts'+(M.one?' one':'')+'">'+M.o.map(function(o,j){var c=p==null?'':(j===M.a?' right':(j===p?' wrong':''));return '<button class="qb'+c+'" data-m="'+i+'" data-o="'+j+'"'+(p==null?'':' disabled')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+o+'</span></button>';}).join('')+'</div>'+
+ (p==null?'':'<div class="note">'+(p===M.a?'<span class="good">'+(M.shown?'✓ Right.':'Correct!')+'</span> ':'<span class="bad">'+(M.shown?'✗ Review:':'Not quite.')+'</span> ')+M.w+'</div>')+'</div>';}
+function seqPanel(L,tail){function r(){$('panel').innerHTML=L.map(function(M,i){return i===0||L[i-1].p!=null?mqHtml(M,i):'';}).join('')+(L[L.length-1].p!=null&&tail?tail:'');mqBind(L,r);}r();}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var T=0;
+function cvXY(e){var r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+cv.addEventListener('click',function(e){var t=TAB[tabI];if(t.click){var p=cvXY(e);t.click(p.x,p.y);}});
+function segHtml(id,labels,cur){return '<div class="seg" id="'+id+'">'+labels.map(function(l,i){return '<button data-k="'+i+'" class="'+(i===cur?'on':'')+'">'+l+'</button>';}).join('')+'</div>';}
+function segBind(id,fn){each('#'+id+' button',function(b){b.onclick=function(){each('#'+id+' button',function(x){x.classList.remove('on');});b.classList.add('on');fn(+b.getAttribute('data-k'));};});}
+function mkQ(L,exit){return {L:L,exit:!!exit,ord:null,player:null};}
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+/* the right answer lands on a random letter, never the same letter twice in a row */
+function placeAns(q,prev){var n=q.o.length,pos;do{pos=Math.floor(Math.random()*n);}while(n>1&&pos===prev);var rest=shuffle(q.o.map(function(_,k){return k;}).filter(function(k){return k!==q.a;}));rest.splice(pos,0,q.a);return {ord:rest,pos:pos};}
+function mixL(L){var prev=-1;L.forEach(function(M){var r=placeAns(M,prev);prev=r.pos;M.o=r.ord.map(function(k){return M.o[k];});M.a=r.pos;});}
+function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.sent=false;Q.started=Date.now();var prev=-1;Q.ord=Q.L.map(function(q){var r=placeAns(q,prev);prev=r.pos;return r.ord;});}
+function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
+function exStartHtml(Q){var me={};try{me=JSON.parse(lsGet('msm-student')||'{}')||{};}catch(e){}var nm=Q.last?Q.last.name:(me.name||''),cl=Q.last?Q.last.cls:(me.cls||'');
+ return '<div class="qz"><div class="lbl">Exit ticket · Chapter 8.5</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions. One try per question. You have 15 minutes.</div><div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div><div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="exerr" id="exErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="exGo">Start the exit ticket ▶</button></div></div>';}
+function exResult(Q){var N=Q.L.length,now=new Date(),mins=Math.max(1,Math.round((Date.now()-Q.started)/60000)),when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),hh=(Q.player.name+'|'+Q.player.cls+'|'+Q.score*100+'|'+Q.score+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7),code='EP-'+('000000'+hh.toString(36).toUpperCase()).slice(-6);
+ Q.res={when:when,code:code,payload:{game:'Electronegativity and Polarity Lab: Exit Ticket',chapter:8,name:Q.player.name,cls:Q.player.cls,score:Q.score*100,correct:Q.score,total:N,mins:mins,when:when,code:code,missed:Q.hist.map(function(h,k){return h?'':'Q'+(k+1);}).filter(Boolean).join(' ')}};}
+function exSend(Q){var st=$('exSt'),rt=$('exRetry');if(!st)return;st.className='sendst';st.textContent='Sending your result to your teacher…';if(rt)rt.style.display='none';
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Q.res.payload)}).then(function(){Q.sent=true;var s=$('exSt');if(s){s.className='sendst ok';s.textContent='✓ Your result was sent to your teacher.';}}).catch(function(){var s=$('exSt'),r=$('exRetry');if(s){s.className='sendst err';s.textContent='Could not send. Check your internet, then press Send again.';}if(r)r.style.display='';});}
+function qzHtml(Q){if(Q.exit&&!Q.player)return exStartHtml(Q);if(!Q.ord)qzStart(Q);var N=Q.L.length;
+ if(Q.done){var pct=Q.score/N,msg=pct>=.8?'Excellent work today!':(pct>=.6?'Good effort. Look at the ones you missed.':'Go back through this part, then try again.');
+  return '<div class="qz qzend">'+(Q.exit?'<div class="lbl">Exit ticket · Chapter 8.5</div><div class="big">Congratulations, '+esc(Q.player.name.split(' ')[0])+'!</div><div class="small">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+' · '+Q.res.when+' · check code '+Q.res.code+'</div>':'')+'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q)+(Q.exit?'<div class="stepbar"><span class="'+(Q.sent?'sendst ok':'sendst')+'" id="exSt">'+(Q.sent?'✓ Your result was sent to your teacher.':'Sending your result to your teacher…')+'</span><button class="btn" id="exRetry" style="display:none">Send again</button></div>':'')+
+   '<div class="qzrev">'+Q.L.map(function(q,k){return '<div class="'+(Q.hist[k]?'ok':'no')+'">'+(Q.hist[k]?'✓':'✗')+' <b>'+(k+1)+'.</b> '+q.q+' → <b>'+q.o[q.a]+'</b></div>';}).join('')+'</div><div class="stepbar"><button class="btn fill" id="qzR">'+(Q.exit?'Start again':'Try again')+'</button></div></div>';}
+ var q=Q.L[Q.i],ans=Q.pick!==null,h='<div class="qz">'+(Q.exit?'<div class="small" style="margin-bottom:6px">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div><div class="qzq">'+q.q+'</div><div class="opts">'+Q.ord[Q.i].map(function(k,j){var cls=ans?(k===q.a?' right':(k===Q.pick?' wrong':'')):'';return '<button class="qb qzb'+cls+'" data-k="'+k+'"'+(ans?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
+ if(ans)h+='<div class="fb '+(Q.pick===q.a?'ok':'no')+'"><b>'+(Q.pick===q.a?'Correct!':'Not quite.')+'</b> '+(Q.pick===q.a?'':'The answer is <b>'+q.o[q.a]+'</b>. ')+q.w+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(Q.i<N-1?'Next question ▶':'See my score ▶')+'</button></div>';
+ return h+'</div>';}
+function qzShow(Q){$('panel').innerHTML=qzHtml(Q);
+ each('.qzb',function(b){b.onclick=function(){if(Q.pick!==null)return;var q=Q.L[Q.i];Q.pick=+b.getAttribute('data-k');var ok=Q.pick===q.a;if(ok){Q.score++;SFX.good();}else SFX.bad();Q.hist[Q.i]=ok;qzShow(Q);if(ok)burst($('qzN'),25);};});
+ var x;if((x=$('qzN')))x.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;qzShow(Q);}else{Q.done=true;if(Q.exit)exResult(Q);renderSteps();qzShow(Q);if(Q.exit){exSend(Q);}var pc=Q.score/Q.L.length;if(pc>=.6){rain(Q.exit?260:120);SFX.fan();}}};
+ if((x=$('qzR')))x.onclick=function(){if(Q.exit){Q.last=Q.player;Q.player=null;Q.ord=null;Q.done=false;qzShow(Q);return;}qzStart(Q);renderSteps();qzShow(Q);};
+ if((x=$('exRetry')))x.onclick=function(){exSend(Q);};
+ if((x=$('exGo'))){var nm=$('exName'),cl=$('exCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exErr');nm.classList.remove('no');cl.classList.remove('no');if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}if(!c){er.textContent='Please choose your class.';cl.classList.add('no');cl.focus();return;}Q.player={name:v,cls:c};qzStart(Q);renderSteps();qzShow(Q);};x.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}}
+/* ================= chemistry data (Pauling electronegativities) ================= */
+var EN={H:2.20,Li:0.98,Na:0.93,K:0.82,Mg:1.31,Ca:1.00,Al:1.61,B:2.04,C:2.55,Si:1.90,N:3.04,P:2.19,O:3.44,S:2.58,F:3.98,Cl:3.16,Br:2.96,I:2.66};
+var METAL={Li:1,Na:1,K:1,Mg:1,Ca:1,Al:1};
+var ENAME={H:'hydrogen',Li:'lithium',Na:'sodium',K:'potassium',Mg:'magnesium',Ca:'calcium',Al:'aluminum',B:'boron',C:'carbon',Si:'silicon',N:'nitrogen',P:'phosphorus',O:'oxygen',S:'sulfur',F:'fluorine',Cl:'chlorine',Br:'bromine',I:'iodine'};
+var ATOM={H:['#eef1f6',INK,22],C:['#3b3550','#fff',30],N:['#2b59c3','#fff',30],O:['#d8434a','#fff',30],F:['#5fae2e','#fff',28],Cl:['#2e9e5b','#fff',33],B:['#e8962a','#fff',28],S:['#e3b520',INK,33],Br:['#a0522d','#fff',34],I:['#7b3fa0','#fff',36],
+ Li:['#8a4fbf','#fff',34],Na:['#8a4fbf','#fff',36],K:['#8a4fbf','#fff',38],Mg:['#0f8b8d','#fff',32],Ca:['#0f8b8d','#fff',34],Al:['#7a8aa0','#fff',32],Si:['#b08850','#fff',32],P:['#e67e22','#fff',32]};
+function f2(v){return (Math.round(v*100)/100).toFixed(2);}
+function atomDraw(el,x,y,r,lab,fs){var a=ATOM[el]||['#8a94a8','#fff',30];r=r||a[2];ctx.fillStyle=a[0];ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+ var g=ctx.createRadialGradient(x-r*.4,y-r*.4,r*.1,x,y,r);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(.6,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(0,0,0,.12)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+ ctx.strokeStyle='rgba(24,35,58,.45)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke();txt(lab==null?el:lab,x,y+1,{s:fs||Math.round(r*.8),c:a[1]});}
+/* dipole arrow: the cross (+) at the tail, the head at the δ− end */
+function dipArrow(x1,y1,x2,y2,c,w){w=w||4;var a=Math.atan2(y2-y1,x2-x1),L=Math.hypot(x2-x1,y2-y1);if(L<4)return;seg(x1,y1,x2-Math.cos(a)*6,y2-Math.sin(a)*6,c,w);
+ var z=10+w*1.6;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-z*Math.cos(a-.42),y2-z*Math.sin(a-.42));ctx.lineTo(x2-z*Math.cos(a+.42),y2-z*Math.sin(a+.42));ctx.closePath();ctx.fill();
+ var k=Math.min(12,L*.25),cx=x1+Math.cos(a)*k,cy=y1+Math.sin(a)*k,h=5+w;seg(cx-Math.sin(a)*h,cy+Math.cos(a)*h,cx+Math.sin(a)*h,cy-Math.cos(a)*h,c,w*.8);}
+function ePair(x,y,s){s=s||1;var g=ctx.createRadialGradient(x,y,2,x,y,24*s);g.addColorStop(0,'rgba(255,214,60,.95)');g.addColorStop(1,'rgba(255,214,60,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,24*s,0,7);ctx.fill();
+ [-1,1].forEach(function(k){ctx.fillStyle='#18233a';ctx.beginPath();ctx.arc(x+k*6*s,y,4.2*s,0,7);ctx.fill();});}
+
+/* ---- molecules: unit vectors from the central atom (x right, y up, z toward you) ---- */
+function bentV(a){var h=a*Math.PI/360;return [[-Math.sin(h),-Math.cos(h),0],[Math.sin(h),-Math.cos(h),0]];}
+function triV(y){var r=Math.sqrt(1-y*y),o=[];[90,210,330].forEach(function(d){var p=d*Math.PI/180;o.push([r*Math.cos(p),y,r*Math.sin(p)]);});return o;}
+var TET=[[0,1,0]].concat(triV(-1/3));
+var MOL={
+ CO2:{f:'CO₂',c:'C',o:['O','O'],v:[[-1,0,0],[1,0,0]],lp:[],sh:'linear',bo:2},
+ H2O:{f:'H₂O',c:'O',o:['H','H'],v:bentV(104.5),lp:[[-.6,.8,0],[.6,.8,0]],sh:'bent',to:'O'},
+ H2S:{f:'H₂S',c:'S',o:['H','H'],v:bentV(92),lp:[[-.6,.8,0],[.6,.8,0]],sh:'bent',to:'S'},
+ BF3:{f:'BF₃',c:'B',o:['F','F','F'],v:[[0,1,0],[.866,-.5,0],[-.866,-.5,0]],lp:[],sh:'trigonal planar'},
+ NH3:{f:'NH₃',c:'N',o:['H','H','H'],v:triV(-.372),lp:[[0,1,0]],sh:'trigonal pyramidal',to:'N'},
+ CH4:{f:'CH₄',c:'C',o:['H','H','H','H'],v:TET,lp:[],sh:'tetrahedral'},
+ CCl4:{f:'CCl₄',c:'C',o:['Cl','Cl','Cl','Cl'],v:TET,lp:[],sh:'tetrahedral'},
+ CHCl3:{f:'CHCl₃',c:'C',o:['H','Cl','Cl','Cl'],v:TET,lp:[],sh:'tetrahedral, but one H',to:'the three Cl atoms'},
+ CH3Cl:{f:'CH₃Cl',c:'C',o:['Cl','H','H','H'],v:TET,lp:[],sh:'tetrahedral, but one Cl',to:'Cl'},
+ HCl:{f:'HCl',c:'H',o:['Cl'],v:[[1,0,0]],lp:[],sh:'two atoms',di:1,to:'Cl'},
+ Cl2:{f:'Cl₂',c:'Cl',o:['Cl'],v:[[1,0,0]],lp:[],sh:'two atoms',di:1}
+};
+function proj(v){return [v[0],-v[1]+v[2]*.35];}
+function molNet(m){var n=[0,0,0];m.o.forEach(function(el,i){var d=EN[el]-EN[m.c];for(var k=0;k<3;k++)n[k]+=d*m.v[i][k];});return n;}
+function netSize(m){var n=molNet(m);return Math.hypot(n[0],n[1],n[2]);}
+function isPolar(m){return netSize(m)>.05;}
+function lpCount(m){return m.di?0:(m.lp||[]).length;}
+/* o: pairs (0..1), delta, dip (0..1), net (0..1), netAt [x,y], lpOn */
+function drawMol(m,cx,cy,sc,o){o=o||{};var L=130*sc,DS=55*sc;if(m.di)cx-=L/2;
+ var outs=m.o.map(function(el,i){var v=m.v[i],p=proj(v);return {el:el,v:v,z:v[2],x:cx+p[0]*L,y:cy+p[1]*L,d:EN[el]-EN[m.c],r:(ATOM[el][2])*sc*1.05};});
+ var rc=ATOM[m.c][2]*sc*1.05,dirs=[];
+ outs.forEach(function(a){dirs.push(Math.atan2(a.y-cy,a.x-cx));});
+ if(!m.di)(m.lp||[]).forEach(function(v){var p=proj(v),x=cx+p[0]*L*.56,y=cy+p[1]*L*.56,a=Math.atan2(p[1],p[0]);dirs.push(a);ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.fillStyle='rgba(138,79,191,.2)';ctx.strokeStyle='rgba(138,79,191,.65)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,32*sc,21*sc,0,0,7);ctx.fill();ctx.stroke();
+  [-1,1].forEach(function(k){ctx.fillStyle=PLUM;ctx.beginPath();ctx.arc(4*sc,k*7*sc,4.5*sc,0,7);ctx.fill();});ctx.restore();});
+ outs.forEach(function(a){var nx=-(a.y-cy),ny=a.x-cx,nl=Math.hypot(nx,ny)||1;nx/=nl;ny/=nl;var ww=10*sc;
+  if((m.bo||1)===2){seg(cx+nx*6*sc,cy+ny*6*sc,a.x+nx*6*sc,a.y+ny*6*sc,'#9aa3b5',ww*.75);seg(cx-nx*6*sc,cy-ny*6*sc,a.x-nx*6*sc,a.y-ny*6*sc,'#9aa3b5',ww*.75);}else seg(cx,cy,a.x,a.y,'#9aa3b5',ww);});
+ var srt=outs.slice().sort(function(a,b){return a.z-b.z;});
+ srt.forEach(function(a){if(a.z<-.01)atomDraw(a.el,a.x,a.y,a.r*(1-.08),null,Math.round(a.r*.75));});
+ atomDraw(m.c,cx,cy,rc,null,Math.round(rc*.75));
+ srt.forEach(function(a){if(a.z>=-.01)atomDraw(a.el,a.x,a.y,a.r*(1+a.z*.08),null,Math.round(a.r*.75));});
+ if(o.pairs!=null)outs.forEach(function(a){var sh=clamp(Math.abs(a.d)/1.6,0,1)*.24*o.pairs,f=.5+(a.d>0?sh:-sh);ePair(lerp(cx,a.x,f),lerp(cy,a.y,f),sc*.95);});
+ if(o.delta){var pos=0,neg=0;outs.forEach(function(a){if(Math.abs(a.d)<.1)return;var ux=a.x-cx,uy=a.y-cy,ul=Math.hypot(ux,uy)||1;txt(a.d>0?'δ−':'δ+',a.x+ux/ul*(a.r+20*sc),a.y+uy/ul*(a.r+20*sc),{s:Math.round(22*sc),c:a.d>0?RED:BLUE});if(a.d>0)pos++;else neg++;});
+  if((pos||neg)&&!(pos&&neg)){var best=0,bs=-1;for(var k=0;k<16;k++){var an=k*Math.PI/8-Math.PI,mn=9;dirs.forEach(function(d){var df=Math.abs(Math.atan2(Math.sin(an-d),Math.cos(an-d)));mn=Math.min(mn,df);});if(mn>bs){bs=mn;best=an;}}
+   txt(pos?'δ+':'δ−',cx+Math.cos(best)*(rc+20*sc),cy+Math.sin(best)*(rc+20*sc),{s:Math.round(22*sc),c:pos?BLUE:RED});}}
+ if(o.dip)outs.forEach(function(a){if(Math.abs(a.d)<.05)return;var p=proj(a.v),dx=p[0]*a.d*DS,dy=p[1]*a.d*DS,mx=(cx+a.x)/2,my=(cy+a.y)/2,nx=-(a.y-cy),ny=a.x-cx,nl=Math.hypot(nx,ny)||1;
+  if(ny/nl<-.2||(Math.abs(ny/nl)<=.2&&nx<0)){nx=-nx;ny=-ny;}var off=(m.bo===2?30:24)*sc;mx+=nx/nl*off;my+=ny/nl*off;ctx.globalAlpha=o.dip;dipArrow(mx-dx/2,my-dy/2,mx+dx/2,my+dy/2,ORANGE,4*Math.max(.8,sc));ctx.globalAlpha=1;});
+ if(o.net){var n=molNet(m),p=proj(n),nn=Math.hypot(n[0],n[1],n[2]);ctx.globalAlpha=o.net;
+  if(nn<.05){if(o.zeroAt){ctx.fillStyle=PLUM;ctx.beginPath();ctx.arc(o.zeroAt[0],o.zeroAt[1]-24,7,0,7);ctx.fill();txt('net dipole = 0',o.zeroAt[0],o.zeroAt[1],{s:Math.round(19*Math.max(.9,sc)),c:PLUM});}}
+  else{var dx=p[0]*DS*1.15,dy=p[1]*DS*1.15,ul0=Math.hypot(dx,dy)||1,clash=outs.some(function(q){var qx=q.x-cx,qy=q.y-cy,ql=Math.hypot(qx,qy)||1;return Math.abs((qx*dx+qy*dy)/(ql*ul0))>.93&&ql>20;}),ax,ay,bx,by;
+   if(clash||true){var lx=Math.max(40,Math.min.apply(null,outs.map(function(q){return q.x-q.r;}))-62*sc);ax=lx-dx/2;ay=cy-dy/2;bx=lx+dx/2;by=cy+dy/2;ctx.globalAlpha=o.net;dipArrow(ax,ay,bx,by,PLUM,8);txt('net',lx,Math.max(ay,by)+20,{s:Math.round(17*Math.max(.85,sc)),c:PLUM});txt('dipole',lx,Math.max(ay,by)+40,{s:Math.round(17*Math.max(.85,sc)),c:PLUM});ctx.globalAlpha=1;return;}
+   ax=cx-dx*.35;ay=cy-dy*.35;bx=cx+dx*.85;by=cy+dy*.85;ctx.globalAlpha=o.net*.95;dipArrow(ax,ay,bx,by,'#fff',13);dipArrow(ax,ay,bx,by,PLUM,8);
+   var ul=Math.hypot(dx,dy),lx=bx+dx/ul*0+(-dy/ul)*0;txt('net dipole',bx+(Math.abs(dx)>Math.abs(dy)?0:62*Math.max(.8,sc)),by+(Math.abs(dx)>Math.abs(dy)?-26:0),{s:Math.round(18*Math.max(.85,sc)),c:PLUM});}ctx.globalAlpha=1;}}
+/* tip-to-tail sum in a box */
+function vecSum(m,x,y,w,h,u){panel(x,y,w,h);txt('Add the bond dipoles',x+w/2,y+24,{s:17,c:PLUM});txt('tip to tail',x+w/2,y+46,{s:14,c:MUTED,w:500});
+ var DS=58,pts=[[0,0]],vs=[];m.o.forEach(function(el,i){var d=EN[el]-EN[m.c];if(Math.abs(d)<.05)return;var p=proj(m.v[i]);vs.push([p[0]*d*DS,p[1]*d*DS]);});
+ vs.forEach(function(v){var q=pts[pts.length-1];pts.push([q[0]+v[0],q[1]+v[1]]);});
+ var x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;pts.forEach(function(p){x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1]);});
+ var s=Math.min(2.5,(w-60)/Math.max(1,x1-x0),(h-140)/Math.max(1,y1-y0)),ox=x+w/2-(x0+x1)/2*s,oy=y+60+(h-140)/2+20-(y0+y1)/2*s;
+ var nShow=Math.min(vs.length,Math.floor(u*vs.length*1.0001+.0001));
+ for(var i=0;i<vs.length;i++){if(i>=nShow)break;dipArrow(ox+pts[i][0]*s,oy+pts[i][1]*s,ox+pts[i+1][0]*s,oy+pts[i+1][1]*s,ORANGE,4);}
+ dotc(ox+pts[0][0]*s,oy+pts[0][1]*s,6,INK);
+ if(nShow>=vs.length&&u>=1){var e=pts[pts.length-1],zero=Math.hypot(e[0],e[1])<4;
+  if(zero){txt('back to the start:',x+w/2,y+h-54,{s:16,c:INK});txt('net dipole = 0',x+w/2,y+h-28,{s:19,c:PLUM});}
+  else{dipArrow(ox,oy,ox+e[0]*s,oy+e[1]*s,PLUM,6);txt('start → end = net dipole',x+w/2,y+h-28,{s:16,c:PLUM});}}}
+
+/* ================= Tab 0: tug of war ================= */
+var TG={l:5,r:5,x:400,pair:3};
+var TPAIR=[['H','H'],['Cl','Cl'],['H','Br'],['H','Cl'],['H','F']];
+function tgFrame(real){clear();var A,B,pl,pr,xa=190,xb=610,y=230;
+ if(real){var p=TPAIR[TG.pair];A=p[0];B=p[1];pl=EN[A];pr=EN[B];}else{pl=TG.l;pr=TG.r;}
+ var ra=real?ATOM[A][2]*1.9:48+pl*2.6,rb=real?ATOM[B][2]*1.9:48+pr*2.6,shift=real?120*(pr-pl):300*(pr-pl)/(pr+pl),lim=shift>0?xb-rb-30-400:400-(xa+ra+30);shift=clamp(shift,-Math.min(130,lim),Math.min(130,lim));TG.x=lerp(TG.x,400+shift,.08);
+ seg(400,70,400,330,'#b9c5d8',2,[6,8]);txt('middle',400,58,{s:15,c:MUTED,w:500});
+ ctx.strokeStyle='#b07a3c';ctx.lineWidth=12;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(xa,y);ctx.lineTo(xb,y);ctx.stroke();ctx.strokeStyle='#8a5a28';ctx.lineWidth=12;ctx.setLineDash([3,11]);ctx.beginPath();ctx.moveTo(xa,y);ctx.lineTo(xb,y);ctx.stroke();ctx.setLineDash([]);
+ if(real){atomDraw(A,xa,y,ra,null,38);atomDraw(B,xb,y,rb,null,38);txt('EN '+f2(pl),xa,y+ra+24,{s:19,c:INK});txt('EN '+f2(pr),xb,y+rb+24,{s:19,c:INK});}
+ else{[[xa,ra,BLUE,'A',pl],[xb,rb,CORAL,'B',pr]].forEach(function(t){ctx.fillStyle=t[2];ctx.beginPath();ctx.arc(t[0],y,t[1],0,7);ctx.fill();var g=ctx.createRadialGradient(t[0]-t[1]*.4,y-t[1]*.4,4,t[0],y,t[1]);g.addColorStop(0,'rgba(255,255,255,.5)');g.addColorStop(.7,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(t[0],y,t[1],0,7);ctx.fill();txt('Atom '+t[3],t[0],y,{s:26,c:'#fff'});txt('pull '+t[4],t[0],y+t[1]+24,{s:19,c:INK});});}
+ arrow(xa-ra-8,y,xa-ra-8-pl*(real?22:9),y,BLUE,8);arrow(xb+rb+8,y,xb+rb+8+pr*(real?22:9),y,CORAL,8);
+ ePair(TG.x,y,1.6);seg(TG.x,y-84,TG.x,y-30,'#d9a400',2);txt('shared electrons',TG.x,y-96,{s:16,c:'#a37b00'});
+ var off=TG.x-400;
+ if(Math.abs(off)>6){var sA=off>0?'δ+':'δ−',sB=off>0?'δ−':'δ+';txt(sA,xa,y-ra-26,{s:30,c:off>0?BLUE:RED});txt(sB,xb,y-rb-26,{s:30,c:off>0?RED:BLUE});
+  if(Math.abs(off)>30){if(off>0)dipArrow(xa+20,y+120,xb-20,y+120,ORANGE,5);else dipArrow(xb-20,y+120,xa+20,y+120,ORANGE,5);txt('dipole arrow: + end → − end',400,y+146,{s:15,c:ORANGE});}}
+ panel(40,410,720,74);var msg,msg2;
+ if(real){var d=Math.abs(pr-pl),win=pr>pl?B:A,lose=pr>pl?A:B;if(d<.01){msg=A+'–'+B+': equal pull, so the electrons stay in the middle';msg2='shared equally · no δ+ or δ− · nonpolar bond';}
+  else{msg=win+' pulls harder (EN '+f2(EN[win])+'), so the electrons sit closer to '+win;msg2=win+' becomes δ− and '+lose+' becomes δ+ · polar bond (ΔEN = '+f2(d)+')';}}
+ else{if(pl===pr){msg='Equal pulls: the shared electrons stay in the middle';msg2='both atoms share them equally';}else{var w2=pr>pl?'B':'A';msg='Atom '+w2+' pulls harder: the shared electrons move toward Atom '+w2;msg2='the stronger puller gets more than its share: it becomes partly negative (δ−)';}}
+ fitTxt(msg,400,436,20,INK,600,690);fitTxt(msg2,400,464,16,MUTED,500,690);}
+var TQ=[{q:'In a tug of war over shared electrons, the electrons end up…',o:['closer to the atom that pulls harder','always exactly in the middle','closer to the atom that pulls less','on neither atom'],a:0,w:'The stronger puller gets more than its share of the electrons.'},
+ {q:'Electronegativity is…',o:['the ability of an atom in a bond to attract the shared electrons','the energy needed to remove an electron','the number of electrons an atom shares','the charge on an ion'],a:0,w:'It is the "pull" of an atom on the shared pair in a bond.'},
+ {q:'In H–H both atoms pull equally. The bond is…',o:['nonpolar: the electrons are shared equally','polar: H gets δ−','ionic','polar: the right H gets δ+'],a:0,w:'Same atom, same pull: ΔEN = 0.'},
+ {q:'In H–Cl (H 2.20, Cl 3.16), which atom has the δ−?',o:['Cl','H','both','neither'],a:0,w:'Cl has the higher electronegativity, so the shared electrons spend more time near Cl.'}];
+var T0={name:'Tug of war',c:PLUM,steps:['Set the pulls','Real atoms','Quiz me'],
+ title:function(i){return ['Warm-up: a tug of war over two shared electrons','Real atoms: who pulls harder?','Quiz: the tug of war'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">Atom A pull <input type="range" id="tL" min="1" max="10" step="1" value="'+TG.l+'"><output id="tLo">'+TG.l+'</output></div><div class="ctl">Atom B pull <input type="range" id="tR" min="1" max="10" step="1" value="'+TG.r+'"><output id="tRo">'+TG.r+'</output></div><button class="btn" id="tE">Make them equal</button>';
+   $('tL').oninput=function(){TG.l=+this.value;$('tLo').textContent=TG.l;};$('tR').oninput=function(){TG.r=+this.value;$('tRo').textContent=TG.r;};$('tE').onclick=function(){TG.l=TG.r=5;$('tL').value=5;$('tR').value=5;$('tLo').textContent=5;$('tRo').textContent=5;};
+   setQ('Two atoms share a pair of electrons, like a rope in a <b>tug of war</b>. Set each atom\'s pull. <b>Predict:</b> where do the shared electrons go when one atom pulls harder? Try equal pulls too.');
+   setRule(['Equal pulls: the shared electrons stay in the <b>middle</b>','Unequal pulls: the electrons move toward the <b>stronger</b> atom, which becomes partly negative (<b>δ−</b>); the other becomes <b>δ+</b>','<b>Electronegativity</b> = an atom\'s ability to attract the shared electrons in a bond']);}
+  else if(i===1){$('controls').innerHTML=segHtml('tP',TPAIR.map(function(p){return p[0]+'–'+p[1];}),TG.pair);segBind('tP',function(k){TG.pair=k;});
+   setQ('Now the pull is the atom\'s <b>electronegativity</b> (EN). Compare <b>H–H</b> with <b>H–Cl</b>. Which atom gets δ−? Try H–F: what changes?');
+   setRule(['H–H and Cl–Cl: same EN, electrons shared <b>equally</b>: <b>nonpolar</b> bond','H–Cl: Cl has the higher EN, so the electrons sit closer to Cl: <b>Cl is δ−, H is δ+</b>: <b>polar</b> bond','The <b>bigger</b> the EN difference, the further the electrons shift','The dipole arrow points from the <b>+</b> end to the <b>−</b> end']);}
+  else{$('readcard').style.display='none';seqPanel(TQ);setQ('Think about who pulls harder and where the electrons go.','Explain');setRule(['Electronegativity: the pull on the shared electrons','Higher EN → δ−; lower EN → δ+']);}},
+ frame:function(dt){tgFrame(stepI>=1);var real=stepI>=1;if(stepI<2){if(real){var p=TPAIR[TG.pair],d=Math.abs(EN[p[0]]-EN[p[1]]);setReads([['EN of '+p[0],f2(EN[p[0]])],['EN of '+p[1],f2(EN[p[1]])],['Difference (ΔEN)',f2(d)],['Bond',d<.01?'nonpolar':'polar']]);}
+  else setReads([['Atom A pull',TG.l],['Atom B pull',TG.r],['Electrons are',TG.l===TG.r?'in the middle':'closer to '+(TG.r>TG.l?'B':'A'),1]]);}}};
+
+/* ================= Tab 1: central atom tug of war ================= */
+var CA={mode:0,mol:'CO2',more:0,u:0,ts:0};
+var MORE=['BF3','CH4','CCl4','NH3','CHCl3'];
+function caMol(){return stepI===0?'CO2':(stepI===1?'H2O':MORE[CA.more]);}
+function caControls(){$('controls').innerHTML=(stepI===2?'<div class="ctl">Molecule '+segHtml('caM',MORE.map(function(k){return MOL[k].f;}),CA.more)+'</div>':'')+'<div class="ctl">'+segHtml('caS',['1. Who pulls?','2. Bond dipoles','3. Add them up'],CA.mode)+'</div>';
+ segBind('caS',function(k){CA.mode=k;CA.u=0;caText();});if(stepI===2)segBind('caM',function(k){CA.more=k;CA.u=0;CA.mode=0;caControls();caText();});}
+function bondList(m){var seen={},out=[];m.o.forEach(function(el){var k=m.c+'–'+el;if(seen[k])return;seen[k]=1;out.push(k+' '+f2(Math.abs(EN[el]-EN[m.c])));});return out.join(', ');}
+function caText(){var k=caMol(),m=MOL[k],pol=isPolar(m);
+ var q={CO2:'In CO₂ the central C is pulled by <b>two O atoms</b>, one on each side. Each O pulls harder than C. <b>Predict:</b> do the two pulls cancel? Click through 1 → 2 → 3.',
+  H2O:'In H₂O the central O pulls the electrons from <b>two H atoms</b>. The <b>two lone pairs</b> on O push the bonds down into a <b>bent</b> shape. <b>Predict:</b> do the pulls cancel now?',
+  BF3:'BF₃: three equal B–F pulls, 120° apart, all in one flat plane.',CH4:'CH₄: four equal C–H pulls pointing to the corners of a tetrahedron (C is slightly more electronegative than H).',CCl4:'CCl₄: four equal C–Cl pulls pointing to the corners of a tetrahedron.',
+  NH3:'NH₃: three N–H pulls, but the <b>lone pair</b> on N pushes them down into a pyramid.',CHCl3:'CHCl₃: still tetrahedral, but <b>one corner is H</b> instead of Cl, so the pulls are not all the same.'}[k];
+ setQ(q+(stepI===2?' Is it polar?':''));
+ var r={CO2:['Each C=O bond is <b>polar</b> (ΔEN 0.89): O is δ−, C is δ+','The two bond dipoles are <b>equal</b> and point in <b>opposite</b> directions (180°)','They <b>cancel</b>: net dipole = 0, so the middle does not move: CO₂ is <b>nonpolar</b>'],
+  H2O:['Each O–H bond is <b>polar</b> (ΔEN 1.24): O is δ−, each H is δ+','The lone pairs make H₂O <b>bent</b> (about 104.5°), so the bond dipoles are <b>not</b> opposite','Bond dipoles are <b>vectors</b>: they add up to a <b>net dipole</b> along the line that splits the H–O–H angle, pointing toward O: H₂O is <b>polar</b>']}[k];
+ if(!r)r=pol?['The bond dipoles do <b>not</b> cancel: there is a <b>net dipole</b> toward '+m.to,'Shape: '+m.sh+(lpCount(m)?' (lone pair on the central atom)':''),m.f+' is <b>polar</b>']:['Equal bond dipoles arranged <b>symmetrically</b> ('+m.sh+')','Tip to tail they return to the start: net dipole = 0',m.f+' is <b>nonpolar</b>, even though its bonds are polar'];
+ setRule(r);}
+function caFrame(dt){clear();var k=caMol(),m=MOL[k];CA.u=Math.min(1,CA.u+dt*.8);var u=ease(CA.u);
+ txt(m.f,22,30,{s:28,c:INK,a:'left'});txt(m.sh,22,58,{s:17,c:MUTED,w:500,a:'left'});
+ drawMol(m,295,250,1.2,{pairs:CA.mode===0?u:(CA.mode===1?1:null),delta:CA.mode===0?(u>.6?1:0):1,dip:CA.mode>=1?(CA.mode===1?u:1):0,net:CA.mode===2&&CA.u>=1?1:0});
+ if(CA.mode===2)vecSum(m,545,80,240,330,u);
+ else{panel(545,80,240,330);txt(CA.mode===0?'Who pulls harder?':'Bond dipoles',665,110,{s:18,c:PLUM});
+  var lines=CA.mode===0?['Each bond is its own','tug of war.','','The shared electrons','(yellow) move toward','the atom with the','higher EN.']:['Each orange arrow is','one bond dipole:','+ at δ+ end,','head at the δ− end.','','Longer arrow =','bigger ΔEN.'];
+  lines.forEach(function(s,i){txt(s,665,150+i*28,{s:17,c:INK,w:500});});}
+ panel(40,430,720,56);var pol=isPolar(m);
+ fitTxt(CA.mode<2?'Bonds: '+bondList(m)+(lpCount(m)?' · lone pairs on '+m.c+': '+lpCount(m):''):(pol?'The pulls do not cancel: '+m.f+' is POLAR':'The pulls cancel: '+m.f+' is NONPOLAR'),400,458,20,CA.mode<2?INK:(pol?RED:TEAL),600,690);
+ setReads([['Shape',m.sh,1],['Lone pairs on '+m.c,lpCount(m)],['Bonds (ΔEN)',bondList(m),1],['Net dipole',CA.mode===2&&CA.u>=1?(pol?'toward '+m.to:'0 (cancel)'):'?',1],['Molecule',CA.mode===2&&CA.u>=1?(pol?'polar':'nonpolar'):'?',1]]);}
+var CQ=[{q:'Why is CO₂ nonpolar, even though each C=O bond is polar?',o:['The two equal bond dipoles point in opposite directions and cancel','C and O have the same electronegativity','CO₂ has lone pairs on C','The bonds are ionic'],a:0,w:'Linear shape, 180°: equal and opposite pulls cancel.'},
+ {q:'In H₂O, the net dipole points…',o:['toward O, along the line that splits the H–O–H angle','from one H to the other H','toward the H atoms','nowhere: it is zero'],a:0,w:'The two O–H dipoles add like vectors; their sum points toward the δ− oxygen.'},
+ {q:'What makes H₂O bent instead of linear?',o:['The two lone pairs on O','The H atoms repel the electrons','O is larger than H','The bonds are double bonds'],a:0,w:'Four electron groups (2 bonds + 2 lone pairs) around O: the bonds are pushed into a bent shape.'},
+ {q:'Which molecule has bond dipoles that do NOT cancel?',o:['NH₃','BF₃','CCl₄','CH₄'],a:0,w:'NH₃ is trigonal pyramidal (lone pair on N), so its bond dipoles add up to a net dipole.'}];
+var T1={name:'Central atom',c:BLUE,steps:['Linear CO₂','Bent H₂O','More shapes','Quiz me'],
+ title:function(i){return ['Tug of war with a central atom: linear CO₂','Tug of war with a central atom: bent H₂O','More shapes: cancel or not?','Quiz: adding the pulls'][i];},
+ enter:function(i){if(i<3){CA.mode=0;CA.u=0;caControls();caText();}else{$('readcard').style.display='none';seqPanel(CQ);setQ('Think about the direction of each pull, not only its size.','Explain');setRule(['Bond dipoles are vectors: add them tip to tail','Equal and symmetric → cancel → nonpolar','Bent or pyramidal → do not cancel → polar']);}},
+ frame:function(dt){if(stepI<3)caFrame(dt);else{clear();drawMol(MOL.H2O,280,250,1.22,{delta:1,dip:1,net:1});vecSum(MOL.H2O,545,80,240,330,1);}}};
+
+/* ================= Tab 2: symmetric vs asymmetric ================= */
+var SY={pair:0},SPAIRS=[['CO2','H2O'],['BF3','NH3'],['CCl4','CHCl3']];
+var SR={list:null,i:0,pick:null,score:0,bins:[[],[]]};
+var SORTK=['CO2','H2O','BF3','NH3','CH4','CCl4','CHCl3','HCl','Cl2','H2S','CH3Cl'];
+function srReset(){SR.list=shuffle(SORTK);SR.i=0;SR.pick=null;SR.score=0;SR.bins=[[],[]];}
+function syCompare(){clear();var p=SPAIRS[SY.pair];seg(400,20,400,480,LINE,2,[6,8]);
+ p.forEach(function(k,j){var m=MOL[k],cx=j?600:200,pol=isPolar(m);txt(m.f+'  ·  '+m.sh,cx,30,{s:21});
+  drawMol(m,cx,232,.9,{delta:1,dip:1,net:1,zeroAt:[cx,410]});
+  pill(pol?'asymmetric → POLAR':'symmetric → NONPOLAR',cx,462,pol?RED:TEAL,'#fff',19);});}
+function srFrame(){clear();if(!SR.list)srReset();var done=SR.i>=SR.list.length;
+ [[40,'Polar',RED],[410,'Nonpolar',TEAL]].forEach(function(b,j){rr(b[0],370,350,116,16);ctx.fillStyle=j?'#e6f4f4':'#fdeef0';ctx.fill();ctx.strokeStyle=b[2];ctx.lineWidth=2.5;ctx.stroke();txt(b[1],b[0]+175,392,{s:20,c:b[2]});
+  SR.bins[j].forEach(function(f,i){var col=i%4,row=Math.floor(i/4);pill(f,b[0]+50+col*84,424+row*36,'#fff',b[2],17);});});
+ if(done){txt('All sorted! Score: '+SR.score+' / '+SR.list.length,400,170,{s:30,c:SR.score===SR.list.length?GREEN:INK});txt('Press "Start again" to sort a new order.',400,215,{s:18,c:MUTED,w:500});return;}
+ var m=MOL[SR.list[SR.i]],an=SR.pick!==null;txt('Molecule '+(SR.i+1)+' of '+SR.list.length+':  '+m.f,22,30,{s:24,a:'left'});
+ drawMol(m,420,200,.88,{delta:1,dip:an?1:0,net:an?1:0,zeroAt:[120,200]});
+ if(!an)txt('Polar or nonpolar? Look at the shape.',420,352,{s:18,c:MUTED,w:500});else txt(m.sh+(lpCount(m)?' · lone pair(s) on '+m.c:''),420,352,{s:18,c:MUTED,w:500});}
+function srControls(){var done=SR.list&&SR.i>=SR.list.length,an=SR.pick!==null;
+ $('controls').innerHTML=(done?'':'<button class="btn fill" id="sP"'+(an?' disabled':'')+'>Polar</button><button class="btn fill" id="sN"'+(an?' disabled':'')+'>Nonpolar</button>'+(an?'<button class="btn" id="sX">Next molecule ▶</button>':''))+'<button class="btn" id="sR">Start again</button>';
+ function pick(p){var m=MOL[SR.list[SR.i]],ok=p===isPolar(m);SR.pick=p;if(ok){SR.score++;SFX.good();}else SFX.bad();SR.bins[isPolar(m)?0:1].push(m.f);
+  $('panel').innerHTML='<div class="fb '+(ok?'ok':'no')+'"><b>'+(ok?'Correct!':'Not quite.')+'</b> '+m.f+' is <b>'+(isPolar(m)?'polar':'nonpolar')+'</b>: '+srWhy(m)+'</div>';srControls();if(ok)burst($('sX'),20);}
+ if($('sP')){$('sP').onclick=function(){pick(true);};$('sN').onclick=function(){pick(false);};}
+ if($('sX'))$('sX').onclick=function(){SR.i++;SR.pick=null;$('panel').innerHTML='';srControls();if(SR.i>=SR.list.length){renderSteps();if(SR.score>=SR.list.length*.6){rain(100);SFX.fan();}}};
+ $('sR').onclick=function(){srReset();$('panel').innerHTML='';srControls();renderSteps();};}
+function srWhy(m){var d=Math.abs(EN[m.o[0]]-EN[m.c]);if(m.di)return d<.05?'both atoms are the same, so the bond is nonpolar.':'it has only one bond and that bond is polar.';
+ return isPolar(m)?m.sh+(lpCount(m)?' (lone pairs on '+m.c+')':'')+', so the bond dipoles do not cancel.':m.sh+' with identical outer atoms, so the bond dipoles cancel.';}
+var SQ=[{q:'A molecule has polar bonds. It is nonpolar when…',o:['its shape is symmetric, so the bond dipoles cancel','it has a lone pair on the central atom','it is bent','its outer atoms are different'],a:0,w:'Symmetric shape: equal pulls in balanced directions cancel.'},
+ {q:'CCl₄ is nonpolar but CHCl₃ is polar. Why?',o:['Replacing one Cl with H makes the pulls unequal, so they no longer cancel','CHCl₃ has a lone pair on C','CHCl₃ is linear','C–Cl bonds are nonpolar'],a:0,w:'Same tetrahedral shape, but different outer atoms → the bond dipoles do not cancel.'},
+ {q:'Which pair are both polar molecules?',o:['H₂O and NH₃','CO₂ and BF₃','CH₄ and CCl₄','Cl₂ and CO₂'],a:0,w:'Both have lone pairs on the central atom: bent and trigonal pyramidal.'}];
+var T2={name:'Symmetric or not?',c:TEAL,steps:['Compare','Sort them','Quiz me'],mark:function(i){if(i===1)return SR.list&&SR.i>=SR.list.length?'✓':2;return i+1;},
+ title:function(i){return ['Same polar bonds, different shapes','Sort the molecules: polar or nonpolar?','Quiz: symmetric or asymmetric'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML=segHtml('syP',SPAIRS.map(function(p){return MOL[p[0]].f+' vs '+MOL[p[1]].f;}),SY.pair);segBind('syP',function(k){SY.pair=k;syRule();});syRule();
+   setQ('Both molecules in each pair have <b>polar bonds</b>. So why is one polar and the other nonpolar? Look at the <b>shape</b> and the <b>net dipole</b>.');}
+  else if(i===1){if(!SR.list)srReset();srControls();setQ('Decide: <b>polar</b> or <b>nonpolar</b>? Then the dipoles appear so you can check. Ask: are the bonds polar? Is the shape symmetric? Are the outer atoms all the same?');
+   setRule(['<b>Step 1:</b> Are the bonds polar? If ΔEN = 0 (Cl₂), the molecule is nonpolar','<b>Step 2:</b> Is the shape symmetric (linear, trigonal planar, tetrahedral) with identical outer atoms? → nonpolar','<b>Step 3:</b> Lone pairs on the central atom (bent, pyramidal) or different outer atoms → polar']);}
+  else{$('readcard').style.display='none';seqPanel(SQ);setQ('Think about shape and identical outer atoms.','Explain');setRule(['Polar bonds + symmetric shape → nonpolar molecule','Polar bonds + asymmetric shape → polar molecule']);}},
+ frame:function(){if(stepI===0){syCompare();var p=SPAIRS[SY.pair];setReads([[MOL[p[0]].f,isPolar(MOL[p[0]])?'polar':'nonpolar'],[MOL[p[1]].f,isPolar(MOL[p[1]])?'polar':'nonpolar'],['Bonds','polar in both',1]]);}
+  else if(stepI===1){srFrame();setReads([['Score',SR.score+' / '+(SR.list?SR.list.length:11)],['Left to sort',SR.list?Math.max(0,SR.list.length-SR.i-(SR.pick!==null?1:0)):11]]);}
+  else syCompare();}};
+function syRule(){setRule(['Both molecules have <b>polar bonds</b>','<b>Symmetric</b> shape (no lone pairs on the centre, identical outer atoms): the bond dipoles <b>cancel</b> → <b>nonpolar</b>','<b>Asymmetric</b> shape (lone pairs, or a different outer atom): they <b>do not cancel</b> → <b>polar</b>']);}
+
+/* ================= Tab 3: bond type from ΔEN ================= */
+var BT={a:'H',b:'Cl',f:0,ion:0};
+var ELS=['H','Li','Na','K','Mg','Ca','Al','B','C','Si','N','P','O','S','F','Cl','Br','I'];
+function btType(d){return d<.4?'Nonpolar covalent':(d<=1.7?'Polar covalent':'Ionic');}
+function btShare(d){return d===0?'shared equally':(d<.4?'shared almost equally':(d<=1.7?'shared unequally':'transferred'));}
+function btD(){return Math.round(Math.abs(EN[BT.a]-EN[BT.b])*100)/100;}
+function btFrame(){clear();var A=BT.a,B=BT.b,d=btD(),both=METAL[A]&&METAL[B],ion=!both&&d>1.7,hiB=EN[B]>=EN[A],xa=230,xb=570,y=165;
+ BT.f=lerp(BT.f,both?0:clamp(d/1.7,0,1),.07);BT.ion=lerp(BT.ion,ion?1:0,.06);
+ var sep=BT.ion*40,XA=xa-sep,XB=xb+sep,ra=62,rb=62,hx=hiB?XB:XA;
+ var ccx=lerp(lerp(400,400+.62*(hx-400),BT.f),hx,BT.ion);
+ if(!both){var cx=ccx,rx=lerp(250-BT.f*40,104,BT.ion),ry=lerp(78,92,BT.ion),g=ctx.createRadialGradient(cx,y,10,cx,y,rx);
+  g.addColorStop(0,'rgba(255,205,60,.75)');g.addColorStop(1,'rgba(255,205,60,0)');ctx.save();ctx.translate(cx,y);ctx.scale(1,ry/rx);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,rx,0,7);ctx.fill();ctx.restore();}
+ if(BT.ion<.5&&!both)seg(XA,y,XB,y,'#9aa3b5',10);
+ atomDraw(A,XA,y,ra,null,40);atomDraw(B,XB,y,rb,null,40);
+ if(!both)ePair(lerp(ccx,hx+(hiB?-1:1)*44,BT.ion),lerp(y,y+30,BT.ion),1.5);
+ txt(ENAME[A]+' · EN '+f2(EN[A]),XA,y+ra+24,{s:17,c:INK,w:500});txt(ENAME[B]+' · EN '+f2(EN[B]),XB,y+rb+24,{s:17,c:INK,w:500});
+ if(!both&&d>=.4){var neg=hiB?XB:XA,pos=hiB?XA:XB;if(ion){[[pos,'+',BLUE],[neg,'−',RED]].forEach(function(t){ctx.fillStyle=t[2];ctx.beginPath();ctx.arc(t[0]+48,y-52,17,0,7);ctx.fill();txt(t[1],t[0]+48,y-51,{s:26,c:'#fff'});});}
+  else{txt('δ+',pos,y-ra-22,{s:28,c:BLUE});txt('δ−',neg,y-rb-22,{s:28,c:RED});}}
+ else if(!both&&d>0){txt('δ+',hiB?XA:XB,y-ra-22,{s:20,c:'#8fa4cc'});txt('δ−',hiB?XB:XA,y-rb-22,{s:20,c:'#e5a0a3'});}
+ var hiE=EN[A]>=EN[B]?A:B,loE=hiE===A?B:A;
+ txt(both?'Two metals':'ΔEN = '+f2(EN[hiE])+' − '+f2(EN[loE])+' = '+f2(d),400,298,{s:28,c:INK});
+ var x0=70,x1=730,ux=function(v){return x0+(x1-x0)*v/3.3;},by=370;
+ [[0,.4,TEAL,'nonpolar|covalent'],[.4,1.7,AMBER,'polar covalent'],[1.7,3.3,CORAL,'ionic']].forEach(function(z){rr(ux(z[0]),by-4,ux(z[1])-ux(z[0]),38,6);ctx.fillStyle=z[2];ctx.fill();var ls=z[3].split('|'),cxz=(ux(z[0])+ux(z[1]))/2;if(ls.length>1){txt(ls[0],cxz,by+6,{s:14,c:'#fff'});txt(ls[1],cxz,by+23,{s:14,c:'#fff'});}else txt(ls[0],cxz,by+15,{s:18,c:'#fff'});});
+ [0,.4,1.7,3.3].forEach(function(v){txt(String(v),ux(v),by+46,{s:15,c:MUTED});});txt('ΔEN',x0-34,by+15,{s:16,c:MUTED});
+ if(!both){var mx=ux(Math.min(d,3.3));ctx.fillStyle=INK;ctx.beginPath();ctx.moveTo(mx,by-6);ctx.lineTo(mx-12,by-26);ctx.lineTo(mx+12,by-26);ctx.closePath();ctx.fill();txt(f2(d),mx,by-40,{s:18});}
+ panel(40,432,720,56);var nn=ion&&!METAL[A]&&!METAL[B],msg=both?'Two metals form a metallic bond: choose at least one nonmetal':(nn?'ΔEN above 1.7: in the ionic range (very unequal sharing)':btType(d)+' bond: the electrons are '+btShare(d));
+ fitTxt(msg,400,452,21,both?MUTED:(d<.4?TEAL:(d<=1.7?'#b86e0c':CORAL)),600,690);
+ if(!both&&ion&&!METAL[A]&&!METAL[B])fitTxt('The cut-offs are a guide, not sharp lines: two nonmetals usually still share (HF is a very polar covalent molecule).',400,476,14,MUTED,500,690);
+ else if(!both)fitTxt(d<.4?'ΔEN below 0.4: (almost) equal sharing':(d<=1.7?'ΔEN from 0.4 to 1.7: unequal sharing, δ+ and δ−':'ΔEN above 1.7: electrons move over, ions form'),400,476,14,MUTED,500,690);
+ setReads([['EN of '+A,f2(EN[A])],['EN of '+B,f2(EN[B])],['ΔEN',both?'n/a':f2(d)],['Bond type',both?'metallic':btType(d).toLowerCase()],['Electrons are',both?'a "sea" of electrons':btShare(d),1]]);}
+var BQ=[{q:'Classify the N–H bond. (N = 3.04, H = 2.20)',o:['Polar covalent (ΔEN = 0.84)','Nonpolar covalent (ΔEN = 0.84)','Ionic (ΔEN = 0.84)','Nonpolar covalent (ΔEN = 0)'],a:0,w:'0.84 is between 0.4 and 1.7.'},
+ {q:'Classify the O–O bond. (O = 3.44)',o:['Nonpolar covalent','Polar covalent','Ionic','Metallic'],a:0,w:'3.44 − 3.44 = 0: shared equally.'},
+ {q:'Classify the Li–F bond. (Li = 0.98, F = 3.98)',o:['Ionic (ΔEN = 3.00)','Polar covalent (ΔEN = 3.00)','Nonpolar covalent (ΔEN = 4.96)','Polar covalent (ΔEN = 1.50)'],a:0,w:'3.98 − 0.98 = 3.00, above 1.7: the electron is transferred.'},
+ {q:'Which bond is the MOST polar? (H 2.20, C 2.55, N 3.04, O 3.44)',o:['O–H','N–H','C–H','H–H'],a:0,w:'O–H has the largest ΔEN (1.24).'}];
+var T3={name:'Bond type',c:AMBER,steps:['Pick two elements','Quiz me'],
+ title:function(i){return ['Bond type from the electronegativity difference','Quiz: what type of bond?'][i];},
+ enter:function(i){if(i===0){function opts(cur){return ELS.map(function(e){return '<option value="'+e+'"'+(e===cur?' selected':'')+'>'+e+' ('+f2(EN[e])+')</option>';}).join('');}
+   $('controls').innerHTML='<div class="ctl">Atom 1 <select class="pick" id="bA">'+opts(BT.a)+'</select></div><div class="ctl">Atom 2 <select class="pick" id="bB">'+opts(BT.b)+'</select></div><div class="chips">'+[['H','H'],['H','Cl'],['C','O'],['Ca','O'],['Na','Cl'],['C','H']].map(function(p){return '<button class="btn chip" data-a="'+p[0]+'" data-b="'+p[1]+'">'+p[0]+'–'+p[1]+'</button>';}).join('')+'</div>';
+   $('bA').onchange=function(){BT.a=this.value;};$('bB').onchange=function(){BT.b=this.value;};each('.chip',function(b){b.onclick=function(){BT.a=b.getAttribute('data-a');BT.b=b.getAttribute('data-b');$('bA').value=BT.a;$('bB').value=BT.b;};});
+   setQ('Pick two elements. Find <b>ΔEN = higher EN − lower EN</b>. Watch the shared electrons (yellow). <b>Predict:</b> which pair moves the electrons all the way over? Try H–H, H–Cl, C–O, Ca–O and Na–Cl.');
+   setRule(['<b>ΔEN = higher EN − lower EN</b> (always subtract the smaller value)','ΔEN <b>below 0.4</b>: <b>nonpolar covalent</b> (0 = shared equally)','ΔEN <b>0.4 to 1.7</b>: <b>polar covalent</b>: shared unequally, δ+ and δ−','ΔEN <b>above 1.7</b>: <b>ionic</b>: electrons transferred','Bonding is a range: the bigger ΔEN, the more ionic the bond']);}
+  else{$('readcard').style.display='none';seqPanel(BQ);setQ('Subtract the smaller EN from the larger, then use the cut-offs 0.4 and 1.7.','Calculate');setRule(['< 0.4 nonpolar covalent','0.4 – 1.7 polar covalent','> 1.7 ionic']);}},
+ frame:function(){btFrame();}};
+
+/* ================= Tab 4: like dissolves like ================= */
+var SOLV=[{n:'Water',p:'polar',c:[226,239,251],den:'1.00 g/mL'},{n:'CCl₄',p:'nonpolar',c:[236,239,244],den:'1.59 g/mL'},{n:'Paraffin oil',p:'nonpolar',c:[250,240,200],den:'≈ 0.85 g/mL'}];
+var SOLU=[{n:'KMnO₄',sh:'KMnO₄',k:'ionic',xc:'#3a0d4a',res:[[1,[110,20,140]],[0,null],[0,null]]},{n:'Iodine (I₂)',sh:'I₂',k:'nonpolar',xc:'#43404d',res:[[.14,[200,130,35]],[1,[140,50,170]],[1,[165,75,175]]]}];
+var LD={s:0,t:-1,pair:0,ls:0,lt:-1,lsol:1};
+var XT_R=[];for(var i0=0;i0<10;i0++)XT_R.push([Math.random()*2-1,Math.random(),Math.random()*6.3]);
+function mixC(a,b,t){return 'rgb('+Math.round(lerp(a[0],b[0],t))+','+Math.round(lerp(a[1],b[1],t))+','+Math.round(lerp(a[2],b[2],t))+')';}
+function tubePath(x,y0,y1,w){var r=w/2;ctx.beginPath();ctx.moveTo(x-r,y0);ctx.lineTo(x-r,y1-r);ctx.arc(x,y1-r,r,Math.PI,0,true);ctx.lineTo(x+r,y0);}
+function tubeGlass(x,y0,y1,w){tubePath(x,y0,y1,w);ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3.5;ctx.stroke();rr(x-w/2-8,y0-8,w+16,12,5);ctx.fillStyle='#c9d4e6';ctx.fill();seg(x-w/2+9,y0+20,x-w/2+9,y1-w/2-10,'rgba(255,255,255,.85)',4);}
+function crystals(x,yb,w,n,col,t,sh){for(var i=0;i<n;i++){var R=XT_R[i],cx=x+R[0]*(w/2-14),drop=clamp(t*1.4-R[1]*.4,0,1),cy=lerp(70,yb-8-R[1]*10,ease(drop)),s=(7+R[1]*4)*sh;if(s<1)continue;
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(R[2]);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(-s,-s*.5);ctx.lineTo(0,-s);ctx.lineTo(s,-s*.3);ctx.lineTo(s*.6,s*.7);ctx.lineTo(-s*.7,s*.6);ctx.closePath();ctx.fill();ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(-s*.3,-s*.6,s*.4,s*.25);ctx.restore();}}
+function ldOne(dt){clear();if(LD.t>=0)LD.t+=dt;var t=LD.t,S=SOLU[LD.s];
+ SOLV.forEach(function(v,j){var x=150+j*250,y0=105,y1=400,w=96,ly=215,res=S.res[j],shake=t>1.1&&t<2.3?Math.sin(t*28)*.06:0,prog=t<1.3?0:clamp((t-1.3)/2,0,1);
+  txt(v.n,x,30,{s:24});pill(v.p,x,64,v.p==='polar'?BLUE:TEAL,'#fff',16);
+  ctx.save();ctx.translate(x,y1);ctx.rotate(shake);ctx.translate(-x,-y1);
+  ctx.save();tubePath(x,y0,y1,w);ctx.clip();ctx.fillStyle=mixC(v.c,v.c,0);ctx.fillRect(x-w,ly,w*2,y1);
+  if(t>=0&&res[0]>0){ctx.globalAlpha=(res[0]>.5?.85:.42)*ease(prog);ctx.fillStyle='rgb('+res[1].join(',')+')';ctx.fillRect(x-w,ly,w*2,y1);ctx.globalAlpha=1;}
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(x-w,ly,w*2,4);
+  if(t>=0)crystals(x,y1,w,8,S.xc,Math.min(t,1.2),1-res[0]*.95*ease(prog));ctx.restore();tubeGlass(x,y0,y1,w);ctx.restore();
+  if(t>3.3){var ok=res[0]>.5,lab=ok?'dissolves':(res[0]>0?'barely dissolves':'does not dissolve');pill(lab,x,436,ok?GREEN:(res[0]>0?AMBER:RED),'#fff',17);
+   var c=LD.s===0?(ok?'purple solution':'crystals stay at the bottom'):(ok?'violet solution':(res[0]>0?'pale yellow-brown':'crystals stay'));txt(c,x,470,{s:16,c:MUTED,w:500});}});
+ if(t<0)txt('Choose a solute, then press "Add and shake"',400,452,{s:19,c:MUTED,w:500});}
+var PAIRL=[{n:'Water + CCl₄',top:0,bot:1},{n:'Water + paraffin oil',top:2,bot:0}];
+function ldTwo(dt){clear();if(LD.lt>=0)LD.lt+=dt;var P=PAIRL[LD.pair],t=LD.lt,x=280,y0=60,y1=440,w=140,mid=255,top=SOLV[P.top],bot=SOLV[P.bot],
+ mix=t<0?0:(t<1.4?ease(t/0.6):clamp(1-(t-1.4)/1.6,0,1)),shake=t>=0&&t<1.6?Math.sin(t*26)*.07:0,done=t<0||t>3.0,prog=t<0?0:clamp((t-.6)/2.4,0,1),sol=LD.lsol>=0?SOLU[LD.lsol]:null;
+ function layerCol(si,base){var c=base.c.slice(),a=0,rc=null;if(sol&&t>=0){var r=sol.res[si];a=r[0]>.5?.85:(r[0]>0?.2:0);rc=r[1];}return {base:'rgb('+c.join(',')+')',top:rc,a:a*prog};}
+ var LT=layerCol(P.top,top),LB=layerCol(P.bot,bot);
+ ctx.save();ctx.translate(x,y1);ctx.rotate(shake);ctx.translate(-x,-y1);
+ ctx.save();tubePath(x,y0,y1,w);ctx.clip();
+ function fillL(L,ya,yb){ctx.fillStyle=L.base;ctx.fillRect(x-w,ya,w*2,yb-ya);if(L.top){ctx.globalAlpha=L.a;ctx.fillStyle='rgb('+L.top.join(',')+')';ctx.fillRect(x-w,ya,w*2,yb-ya);ctx.globalAlpha=1;}}
+ fillL(LT,130,mid);fillL(LB,mid,y1+10);
+ if(mix>0){ctx.globalAlpha=mix;fillL(LT,130,y1+10);ctx.globalAlpha=1;for(var i=0;i<26;i++){var R=XT_R[i%10],bx=x+((i*37)%120-60),byy=150+((i*53+Math.floor(T*3)*7)%270),br=8+(i%4)*3;ctx.globalAlpha=mix;ctx.fillStyle=LB.base;ctx.beginPath();ctx.arc(bx,byy,br,0,7);ctx.fill();if(LB.top&&LB.a>0){ctx.globalAlpha=mix*LB.a;ctx.fillStyle='rgb('+LB.top.join(',')+')';ctx.beginPath();ctx.arc(bx,byy,br,0,7);ctx.fill();}ctx.globalAlpha=1;}}
+ if(sol&&(t<0||t<1.4))crystals(x,y1,w,8,sol.xc,t<0?1.2:1.2,1-prog*.9);
+ if(mix<.3)seg(x-w/2,mid,x+w/2,mid,'rgba(24,35,58,.35)',2);
+ ctx.restore();tubeGlass(x,y0,y1,w);ctx.restore();
+ txt(PAIRL[LD.pair].n,x,30,{s:24});
+ [[top,190,'top'],[bot,355,'bottom']].forEach(function(L){arrow(560,L[1],x+w/2+12,L[1],MUTED,2.5);txt(L[0].n,600,L[1]-26,{s:21,a:'left'});txt(L[0].p+' · '+L[0].den,600,L[1]+4,{s:16,c:L[0].p==='polar'?BLUE:TEAL,a:'left',w:500});
+  if(sol&&done&&t>=0){var r=sol.res[SOLV.indexOf(L[0])];txt(r[0]>.5?'✓ '+sol.sh+' dissolves here':(r[0]>0?'only a little '+sol.sh+' (pale)':'✗ no '+sol.sh+' here'),600,L[1]+32,{s:16,c:r[0]>.5?GREEN:RED,a:'left'});}});
+ panel(470,420,310,66);fitTxt(sol?(t<0?'Press "Shake" to mix':(done?(LD.lsol===0?'KMnO₄ (ionic) goes into the water layer':'I₂ (nonpolar) goes into the '+(LD.pair===0?'CCl₄':'oil')+' layer'):'shaking…')):'Two layers: they do not mix',625,446,17,INK,600,290);
+ fitTxt('the denser liquid sinks to the bottom',625,470,14,MUTED,500,290);}
+var LQ=[{q:'KMnO₄ dissolves in water but not in CCl₄. Why?',o:['KMnO₄ is ionic; it dissolves in polar water, not in nonpolar CCl₄','KMnO₄ is nonpolar like water','CCl₄ is too dense','Water reacts with KMnO₄ to make it purple'],a:0,w:'Like dissolves like: ionic/polar solutes dissolve in polar solvents.'},
+ {q:'Iodine crystals in paraffin oil give…',o:['a violet solution: nonpolar I₂ dissolves in nonpolar oil','no colour: I₂ does not dissolve','a purple solution only in water','a pale yellow-brown solution like water'],a:0,w:'I₂ and paraffin oil are both nonpolar.'},
+ {q:'Water and CCl₄ are poured into one tube. What do you see?',o:['Two layers: CCl₄ at the bottom, water on top','One clear mixture','Two layers: water at the bottom','A purple solution'],a:0,w:'Polar water and nonpolar CCl₄ do not mix; CCl₄ (1.59 g/mL) is denser.'},
+ {q:'You shake iodine with water and CCl₄, then let it settle. Where is the violet colour?',o:['In the bottom CCl₄ layer','In the top water layer','In both layers equally','Nowhere: iodine stays solid'],a:0,w:'Nonpolar I₂ moves into the nonpolar CCl₄ layer, which is at the bottom.'}];
+var T4={name:'Like dissolves like',c:CORAL,steps:['One solvent at a time','Two layers','Quiz me'],
+ title:function(i){return ['Like dissolves like: KMnO₄ and iodine in three solvents','Two liquids in one tube','Quiz: like dissolves like'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">Solute '+segHtml('ldS',SOLU.map(function(s){return s.n;}),LD.s)+'</div><button class="btn fill" id="ldGo">Add and shake</button><button class="btn" id="ldX">Empty the tubes</button>';
+   segBind('ldS',function(k){LD.s=k;LD.t=-1;ldRule();});$('ldGo').onclick=function(){LD.t=0;tone(660,0,.08);};$('ldX').onclick=function(){LD.t=-1;};ldRule();
+   setQ('Three tubes: <b>water</b> (polar), <b>CCl₄</b> and <b>paraffin oil</b> (both nonpolar). <b>Predict:</b> where will ionic <b>KMnO₄</b> dissolve? Where will nonpolar <b>iodine</b> dissolve? Test both. <span class="small">(CCl₄ is toxic: in class it is a teacher demo.)</span>');}
+  else if(i===1){$('controls').innerHTML='<div class="ctl">'+segHtml('ldP',PAIRL.map(function(p){return p.n;}),LD.pair)+'</div><div class="ctl">Add '+segHtml('ldL',['Nothing','KMnO₄','Iodine'],LD.lsol+1)+'</div><button class="btn fill" id="ldSh">Shake</button>';
+   segBind('ldP',function(k){LD.pair=k;LD.lt=-1;});segBind('ldL',function(k){LD.lsol=k-1;LD.lt=-1;});$('ldSh').onclick=function(){LD.lt=0;tone(520,0,.08);};
+   setQ('Pour water and a nonpolar liquid into one tube. <b>Predict:</b> do they mix? Which one sinks? Then add a solute and <b>shake</b>: which layer gets the colour?');
+   setRule(['Polar water and a nonpolar liquid <b>do not mix</b>: they form <b>two layers</b>','The <b>denser</b> liquid is at the bottom: <b>CCl₄</b> (1.59 g/mL) sinks below water; <b>paraffin oil</b> (≈ 0.85 g/mL) floats on water','After shaking, <b>KMnO₄</b> colours the <b>water</b> layer and <b>I₂</b> colours the <b>nonpolar</b> layer']);}
+  else{$('readcard').style.display='none';seqPanel(LQ);setQ('Match the solute to the solvent: polar with polar, nonpolar with nonpolar.','Explain');setRule(['Like dissolves like','Polar/ionic solutes → polar solvents; nonpolar solutes → nonpolar solvents']);}},
+ frame:function(dt){T+=dt;if(stepI===0){ldOne(dt);var S=SOLU[LD.s];setReads([['Solute',S.n],['Solute type',S.k],['Water (polar)',LD.t>3.3?(S.res[0][0]>.5?'dissolves':'barely'):'?'],['CCl₄ / oil (nonpolar)',LD.t>3.3?(S.res[1][0]>.5?'dissolves':'no'):'?']]);}
+  else if(stepI===1){ldTwo(dt);var P=PAIRL[LD.pair];setReads([['Top layer',SOLV[P.top].n],['Bottom layer',SOLV[P.bot].n],['Mix?','no: two layers',1]]);}
+  else{LD.lt=4;ldTwo(0);}}};
+function ldRule(){setRule(['<b>KMnO₄</b> is ionic: it dissolves in polar <b>water</b> (purple) but not in nonpolar CCl₄ or oil','<b>Iodine</b> is nonpolar: it barely dissolves in water (pale yellow-brown) but dissolves in <b>CCl₄</b> or <b>oil</b> (violet)','<b>Like dissolves like</b>: polar/ionic solutes dissolve in polar solvents; nonpolar solutes dissolve in nonpolar solvents']);}
+
+/* ================= Tab 5: bending water ================= */
+var BW={q:1,d:60,liq:0,def:[0,0],ang:[]};
+var LIQ2=['Hexane','CCl₄'];
+for(var i1=0;i1<14;i1++)BW.ang.push(Math.random()*6.3);
+function bwFrame(dt){clear();T+=dt;var close=BW.d/100;seg(400,10,400,490,LINE,2,[6,8]);
+ [0,1].forEach(function(j){var x0=j?540:140,polar=j===0,objX=x0+lerp(170,95,close),oy=250,target=polar&&BW.q?20+68*close*close:0;BW.def[j]=lerp(BW.def[j],target,.06);var df=BW.def[j];
+  txt(polar?'Water':LIQ2[BW.liq],x0+60,24,{s:22});pill(polar?'polar':'nonpolar',x0+60,52,polar?BLUE:TEAL,'#fff',15);
+  rr(x0-14,70,28,40,5);ctx.fillStyle='#dfe7f2';ctx.fill();ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2.5;ctx.stroke();rr(x0-5,108,10,10,2);ctx.fillStyle='#7f8ea6';ctx.fill();
+  var col=polar?'#4f9fe0':'#a9b6c8';function sx(y){return x0+df*ease(clamp((y-125)/240,0,1));}
+  ctx.strokeStyle=col;ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();for(var y=118;y<=430;y+=6){var xx=sx(y);if(y===118)ctx.moveTo(xx,y);else ctx.lineTo(xx,y);}ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=2.5;ctx.setLineDash([6,18]);ctx.lineDashOffset=-T*120;ctx.beginPath();for(var y2=118;y2<=430;y2+=6){var x2=sx(y2);if(y2===118)ctx.moveTo(x2,y2);else ctx.lineTo(x2,y2);}ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;
+  ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x0-45,415);ctx.lineTo(x0-40,478);ctx.lineTo(x0+115,478);ctx.lineTo(x0+120,415);ctx.stroke();ctx.fillStyle=polar?'rgba(79,159,224,.3)':'rgba(169,182,200,.35)';ctx.fillRect(x0-39,450,153,27);
+  if(BW.q===2){rr(objX-8,oy-14,112,28,12);ctx.fillStyle='rgba(220,235,245,.9)';ctx.fill();ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2;ctx.stroke();for(var k=0;k<4;k++)txt('+',objX+12+k*30,oy+1,{s:24,c:BLUE});}
+  else{ctx.strokeStyle=MUTED;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(objX+42,oy+56);ctx.quadraticCurveTo(objX+30,oy+90,objX+46,oy+130);ctx.stroke();ctx.fillStyle='#e2708a';ctx.beginPath();ctx.ellipse(objX+42,oy,40,52,0,0,7);ctx.fill();
+   var g=ctx.createRadialGradient(objX+28,oy-20,4,objX+42,oy,52);g.addColorStop(0,'rgba(255,255,255,.55)');g.addColorStop(.6,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(objX+42,oy,40,52,0,0,7);ctx.fill();
+   if(BW.q===1)[[-14,-18],[14,-14],[-10,14],[16,16],[0,-2]].forEach(function(p){txt('−',objX+42+p[0],oy+p[1],{s:24,c:'#5a1020'});});}
+  var ix=x0-72,iy=300,R=62;
+  seg(sx(300)-6,300,ix+R,iy,'#9aa8ba',2,[4,5]);ctx.save();ctx.beginPath();ctx.arc(ix,iy,R,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#9aa8ba';ctx.lineWidth=2.5;ctx.stroke();ctx.clip();
+  for(var m=0;m<7;m++){var mx=ix-28+(m%3)*28+(Math.floor(m/3)===1?-14:0)+(m===6?28:0),my=iy-30+Math.floor(m/3)*30,k2=j*7+m,tA;
+   if(polar){tA=BW.q===1?0:(BW.q===2?Math.PI:BW.ang[k2]+Math.sin(T*1.3+m)*.8);var cur=BW['a'+k2];if(cur==null)cur=BW.ang[k2];cur=cur+Math.atan2(Math.sin(tA-cur),Math.cos(tA-cur))*.06;BW['a'+k2]=cur;
+    /* the H end (δ+) points along cur */
+    var ca=Math.cos(cur),sa=Math.sin(cur);[[.9,.6],[.9,-.6]].forEach(function(h){var hx=mx+(h[0]*ca-h[1]*sa)*13,hy=my+(h[0]*sa+h[1]*ca)*13;ctx.fillStyle='#eef1f6';ctx.strokeStyle='#8a94a8';ctx.lineWidth=1;ctx.beginPath();ctx.arc(hx,hy,6,0,7);ctx.fill();ctx.stroke();});
+    ctx.fillStyle=RED;ctx.beginPath();ctx.arc(mx,my,9.5,0,7);ctx.fill();}
+   else{var a2=BW.ang[k2]+T*.4*(m%2?1:-1);ctx.strokeStyle='#5a6780';ctx.lineWidth=3;ctx.beginPath();for(var z=0;z<5;z++){var px=mx+(z-2)*6*Math.cos(a2)-(z%2?4:-4)*Math.sin(a2),py=my+(z-2)*6*Math.sin(a2)+(z%2?4:-4)*Math.cos(a2);if(!z)ctx.moveTo(px,py);else ctx.lineTo(px,py);}ctx.stroke();}}
+  ctx.restore();txt('zoom in',ix,iy+R+16,{s:13,c:MUTED,w:500});
+  var bends=df>8;pill(bends?'bends toward the '+(BW.q===2?'rod':'balloon'):'falls straight down',x0+130,92,bends?GREEN:MUTED,'#fff',15);});}
+var WQ=[{q:'A charged balloon is held near a stream of water and a stream of hexane. What happens?',o:['Only the water stream bends toward the balloon','Both streams bend','Only the hexane stream bends','Neither stream bends'],a:0,w:'Water molecules are polar; hexane molecules are nonpolar.'},
+ {q:'A positive glass rod is brought near a stream of water. The stream…',o:['also bends toward the rod: the δ− O ends turn to face it','bends away from the rod','does not move','stops flowing'],a:0,w:'Polar molecules turn so their opposite partial charge faces the rod, so they are attracted to either charge.'},
+ {q:'Why does a stream of CCl₄ not bend near a charged balloon?',o:['CCl₄ molecules are nonpolar: no net dipole to line up','CCl₄ is too dense','CCl₄ has no bonds','The C–Cl bonds are ionic'],a:0,w:'Symmetric tetrahedral CCl₄: its bond dipoles cancel.'}];
+var T5={name:'Bending water',c:GREEN,steps:['Charged balloon or rod','Quiz me'],
+ title:function(i){return ['A charged balloon next to two running streams','Quiz: bending streams'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">'+segHtml('bwQ',['Not rubbed','Balloon rubbed on hair (−)','Glass rod rubbed with silk (+)'],BW.q)+'</div><div class="ctl">Nonpolar liquid '+segHtml('bwL',LIQ2,BW.liq)+'</div><div class="ctl">Bring it closer <input type="range" id="bwD" min="0" max="100" step="1" value="'+BW.d+'"></div>';
+   segBind('bwQ',function(k){BW.q=k;});segBind('bwL',function(k){BW.liq=k;});$('bwD').oninput=function(){BW.d=+this.value;};
+   setQ('Rub a balloon on your hair to charge it. Bring it near a thin stream of <b>water</b> and a thin stream of a <b>nonpolar</b> liquid. <b>Predict:</b> which stream bends? Then try a positive glass rod, and move it closer.');
+   setRule(['The <b>water</b> stream bends toward the charged balloon <b>or</b> rod: water molecules are <b>polar</b> and turn their opposite end to face the charge','The <b>hexane</b> or <b>CCl₄</b> stream falls straight: its molecules are <b>nonpolar</b>','The closer the charge, the more the water bends']);}
+  else{$('readcard').style.display='none';seqPanel(WQ);setQ('Which molecules have a δ+ end and a δ− end?','Explain');setRule(['Polar liquids are attracted by a charge','Nonpolar liquids are not']);}},
+ frame:function(dt){bwFrame(dt);if(stepI===0)setReads([['Charge',['none','negative (−)','positive (+)'][BW.q]],['Closeness',BW.d+'%'],['Water stream',BW.def[0]>8?'bends':'straight'],[LIQ2[BW.liq]+' stream','straight']]);}};
+T0.mark=function(i){return i===2&&TQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+
+/* ================= Exit ticket ================= */
+var QZX=mkQ([{q:'Electronegativity is…',o:['the ability of an atom in a bond to attract the shared electrons','the number of bonds an atom forms','the energy released when an atom gains an electron','the size of an atom'],a:0,w:'The pull on the shared electrons in a bond.'},
+ {q:'Classify the H–Cl bond. (H = 2.20, Cl = 3.16)',o:['Polar covalent','Nonpolar covalent','Ionic','Metallic'],a:0,w:'ΔEN = 0.96, between 0.4 and 1.7.'},
+ {q:'Classify the Ca–O bond. (Ca = 1.00, O = 3.44)',o:['Ionic','Polar covalent','Nonpolar covalent','Metallic'],a:0,w:'ΔEN = 2.44, above 1.7.'},
+ {q:'In the O–H bond, which atom has the δ−?',o:['O','H','both','neither'],a:0,w:'O has the higher electronegativity.'},
+ {q:'Why is CO₂ nonpolar even though its bonds are polar?',o:['It is linear: the equal bond dipoles point in opposite directions and cancel','C and O pull equally','It has two lone pairs on C','Its bonds are nonpolar covalent'],a:0,w:'Symmetric linear shape: net dipole = 0.'},
+ {q:'Why is H₂O polar?',o:['It is bent (lone pairs on O), so the bond dipoles add to a net dipole','It is linear','O and H have the same electronegativity','It has double bonds'],a:0,w:'The dipoles do not cancel; the net dipole points toward O.'},
+ {q:'Which molecule is polar?',o:['NH₃','CH₄','CCl₄','BF₃'],a:0,w:'Trigonal pyramidal with a lone pair: the dipoles do not cancel.'},
+ {q:'Iodine crystals dissolve best in…',o:['CCl₄, giving a violet solution','water, giving a purple solution','water, giving a colourless solution','none of these liquids'],a:0,w:'Nonpolar I₂ dissolves in nonpolar CCl₄: like dissolves like.'},
+ {q:'Water and CCl₄ are poured into the same tube. You see…',o:['two layers, with CCl₄ at the bottom','two layers, with water at the bottom','one mixed liquid','a purple solution'],a:0,w:'They do not mix; CCl₄ is denser than water.'},
+ {q:'A charged balloon bends a stream of water but not a stream of hexane because…',o:['water molecules are polar; hexane molecules are nonpolar','hexane is heavier than water','water is ionic','hexane conducts electricity'],a:0,w:'Only polar molecules line up with the charge and are attracted.'}],true);
+var TX={name:'Exit ticket',c:'#3b3550',steps:['Exit ticket'],mark:function(){return QZX.done?'✓':1;},title:function(){return 'Exit ticket: Electronegativity and Polarity';},
+ enter:function(){$('readcard').style.display='none';qzShow(QZX);setQ('Think about ΔEN, δ+ and δ−, shape and cancelling dipoles, and like dissolves like.','Exit ticket');setRule(['ΔEN: < 0.4 nonpolar, 0.4–1.7 polar, > 1.7 ionic','Symmetric → nonpolar; asymmetric → polar','Like dissolves like']);},
+ frame:function(dt){clear();drawMol(MOL.H2O,255,220,1.1,{delta:1,dip:1,net:1});drawMol(MOL.CO2,590,220,.9,{delta:1,dip:1,net:1,zeroAt:[590,350]});txt('polar',255,450,{s:24,c:RED});txt('nonpolar',590,450,{s:24,c:TEAL});}};
+T1.mark=function(i){return i===3&&CQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T3.mark=function(i){return i===1&&BQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T4.mark=function(i){return i===2&&LQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T5.mark=function(i){return i===1&&WQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+var T2m=T2.mark;T2.mark=function(i){if(i===2)return SQ.every(function(M){return M.p!=null;})?'✓':3;return T2m(i);};
+[TQ,CQ,SQ,BQ,LQ,WQ].forEach(mixL);
+
+/* ---- sound button ---- */
+function spk(on){return '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="#18233a"/>'+(on?'<path d="M15.5 9 C17.5 11 17.5 13 15.5 15 M18 6.5 C21.5 10 21.5 14 18 17.5" fill="none" stroke="#18233a" stroke-width="2" stroke-linecap="round"/>':'<path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="#d8434a" stroke-width="2.4" stroke-linecap="round"/>')+'</svg>';}
+(function(){var t=document.createElement('div');t.id='tools';t.innerHTML='<button class="tb" id="tMute" title="Sound on or off" aria-label="Sound on or off">'+spk(true)+'</button>';document.body.appendChild(t);$('tMute').onclick=function(){MUTE=!MUTE;this.innerHTML=spk(!MUTE);};})();
+/* ---------- shell ---------- */
+var TAB=[T0,T1,T2,T3,T4,T5,TX],tabI=0,stepI=0,HASH=['tug-of-war','central-atom','shapes','bond-type','like-dissolves-like','bending-water','exit-ticket'];
+function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. <span>'+t.name+'</span></button>';}).join('');Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
+function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk+'</b><span>'+l+'</span></button>';}).join('');Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
+function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('readcard').style.display='';$('controls').innerHTML='';$('panel').innerHTML='';renderTabs();renderSteps();$('stitle').innerHTML=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+/* ---- exit ticket timer: 15 minutes from Start; a student who runs over can still finish ---- */
+var XT={secs:900,tick:-1,buzz:0};
+function xStart(){return QZX.player&&!QZX.done&&QZX.started?QZX.started:0;}
+(function(){var c=document.createElement('div');c.id='xChip';c.innerHTML='<div><span>Exit ticket</span><br><b id="xTime"></b></div><button class="btn" id="xBack">Back to the exit ticket</button>';document.body.appendChild(c);$('xBack').onclick=function(){go(TAB.indexOf(TX),0);window.scrollTo(0,0);};})();
+function xTick(){var c=$('xChip'),st=xStart();if(!st){c.style.display='none';return;}c.style.display='flex';$('xBack').style.display=tabI===TAB.indexOf(TX)?'none':'';
+ var left=XT.secs-(Date.now()-st)/1000;if(left>=0){var sec=Math.ceil(left);$('xTime').textContent=Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' left';c.className=left<=60?'warn':'';if(sec<=10&&sec>0&&sec!==XT.tick){XT.tick=sec;tone(1100,0,.05,'square',.04);}}
+ else{var o=Math.round(-left);$('xTime').textContent='Time’s up +'+Math.floor(o/60)+':'+('0'+o%60).slice(-2);c.className='over';if(XT.buzz!==st){XT.buzz=st;tone(150,0,.7,'sawtooth',.07);}}}
+xTick();setInterval(xTick,250);
+var last=performance.now();
+function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+})();
+</script>
+<script src="student-visits.js"></script>
+<script src="live-results.js" data-game="Electronegativity and Polarity Lab" data-chapter="8"></script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
