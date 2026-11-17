@@ -85,7 +85,7 @@ sub{font-size:.65em}
 .f input.ok{border-color:#2e9e5b;background:#e8f6ee}.f input.no{border-color:#d8434a;background:#fdeeee}
 .f input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 .f sup{font-size:.75em;vertical-align:.6em}
-.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid var(--line);background:#f3f6fb}
 .fb.ok{background:#e8f6ee;border-color:#2e9e5b;animation:pop .4s}.fb.no{background:#fdeeee;border-color:#d8434a}
 .fb ul{margin:4px 0 0;padding-left:20px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
@@ -165,6 +165,38 @@ select.pick{font-family:Fredoka,sans-serif;font-size:16px;padding:8px 12px;borde
 .btn.chip{font-size:14px;padding:6px 11px}
 .btn.hold{font-size:18px;padding:11px 22px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
 .btn.hold.down{transform:translateY(3px);box-shadow:0 0 0 var(--shadow);background:#d8434a;border-color:#d8434a}
+.fb.bad{background:#fdeeee;border-color:#d8434a}.fb.hint{background:#fff6e8;border-color:#e8962a}.fb:empty{display:none}
+.bar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.beq{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:stretch;background:#f6f8fc;border-radius:16px;padding:14px}
+.bsp{background:#fff;border:2px solid var(--line);border-radius:16px;padding:8px 10px;text-align:center;min-width:120px;max-width:100%;flex:0 1 auto;display:flex;flex-direction:column;align-items:center}
+.fm{font-family:Fredoka,sans-serif;font-weight:600;font-size:30px;white-space:nowrap}
+.fm em{font-style:normal;color:var(--accent)}
+.opr{align-self:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;color:var(--muted)}
+.stp{display:inline-flex;align-items:center;gap:8px;margin-bottom:4px}
+.stp button{width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:#fff;color:var(--accent);font-family:Fredoka,sans-serif;font-size:20px;line-height:1;cursor:pointer;padding:0}
+.stp b{min-width:24px;font-family:Fredoka,sans-serif;font-size:22px}
+.tray{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:center;margin-top:8px;max-width:270px}
+.ss3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:700px){.ss3{grid-template-columns:1fr}}
+.ss{border:2px solid var(--line);border-radius:14px;padding:8px 10px;font-size:15px;line-height:1.3;background:#fff}
+.ss b{display:block;font-family:Fredoka,sans-serif;font-weight:600;font-size:16px}
+.ss.on{border-color:var(--accent);background:#fff8ee;box-shadow:0 0 0 3px rgba(232,150,42,.15)}
+.ss.done b{color:#2e9e5b}
+.ptabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ptabs button{font-family:Fredoka,sans-serif;font-size:15px;border:2px solid var(--line);border-radius:12px;padding:5px 11px;background:#fff;cursor:pointer;color:var(--ink)}
+.ptabs button.on{border-color:var(--accent);color:var(--accent)}
+.ptabs button.done{background:#e8f6ee;border-color:#2e9e5b}
+.pt{width:100%;max-width:560px;margin:12px auto 0;border-collapse:collapse;font-size:22px;font-family:Fredoka,sans-serif}
+.pt th{font-weight:600;background:#f3f6fb;border:2px solid var(--line);padding:6px}
+.pt td{border:2px solid var(--line);padding:8px 12px;vertical-align:top;width:50%}
+.at{min-height:44px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.at.y b{color:#2e9e5b}.at.n b{color:#d8434a}
+.mul{color:#d8434a;font-weight:700}
+.inp{font-family:Fredoka,sans-serif;font-size:18px;border:2px solid var(--line);border-radius:10px;padding:5px 10px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none;text-align:center}
+.inp.sm{width:70px;padding:4px 6px}
+.final{text-align:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;margin-top:12px}
+.f select.pick{font-size:18px;max-width:100%}
+select.pick.ok{border-color:#2e9e5b;background:#e8f6ee}select.pick.no{border-color:#d8434a;background:#fdeeee}
 </style>
 </head>
 <body>
@@ -472,54 +504,203 @@ var T3={name:'Word to symbol',c:BLUE,steps:['Build the equation','Quiz me'],
  frame:function(dt){T+=dt;wbFrame(dt);}};
 
 /* ================= Tab 4: balance it, and mass is conserved ================= */
-var ACOL={H:'#e9eef5',O:'#d8434a',Mg:'#a9b0bb',Na:'#8a4fbf',Cl:'#7cc04b',N:'#2b59c3',C:'#3b3f47'};
-var SP={H2:{H:2},O2:{O:2},H2O:{H:2,O:1},Mg:{Mg:1},MgO:{Mg:1,O:1},Na:{Na:1},Cl2:{Cl:2},NaCl:{Na:1,Cl:1},N2:{N:2},NH3:{N:1,H:3},CH4:{C:1,H:4},CO2:{C:1,O:2}};
-var BAL=[{s:['H2','O2','H2O'],r:2,ans:[2,1,2]},{s:['Mg','O2','MgO'],r:2,ans:[2,1,2]},{s:['Na','Cl2','NaCl'],r:2,ans:[2,1,2]},{s:['N2','H2','NH3'],r:2,ans:[1,3,2]},{s:['CH4','O2','CO2','H2O'],r:2,ans:[1,2,1,2]}];
-var BL={i:0,c:{},ok:{}};
-function blCo(){return BL.c[BL.i]||(BL.c[BL.i]=BAL[BL.i].s.map(function(){return 1;}));}
-function atomCount(side){var e=BAL[BL.i],c=blCo(),n={};e.s.forEach(function(f,k){if((k<e.r)!==(side===0))return;for(var a in SP[f])n[a]=(n[a]||0)+SP[f][a]*c[k];});return n;}
-function molDraw(f,x,y){var at=[];for(var a in SP[f])for(var j=0;j<SP[f][a];j++)at.push(a);var n=at.length;
- at.forEach(function(a,j){var ang=n===1?0:j/n*Math.PI*2,r=n===1?0:(n===2?13:19);var px=x+Math.cos(ang)*r,py=y+Math.sin(ang)*r;ctx.fillStyle=ACOL[a];ctx.beginPath();ctx.arc(px,py,a==='H'?10:14,0,7);ctx.fill();ctx.strokeStyle='#5a6780';ctx.lineWidth=1.2;ctx.stroke();});}
-function blFrame(dt){clear();var e=BAL[BL.i],c=blCo();
- var eq=e.s.map(function(f,k){return (c[k]>1?c[k]:'')+fm(f);});txt(eq.slice(0,e.r).join(' + ')+'  →  '+eq.slice(e.r).join(' + '),400,45,{s:30});
- panel(20,75,370,230);panel(410,75,370,230);txt('Reactants',205,95,{s:15,c:RED});txt('Products',595,95,{s:15,c:BLUE});
- [0,1].forEach(function(side){var x0=side?430:40,xs=0;e.s.forEach(function(f,k){if((k<e.r)!==(side===0))return;for(var j=0;j<c[k];j++){var col=xs%5,row=Math.floor(xs/5);molDraw(f,x0+40+col*72,145+row*70);xs++;}});});
- var L=atomCount(0),R=atomCount(1),els=Object.keys(L),all=true;
- panel(20,320,760,160);txt('Atom count',400,340,{s:15,c:MUTED});
- els.forEach(function(a,k){var y=370+k*30,l=L[a]||0,r=R[a]||0,same=l===r;if(!same)all=false;dotc(60,y,9,ACOL[a]);txt(a,82,y,{s:15,a:'left'});
-  rr(120,y-9,l*22,18,5);ctx.fillStyle=RED;ctx.fill();txt(String(l),110,y,{s:14,a:'right'});rr(470,y-9,r*22,18,5);ctx.fillStyle=BLUE;ctx.fill();txt(String(r),460,y,{s:14,a:'right'});txt(same?'✓':'✗',760,y,{s:18,c:same?GREEN:RED});});
- if(all){BL.ok[BL.i]=1;txt('Balanced! Same atoms on both sides.',400,300,{s:17,c:GREEN});}
- setReads([['Equation',(BL.i+1)+' of '+BAL.length],['Balanced?',all?'yes':'not yet'],['Balanced so far',Object.keys(BL.ok).length+' of '+BAL.length]]);
- if(Object.keys(BL.ok).length>=3&&!BL.ruled){BL.ruled=1;blRule();good($('rule'));}}
-function blRule(){setRule(Object.keys(BL.ok).length>=3?['A <b>balanced</b> equation has the <b>same number of each atom</b> on both sides','Change only the <b>coefficients</b> (big numbers in front), never the <b>subscripts</b>','Atoms are rearranged, not created or destroyed: <b>mass is conserved</b>']:['Use + and − to change the coefficients until every atom is balanced. Balance at least three.']);}
-function blPanel(){var e=BAL[BL.i],c=blCo();$('panel').innerHTML='<div class="qz"><div class="qzq">Coefficients</div><div style="display:flex;flex-wrap:wrap;gap:14px">'+e.s.map(function(f,k){return '<div style="display:flex;align-items:center;gap:6px"><button class="btn chip" data-d="'+k+'" data-v="-1">−</button><b style="font-size:20px;min-width:70px;text-align:center">'+c[k]+' '+fm(f)+'</b><button class="btn chip" data-d="'+k+'" data-v="1">+</button></div>';}).join('')+'</div><p style="margin:8px 2px;color:#5a6780">Tip: count each type of atom on both sides. Balance the atom that appears in only one substance on each side first.</p></div>';
- each('[data-d]',function(b){b.onclick=function(){var k=+b.getAttribute('data-d');c[k]=clamp(c[k]+(+b.getAttribute('data-v')),1,6);tone(600,0,.04);blPanel();};});}
-var MS={closed:1,t:0,run:false,bub:[]};
-function msFrame(dt){clear();if(MS.run)MS.t=Math.min(6,MS.t+dt);var u=MS.t/6,lost=MS.closed?0:4*u,mass=(200-lost).toFixed(1);
- panel(20,20,760,460);txt(MS.closed?'Sealed flask (closed system)':'Open beaker (open system)',400,48,{s:18});
- var x=300,y=85;ctx.fillStyle='rgba(220,235,250,.9)';ctx.beginPath();ctx.moveTo(x+60,y+150);ctx.lineTo(x+140,y+150);ctx.lineTo(x+180,y+260);ctx.lineTo(x+20,y+260);ctx.closePath();ctx.fill();
- ctx.strokeStyle='#5a6780';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x+70,y);ctx.lineTo(x+70,y+80);ctx.lineTo(x+10,y+262);ctx.lineTo(x+190,y+262);ctx.lineTo(x+130,y+80);ctx.lineTo(x+130,y);ctx.stroke();
- if(MS.closed){rr(x+62,y-22,76,26,5);ctx.fillStyle='#9c7247';ctx.fill();}
- if(MS.run&&u<1&&Math.random()<.6)MS.bub.push({x:x+40+Math.random()*120,y:y+250,v:60+Math.random()*60});
- MS.bub=MS.bub.filter(function(b){b.y-=b.v*dt;ctx.strokeStyle='#5a6780';ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.x,b.y,4.5,0,7);ctx.stroke();var top=MS.closed?y+10:y-120;if(MS.closed&&b.y<y+10){b.y=y+10+Math.random()*60;}return b.y>top;});
- rr(230,y+268,340,22,6);ctx.fillStyle='#a8afbd';ctx.fill();rr(250,y+290,300,70,10);ctx.fillStyle='#78839a';ctx.fill();rr(320,y+305,160,40,6);ctx.fillStyle='#1d2a20';ctx.fill();txt(mass+' g',400,y+325,{s:22,c:'#7dff8a'});
- txt(MS.run?(u<1?'baking soda + vinegar → fizzing (carbon dioxide gas)':'reaction finished'):'Press Mix to start the reaction',400,465,{s:15,c:MUTED});
- setReads([['System',MS.closed?'closed (sealed)':'open'],['Mass before','200.0 g'],['Mass now',mass+' g'],['Gas escaped?',MS.closed?'no':(MS.t>0?'yes':'not yet')]]);
- if(MS.t>=6)MS.seen=MS.seen|(MS.closed?1:2);if(MS.seen===3&&!MS.ruled){MS.ruled=1;msRule();good($('rule'));}}
-function msRule(){setRule(MS.seen===3?['<b>Law of conservation of mass:</b> mass is neither created nor destroyed in a chemical reaction','In a <b>sealed</b> flask the mass stays the same','In an <b>open</b> beaker the mass seems to fall because the <b>gas escapes</b>, not because mass is destroyed']:['Run the reaction in the sealed flask and in the open beaker. Compare the masses.']);}
+/* ---- balancing in three steps (same steps as the Balancing and Mole Basics lab) ---- */
+var BCOL={H:'#ffffff',C:'#3b3550',N:'#2b59c3',O:'#d8434a',Na:'#8a4fbf',Mg:'#e8962a',Cl:'#2e9e5b'};
+function parse(f){var c={},re=/([A-Z][a-z]?)(\d*)/g,m;while((m=re.exec(f)))c[m[1]]=(c[m[1]]||0)+ +(m[2]||1);return c;}
+function fh(f){return f.replace(/(\d+)/g,'<sub>$1</sub>');}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function molSVG(f,r){r=r||9;var c=parse(f),L=[];for(var k in c)for(var i=0;i<c[k];i++)L.push(k);var n=L.length;var cols=n<=2?n:n<=4?2:n<=9?3:4;var s=r*1.65;var rows=Math.ceil(n/cols);var w=(cols-1)*s+2*r+2,h=(rows-1)*s+2*r+2;var o='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true">';
+ L.forEach(function(e,i){var x=r+1+(i%cols)*s,y=r+1+Math.floor(i/cols)*s,dark=e!=='H';o+='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+BCOL[e]+'" stroke="#18233a" stroke-width="1.2"/>';if(r>=8)o+='<text x="'+x+'" y="'+(y+.5)+'" text-anchor="middle" dominant-baseline="central" font-family="Fredoka,sans-serif" font-weight="600" font-size="'+(e.length>1?r*.9:r*1.1)+'" fill="'+(dark?'#fff':'#18233a')+'">'+e+'</text>';});return o+'</svg>';}
+function Bal(p){var S={coef:p.r.concat(p.p).map(function(){return 1;}),sp:p.r.concat(p.p),nr:p.r.length,lock:true};
+ S.counts=function(){var R={},P={};S.sp.forEach(function(f,i){var c=parse(f),T=i<S.nr?R:P;for(var k in c)T[k]=(T[k]||0)+c[k]*S.coef[i];});return [R,P];};
+ S.balanced=function(){var c=S.counts(),ok=true;for(var k in c[0])if(c[0][k]!==c[1][k])ok=false;for(var j in c[1])if(c[0][j]!==c[1][j])ok=false;return ok;};
+ S.simple=function(){return S.coef.reduce(gcd)===1;};
+ S.eqHtml=function(){var h='<div class="beq">';S.sp.forEach(function(f,i){if(i===S.nr)h+='<div class="opr">→</div>';else if(i>0)h+='<div class="opr">+</div>';var c=parse(f),tot=0;for(var k in c)tot+=c[k];tot*=S.coef[i];var r=S.coef[i]>8||tot>24?6:9;
+   h+='<div class="bsp">'+(S.lock?'':'<div class="stp"><button data-c="'+i+'" data-d="-1" aria-label="less">−</button><b>'+S.coef[i]+'</b><button data-c="'+i+'" data-d="1" aria-label="more">+</button></div>')+'<div class="fm"><em>'+(S.coef[i]>1?S.coef[i]:'')+'</em>'+fh(f)+'</div><div class="tray">';for(var m=0;m<S.coef[i];m++)h+=molSVG(f,r);h+='</div></div>';});return h+'</div>';};
+ S.bind=function(el,cb){Array.prototype.forEach.call(el.querySelectorAll('[data-c]'),function(b){b.onclick=function(){var i=+b.getAttribute('data-c'),v=S.coef[i]+ +b.getAttribute('data-d');if(v<1||v>20)return;S.coef[i]=v;tone(600,0,.04);cb();};});};
+ return S;}
+function eqText(S){var h='';S.sp.forEach(function(f,i){if(i===S.nr)h+=' → ';else if(i>0)h+=' + ';h+=(S.coef[i]>1?S.coef[i]:'')+fh(f);});return h;}
+/* w: [which substance, multiplier, what the teacher says] for Show me */
+var BAL=[{r:['H2','O2'],p:['H2O'],w:[[2,2,'O: 2 on the left, 1 on the right. ×2 is written as the coefficient of H<sub>2</sub>O. H on the right is now 4.'],[0,2,'H: 2 on the left, 4 on the right. ×2 is written as the coefficient of H<sub>2</sub>.']]},
+ {r:['Mg','O2'],p:['MgO'],w:[[2,2,'O: 2 on the left, 1 on the right. ×2 is written as the coefficient of MgO. Mg on the right is now 2.'],[0,2,'Mg: 1 on the left, 2 on the right. ×2 is written in front of Mg.']]},
+ {r:['Na','Cl2'],p:['NaCl'],w:[[2,2,'Cl: 2 on the left, 1 on the right. ×2 is written as the coefficient of NaCl. Na on the right is now 2.'],[0,2,'Na: 1 on the left, 2 on the right. ×2 is written in front of Na.']]},
+ {r:['N2','H2'],p:['NH3'],w:[[2,2,'N: 2 on the left, 1 on the right. ×2 is written as the coefficient of NH<sub>3</sub>. H on the right is now 6.'],[1,3,'H: 2 on the left, 6 on the right. ×3 is written as the coefficient of H<sub>2</sub>.']]},
+ {r:['CH4','O2'],p:['CO2','H2O'],w:[[3,2,'C is already equal (1 and 1). H: 4 on the left, 2 on the right. ×2 is written as the coefficient of H<sub>2</sub>O. O on the right is now 4.'],[1,2,'O: 2 on the left, 4 on the right. ×2 is written as the coefficient of O<sub>2</sub>.']]}];
+function balFlow(cfg){var idx=0,mode=cfg.mode,solved={},S,stage,k,msg,mc,typed;function init(){S=Bal(cfg.list[idx]);stage=0;k=-1;msg='';mc='';typed={};}init();
+ function els(){return Object.keys(S.counts()[0]);}
+ function base(i){var sd=i===0?S.sp.slice(0,S.nr):S.sp.slice(S.nr),o={};sd.forEach(function(f){var c=parse(f);for(var e in c)o[e]=(o[e]||0)+c[e];});return o;}
+ function cellB(side,e){var c=S.counts(),now=c[side][e],b=base(side)[e],sd=side===0?[0,S.nr]:[S.nr,S.sp.length],hits=[];for(var i=sd[0];i<sd[1];i++)if(parse(S.sp[i])[e])hits.push(i);var bits='';if(hits.length===1&&S.coef[hits[0]]>1)bits=' <span class="mul">×'+S.coef[hits[0]]+'</span>';else if(now!==b)bits=' <span class="mul">→ '+now+'</span>';var ok=c[0][e]===c[1][e];return '<div class="at '+(ok?'y':'n')+'"><b>'+e+':</b> '+b+bits+(hits.length===1&&S.coef[hits[0]]>1?' <span class="small">= '+now+'</span>':'')+'</div>';}
+ function table(){var E=els(),h='<table class="pt"><tr><th>Reactants</th><th>Products</th></tr><tr>';[0,1].forEach(function(side){h+='<td>';E.forEach(function(e,j){if(stage===0){if(mode==='show'&&k>=0)h+='<div class="at"><b>'+e+':</b></div>';else if(mode==='show')h+='<div class="at">&nbsp;</div>';else h+='<div class="at"><input class="inp sm" id="L'+side+j+'" aria-label="atom" value="'+esc(typed['L'+side+j]||'')+'" autocomplete="off" autocapitalize="off" spellcheck="false"></div>';}
+   else if(stage===1){var b=base(side)[e];if(mode==='show')h+='<div class="at"><b>'+e+':</b> '+(k>=1?b:'')+'</div>';else h+='<div class="at"><b>'+e+':</b> <input class="inp sm" id="C'+side+j+'" inputmode="numeric" aria-label="number of '+e+' atoms" value="'+esc(typed['C'+side+j]||'')+'" autocomplete="off"></div>';}
+   else h+=cellB(side,e);});h+='</td>';});return h+'</tr></table>';}
+ var CARDS=[['Step 1: List','Write every atom on both sides.'],['Step 2: Count','Count each atom on both sides.'],['Step 3: Balance','Trial and error: write the multiplier as a coefficient.']];
+ var o={q:'Follow the three steps: <b>list</b> the atoms, <b>count</b> them, then <b>balance</b> by trial and error. Where does the multiplier end up in the equation?',
+ rule:['Step 1: list the atoms on both sides.','Step 2: count each atom on both sides.','Step 3: trial and error. Multiply where the numbers differ, and write the multiplier as the <b>coefficient</b>.','Recount after every change. Never change a subscript.'],
+ reads:function(){return [['Equation',eqText(S),1],['Problems solved',Object.keys(solved).length+' / '+cfg.list.length],['Now on','Step '+Math.min(stage+1,3)]];},
+ solved:function(){return Object.keys(solved).length;},
+ render:function(el){function refresh(){setReads(o.reads());}
+  function draw(){var w=cfg.list[idx].w;var h='<div class="ptabs">'+cfg.list.map(function(_,i){return '<button data-p="'+i+'" class="'+(i===idx?'on ':'')+(solved[i]?'done':'')+'">Equation '+(i+1)+'</button>';}).join('')+'</div>';h+='<div class="bar-row" style="margin:0 0 10px"><div class="seg"><button id="mS"'+(mode==='show'?' class="on"':'')+'>Show me</button><button id="mT"'+(mode==='try'?' class="on"':'')+'>My turn</button></div></div>';
+   S.lock=mode==='show'||stage<2;h+=S.eqHtml();h+='<div class="ss3">'+CARDS.map(function(c,i){return '<div class="ss'+(i===stage?' on':'')+(i<stage?' done':'')+'"><b>'+(i<stage?'✓ ':'')+c[0]+'</b>'+c[1]+'</div>';}).join('')+'</div>'+table();
+   if(stage===2&&(S.balanced()||mode==='show'))h+='<div class="final">⇨ '+eqText(S)+'</div>';
+   if(mode==='show'){var tx;if(stage===0)tx=k<0?'Press Next to list the atoms.':'List every element once in each column.';else if(stage===1)tx=k<1?'Press Next to count.':'Use the subscripts: a subscript counts the atoms in one formula.';else tx=k>=2+w.length?'<b>Recount:</b> every atom matches, so the equation is balanced.':w[k-2][2];var last=stage===2&&k>=2+w.length;
+    h+='<div class="fb hint">'+tx+'</div><div class="bar-row"><button class="btn" id="bk"'+(k<0?' disabled':'')+'>◀ Back</button><button class="btn fill" id="nx"'+(last?' disabled':'')+'>Next ▶</button></div>';}
+   else{h+='<div class="bar-row"><button class="btn fill" id="ck">'+(stage===0?'Check my list':stage===1?'Check my count':'Check my equation')+'</button>'+(stage===2?'<button class="btn" id="rs">Start again</button>':'')+'</div><div class="fb '+mc+'">'+msg+'</div>';}
+   el.innerHTML=h;S.bind(el,function(){msg='';mc='';draw();refresh();});
+   Array.prototype.forEach.call(el.querySelectorAll('[data-p]'),function(b){b.onclick=function(){idx=+b.getAttribute('data-p');init();draw();refresh();};});
+   $('mS').onclick=function(){mode='show';init();draw();refresh();};$('mT').onclick=function(){mode='try';init();draw();refresh();};
+   Array.prototype.forEach.call(el.querySelectorAll('input.sm'),function(x){x.oninput=function(){typed[x.id]=x.value;};});
+   if(mode==='show'){$('nx').onclick=function(){k++;ap();};$('bk').onclick=function(){k--;ap();};}
+   else{if($('rs'))$('rs').onclick=function(){S.coef=S.sp.map(function(){return 1;});msg='';mc='';draw();refresh();};
+    $('ck').onclick=function(){var E=els();if(stage===0){var bad=false,cs=false;[0,1].forEach(function(sd){var got=E.map(function(_,j){return $('L'+sd+j).value.trim();});var a=got.slice().sort().join(),b=E.slice().sort().join();if(a!==b){bad=true;if(a.toLowerCase()===b.toLowerCase())cs=true;}});if(bad){msg=cs?'Check the capital letters: a symbol starts with one capital, like Cl.':'Look at the formulas again. Each atom should appear once in each column.';mc='bad';SFX.bad();}else{stage=1;msg='Good list. Now count them.';mc='ok';SFX.good();}}
+     else if(stage===1){var wrong=[];[0,1].forEach(function(sd){E.forEach(function(e,j){var i=$('C'+sd+j);if(+i.value!==base(sd)[e]||i.value.trim()==='')wrong.push(e+(sd?' (products)':' (reactants)'));});});if(wrong.length){msg='Count again: '+wrong.join(', ')+'.';mc='bad';SFX.bad();}else{stage=2;msg='Correct. Where the numbers differ, start trial and error with + and −.';mc='ok';SFX.good();}}
+     else{if(!S.balanced()){var c=S.counts();msg='Not balanced yet. Check: '+E.filter(function(e){return c[0][e]!==c[1][e];}).join(', ')+'.';mc='bad';SFX.bad();}else if(!S.simple()){msg='Balanced, but use the smallest whole numbers.';mc='hint';}else{msg='Correct! The multipliers are your coefficients.';mc='ok';solved[idx]=1;good(el);if(Object.keys(solved).length>=3&&!o.ruled){o.ruled=1;good($('rule'));}}}
+     draw();refresh();};}}
+  function ap(){var w=cfg.list[idx].w;stage=k<1?0:k<2?1:2;S.coef=S.sp.map(function(){return 1;});for(var j=2;j<2+w.length&&j<=k;j++)S.coef[w[j-2][0]]=w[j-2][1];draw();refresh();}
+  draw();refresh();}};return o;}
+var BF=balFlow({list:BAL,mode:'show'});
+
+/* ---- conservation of mass: sealed flask with balloon, open flask, precipitate ---- */
+var MS={m:0,t:0,run:false,bub:[],gas:[],seen:{},fb:0},MSD=6;
+var MCX=400,NT=200,NB=250,FB=400,LS=330;
+function halfW(y){return y<=NB?28:28+(y-NB)/(FB-NB)*62;}
+function msReset(){MS.t=0;MS.run=false;MS.bub=[];MS.gas=[];MS.fb=0;if(tabI===3&&stepI===1)$('panel').innerHTML='';}
+function co2(x,y,al){ctx.globalAlpha=al;ctx.fillStyle=RED;ctx.beginPath();ctx.arc(x-6.5,y,3.8,0,7);ctx.arc(x+6.5,y,3.8,0,7);ctx.fill();ctx.fillStyle='#3b3550';ctx.beginPath();ctx.arc(x,y,4.4,0,7);ctx.fill();ctx.globalAlpha=1;}
+function msBalance(cx,w,mass){rr(cx-w/2,FB+2,w,16,6);ctx.fillStyle='#a8afbd';ctx.fill();rr(cx-w/2+28,FB+18,w-56,56,10);ctx.fillStyle='#78839a';ctx.fill();rr(cx-68,FB+26,136,38,6);ctx.fillStyle='#1d2a20';ctx.fill();txt(mass+' g',cx,FB+45,{s:26,c:'#7dff8a'});}
+function msCard(x,lab,val,col,l1,l2){rr(x,95,180,190,16);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();txt(lab,x+90,122,{s:17,c:MUTED});txt(val,x+90,168,{s:36,c:col});if(l1)fitTxt(l1,x+90,218,15,MUTED,500,166);if(l2)fitTxt(l2,x+90,242,15,MUTED,500,166);}
+function msFlask(closed,u,dt){var s=ease(u),R=14+38*s;
+ /* liquid and baking soda */
+ var hs=halfW(LS);ctx.fillStyle='rgba(205,228,250,.95)';ctx.beginPath();ctx.moveTo(MCX-hs,LS);ctx.lineTo(MCX+hs,LS);ctx.lineTo(MCX+88,FB-2);ctx.lineTo(MCX-88,FB-2);ctx.closePath();ctx.fill();
+ var pw=56*(1-s);if(pw>2){ctx.fillStyle='#fff';ctx.strokeStyle='#c3cad6';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(MCX,FB-5,pw,7*(1-s)+2,0,Math.PI,0);ctx.closePath();ctx.fill();ctx.stroke();}
+ /* bubbles in the liquid: they rise to the surface and stay inside the walls */
+ if(MS.run&&u<.9&&Math.random()<.75*(1-u)){var y0=FB-12-Math.random()*25,hw=halfW(y0)-14;MS.bub.push({x:MCX+(Math.random()*2-1)*hw*.8,y:y0,v:45+Math.random()*45,r:3+Math.random()*2.5,ph:Math.random()*6});}
+ MS.bub=MS.bub.filter(function(b){b.y-=b.v*dt;b.ph+=dt*6;var hw=halfW(b.y)-b.r-5;b.x=clamp(b.x+Math.sin(b.ph)*.4,MCX-hw,MCX+hw);
+  if(b.y<=LS+b.r){if(MS.gas.length<(closed?45:400))MS.gas.push({x:b.x,y:LS-8,vx:(Math.random()-.5)*40,vy:-30-Math.random()*30});return false;}
+  ctx.strokeStyle='#5a6780';ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.stroke();return true;});
+ /* flask outline */
+ ctx.strokeStyle='#5a6780';ctx.lineWidth=4;ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(MCX-28,NT);ctx.lineTo(MCX-28,NB);ctx.lineTo(MCX-90,FB);ctx.lineTo(MCX+90,FB);ctx.lineTo(MCX+28,NB);ctx.lineTo(MCX+28,NT);ctx.stroke();
+ seg(MCX-34,NT,MCX-24,NT,'#5a6780',4);seg(MCX+24,NT,MCX+34,NT,'#5a6780',4);
+ var by=NT-R,ry=R*1.15;
+ if(closed){ctx.fillStyle='rgba(226,112,138,.30)';ctx.beginPath();ctx.ellipse(MCX,by,R,ry,0,0,Math.PI*2);ctx.fill();}
+ /* carbon dioxide particles */
+ MS.gas=MS.gas.filter(function(p){p.vx+=(Math.random()-.5)*240*dt;p.vy+=(Math.random()-.5)*240*dt;
+  if(p.y>=NT){p.vy+=(-85-p.vy)*Math.min(1,dt*3);p.vx+=(MCX-p.x)*1.2*dt;}
+  else if(closed){p.vx+=(MCX-p.x)*.8*dt;p.vy+=(by-p.y)*.8*dt;p.vx*=.985;p.vy*=.985;}
+  else{p.vy+=(-85-p.vy)*Math.min(1,dt*3);}
+  var sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(sp>110){p.vx*=110/sp;p.vy*=110/sp;}
+  p.x+=p.vx*dt;p.y+=p.vy*dt;
+  if(p.y>LS-8){p.y=LS-8;p.vy=-Math.abs(p.vy);}
+  if(p.y>=NT){var hw=halfW(p.y)-10;if(p.x<MCX-hw){p.x=MCX-hw;p.vx=Math.abs(p.vx);}else if(p.x>MCX+hw){p.x=MCX+hw;p.vx=-Math.abs(p.vx);}}
+  else if(closed){var ax=R-8,ay=ry-8,dx=(p.x-MCX)/ax,dy=(p.y-by)/ay,d=Math.sqrt(dx*dx+dy*dy);if(d>1){p.x=MCX+dx/d*ax;p.y=by+dy/d*ay;p.vx=-p.vx*.5;p.vy=-p.vy*.5;}}
+  else{p.vx+=(p.x<MCX?-1:1)*30*dt;}
+  var al=closed?1:clamp((p.y-70)/(NT-70),0,1);co2(p.x,p.y,al);return closed||p.y>70;});
+ if(closed){ctx.strokeStyle=CORAL;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(MCX,by,R,ry,0,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.ellipse(MCX-R*.4,by-ry*.45,R*.16,R*.28,-.5,0,Math.PI*2);ctx.fill();
+  rr(MCX-33,NT-8,66,22,6);ctx.fillStyle='rgba(226,112,138,.85)';ctx.fill();rr(MCX-35,NT+8,70,7,3);ctx.fillStyle='#8a2f45';ctx.fill();}}
+function hash(k){var s=Math.sin(k*12.9898)*43758.5453;return s-Math.floor(s);}
+function msPpt(t){var a=t<.8?ease(t/.8)*.6:t<2.8?.6:t<3.4?.6*(1-ease((t-2.8)/.6)):0,fB=t<.8?1:t<2.8?1-(t-.8)/2:0,px=330,py=FB,bw=80,bh=140;
+ var ax=440,aw=130,ah=100,lvA=46+50*(1-fB),yel=clamp((t-.9)/1.2,0,1),settle=ease(clamp((t-2.6)/3.2,0,1));
+ ctx.fillStyle='rgba(205,228,250,.95)';ctx.fillRect(ax+4,FB-lvA,aw-8,lvA-2);
+ if(yel>0){ctx.fillStyle='rgba(245,205,40,'+(yel*.75*(1-settle*.85))+')';ctx.fillRect(ax+4,FB-lvA,aw-8,lvA-2);
+  ctx.fillStyle='rgba(225,175,10,'+Math.min(1,yel*1.3)+')';for(var k=0;k<90;k++){var fx=hash(k),fy=hash(k+101),x=ax+12+fx*(aw-24),y0=FB-lvA+6+fy*(lvA-14),y1=FB-6-((k*13)%12)-(k%3)*2;ctx.beginPath();ctx.arc(x,lerp(y0,y1,settle),3.3,0,7);ctx.fill();}}
+ beaker(ax,FB-ah,aw,ah,null,0);
+ /* the potassium iodide beaker tips and pours */
+ var lipX=px+bh*Math.sin(a),lipY=py-bh*Math.cos(a);
+ if(fB>0){var surf=t<.8?Math.max(py-116,lipY+3):lerp(lipY+3,py-2,1-fB);ctx.save();ctx.translate(px,py);ctx.rotate(a);ctx.beginPath();ctx.rect(-bw+4,-bh,bw-8,bh-2);ctx.clip();ctx.rotate(-a);ctx.translate(-px,-py);ctx.fillStyle='rgba(205,228,250,.95)';ctx.fillRect(px-200,surf,400,200);ctx.restore();}
+ ctx.save();ctx.translate(px,py);ctx.rotate(a);ctx.strokeStyle='#5a6780';ctx.lineWidth=4;ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(-bw,-bh);ctx.lineTo(-bw,0);ctx.lineTo(0,0);ctx.lineTo(0,-bh);ctx.stroke();ctx.restore();
+ if(t>.8&&t<2.8){ctx.strokeStyle='rgba(150,190,235,.95)';ctx.lineWidth=3+5*fB;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(lipX,lipY);ctx.quadraticCurveTo(lipX+36,lipY-14,ax+40,FB-lvA);ctx.stroke();}
+ txt('potassium iodide',290,FB-bh-30,{s:15,c:MUTED});txt('lead nitrate',ax+aw/2,FB-ah-48,{s:15,c:MUTED});
+ if(settle>.3){ctx.globalAlpha=clamp((settle-.3)*2,0,1);txt('yellow precipitate',ax+aw/2,FB-ah-72,{s:15,c:'#b07d00'});ctx.globalAlpha=1;}}
+function msFrame(dt){clear();if(MS.run)MS.t=Math.min(MSD,MS.t+dt);var u=MS.t/MSD,m=MS.m,done=MS.t>=MSD;
+ var before=m===2?150:200,lost=m===1?4.4*ease(u):0,mass=(before-lost).toFixed(1),bs=before.toFixed(1);
+ panel(20,20,760,460);txt(['Sealed flask with a balloon (closed system)','Open flask (open system)','Two solutions make a precipitate (no gas)'][m],400,42,{s:20});
+ txt(!MS.run?'Press Mix to start the reaction':done?'Reaction finished: compare the mass before and after':['Fizzing: the balloon traps the carbon dioxide','Fizzing: carbon dioxide escapes through the opening at the top','Pouring: a yellow solid (precipitate) forms'][m],400,70,{s:16,c:MUTED,w:500});
+ if(m<2){msFlask(m===0,u,dt);msBalance(MCX,270,mass);}else{msPpt(MS.t);msBalance(410,360,mass);}
+ msCard(30,'Mass before',bs+' g',INK,m===2?'two clear solutions':'baking soda + vinegar',m===0?'flask + balloon':(m===1?'open flask':'both beakers'));
+ var same=mass===bs;msCard(590,'Mass now',mass+' g',same?GREEN:RED,!MS.run?'press Mix':(m===0?'gas is in the balloon':(m===1?(done?'lost '+lost.toFixed(1)+' g of gas':'gas escapes at the top'):'no gas is made')),MS.run?(same?'same mass':'the gas left the flask'):'');
+ setReads([['Example',['Sealed + balloon','Open flask','Precipitate'][m]],['Mass before',bs+' g'],['Mass now',mass+' g'],['Gas',m===2?'none made':(m===0?(MS.t>0?'trapped in balloon':'not yet'):(MS.t>0?'escapes at the top':'not yet'))]]);
+ if(done){MS.seen[m]=1;if(!MS.fb&&tabI===3&&stepI===1){MS.fb=1;$('panel').innerHTML='<div class="fb ok">'+['<b>Mass before = '+bs+' g, mass after = '+mass+' g.</b> The carbon dioxide is trapped in the balloon, so nothing leaves the closed system.','<b>The mass fell by '+lost.toFixed(1)+' g.</b> That is the mass of carbon dioxide that left through the opening. The mass was not destroyed: it went into the air.','<b>Mass before = '+bs+' g, mass after = '+mass+' g.</b> A new yellow solid formed, but no gas was made, so nothing escaped even though the beakers are open.'][m]+'</div>';}}
+ if(Object.keys(MS.seen).length===3&&!MS.ruled){MS.ruled=1;msRule();good($('rule'));}}
+function msRule(){setRule(Object.keys(MS.seen).length===3?['<b>Law of conservation of mass:</b> mass is neither created nor destroyed in a chemical reaction','<b>Closed</b> system: the balloon traps the gas, so the mass stays the same','<b>Open</b> system: the mass falls only because the gas <b>escapes through the opening</b>','No gas made: the mass stays the same, even in open beakers']:['Run all three examples. Compare the mass before and after.']);}
+
+/* ---- mass calculations: knowns first, then step by step ---- */
+var MC=[{name:'Find the mass of a product',text:'4.8 g of magnesium burns completely in 3.2 g of oxygen. What mass of magnesium oxide forms?',eq:'2Mg + O₂ → 2MgO',
+  t:[['m(Mg)',4.8,0],['m(O₂)',3.2,0],['m(MgO)',8.0,1]],u:2,
+  law:['m(Mg) + m(O₂) = m(MgO)','m(Mg) = m(O₂) + m(MgO)','m(Mg) − m(O₂) = m(MgO)'],
+  rea:['m(MgO) = m(Mg) + m(O₂)','m(MgO) = m(Mg) − m(O₂)','m(MgO) = m(O₂) − m(Mg)'],
+  sub:'4.8 g + 3.2 g',alt:[[1.6,'You subtracted. Both reactants end up in the product, so add their masses.']]},
+ {name:'Find the mass of a reactant',text:'4.0 g of hydrogen reacts with oxygen and makes 36.0 g of water. What mass of oxygen reacted?',eq:'2H₂ + O₂ → 2H₂O',
+  t:[['m(H₂)',4.0,0],['m(O₂)',32.0,0],['m(H₂O)',36.0,1]],u:1,
+  law:['m(H₂) + m(O₂) = m(H₂O)','m(H₂) = m(O₂) + m(H₂O)','m(H₂) − m(O₂) = m(H₂O)'],
+  rea:['m(O₂) = m(H₂O) − m(H₂)','m(O₂) = m(H₂O) + m(H₂)','m(O₂) = m(H₂) − m(H₂O)'],
+  sub:'36.0 g − 4.0 g',alt:[[40.0,'You added. Oxygen is a reactant: take the mass of hydrogen away from the mass of water.']]},
+ {name:'Two products',text:'Heating 10.0 g of calcium carbonate makes calcium oxide and 4.4 g of carbon dioxide. What mass of calcium oxide forms?',eq:'CaCO₃ → CaO + CO₂',
+  t:[['m(CaCO₃)',10.0,0],['m(CaO)',5.6,1],['m(CO₂)',4.4,1]],u:1,
+  law:['m(CaCO₃) = m(CaO) + m(CO₂)','m(CaCO₃) + m(CaO) = m(CO₂)','m(CaCO₃) = m(CaO) − m(CO₂)'],
+  rea:['m(CaO) = m(CaCO₃) − m(CO₂)','m(CaO) = m(CaCO₃) + m(CO₂)','m(CaO) = m(CO₂) − m(CaCO₃)'],
+  sub:'10.0 g − 4.4 g',alt:[[14.4,'You added. The two products share the mass of the reactant, so subtract.']]},
+ {name:'Gas escapes',text:'Baking soda and vinegar have a mass of 150.0 g before they are mixed in an open flask. When the fizzing stops, the flask and its contents have a mass of 147.8 g. What mass of carbon dioxide escaped?',eq:'baking soda + vinegar → sodium acetate + water + carbon dioxide',
+  t:[['m(before)',150.0,0],['m(left in flask)',147.8,1],['m(CO₂)',2.2,1]],u:2,
+  law:['m(before) = m(left in flask) + m(CO₂)','m(before) + m(CO₂) = m(left in flask)','m(before) = m(left in flask) − m(CO₂)'],
+  rea:['m(CO₂) = m(before) − m(left in flask)','m(CO₂) = m(before) + m(left in flask)','m(CO₂) = m(left in flask) − m(before)'],
+  sub:'150.0 g − 147.8 g',alt:[[297.8,'You added. The gas is the mass that went missing, so subtract.']]}];
+var MCH=['Identify the knowns and the unknown','Write the law of conservation of mass for this reaction','Rearrange the law for the unknown','Substitute the knowns with units, then calculate'];
+var MCT=['The knowns are the masses given in the question. The unknown is the mass the question asks you to find.','Total mass of the reactants (left of the arrow) = total mass of the products (right of the arrow).','To move a mass to the other side of the equals sign, add or subtract it on both sides.','Put each known into your rearranged equation. Write g after every number.'];
+var MCI=0,MCS=MC.map(function(P){return {k:0,done:false,lo:shuffle([0,1,2]),ro:shuffle([0,1,2]),uo:shuffle(P.t.map(function(_,j){return j;}))};});
+function mcFields(P){return P.t.map(function(t,j){return {lab:t[0]+' =',want:t[1],unit:'g',why:'Read this mass from the question.',j:j};}).filter(function(f){return f.j!==P.u;});}
+function mcDone(P,i){var g=function(v){return v.toFixed(1)+' g';};
+ if(i===0)return mcFields(P).map(function(f){return f.lab+' <span class="ansb">'+g(f.want)+'</span>';}).join(' &nbsp; ')+' &nbsp; unknown: <span class="ansb">'+P.t[P.u][0]+'</span>';
+ if(i===1)return '<span class="ansb">'+P.law[0]+'</span>';if(i===2)return '<span class="ansb">'+P.rea[0]+'</span>';
+ return P.t[P.u][0]+' = '+P.sub+' = <span class="ansb">'+g(P.t[P.u][1])+'</span>';}
+function mcSel(id,lab,opts,order){return '<div class="f"><span>'+lab+'</span><select class="pick" id="'+id+'"><option value="">Choose…</option>'+order.map(function(j){return '<option value="'+j+'">'+opts[j]+'</option>';}).join('')+'</select></div>';}
+function mcShow(n){var P=MC[n],S=MCS[n],pre='mc'+n+'s',h='<div class="task"><b>Problem '+(n+1)+': '+P.name+'.</b> '+P.text+'<div class="small" style="margin-top:4px">'+P.eq+'</div></div>';
+ MCH.forEach(function(hd,i){if(i>S.k)return;var cur=i===S.k&&!S.done,body='';
+  if(cur){if(i===0)body=mcFields(P).map(function(f,k){return fieldHtml(f,k,pre+i);}).join('')+mcSel(pre+i+'u','Unknown:',P.t.map(function(t){return t[0];}),S.uo);
+   else if(i===1)body=mcSel(pre+i+'u','Law:',P.law,S.lo);else if(i===2)body=mcSel(pre+i+'u','Rearranged:',P.rea,S.ro);
+   else body=fieldHtml({lab:P.t[P.u][0]+' =',unit:'g'},0,pre+i);
+   body+='<div class="stepbar"><button class="btn fill" id="mcC">Check</button><button class="btn" id="mcH">Hint</button></div><div class="hintbox" id="mcHB">'+MCT[i]+'</div><div id="mcF"></div>';}
+  else body='<div class="ln">'+mcDone(P,i)+'</div>';
+  h+='<div class="st'+(cur?' cur':'')+'"><div class="sh"><span class="n">'+(i+1)+'</span>'+hd+'</div>'+body+'</div>';});
+ if(S.done)h+='<div class="fb ok"><b>Solved!</b> Mass of reactants = mass of products. '+(n<MC.length-1?'Go on to Problem '+(n+2)+'.':'Great work: you can find the mass of a reactant or a product.')+'</div>';
+ $('panel').innerHTML=h+'<div class="stepbar"><button class="btn" id="mcR">Start again</button></div>';
+ var c=$('mcC');if(c){c.onclick=function(){var i=S.k,errs=[],sel=$(pre+i+'u');
+   if(i===0)mcFields(P).forEach(function(f,k){errs.push(fieldCheck(f,k,pre+i));});
+   if(i===3)errs.push(fieldCheck({want:P.t[P.u][1],alt:P.alt,why:'Check your calculation: use the rearranged equation from step 3.'},0,pre+i));
+   if(sel){var okS=sel.value===String(i===0?P.u:0);sel.classList.toggle('ok',okS);sel.classList.toggle('no',!okS);if(!okS)errs.push(sel.value===''?'Choose an answer from the list.':['The unknown is the mass the question asks you to find.','The masses on the left of the arrow add up to the masses on the right.','Get the unknown on its own on one side of the equals sign.'][i]);}
+   var bad=errs.filter(Boolean);if(!bad.length){SFX.good();if(S.k<MCH.length-1)S.k++;else{S.done=true;renderSteps();burst($('panel'),40);}mcShow(n);}else{SFX.bad();$('mcF').innerHTML='<div class="fb no">'+bad[0]+'</div>';}};
+  $('mcH').onclick=function(){$('mcHB').classList.toggle('on');};}
+ $('mcR').onclick=function(){S.k=0;S.done=false;renderSteps();mcShow(n);};}
+function mcFrame(n){clear();var P=MC[n],S=MCS[n];txt('Problem '+(n+1)+': '+P.name,400,32,{s:24});
+ var lines=[],line='';P.text.split(' ').forEach(function(w){var t=line?line+' '+w:w;if(tw(t,19)>710){lines.push(line);line=w;}else line=t;});lines.push(line);lines.forEach(function(l,i){txt(l,400,68+i*27,{s:19,w:500});});
+ var y=68+lines.length*27+8;fitTxt(P.eq,400,y,21,PLUM,600,700);y+=26;
+ ['① Knowns','② Law','③ Rearrange','④ Calculate'].forEach(function(s,i){var x=115+i*190,d=i<S.k||S.done,c=i===S.k&&!S.done;rr(x-80,y,160,42,14);ctx.fillStyle=d?'#e8f6ee':(c?'#fff4d6':'#f3f6fb');ctx.fill();ctx.strokeStyle=d?GREEN:(c?AMBER:LINE);ctx.lineWidth=2.5;ctx.stroke();txt((d?'✓ ':'')+s,x,y+21,{s:17,c:d?GREEN:INK});});
+ y+=58;
+ if(S.k>0||S.done){[0,1].forEach(function(side){var x0=side?410:40,terms=P.t.filter(function(t){return t[2]===side;});panel(x0,y,350,92);txt(side?'Products':'Reactants',x0+175,y+16,{s:14,c:side?BLUE:RED});
+   terms.forEach(function(t,j){var cx=x0+350*(j+.5)/terms.length,unk=t===P.t[P.u];txt(t[0],cx,y+42,{s:18});
+    if(unk&&!S.done){rr(cx-34,y+56,68,28,10);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=2;ctx.stroke();txt('?',cx,y+70,{s:20,c:AMBER});}
+    else txt(t[1].toFixed(1)+' g',cx,y+70,{s:20,c:unk?GREEN:INK});});});
+  txt('=',400,y+46,{s:30,c:MUTED});y+=112;
+  for(var i=1;i<MCH.length;i++){if(i>=S.k&&!S.done)break;var s=i===1?P.law[0]:(i===2?P.rea[0]:P.t[P.u][0]+' = '+P.sub+' = '+P.t[P.u][1].toFixed(1)+' g');fitTxt(s,400,y,22,i===3?GREEN:INK,600,700);y+=34;}}
+ else txt('Type the knowns below the picture and choose the unknown, then press Check.',400,y+40,{s:17,c:MUTED,w:500});
+ var sv=MCS.filter(function(x){return x.done;}).length;setReads([['Problem',(n+1)+' of '+MC.length],['Step',S.done?'solved':(S.k+1)+' of 4'],['Solved',sv+' of '+MC.length]]);}
+
 var BQ=[{q:'Which coefficients balance  __Na + __Cl₂ → __NaCl?',o:['2, 1, 2','1, 1, 1','1, 2, 1','2, 2, 1'],a:0,w:'2 Na and 2 Cl on each side.'},
  {q:'To balance an equation, you may change…',o:['only the coefficients','only the subscripts','both coefficients and subscripts','the arrow'],a:0,w:'Changing a subscript changes the substance.'},
- {q:'10 g of hydrogen reacts with 80 g of oxygen. What mass of water forms?',o:['90 g','70 g','80 g','800 g'],a:0,w:'Mass of products = mass of reactants.'},
- {q:'Baking soda and vinegar react in an OPEN beaker and the mass falls. Why?',o:['Carbon dioxide gas escaped into the air','Mass was destroyed','The beaker lost mass','A solid formed'],a:0,w:'The gas left the beaker.'}];
-var T4={name:'Balance it',c:AMBER,steps:['Count the atoms','Mass is conserved','Quiz me'],
- title:function(i){return ['Balance the equation: count the atoms','Conservation of mass: sealed or open?','Quiz: balancing and mass'][i];},
- enter:function(i){if(i===0){$('controls').innerHTML=segHtml('blSel',BAL.map(function(e,k){return 'Equation '+(k+1);}),BL.i);segBind('blSel',function(k){BL.i=k;blPanel();});blPanel();blRule();
-   setQ('Change the <b>coefficients</b> until the number of each atom is the <b>same on both sides</b>.');}
-  else if(i===1){$('controls').innerHTML=segHtml('msSel',['Sealed flask','Open beaker'],MS.closed?0:1)+'<button class="btn" id="msGo">Mix</button>';segBind('msSel',function(k){MS.closed=k?0:1;MS.t=0;MS.run=false;MS.bub=[];});
-   $('msGo').onclick=function(){MS.t=0;MS.run=true;MS.bub=[];tone(440,0,.06);};$('panel').innerHTML='';msRule();
-   setQ('Baking soda reacts with vinegar and makes carbon dioxide gas. Watch the balance in a <b>sealed</b> flask, then in an <b>open</b> beaker. Is mass lost?');}
-  else{$('readcard').style.display='none';seqPanel(BQ);setQ('Count atoms; mass is conserved.','Explain');setRule(['Balance with coefficients only','Mass before = mass after']);}},
- frame:function(dt){T+=dt;if(stepI===1)msFrame(dt);else blFrame(dt);}};
+ {q:'What is the first step in balancing an equation?',o:['List every atom on both sides','Change the subscripts','Add coefficients at random','Count only the oxygen atoms'],a:0,w:'List, count, then balance by trial and error.'},
+ {q:'10.0 g of hydrogen reacts with 80.0 g of oxygen. What mass of water forms?',o:['90.0 g','70.0 g','80.0 g','800.0 g'],a:0,w:'Mass of products = mass of reactants: 10.0 g + 80.0 g = 90.0 g.'},
+ {q:'Baking soda and vinegar react in a sealed flask with a balloon on top. The balloon inflates. What happens to the mass?',o:['It stays the same: the gas is trapped in the balloon','It increases: the balloon gets bigger','It decreases: gas is made','It becomes zero'],a:0,w:'Nothing leaves a closed system.'},
+ {q:'In an OPEN flask, how does the carbon dioxide leave?',o:['Through the opening at the top','Through the glass walls','It does not leave','Through the bottom of the flask'],a:0,w:'Gas can only escape through the opening; glass does not let it through.'},
+ {q:'Two solutions are mixed in open beakers and a yellow solid forms. The mass…',o:['stays the same','increases','decreases','becomes zero'],a:0,w:'No gas is made, so nothing escapes.'}];
+var T4={name:'Balance it',c:AMBER,steps:['Balance in 3 steps','Mass is conserved','Mass calculations','Quiz me'],
+ mark:function(i){return i===2&&MCS.every(function(s){return s.done;})?'✓':i+1;},
+ title:function(i){return ['Balancing in three steps: list, count, balance','Conservation of mass: closed, open and no gas','Calculate a mass with the law of conservation of mass','Quiz: balancing and mass'][i];},
+ enter:function(i){if(i===0){$('cv').style.display='none';BF.render($('panel'));setRule(BF.rule);setQ(BF.q);}
+  else if(i===1){$('controls').innerHTML=segHtml('msSel',['Sealed flask + balloon','Open flask','Precipitate (no gas)'],MS.m)+'<button class="btn fill" id="msGo">Mix ▶</button><button class="btn" id="msRs">Reset</button>';segBind('msSel',function(k){MS.m=k;msReset();});
+   $('msGo').onclick=function(){msReset();MS.run=true;tone(440,0,.06);};$('msRs').onclick=msReset;msReset();msRule();
+   setQ('Watch the balance. In the <b>sealed</b> flask a balloon collects the gas. In the <b>open</b> flask the gas can leave through the top. Then try a reaction that makes <b>no gas</b>. When does the mass change?');}
+  else if(i===2){$('controls').innerHTML=segHtml('mcSel',MC.map(function(_,k){return 'Problem '+(k+1);}),MCI);segBind('mcSel',function(k){MCI=k;mcShow(k);});mcShow(MCI);
+   setQ('Start by writing the <b>knowns</b> with units and choosing the <b>unknown</b>. Then write the law, rearrange it and calculate.');setRule(['<b>Mass of reactants = mass of products</b>','Write the knowns (with units) and the unknown first','Rearrange for the unknown, then substitute with units','Open system: mass of gas that escaped = mass before − mass after']);}
+  else{$('readcard').style.display='none';seqPanel(BQ);setQ('List, count, balance. Mass is conserved.','Explain');setRule(['Balance with coefficients only','Mass before = mass after','In an open system, gas leaves through the opening']);}},
+ frame:function(dt){T+=dt;if(stepI===1||stepI===3)msFrame(dt);else if(stepI===2)mcFrame(MCI);}};
 
 function mkQ(L,exit){return {L:L,exit:!!exit,ord:null,player:null};}
 var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
@@ -559,7 +740,7 @@ var QZX=mkQ([{q:'Which observation is evidence of a chemical reaction?',o:['Bubb
  {q:'In  2Mg + O₂ → 2MgO, what does the 2 in front of Mg mean?',o:['2 atoms of magnesium','Magnesium has 2 electrons','2 grams of magnesium','Magnesium has a 2+ charge'],a:0,w:'A coefficient counts particles.'},
  {q:'12 g of magnesium reacts with 8 g of oxygen. What mass of magnesium oxide forms?',o:['20 g','4 g','12 g','96 g'],a:0,w:'Mass is conserved: 12 + 8.'},
  {q:'A reaction in a SEALED flask makes a gas. The mass after the reaction is…',o:['the same as before','larger than before','smaller than before','zero'],a:0,w:'Nothing enters or leaves.'}],true);
-var T5={name:'Exit ticket',c:GREEN,steps:['Exit ticket'],mark:function(){return QZX.done?'✓':1;},title:function(){return 'Exit ticket: Reactions and Equations';},enter:function(){$('readcard').style.display='none';qzShow(QZX);setQ('Think about signs of a reaction, symbol equations, balancing and conservation of mass.','Exit ticket');setRule(['New substance = chemical reaction','Balanced: same atoms on both sides; mass is conserved']);},frame:function(dt){T4.frame(dt);}};
+var T5={name:'Exit ticket',c:GREEN,steps:['Exit ticket'],mark:function(){return QZX.done?'✓':1;},title:function(){return 'Exit ticket: Reactions and Equations';},enter:function(){$('readcard').style.display='none';$('cv').style.display='none';qzShow(QZX);setQ('Think about signs of a reaction, symbol equations, balancing and conservation of mass.','Exit ticket');setRule(['New substance = chemical reaction','Balanced: same atoms on both sides; mass is conserved']);},frame:function(){}};
 function qzMark(t,i,Q){return t.steps.length-1===i&&Q.done?'✓':i+1;}
 /* ---- sound button ---- */
 function spk(on){return '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="#18233a"/>'+(on?'<path d="M15.5 9 C17.5 11 17.5 13 15.5 15 M18 6.5 C21.5 10 21.5 14 18 17.5" fill="none" stroke="#18233a" stroke-width="2" stroke-linecap="round"/>':'<path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="#d8434a" stroke-width="2.4" stroke-linecap="round"/>')+'</svg>';}
