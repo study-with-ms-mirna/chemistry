@@ -268,7 +268,7 @@ KAnim.prototype.lay=function(row,y,size){var T=this.T,items=[],pos={},bars={};
  items.forEach(function(it){if(it.id)pos[it.id]={x:x+it.w/2,y:y};else{var cx=x+it.w/2,xt=cx-it.wt/2,xb=cx-it.wb/2;
   it.f.top.forEach(function(id){pos[id]={x:xt+w(id)/2,y:y-size*.62};xt+=w(id);});it.f.bot.forEach(function(id){pos[id]={x:xb+w(id)/2,y:y+size*.62};xb+=w(id);});bars[it.f.f]={x:x+6,w:it.w-12,y:y};}x+=it.w;});
  return {pos:pos,bars:bars};};
-KAnim.prototype.draw=function(dt){var T=this.T;this.u=Math.min(1,this.u+dt*1.1);var u=ease(this.u),cur=this.S[this.i],prev=this.u>=1?cur:(this.S[this.pi]||cur),sA=prev.size||60,sB=cur.size||60,A=this.lay(prev.row,190,sA),B=this.lay(cur.row,190,sB);
+KAnim.prototype.draw=function(dt){var T=this.T;this.u=Math.min(1,this.u+dt*1.1);var u=ease(this.u),cur=this.S[this.i],prev=this.u>=1?cur:(this.S[this.pi]||cur),sA=this.fit(prev),sB=this.fit(cur),A=this.lay(prev.row,190,sA),B=this.lay(cur.row,190,sB);
  clear();txt(this.title,400,40,{s:20});panel(40,80,720,220);
  (cur.hl||[]).forEach(function(id){var p=B.pos[id];if(!p)return;var o=T[id][2]||{},sz=o.sup?sB*.6:sB,w=tw(T[id][0],sz)+18,h=sz*1.1,yy=p.y-(o.sup?sB*.34:0);ctx.globalAlpha=u*.9;rr(p.x-w/2,yy-h/2,w,h,14);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=1;});
  var ids={};Object.keys(A.pos).concat(Object.keys(B.pos)).forEach(function(k){ids[k]=1;});
@@ -407,6 +407,11 @@ var T0={name:'Antacid warm-up',c:PLUM,steps:['Cure the heartburn','Quiz me'],
  frame:function(dt){T+=dt;awFrame(stepI===0?dt:0);}};
 
 /* ================= Tab 1: from word equation to net ionic ================= */
+/* shrink any equation row so it always fits inside its box */
+KAnim.prototype.fit=function(st){var T=this.T,s=st.size||60;
+ function w(id,z){var o=T[id][2]||{};return tw(T[id][0],o.sup?z*.6:z)+(o.tight?2:o.sup?8:16);}
+ function W(z){return st.row.reduce(function(a,it){if(typeof it==='string')return a+w(it,z);var t=it.top.reduce(function(p,q){return p+w(q,z);},0),u=it.bot.reduce(function(p,q){return p+w(q,z);},0);return a+Math.max(t,u)+20;},0);}
+ while(s>14&&W(s)>650)s-=1;return s;};
 var EQ1=new KAnim({a:['acid',RED],b:['base',BLUE],s:['salt',PLUM],w:['water',TEAL],p1:['+',MUTED],ar:['→',MUTED],p2:['+',MUTED],
   a2:['hydrochloric acid',RED],b2:['sodium hydroxide',BLUE],s2:['sodium chloride',PLUM],w2:['water',TEAL],
   a3:['HCl',RED],b3:['NaOH',BLUE],s3:['NaCl',PLUM],w3:['H₂O',TEAL],a4:['2HCl',RED],b4:['Mg(OH)₂',BLUE],s4:['MgCl₂',PLUM],w4:['2H₂O',TEAL]},
@@ -525,30 +530,87 @@ function apFrame(){clear();
  if(AP.pick>=0){var a=APP[AP.pick];txt(a.n,670,130,{s:22,c:ORANGE});wrapTxt(a.d,670,170,190,24,17);}
  else wrapTxt('Click on the apparatus in the picture to learn its name and job.',670,170,190,24,17);}
 function wrapTxt(s,x,y,w,lh,size){var words=s.split(' '),line='',yy=y;words.forEach(function(wd){var t=line?line+' '+wd:wd;if(tw(t,size)>w&&line){txt(line,x,yy,{s:size,w:500});line=wd;yy+=lh;}else line=t;});if(line)txt(line,x,yy,{s:size,w:500});}
-var PROC=['Rinse the burette with a little NaOH, then fill it using a funnel; remove the funnel','Record the initial burette reading (eye level, bottom of the meniscus)','Use a pipette to put 25.00 mL of the unknown acid into a conical flask','Add 2–3 drops of indicator to the flask','Put the flask on a white tile under the burette','Open the tap and add NaOH while swirling the flask','Near the end point, add the NaOH drop by drop until the colour change stays','Record the final reading: volume used = final − initial; repeat for close results'];
-var PR={done:[],order:null,wrong:-1};
-function prShow(){if(!PR.order)PR.order=shuffle(PROC.map(function(_,i){return i;}));var left=PR.order.filter(function(i){return PR.done.indexOf(i)<0;});
- $('panel').innerHTML=(left.length?'<div class="small">Click the <b>next</b> step:</div><div class="opts one">'+left.map(function(i){return '<button class="qb'+(PR.wrong===i?' wrong':'')+'" data-p="'+i+'"><span>'+PROC[i]+'</span></button>';}).join('')+'</div>':'<div class="fb ok"><b>All 8 steps in order!</b> Now try it yourself in the next tab.</div>')+'<div class="stepbar"><button class="btn" id="prR">Start again</button></div>';
- each('[data-p]',function(b){b.onclick=function(){var i=+b.getAttribute('data-p');if(i===PR.done.length){PR.done.push(i);PR.wrong=-1;SFX.good();if(PR.done.length===PROC.length){burst($('panel'),40);renderSteps();}}else{PR.wrong=i;SFX.bad();}prShow();};});
- $('prR').onclick=function(){PR.done=[];PR.order=null;PR.wrong=-1;prShow();renderSteps();};}
-function prFrame(){clear();txt('Titration procedure',400,34,{s:24});PROC.forEach(function(s,i){var y=72+i*50,d=i<PR.done.length;rr(40,y,720,42,12);ctx.fillStyle=d?'#e8f6ee':'#f3f6fb';ctx.fill();ctx.strokeStyle=d?GREEN:LINE;ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle=d?GREEN:LINE;ctx.beginPath();ctx.arc(66,y+21,14,0,7);ctx.fill();txt(String(i+1),66,y+22,{s:16,c:'#fff'});if(d)fitTxt(s,410,y+22,16,INK,500,650);else txt('?',410,y+22,{s:18,c:MUTED});});}
+var PROC=['Rinse the burette with a little NaOH, then fill it using a funnel. Remove the funnel.','Record the initial burette reading at eye level, at the bottom of the meniscus.','Use a pipette to put exactly 25.00 mL of the unknown acid into a conical flask.','Add 2–3 drops of indicator (phenolphthalein) to the flask.','Put the flask on a white tile under the burette.','Open the tap and add NaOH while swirling the flask.','Near the end point, add NaOH drop by drop until the faint pink stays.','Record the final reading. Volume used = final − initial. Repeat until results agree.'];
+var PSH=['Rinse and fill the burette','Read the initial volume','Pipette 25.00 mL of acid into the flask','Add 2–3 drops of indicator','Put the flask on a white tile','Open the tap and swirl','Add drop by drop near the end','Read the final volume'];
+var PWHY=['Rinsing with NaOH stops leftover water from diluting it.','Read at eye level, at the bottom of the curved surface.','The volume of the unknown must be exact, so we use a pipette.','Phenolphthalein is colourless in acid.','The white tile makes the first faint pink easy to see.','Swirling mixes the base in. Pink flashes disappear while acid is left.','One extra drop can pass the end point, so go slowly.','24.60 mL of NaOH was used. Repeat until two results agree.'];
+var PS={k:0,t:0,seen:{0:1}};
+var PINK=[236,72,153],NAOH=[200,220,245],V0=0.50,V1=25.10;
+function pby(v){return 100+v*4.2;}
+function pStand(){seg(150,60,150,452,'#8a94a8',8);rr(100,448,190,14,4);ctx.fillStyle='#8a94a8';ctx.fill();seg(150,160,205,160,'#8a94a8',6);rr(194,150,22,20,4);ctx.fillStyle='#6b7385';ctx.fill();}
+function pTile(x,hl){rr(x-95,440,190,22,4);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=hl?ORANGE:LINE;ctx.lineWidth=hl?3.5:2;ctx.stroke();}
+function pFunnel(x,y){ctx.fillStyle='rgba(238,244,251,.9)';ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-28,y);ctx.lineTo(x+28,y);ctx.lineTo(x+5,y+28);ctx.lineTo(x+5,y+52);ctx.lineTo(x-5,y+52);ctx.lineTo(x-5,y+28);ctx.closePath();ctx.fill();ctx.stroke();}
+function pFlask(x,lvl,pk){flask(x,440,.95,lvl,pk>0?PINK:null,pk);}
+function pPipette(x,top,frac){var bot=top+200,by=top+95;ctx.fillStyle='#f7fafd';rr(x-4,top,8,bot-top,3);ctx.fill();ctx.beginPath();ctx.ellipse(x,by,13,30,0,0,7);ctx.fill();
+ ctx.save();ctx.beginPath();ctx.rect(x-20,top+(bot-top)*(1-frac),40,(bot-top)*frac+2);ctx.clip();ctx.fillStyle='rgba(240,200,200,.9)';rr(x-3,top,6,bot-top,3);ctx.fill();ctx.beginPath();ctx.ellipse(x,by,11,28,0,0,7);ctx.fill();ctx.restore();
+ ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2.5;rr(x-4,top,8,bot-top,3);ctx.stroke();ctx.beginPath();ctx.ellipse(x,by,13,30,0,0,7);ctx.fillStyle='rgba(247,250,253,0)';ctx.stroke();
+ seg(x-9,top+40,x+9,top+40,RED,2);rr(x-15,top-34,30,36,12);ctx.fillStyle='#d8434a';ctx.fill();txt('filler',x+40,top-16,{s:13,c:MUTED,w:500});}
+function pDropper(x,y){rr(x-24,y-110,48,64,8);ctx.fillStyle='#f3e9f7';ctx.fill();ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2.5;ctx.stroke();txt('phenol-',x,y-86,{s:11,c:PLUM});txt('phthalein',x,y-72,{s:11,c:PLUM});
+ rr(x-10,y-46,20,16,4);ctx.fillStyle='#3b3550';ctx.fill();ctx.beginPath();ctx.moveTo(x-5,y-30);ctx.lineTo(x+5,y-30);ctx.lineTo(x+1,y);ctx.lineTo(x-1,y);ctx.closePath();ctx.fillStyle='#e7eef7';ctx.fill();ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2;ctx.stroke();}
+function pDrop(x,y,c){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x,y-9);ctx.quadraticCurveTo(x+6,y,x,y+5);ctx.quadraticCurveTo(x-6,y,x,y-9);ctx.fill();}
+function pEye(x,y){ctx.strokeStyle=INK;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x-16,y);ctx.quadraticCurveTo(x,y-13,x+16,y);ctx.quadraticCurveTo(x,y+13,x-16,y);ctx.stroke();ctx.fillStyle=BLUE;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();}
+function pMag(v,cx,cy,label){var r=88,sx=cx+10;seg(237,pby(v),cx-r*.95,cy+10,'#9aa6ba',2,[5,4]);ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.clip();
+ var px=34,ym=cy;ctx.fillStyle='#f7fafd';ctx.fillRect(sx-30,cy-r,60,2*r);
+ ctx.fillStyle=rgb(NAOH,.95);ctx.beginPath();ctx.moveTo(sx-30,ym-10);ctx.quadraticCurveTo(sx,ym+10,sx+30,ym-10);ctx.lineTo(sx+30,cy+r);ctx.lineTo(sx-30,cy+r);ctx.closePath();ctx.fill();
+ ctx.strokeStyle='#5f7090';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(sx-30,ym-10);ctx.quadraticCurveTo(sx,ym+10,sx+30,ym-10);ctx.stroke();
+ for(var m=Math.floor((v-3)*10);m<=Math.ceil((v+3)*10);m++){var yy=ym+(m/10-v)*px;if(m<0||yy<cy-r||yy>cy+r)continue;var big=m%10===0,mid=m%5===0;seg(sx-30,yy,sx-30+(big?22:mid?15:9),yy,'#4b5873',big?2.5:1.5);if(big)txt(String(m/10),sx-48,yy,{s:16,c:INK});}
+ seg(cx-r,ym,cx+r,ym,RED,2,[6,4]);ctx.restore();ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
+ seg(cx+r*.7,cy+r*.7,cx+r*1.0,cy+r*1.0,INK,9);pEye(cx-r-24,ym);
+ rr(cx-95,cy+r+18,190,34,12);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=2.5;ctx.stroke();txt(label+' = '+v.toFixed(2)+' mL',cx,cy+r+36,{s:17,c:INK});}
+function pScene(k,t){var T2t=PS.T||0;
+ if(k===0){pStand();var fill=clamp(t/.8,0,1),lvl=pby(50)-(pby(50)-pby(0)+6)*fill;burette(225,90,320,fill>0?lvl:null,NAOH);
+  var fy=50-(t>.85?(t-.85)/.15*30:0);ctx.globalAlpha=t>.85?clamp(1-(t-.85)/.15,0,1):1;pFunnel(225,fy);ctx.globalAlpha=1;
+  if(t<.82){ctx.save();ctx.translate(330,34);ctx.rotate(-1.25);beaker(0,0,46,42,26,NAOH,.85);ctx.restore();ctx.strokeStyle=rgb(NAOH,1);ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(281,44);ctx.quadraticCurveTo(240,40,230,62);ctx.stroke();txt('NaOH',372,70,{s:15,c:BLUE});}
+  if(t>.85)txt('funnel removed',320,52,{s:15,c:ORANGE});
+  pTile(225,false);txt('known: 0.100 mol/L NaOH',330,300,{s:15,c:BLUE,a:'left'});}
+ else if(k===1){pStand();burette(225,90,320,pby(V0),NAOH);pTile(225,false);pMag(V0,420,170,'Initial reading');}
+ else if(k===2){var f=clamp(t/.85,0,1);beaker(110,440,90,90,60,[240,200,200],.8);txt('unknown',110,320,{s:15,c:RED});txt('HCl',110,340,{s:15,c:RED});
+  pFlask(300,4+36*f,0);pPipette(300,110,1-f);txt('25.00 mL',345,240,{s:16,c:RED,a:'left'});txt('volume pipette',345,262,{s:14,c:MUTED,w:500,a:'left'});txt('conical flask',300,470,{s:15,c:MUTED,w:500});}
+ else if(k===3){pFlask(300,40,0);pDropper(300,250);var n=Math.min(3,Math.floor(t*3.6));for(var d=0;d<3;d++){var p=clamp(t*3.6-d,0,1);if(p>0&&p<1)pDrop(300,255+p*130,PLUM);}
+  txt('drops: '+n+' of 3',420,330,{s:18,c:PLUM,a:'left'});txt('still colourless',420,360,{s:15,c:MUTED,w:500,a:'left'});txt('conical flask',300,470,{s:15,c:MUTED,w:500});}
+ else if(k===4){pStand();burette(225,90,320,pby(V0),NAOH);var x=lerp(470,225,ease(clamp(t/.7,0,1)));pTile(225,t>.7);pFlask(x,40,0);if(t>.7){arrow(380,455,328,452,ORANGE,3);txt('white tile',440,455,{s:16,c:ORANGE});}}
+ else if(k===5){pStand();var v=lerp(V0,23.5,clamp(t,0,1)),sw=Math.sin(T2t*9)*7;burette(225,90,320,pby(v),NAOH);pTile(225,false);
+  ctx.strokeStyle=rgb(NAOH,1);ctx.lineWidth=3;seg(225,352,225,370,rgb(NAOH,1),3);var fl=Math.max(0,Math.sin(T2t*5.3))>.93?.22:0;pFlask(225+sw,40+v*.4,fl);
+  rr(229,320,24,10,3);ctx.fillStyle=ORANGE;ctx.fill();arrow(320,330,258,326,ORANGE,3);txt('tap open',360,330,{s:15,c:ORANGE,a:'left'});
+  ctx.strokeStyle=TEAL;ctx.lineWidth=3;ctx.beginPath();ctx.arc(225,405,62,.2,1.1);ctx.stroke();ctx.beginPath();ctx.arc(225,405,62,Math.PI+.2,Math.PI+1.1);ctx.stroke();txt('swirl',330,400,{s:16,c:TEAL,a:'left'});
+  txt('NaOH added: '+(v-V0).toFixed(1)+' mL',330,240,{s:16,c:BLUE,a:'left'});}
+ else if(k===6){pStand();var nd=6,q=clamp(t*1.15,0,1)*nd,v=lerp(23.5,V1,Math.min(1,Math.floor(q)/nd));burette(225,90,320,pby(v),NAOH);pTile(225,false);
+  var pk=0;for(var d=0;d<nd;d++){var p=q-d;if(p>0&&p<1)pDrop(225,356+p*(440-40*.95-356-10),rgb(NAOH,1));if(p>=1&&p<1.8&&d<nd-1)pk=Math.max(pk,.3*(1.8-p));}
+  if(q>=nd)pk=.24;pFlask(225,40+v*.4,pk);txt('drop '+Math.min(nd,Math.floor(q)+1)+'…',330,300,{s:17,c:BLUE,a:'left'});
+  if(q>=nd){txt('faint pink stays',330,340,{s:18,c:'#d63384',a:'left'});txt('= end point',330,364,{s:16,c:INK,a:'left'});}}
+ else{pStand();burette(225,90,320,pby(V1),NAOH);pTile(225,false);pFlask(225,40+V1*.4,.24);pMag(V1,420,170,'Final reading');
+  if(t>.4){rr(300,375,240,58,12);ctx.fillStyle='#e8f6ee';ctx.fill();ctx.strokeStyle=GREEN;ctx.lineWidth=2;ctx.stroke();txt('Volume used',420,392,{s:14,c:MUTED,w:500});txt('25.10 − 0.50 = 24.60 mL',420,415,{s:17,c:GREEN});}}}
+function psFrame(dt){PS.T=(PS.T||0)+dt;PS.t=Math.min(1,PS.t+dt/3.6);clear();pScene(PS.k,PS.t);
+ panel(560,30,220,440);txt('Step '+(PS.k+1)+' of 8',670,58,{s:15,c:MUTED,w:500});
+ for(var i=0;i<8;i++){ctx.fillStyle=i===PS.k?TEAL:(PS.seen[i]?'#9fd6d2':'#dde5f0');ctx.beginPath();ctx.arc(600+i*20,82,6,0,7);ctx.fill();}
+ wrapTxt(PSH[PS.k],670,120,190,26,20);wrapTxt(PROC[PS.k],670,200,195,23,15);wrapTxt('Why? '+PWHY[PS.k],670,360,195,22,14);}
+function psControls(){$('controls').innerHTML='<button class="btn" id="psB">◀ Back</button><button class="btn fill" id="psN">Next step ▶</button><button class="btn" id="psR">Play again</button>';
+ $('psB').onclick=function(){if(PS.k>0){PS.k--;PS.t=0;}};$('psN').onclick=function(){if(PS.k<7){PS.k++;PS.t=0;PS.seen[PS.k]=1;if(PS.k===7)renderSteps();}};$('psR').onclick=function(){PS.t=0;};}
+/* ---- What comes next? ---- */
+var PQ={k:0,opts:null,wrong:-1,ok:false};
+function pqShow(){if(PQ.k>=7){$('panel').innerHTML='<div class="fb ok"><b>All 7 correct!</b> You know the whole procedure. Now try it yourself in the next tab.</div><div class="stepbar"><button class="btn" id="pqR">Start again</button></div>';$('pqR').onclick=function(){PQ.k=0;PQ.opts=null;PQ.ok=false;PQ.wrong=-1;pqShow();renderSteps();};return;}
+ if(!PQ.opts){var others=shuffle([0,1,2,3,4,5,6,7].filter(function(i){return i!==PQ.k&&i!==PQ.k+1;})).slice(0,2);PQ.opts=shuffle([PQ.k+1].concat(others));}
+ $('panel').innerHTML='<div class="small">Question '+(PQ.k+1)+' of 7: the picture shows <b>'+PSH[PQ.k].toLowerCase()+'</b>. What comes <b>next</b>?</div><div class="opts one">'+PQ.opts.map(function(i){return '<button class="qb'+(PQ.ok&&i===PQ.k+1?' right':'')+(PQ.wrong===i?' wrong':'')+'" data-q="'+i+'"><span>'+PSH[i]+'</span></button>';}).join('')+'</div>'+(PQ.ok?'<div class="fb ok"><b>Yes!</b> '+PWHY[PQ.k+1]+'</div><div class="stepbar"><button class="btn fill" id="pqN">Next question ▶</button></div>':(PQ.wrong>=0?'<div class="fb no">Not that one. Look at the picture: what do we need to do before that?</div>':''));
+ each('[data-q]',function(b){b.onclick=function(){if(PQ.ok)return;var i=+b.getAttribute('data-q');if(i===PQ.k+1){PQ.ok=true;PQ.wrong=-1;SFX.good();}else{PQ.wrong=i;SFX.bad();}pqShow();};});
+ if(PQ.ok)$('pqN').onclick=function(){PQ.k++;PQ.opts=null;PQ.ok=false;PQ.wrong=-1;if(PQ.k>=7){burst($('panel'),40);renderSteps();}pqShow();};}
+function pqFrame(dt){PS.T=(PS.T||0)+dt;clear();var k=Math.min(PQ.k,7);pScene(k,1);panel(560,30,220,440);txt(PQ.k>=7?'Done!':'This picture:',670,64,{s:16,c:MUTED,w:500});wrapTxt(PSH[k],670,104,190,26,20);
+ if(PQ.k<7){txt('What comes next?',670,220,{s:20,c:TEAL});wrapTxt('Choose in the panel below the picture.',670,256,190,22,15);if(PQ.ok){txt('Next:',670,330,{s:15,c:MUTED,w:500});wrapTxt(PSH[PQ.k+1],670,360,190,24,18);}}}
 var TIQ=[{q:'The purpose of a titration is to…',o:['find the unknown concentration of a solution','make a salt','measure the mass of an acid','change the colour of a solution'],a:0,w:'A known solution is used to find an unknown concentration.'},
  {q:'At the equivalence point…',o:['moles of H⁺ from the acid = moles of OH⁻ from the base','the pH is always 7','the burette is empty','the indicator is added'],a:0,w:'That is the definition; the pH depends on the salt formed.'},
  {q:'Which piece measures exactly 25.00 mL of the unknown?',o:['a pipette','a beaker','a funnel','a conical flask'],a:0,w:'Pipettes deliver one exact volume.'},
  {q:'Why add the titrant drop by drop near the end?',o:['One drop can pass the end point','To save the indicator','The burette is blocked','To heat the flask'],a:0,w:'Near the equivalence point the pH jumps with a tiny volume.'}];
-var T2={name:'Titration',c:TEAL,steps:['The purpose','Apparatus','Procedure','Quiz me'],mark:function(i){if(i===2)return PR.done.length===PROC.length?'✓':3;if(i===1)return Object.keys(AP.seen).length===APP.length?'✓':2;return i===3&&TIQ.every(function(M){return M.p!=null;})?'✓':i+1;},
- title:function(i){return ['Why titrate? To find an unknown concentration','The titration apparatus','Put the procedure in order','Quiz: titration'][i];},
+var T2={name:'Titration',c:TEAL,steps:['The purpose','Apparatus','Procedure','What comes next?','Quiz me'],mark:function(i){if(i===2)return Object.keys(PS.seen).length===8?'✓':3;if(i===3)return PQ.k>=7?'✓':4;if(i===1)return Object.keys(AP.seen).length===APP.length?'✓':2;return i===4&&TIQ.every(function(M){return M.p!=null;})?'✓':i+1;},
+ title:function(i){return ['Why titrate? To find an unknown concentration','The titration apparatus','The procedure, step by step','What comes next?','Quiz: titration'][i];},
  enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">NaOH added <input type="range" id="puV" min="0" max="40" step="0.5" value="'+PU.v+'"><output id="puO">'+PU.v.toFixed(1)+' mL</output></div>';
    $('puV').oninput=function(){PU.v=+this.value;$('puO').textContent=PU.v.toFixed(1)+' mL';};
    setQ('We know the base\'s concentration but <b>not</b> the acid\'s. Add NaOH with the slider. <b>Predict:</b> at what point have we added exactly enough base?');
    setRule(['<b>Titration</b>: react a known volume of the unknown with a solution of <b>known</b> concentration (the <b>titrant</b>)','<b>Equivalence point</b>: moles of OH⁻ added = moles of H⁺ in the acid','The volume needed tells us the unknown concentration']);}
   else if(i===1){setQ('Click each piece of apparatus to learn its name and job.');setRule(['Burette: titrant · pipette: exact volume of unknown','Conical flask on a white tile · a few drops of indicator','The funnel is removed before you start']);}
-  else if(i===2){prShow();setQ('Put the steps of a titration in the right order.');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
+  else if(i===2){psControls();setQ('Watch each step of a titration with the apparatus. Press <b>Next step</b> when you are ready.');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
+  else if(i===3){pqShow();setQ('Look at the picture. Which step comes <b>next</b>?');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
   else{$('readcard').style.display='none';seqPanel(TIQ);setQ('Think about the job of each step.','Explain');setRule(['Titration finds an unknown concentration','Equivalence: mol H⁺ = mol OH⁻']);}},
  click:function(x,y){if(stepI!==1)return;for(var i=0;i<APP.length;i++){var a=APP[i];if(x>=a.x&&x<=a.x+a.w&&y>=a.y&&y<=a.y+a.h&&!(i===1&&x>190)){AP.pick=i;if(!AP.seen[i]){AP.seen[i]=1;tone(660,0,.07);if(Object.keys(AP.seen).length===APP.length){SFX.good();renderSteps();}}return;}}},
  frame:function(dt){T+=dt;if(stepI===0){puFrame();setReads([['NaOH added',PU.v.toFixed(1)+' mL'],['Equivalence at','25.0 mL'],['Flask is',PU.v<24.95?'acidic':(PU.v<=25.05?'neutral':'basic'),1]]);}
-  else if(stepI===1){apFrame();setReads([['Found',Object.keys(AP.seen).length+' of '+APP.length]]);}else if(stepI===2){prFrame();setReads([['Steps in order',PR.done.length+' of 8']]);}else puFrame();}};
+  else if(stepI===1){apFrame();setReads([['Found',Object.keys(AP.seen).length+' of '+APP.length]]);}else if(stepI===2){psFrame(dt);setReads([['Step',(PS.k+1)+' of 8'],['Steps seen',Object.keys(PS.seen).length+' of 8']]);}else if(stepI===3){pqFrame(dt);setReads([['Correct',Math.min(PQ.k,7)+' of 7']]);}else puFrame();}};
 
 /* ================= Tab 3: do the titration ================= */
 var TT={};
