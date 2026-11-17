@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neutralization Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f8;--grid:#dbe4f1;--ink:#18233a;--muted:#5a6780;--line:#c9d4e6;--shadow:#c3cfe3;--accent:#0f8b8d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.4}
+.wrap{max-width:1260px;margin:0 auto;padding:18px 20px 90px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+header svg{flex:none}
+h1{font-family:Fredoka,sans-serif;font-weight:600;font-size:32px;margin:0;line-height:1.1}
+.sub{color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none}
+.tab{font-family:Fredoka,sans-serif;font-weight:500;font-size:15.5px;padding:8px 12px;border-radius:16px;border:2px solid var(--line);background:#fff;box-shadow:0 4px 0 var(--shadow);cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab i{width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block}
+.tab.on{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 4px 0 rgba(24,35,58,.22)}
+.tab.on i{background:#fff}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step{font-family:Fredoka,sans-serif;font-size:16px;padding:6px 14px 6px 7px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;display:flex;align-items:center;gap:8px}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--line);font-weight:600;font-size:14px}
+.step.on{border-color:var(--accent);color:var(--accent)}
+.step.on b{background:var(--accent);color:#fff}
+.step.done b{background:#2e9e5b;color:#fff}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:960px){.main{grid-template-columns:1fr}}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:16px}
+.stage h2{font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;margin:0 0 10px;color:var(--accent)}
+canvas{width:100%;height:auto;display:block;border-radius:14px;background:#f6f8fc}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:14px}
+.controls:empty{display:none}
+.ctl{display:flex;align-items:center;gap:10px;font-family:Fredoka,sans-serif;font-size:16px}
+.ctl output{min-width:84px;font-weight:600;color:var(--accent)}
+.btn{font-family:Fredoka,sans-serif;font-weight:500;font-size:16px;padding:9px 16px;border-radius:14px;border:2px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;box-shadow:0 3px 0 var(--shadow)}
+.btn.fill,.btn.sel{background:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+input[type=range]{-webkit-appearance:none;appearance:none;width:260px;max-width:60vw;height:10px;border-radius:999px;background:#dfe6f2;outline:none;margin:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent),0 2px 3px rgba(0,0,0,.25);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:4px solid #fff;box-shadow:0 0 0 2px var(--accent);cursor:pointer}
+.side{display:flex;flex-direction:column;gap:14px}
+.lbl{font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.q{font-size:19px;font-weight:700}
+.rule{border:3px dashed #d8434a;border-radius:18px;padding:12px 14px;background:#fff}
+.rule .lbl{color:#d8434a}
+.rule ul{margin:0;padding-left:20px}
+.rule li{margin:4px 0}
+.reads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rd{background:#f3f6fb;border-radius:14px;padding:8px 10px}
+.rd span{display:block;font-size:13px;color:var(--muted)}
+.rd b{font-family:Fredoka,sans-serif;font-weight:600;font-size:19px}
+.rd.wide{grid-column:1/-1}
+sub{font-size:.65em}
+#panel:empty{display:none}
+#panel{margin-top:12px}
+.small{font-size:14px;color:var(--muted)}
+.task{font-size:18px;background:#f3f6fb;border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.stepbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.stepdots{display:flex;gap:6px}
+.stepdots i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.stepdots i.on{background:var(--accent)}
+.modebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.seg button{border:none;background:#fff;padding:8px 16px;font-size:16px;cursor:pointer;color:var(--ink);font-family:Fredoka,sans-serif;font-weight:500}
+.seg button.on{background:var(--accent);color:#fff}
+.st{border:2px solid var(--line);border-radius:16px;padding:10px 14px;background:#fff;margin-top:10px;animation:fadein .4s ease}
+.st.cur{border-color:var(--accent)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.03);opacity:1}100%{transform:none;opacity:1}}
+.sh{display:flex;align-items:center;gap:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px}
+.sh .n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:15px;flex:none}
+.ln{font-size:18px;margin-top:6px;line-height:1.65}
+.ansb{font-family:Fredoka,sans-serif;font-weight:600;border:2px solid var(--accent);border-radius:8px;padding:0 8px;color:var(--accent);white-space:nowrap}
+.hintbox{display:none;margin-top:10px;background:#fff4e5;border:2px solid #e8962a;border-radius:14px;padding:10px 14px;font-size:16px}
+.hintbox.on{display:block}
+.f{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:Fredoka,sans-serif;font-size:19px;margin:9px 0}
+.f input{width:96px;font-family:Fredoka,sans-serif;font-size:19px;font-weight:600;text-align:center;border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.f input.ke{width:60px;font-size:16px;padding:3px}
+.f input:focus{outline:none;border-color:var(--accent)}
+.f input.ok{border-color:#2e9e5b;background:#e8f6ee}.f input.no{border-color:#d8434a;background:#fdeeee}
+.f input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
+.f sup{font-size:.75em;vertical-align:.6em}
+.fb{margin-top:12px;border-radius:14px;padding:10px 14px;font-size:17px;border:2px solid}
+.fb.ok{background:#e8f6ee;border-color:#2e9e5b;animation:pop .4s}.fb.no{background:#fdeeee;border-color:#d8434a}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.opts.one{grid-template-columns:1fr}
+@media (max-width:700px){.opts{grid-template-columns:1fr}}
+.qb{display:flex;align-items:flex-start;gap:10px;text-align:left;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:17px;line-height:1.4;border:2px solid var(--line);border-radius:14px;background:#fff;padding:9px 12px;cursor:pointer;box-shadow:0 3px 0 var(--shadow);color:var(--ink);min-width:0}
+.qb:hover:not(:disabled){border-color:var(--accent)}
+.qb:disabled{cursor:default}
+.qb .L{flex:none;width:27px;height:27px;border-radius:50%;background:#eef2f8;display:grid;place-items:center;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px}
+.qb>span:last-child{min-width:0;overflow-wrap:anywhere}
+.qb.right{border-color:#2e9e5b;background:#e8f6ee}.qb.right .L{background:#2e9e5b;color:#fff}
+.qb.wrong{border-color:#d8434a;background:#fdeeee}.qb.wrong .L{background:#d8434a;color:#fff}
+.mq{margin-top:12px}
+.mq>b{font-size:18px}
+.note{margin-top:8px;font-size:16.5px}
+.good{color:#2e9e5b;font-weight:700}.bad{color:#d8434a;font-weight:700}
+.dt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0;font-family:Fredoka,sans-serif;font-size:17px;text-align:center;border:2px solid var(--line);border-radius:12px;overflow:hidden}
+.dt th{background:var(--accent);color:#fff;font-weight:600;padding:7px 6px;font-size:15px}
+.dt td{padding:7px 6px;border-top:1px solid #e3e9f2;background:#fff}
+.bigrule{margin-top:12px;border:3px dashed #d8434a;border-radius:18px;padding:10px 14px;font-size:18px;text-align:center}
+.eqrow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:10px 0;font-family:Fredoka,sans-serif;font-size:21px}
+.eqrow .small{min-width:48px}
+.sp{font-family:Fredoka,sans-serif;font-size:21px;font-weight:500;padding:4px 12px;border:2px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;box-shadow:0 2px 0 var(--shadow);color:var(--ink)}
+.sp.sel{border-color:#d8434a;background:#fdeeee;text-decoration:line-through;text-decoration-color:#d8434a;-webkit-text-decoration-color:#d8434a;text-decoration-thickness:3px}
+.kdone{border:2px solid #2e9e5b;background:#f3fbf6;border-radius:12px;padding:6px 12px;margin-top:8px;font-size:16px}
+.qz{border:2px solid var(--line);border-radius:18px;padding:14px;background:#fff}
+.qzh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:Fredoka,sans-serif;font-size:18px}
+.qzdots{display:flex;gap:6px;flex-wrap:wrap}
+.qzdots i{width:13px;height:13px;border-radius:50%;background:var(--line);display:block}
+.qzdots i.cur{background:var(--accent)}.qzdots i.ok{background:#2e9e5b}.qzdots i.no{background:#d8434a}
+.qzq{font-size:21px;font-weight:700;margin:12px 0 10px;line-height:1.4}
+.qzend{text-align:center}
+.qzend .qzdots{justify-content:center;margin:10px 0}
+.qzend .stepbar{justify-content:center}
+.qzbig{font-family:Fredoka,sans-serif;font-weight:700;font-size:48px;color:var(--accent);line-height:1.1;margin:6px 0}
+.big{font-family:Fredoka,sans-serif;font-weight:600;font-size:28px;line-height:1.15;margin:4px 0 6px}
+.qzrev{text-align:left;margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.qzrev div{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font-size:15px}
+.qzrev div.ok{border-color:#2e9e5b;background:#f3fbf6}.qzrev div.no{border-color:#d8434a;background:#fdf4f4}
+.namerow{display:flex;flex-direction:column;gap:4px;margin:10px 0;max-width:380px}
+.namerow label{font-family:Fredoka,sans-serif;font-weight:600}
+.namerow input,.namerow select{font:inherit;font-size:18px;padding:8px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.namerow .no{border-color:#d8434a}
+.exerr{color:#d8434a;font-weight:700;min-height:22px;margin:4px 0}
+.sendst{font-family:Fredoka,sans-serif;font-size:15px;color:var(--muted)}.sendst.ok{color:#2e9e5b;font-weight:600}.sendst.err{color:#d8434a;font-weight:600}
+#tools{position:fixed;right:14px;bottom:14px;z-index:9998;display:flex;gap:8px}
+.tb{height:44px;min-width:44px;border-radius:999px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;padding:0 12px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;font-size:15px}
+.tb.on{background:#eef3fc;border-color:#2b59c3}
+#conf{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:transparent;border-radius:0}
+.mqz{margin-top:10px}.mqq{font-size:18px;margin:0 0 6px}
+.note{margin-top:8px}.btn.tiny{padding:5px 9px;font-size:14px;min-width:40px}
+.bchip{display:inline-block;color:#fff;border-radius:7px;padding:1px 9px;font-weight:600}
+#cv{touch-action:pan-y}
+#xChip{position:fixed;right:14px;top:14px;z-index:9996;display:none;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:6px 14px;box-shadow:0 4px 0 var(--shadow);font-family:Fredoka,sans-serif;max-width:calc(100vw - 28px);flex-wrap:wrap}
+#xChip span{font-size:13px;color:var(--muted)}#xChip b{font-size:20px;font-weight:600;color:#2b59c3}
+#xChip.warn{border-color:#e8962a}#xChip.warn b{color:#e8962a}
+#xChip.over{border-color:#d8434a}#xChip.over b{color:#d8434a}
+#xChip .btn{padding:4px 10px;font-size:14px}
+.dt{border-collapse:collapse;width:100%;font-size:16px;margin-top:4px}
+.dt th{background:var(--accent);color:#fff;font-family:Fredoka,sans-serif;font-weight:500;padding:6px 8px;text-align:center}
+.dt td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:center}
+.dt tr:nth-child(odd) td{background:#f6f8fc}
+select.pick{font-family:Fredoka,sans-serif;font-size:16px;padding:8px 12px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none;cursor:pointer}
+.calc .cdisp{background:#1d2a3a;color:#e9f3ff;border-radius:12px;padding:8px 12px;text-align:right;font-family:Fredoka,sans-serif;margin-bottom:10px;min-height:64px}
+.calc #cExp{font-size:14px;opacity:.8;word-break:break-all;min-height:18px}
+.calc #cOut{font-size:26px;font-weight:600}
+.ckeys{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ck{font-family:Fredoka,sans-serif;font-size:16px;padding:9px 0;border-radius:10px;border:2px solid var(--line);background:#f3f6fb;color:var(--ink);cursor:pointer}
+.ck.num{background:#fff}
+.ck.fn{background:#e8962a;border-color:#e8962a;color:#fff;font-weight:600}
+.ck.eq{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.ck:active{transform:translateY(2px)}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 4px;line-height:1.25}
+.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+.lvl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.btn.chip{font-size:14px;padding:6px 11px}
+.btn.hold{font-size:18px;padding:11px 22px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
+.btn.hold.down{transform:translateY(3px);box-shadow:0 0 0 var(--shadow);background:#d8434a;border-color:#d8434a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="58" height="54" viewBox="0 0 58 54" aria-hidden="true">
+      <rect x="4" y="4" width="50" height="46" rx="10" fill="#fff" stroke="#18233a" stroke-width="2.5"/>
+      <rect x="25" y="8" width="8" height="22" rx="2" fill="#eef4fb" stroke="#18233a" stroke-width="1.8"/><rect x="26" y="18" width="6" height="11" fill="#2b59c3" opacity=".6"/><path d="M29 30 V34" stroke="#18233a" stroke-width="1.8"/>
+      <path d="M25 36 V39 L15 47 H43 L33 39 V36 Z" fill="#f6c3dc" stroke="#18233a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="29" cy="33.5" r="1.4" fill="#2b59c3"/>
+    </svg>
+    <div><h1>Neutralization Lab</h1><div class="sub">Chapter 18 · Section 4 · antacids · word, ionic and net ionic equations · titration · indicators · calculations · salt hydrolysis · buffers</div></div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="steps" id="steps"></div>
+  <div class="main">
+    <section class="card stage">
+      <h2 id="stitle"></h2>
+      <canvas id="cv" width="800" height="500"></canvas>
+      <div class="controls" id="controls"></div>
+      <div id="panel"></div>
+    </section>
+    <aside class="side">
+      <div class="card"><div class="lbl" id="qlbl">Think</div><div class="q" id="q"></div></div>
+      <div class="card" id="readcard"><div class="lbl">Readings</div><div class="reads" id="reads"></div></div>
+      <div class="rule"><div class="lbl">Our rule</div><ul id="rule"></ul></div>
+    </aside>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),W=800,H=500;
+function fit(){var d=window.devicePixelRatio||1;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}fit();window.addEventListener('resize',fit);
+function $(id){return document.getElementById(id);}
+function each(sel,fn){Array.prototype.forEach.call(document.querySelectorAll(sel),fn);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(x){x=clamp(x,0,1);return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var INK='#18233a',MUTED='#5a6780',LINE='#c9d4e6',TEAL='#0f8b8d',CORAL='#e2708a',AMBER='#e8962a',BLUE='#2b59c3',PLUM='#8a4fbf',RED='#d8434a',GREEN='#2e9e5b',ORANGE='#e67e22';
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function txt(s,x,y,o){o=o||{};ctx.font=(o.w||600)+' '+(o.s||15)+'px Fredoka, sans-serif';ctx.fillStyle=o.c||INK;ctx.textAlign=o.a||'center';ctx.textBaseline='middle';ctx.fillText(s,x,y);return ctx.measureText(s).width;}
+function tw(t,size){ctx.font='600 '+size+'px Fredoka, sans-serif';return ctx.measureText(t).width;}
+function fitTxt(t,x,y,size,c,w,max){var m=tw(t,size);max=max||690;if(m>max)size*=max/m;txt(t,x,y,{s:size,c:c,w:w});}
+function seg(x1,y1,x2,y2,c,w,dash){ctx.strokeStyle=c;ctx.lineWidth=w||2;ctx.setLineDash(dash||[]);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.setLineDash([]);}
+function pill(s,x,y,bg,fg,size){size=size||15;var w=tw(s,size);rr(x-w/2-10,y-size*.85,w+20,size*1.7,size*.85);ctx.fillStyle=bg;ctx.fill();txt(s,x,y,{s:size,c:fg||'#fff'});return w+20;}
+function panel(x,y,w,h){rr(x,y,w,h,14);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}
+function dotc(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();}
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#f6f8fc';ctx.fillRect(0,0,W,H);}
+function arrow(x1,y1,x2,y2,c,w){seg(x1,y1,x2,y2,c,w||3);var a=Math.atan2(y2-y1,x2-x1),z=11;ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-z*Math.cos(a-.45),y2-z*Math.sin(a-.45));ctx.lineTo(x2-z*Math.cos(a+.45),y2-z*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+function sci(v,dp){if(v===0)return '0';var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(dp==null?2:dp)+' × 10<sup>'+String(e).replace('-','−')+'</sup>';}
+var SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+function sciT(v,dp){var e=Math.floor(Math.log10(v)+1e-9),m=v/Math.pow(10,e);if(m>=9.995){m/=10;e++;}return m.toFixed(dp==null?2:dp)+' × 10'+String(e).split('').map(function(c){return SUP[c];}).join('');}
+var lastReads='';
+function setQ(h,lbl){$('q').innerHTML=h;$('qlbl').textContent=lbl||'Think';}
+function setRule(a){$('rule').innerHTML=a.map(function(s){return '<li>'+s+'</li>';}).join('');}
+function setReads(a){var h=a.map(function(r){return '<div class="rd'+(r[2]?' wide':'')+'"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>';}).join('');if(h!==lastReads){$('reads').innerHTML=h;lastReads=h;}}
+function good(el){SFX.good();burst(el,40);}
+
+/* ---- sound ---- */
+var AC=null,MUTE=false;
+function ac(){if(MUTE)return null;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;if(!AC||AC.state==='closed')AC=new C();if(AC.state!=='running'){var p=AC.resume();if(p&&p.catch)p.catch(function(){});}}catch(e){return null;}return AC;}
+function audioWake(){if(MUTE)return;try{if(AC&&AC.state==='interrupted'){AC.close();AC=null;}var a=ac();if(!a)return;var b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0);}catch(e){}}
+['pointerdown','touchend','keydown'].forEach(function(ev){document.addEventListener(ev,audioWake,true);});
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&AC&&AC.state!=='running'){try{AC.resume();}catch(e){}}});
+function tone(f,t0,d,type,vol){var a=ac();if(!a)return;var t=a.currentTime+t0,o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol||.2,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05);}
+var SFX={good:function(){tone(784,0,.15);tone(1175,.1,.35);},bad:function(){tone(233,0,.22,'triangle',.18);tone(175,.13,.32,'triangle',.15);},
+ fan:function(){[523,659,784,1047].forEach(function(f,i){tone(f,i*.14,.35,'triangle',.18);});tone(1047,.6,.9,'sine',.2);tone(1319,.6,.9,'sine',.12);}};
+
+/* ---- confetti ---- */
+var CF=null,CP=[],cfOn=false,CFC=[TEAL,BLUE,PLUM,AMBER,CORAL,GREEN];
+function cfSize(){if(!CF)return;var d=window.devicePixelRatio||1;CF.width=innerWidth*d;CF.height=innerHeight*d;CF.getContext('2d').setTransform(d,0,0,d,0,0);}
+function cfCanvas(){if(!CF){CF=document.createElement('canvas');CF.id='conf';document.body.appendChild(CF);cfSize();window.addEventListener('resize',cfSize);}}
+function cfAdd(x,y,vx,vy){CP.push({x:x,y:y,vx:vx,vy:vy,a:Math.random()*6.3,va:(Math.random()-.5)*12,w:7+Math.random()*6,h:5+Math.random()*5,c:CFC[Math.floor(Math.random()*CFC.length)],t:0});}
+function burst(el,n){cfCanvas();var r=el&&el.getBoundingClientRect?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0},x=r.left+r.width/2,y=r.top+Math.min(r.height/2,24);
+ for(var i=0;i<(n||45);i++){var a=-Math.PI/2+(Math.random()-.5)*2.4,s=260+Math.random()*360;cfAdd(x,y,Math.cos(a)*s,Math.sin(a)*s);}cfRun();}
+function rain(n){cfCanvas();for(var i=0;i<n;i++)cfAdd(Math.random()*innerWidth,-20-Math.random()*innerHeight*.7,(Math.random()-.5)*120,60+Math.random()*160);cfRun();}
+function cfRun(){if(cfOn)return;cfOn=true;var last=performance.now();(function st(now){var dt=Math.min(.04,Math.max(0,(now-last)/1000)),g=CF.getContext('2d');last=now;g.clearRect(0,0,innerWidth,innerHeight);
+ CP.forEach(function(p){p.t+=dt;p.vy=Math.min(p.vy+520*dt,300);p.vx*=.985;p.x+=p.vx*dt;p.y+=p.vy*dt;p.a+=p.va*dt;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.a*1.3))+1);g.restore();});
+ CP=CP.filter(function(p){return p.y<innerHeight+30&&p.t<8;});if(CP.length)requestAnimationFrame(st);else{cfOn=false;g.clearRect(0,0,innerWidth,innerHeight);}})(last);}
+
+/* ---- shared question helpers ---- */
+/* multiple choice: M={q,o,a,w}, picks stored on M.p; one try */
+/* answered questions redraw as 'Right' or 'Review', so the results get one row per answer */
+function mqBind(L,rerender){L.forEach(function(M){if(M.p!=null)M.shown=1;});each('[data-m]',function(b){b.onclick=function(){var M=L[+b.getAttribute('data-m')],j=+b.getAttribute('data-o');M.p=j;if(j===M.a)SFX.good();else SFX.bad();rerender();};});}
+/* typed numbers: m × 10^e (the power box may stay empty) */
+function kVal(m,e){var a=String(m).trim().replace(/−/g,'-').replace(/,/g,'.').replace(/\s/g,''),b=String(e==null?'':e).trim().replace(/[−–]/g,'-');
+ var v=/^-?\d*\.?\d+(e-?\d+)?$/i.test(a)?parseFloat(a):NaN;if(b==='')b='0';var en=/^-?\d+$/.test(b)?parseInt(b,10):NaN;return v*Math.pow(10,en);}
+function near(v,w,t){return isFinite(v)&&(w===0?Math.abs(v)<1e-9:Math.abs(v-w)<=Math.abs(w)*(t||.015));}
+function fieldHtml(f,k,pre){return '<div class="f"><span>'+f.lab+'</span><input id="'+pre+'m'+k+'" inputmode="decimal" autocomplete="off" placeholder="?">'+(f.ex?'<span>× 10</span><sup><input id="'+pre+'e'+k+'" class="ke" inputmode="numeric" autocomplete="off" placeholder="?"></sup>':'')+(f.unit?'<span>'+f.unit+'</span>':'')+'</div>';}
+function fieldCheck(f,k,pre){var m=$(pre+'m'+k),e=$(pre+'e'+k),v=kVal(m.value,e?e.value:''),ok=near(v,f.want,f.tol);[m,e].forEach(function(x){if(x){x.classList.toggle('ok',ok);x.classList.toggle('no',!ok);}});
+ if(ok)return null;if(m.value.trim()==='')return 'Fill in every box.';var hit=(f.alt||[]).filter(function(a){return near(v,a[0],.02);})[0];if(hit)return hit[1];
+ var r=v/f.want;if(isFinite(r)&&r>0){var pw=Math.round(Math.log10(r));if(pw!==0&&near(r/Math.pow(10,pw),1,.02))return 'The number is right, but check the power of 10.';}return f.why||'Check your calculation.';}
+/* ---- equation tiles that slide into place ---- */
+function KAnim(T,S,title){this.T=T;this.S=S;this.i=0;this.pi=0;this.u=1;this.title=title;}
+KAnim.prototype.reset=function(){this.i=0;this.pi=0;this.u=1;};
+KAnim.prototype.lay=function(row,y,size){var T=this.T,items=[],pos={},bars={};
+ function w(id){var o=T[id][2]||{};return tw(T[id][0],o.sup?size*.6:size)+(o.tight?2:o.sup?8:16);}
+ row.forEach(function(it){if(typeof it==='string')items.push({id:it,w:w(it)});else{var wt=it.top.reduce(function(a,b){return a+w(b);},0),wb=it.bot.reduce(function(a,b){return a+w(b);},0);items.push({f:it,w:Math.max(wt,wb)+20,wt:wt,wb:wb});}});
+ var x=400-items.reduce(function(a,b){return a+b.w;},0)/2;
+ items.forEach(function(it){if(it.id)pos[it.id]={x:x+it.w/2,y:y};else{var cx=x+it.w/2,xt=cx-it.wt/2,xb=cx-it.wb/2;
+  it.f.top.forEach(function(id){pos[id]={x:xt+w(id)/2,y:y-size*.62};xt+=w(id);});it.f.bot.forEach(function(id){pos[id]={x:xb+w(id)/2,y:y+size*.62};xb+=w(id);});bars[it.f.f]={x:x+6,w:it.w-12,y:y};}x+=it.w;});
+ return {pos:pos,bars:bars};};
+KAnim.prototype.draw=function(dt){var T=this.T;this.u=Math.min(1,this.u+dt*1.1);var u=ease(this.u),cur=this.S[this.i],prev=this.u>=1?cur:(this.S[this.pi]||cur),sA=prev.size||60,sB=cur.size||60,A=this.lay(prev.row,190,sA),B=this.lay(cur.row,190,sB);
+ clear();txt(this.title,400,40,{s:20});panel(40,80,720,220);
+ (cur.hl||[]).forEach(function(id){var p=B.pos[id];if(!p)return;var o=T[id][2]||{},sz=o.sup?sB*.6:sB,w=tw(T[id][0],sz)+18,h=sz*1.1,yy=p.y-(o.sup?sB*.34:0);ctx.globalAlpha=u*.9;rr(p.x-w/2,yy-h/2,w,h,14);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();ctx.globalAlpha=1;});
+ var ids={};Object.keys(A.pos).concat(Object.keys(B.pos)).forEach(function(k){ids[k]=1;});
+ Object.keys(ids).forEach(function(id){var a=A.pos[id],b=B.pos[id],o=T[id][2]||{},x,yy,al,sz;
+  if(a&&b){x=lerp(a.x,b.x,u);yy=lerp(a.y,b.y,u)-Math.sin(u*Math.PI)*(Math.abs(a.x-b.x)>40?40:0);al=1;sz=lerp(sA,sB,u);}else if(b){x=b.x;yy=b.y-30*(1-u);al=u;sz=sB;}else{x=a.x;yy=a.y+30*u;al=1-u;sz=sA;}
+  if(o.sup){yy-=sz*.34;sz*=.6;}ctx.globalAlpha=al;txt(T[id][0],x,yy,{s:sz,c:T[id][1]});ctx.globalAlpha=1;
+  if((cur.strike||[]).indexOf(id)>=0&&b){var w2=tw(T[id][0],sz);ctx.globalAlpha=u;seg(x-w2/2-4,yy+sz*.25,x+w2/2+4,yy-sz*.25,RED,4);ctx.globalAlpha=1;}});
+ var bk={};Object.keys(A.bars).concat(Object.keys(B.bars)).forEach(function(k){bk[k]=1;});
+ Object.keys(bk).forEach(function(k){var a=A.bars[k],b=B.bars[k],x,w,al;if(a&&b){x=lerp(a.x,b.x,u);w=lerp(a.w,b.w,u);al=1;}else if(b){x=b.x;w=b.w;al=u;}else{x=a.x;w=a.w;al=1-u;}ctx.globalAlpha=al;ctx.fillStyle=INK;ctx.fillRect(x,(b||a).y-2.5,w,5);ctx.globalAlpha=1;});
+ (cur.ann||[]).forEach(function(n){var p=B.pos[n.id];if(!p)return;var al=clamp(u*1.4-.4,0,1),lx=p.x+n.dx,ly=p.y+n.dy,w=tw(n.t,15)+22;ctx.globalAlpha=al;
+  arrow(lx+(n.dx>0?-w/2:n.dx<0?w/2:0)*.8,ly+(n.dy<0?13:-13),p.x+(n.dx>0?8:n.dx<0?-8:0),p.y+(n.dy<0?-sB*.42:sB*.42),n.c||ORANGE,3);
+  rr(lx-w/2,ly-14,w,28,14);ctx.fillStyle=n.c||ORANGE;ctx.fill();txt(n.t,lx,ly,{s:15,c:'#fff'});ctx.globalAlpha=1;});
+ panel(40,320,720,150);txt('Step '+(this.i+1)+' of '+this.S.length,400,346,{s:14,c:MUTED,w:500});fitTxt(cur.note,400,386,22,INK);if(cur.note2)fitTxt(cur.note2,400,430,18,cur.c2||MUTED,500);};
+KAnim.prototype.go=function(d){var j=clamp(this.i+d,0,this.S.length-1);if(j===this.i)return;this.pi=this.i;this.i=j;this.u=0;};
+function animControls(E){$('controls').innerHTML='<button class="btn" id="aB">◀ Back</button><button class="btn fill" id="aN">Next ▶</button><button class="btn" id="aS">Start again</button>';
+ $('aB').onclick=function(){E.go(-1);};$('aN').onclick=function(){E.go(1);};$('aS').onclick=function(){E.reset();};}
+/* ---- multiple choice with feedback (each one is its own .qz so results can label it) ---- */
+function mqHtml(M,i){var p=M.p;return '<div class="qz mqz"><div class="qzq mqq">'+M.q+'</div><div class="opts'+(M.one?' one':'')+'">'+M.o.map(function(o,j){var c=p==null?'':(j===M.a?' right':(j===p?' wrong':''));return '<button class="qb'+c+'" data-m="'+i+'" data-o="'+j+'"'+(p==null?'':' disabled')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+o+'</span></button>';}).join('')+'</div>'+
+ (p==null?'':'<div class="note">'+(p===M.a?'<span class="good">'+(M.shown?'✓ Right.':'Correct!')+'</span> ':'<span class="bad">'+(M.shown?'✗ Review:':'Not quite.')+'</span> ')+M.w+'</div>')+'</div>';}
+function seqPanel(L,tail){function r(){$('panel').innerHTML=L.map(function(M,i){return i===0||L[i-1].p!=null?mqHtml(M,i):'';}).join('')+(L[L.length-1].p!=null&&tail?tail:'');mqBind(L,r);}r();}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+var T=0;
+function cvXY(e){var r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};}
+cv.addEventListener('click',function(e){var t=TAB[tabI];if(t.click){var p=cvXY(e);t.click(p.x,p.y);}});
+function segHtml(id,labels,cur){return '<div class="seg" id="'+id+'">'+labels.map(function(l,i){return '<button data-k="'+i+'" class="'+(i===cur?'on':'')+'">'+l+'</button>';}).join('')+'</div>';}
+function segBind(id,fn){each('#'+id+' button',function(b){b.onclick=function(){each('#'+id+' button',function(x){x.classList.remove('on');});b.classList.add('on');fn(+b.getAttribute('data-k'));};});}
+function dataTable(cols,rows){return '<table class="dt"><tr>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr>'+rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table>';}
+function subTxt(base,sub,x,y,s,c,al){ctx.font='600 '+s+'px Fredoka, sans-serif';var w1=ctx.measureText(base).width;ctx.font='600 '+Math.round(s*.68)+'px Fredoka, sans-serif';var w2=ctx.measureText(sub).width;
+ var x0=al==='left'?x:x-(w1+w2)/2;txt(base,x0+w1/2,y,{s:s,c:c});txt(sub,x0+w1+w2/2,y+s*.28,{s:Math.round(s*.68),c:c});}
+/* many H+ dots, drawn once into an offscreen canvas and reused */
+var CALC={e:'',ans:null,out:''};
+function calcShow(on){var c=$('calcCard');if(!c){c=document.createElement('div');c.className='card calc';c.id='calcCard';var side=document.querySelector('.side');side.insertBefore(c,side.children[1]);
+  var K=[['log','log('],['10ˣ','10^('],['(','('],[')',')'],['C','C'],['7','7'],['8','8'],['9','9'],['÷','÷'],['⌫','B'],['4','4'],['5','5'],['6','6'],['×','×'],['×10ⁿ','E'],['1','1'],['2','2'],['3','3'],['−','−'],['(−)','N'],['0','0'],['.','.'],['Ans','A'],['+','+'],['=','=']];
+  c.innerHTML='<div class="lbl">Calculator</div><div class="cdisp"><div id="cExp">&nbsp;</div><div id="cOut">0</div></div><div class="ckeys">'+K.map(function(k){return '<button class="ck'+(/^(log|10ˣ)$/.test(k[0])?' fn':(k[0]==='='?' eq':(/^[0-9.]$/.test(k[0])?' num':'')))+'" data-k="'+k[1]+'">'+k[0]+'</button>';}).join('')+'</div>';
+  each('.ck',function(b){b.onclick=function(){calcKey(b.getAttribute('data-k'));};});}
+ c.style.display=on?'':'none';}
+function calcDisp(e){return e.replace(/10\^\(/g,'10^(').replace(/E/g,'×10^').replace(/A/g,'Ans')||'&nbsp;';}
+function calcFmt(v){if(!isFinite(v))return 'Error';if(v===0)return '0';var a=Math.abs(v);if(a<0.001||a>=1e7){var ex=Math.floor(Math.log10(a)),mm=v/Math.pow(10,ex);if(Math.abs(mm)>=9.9999995){mm/=10;ex++;}return (+mm.toPrecision(6))+' × 10'+String(ex).split('').map(function(c){return SUP[c]||'⁻';}).join('');}return String(+v.toPrecision(7));}
+function calcKey(k){var c=CALC;if(k==='C'){c.e='';c.out='0';}else if(k==='B'){c.e=c.e.replace(/(log\(|10\^\(|.)$/,'');}else if(k==='='){try{var s=c.e.replace(/log\(/g,'L(').replace(/10\^\(/g,'P(').replace(/A/g,'('+(c.ans==null?0:c.ans)+')').replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/N/g,'-').replace(/E/g,'e');
+   if(/[^0-9LPe.()*\/+\-\s]/.test(s))throw 0;var v=Function('L','P','return ('+s+')')(Math.log10,function(x){return Math.pow(10,x);});c.ans=v;c.out=calcFmt(v);tone(880,0,.05);}catch(err){c.out='Syntax error';}}
+ else{if(k==='N')k='N';c.e+=k;}
+ $('cExp').innerHTML=calcDisp(c.e.replace(/N/g,'−'));$('cOut').textContent=c.out||'0';}
+
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function supE(e){return String(e).split('').map(function(c){return SUP[c]||'⁻';}).join('');}
+function fr(n,d){return '<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>';}
+function sup(n){return n>1?String(n).split('').map(function(c){return SUP[c];}).join(''):'';}
+function graph(x0,y0,w,h,series,ymax,tmax,labels){panel(x0-10,y0-10,w+20,h+40);seg(x0,y0+h,x0+w,y0+h,INK,2);seg(x0,y0,x0,y0+h,INK,2);
+ series.forEach(function(sr){if(sr.pts.length<2)return;ctx.strokeStyle=sr.c;ctx.lineWidth=3;ctx.beginPath();sr.pts.forEach(function(p,k){var x=x0+w*Math.min(1,p[0]/tmax),y=y0+h-h*Math.min(1,p[1]/ymax);if(k)ctx.lineTo(x,y);else ctx.moveTo(x,y);});ctx.stroke();});
+ (labels||[]).forEach(function(l,k){txt(l[0],x0+8+k*120,y0-2,{s:13,c:l[1],a:'left'});});}
+function mkQ(L,exit){return {L:L,exit:!!exit,ord:null,player:null};}
+var SCORE_URL='https://script.google.com/macros/s/AKfycbxqxWcG4jS6gWBLKroZBscjhfJEBmSRwIjZ4OtamJe55XvdfLjX0Jj9j2xgfPAr0Mbu6g/exec';
+var CLASSES=['9-A','9-B','10-A','10-B','11-A','11-B','12-A','12-B'];
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+/* the right answer lands on a random letter, never the same letter twice in a row */
+function placeAns(q,prev){var n=q.o.length,pos;do{pos=Math.floor(Math.random()*n);}while(n>1&&pos===prev);var rest=shuffle(q.o.map(function(_,k){return k;}).filter(function(k){return k!==q.a;}));rest.splice(pos,0,q.a);return {ord:rest,pos:pos};}
+function mixL(L){var prev=-1;L.forEach(function(M){var r=placeAns(M,prev);prev=r.pos;M.o=r.ord.map(function(k){return M.o[k];});M.a=r.pos;});}
+function qzStart(Q){Q.i=0;Q.score=0;Q.pick=null;Q.hist=[];Q.done=false;Q.sent=false;Q.started=Date.now();var prev=-1;Q.ord=Q.L.map(function(q){var r=placeAns(q,prev);prev=r.pos;return r.ord;});}
+function qzDots(Q){return '<div class="qzdots">'+Q.L.map(function(_,k){var h=Q.hist[k];return '<i class="'+(h===true?'ok':(h===false?'no':(k===Q.i&&!Q.done?'cur':'')))+'"></i>';}).join('')+'</div>';}
+function exStartHtml(Q){var me={};try{me=JSON.parse(lsGet('msm-student')||'{}')||{};}catch(e){}var nm=Q.last?Q.last.name:(me.name||''),cl=Q.last?Q.last.cls:(me.cls||'');
+ return '<div class="qz"><div class="lbl">Exit ticket · Chapter 18.4</div><div class="qzq" style="margin-top:4px">Show what you learned today: '+Q.L.length+' questions. One try per question. You have 15 minutes.</div><div class="namerow"><label for="exName">Your full name</label><input id="exName" autocomplete="name" maxlength="60" placeholder="e.g. Sara Ahmed" value="'+esc(nm)+'"></div><div class="namerow"><label for="exCls">Class</label><select id="exCls"><option value="">Choose…</option>'+CLASSES.map(function(c){return '<option'+(c===cl?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div><div class="exerr" id="exErr" role="alert"></div><div class="stepbar"><button class="btn fill" id="exGo">Start the exit ticket ▶</button></div></div>';}
+function exResult(Q){var N=Q.L.length,now=new Date(),mins=Math.max(1,Math.round((Date.now()-Q.started)/60000)),when=now.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),hh=(Q.player.name+'|'+Q.player.cls+'|'+Q.score*100+'|'+Q.score+'|'+now.toISOString().slice(0,16)).split('').reduce(function(a,c){return (a*31+c.charCodeAt(0))>>>0;},7),code='NT-'+('000000'+hh.toString(36).toUpperCase()).slice(-6);
+ Q.res={when:when,code:code,payload:{game:'Neutralization Lab: Exit Ticket',chapter:18,name:Q.player.name,cls:Q.player.cls,score:Q.score*100,correct:Q.score,total:N,mins:mins,when:when,code:code,missed:Q.hist.map(function(h,k){return h?'':'Q'+(k+1);}).filter(Boolean).join(' ')}};}
+function exSend(Q){var st=$('exSt'),rt=$('exRetry');if(!st)return;st.className='sendst';st.textContent='Sending your result to your teacher…';if(rt)rt.style.display='none';
+ fetch(SCORE_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Q.res.payload)}).then(function(){Q.sent=true;var s=$('exSt');if(s){s.className='sendst ok';s.textContent='✓ Your result was sent to your teacher.';}}).catch(function(){var s=$('exSt'),r=$('exRetry');if(s){s.className='sendst err';s.textContent='Could not send. Check your internet, then press Send again.';}if(r)r.style.display='';});}
+function qzHtml(Q){if(Q.exit&&!Q.player)return exStartHtml(Q);if(!Q.ord)qzStart(Q);var N=Q.L.length;
+ if(Q.done){var pct=Q.score/N,msg=pct>=.8?'Excellent work today!':(pct>=.6?'Good effort. Look at the ones you missed.':'Go back through this part, then try again.');
+  return '<div class="qz qzend">'+(Q.exit?'<div class="lbl">Exit ticket · Chapter 18.4</div><div class="big">Congratulations, '+esc(Q.player.name.split(' ')[0])+'!</div><div class="small">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+' · '+Q.res.when+' · check code '+Q.res.code+'</div>':'')+'<div class="qzbig">'+Q.score+' / '+N+'</div><div style="font-size:18px">'+msg+'</div>'+qzDots(Q)+(Q.exit?'<div class="stepbar"><span class="'+(Q.sent?'sendst ok':'sendst')+'" id="exSt">'+(Q.sent?'✓ Your result was sent to your teacher.':'Sending your result to your teacher…')+'</span><button class="btn" id="exRetry" style="display:none">Send again</button></div>':'')+
+   '<div class="qzrev">'+Q.L.map(function(q,k){return '<div class="'+(Q.hist[k]?'ok':'no')+'">'+(Q.hist[k]?'✓':'✗')+' <b>'+(k+1)+'.</b> '+q.q+' → <b>'+q.o[q.a]+'</b></div>';}).join('')+'</div><div class="stepbar"><button class="btn fill" id="qzR">'+(Q.exit?'Start again':'Try again')+'</button></div></div>';}
+ var q=Q.L[Q.i],ans=Q.pick!==null,h='<div class="qz">'+(Q.exit?'<div class="small" style="margin-bottom:6px">'+esc(Q.player.name)+' · '+esc(Q.player.cls)+'</div>':'')+'<div class="qzh"><b>Question '+(Q.i+1)+' of '+N+'</b>'+qzDots(Q)+'<span>Score: '+Q.score+'</span></div><div class="qzq">'+q.q+'</div><div class="opts">'+Q.ord[Q.i].map(function(k,j){var cls=ans?(k===q.a?' right':(k===Q.pick?' wrong':'')):'';return '<button class="qb qzb'+cls+'" data-k="'+k+'"'+(ans?' disabled':'')+'><span class="L">'+'ABCD'.charAt(j)+'</span><span>'+q.o[k]+'</span></button>';}).join('')+'</div>';
+ if(ans)h+='<div class="fb '+(Q.pick===q.a?'ok':'no')+'"><b>'+(Q.pick===q.a?'Correct!':'Not quite.')+'</b> '+(Q.pick===q.a?'':'The answer is <b>'+q.o[q.a]+'</b>. ')+q.w+'</div><div class="stepbar"><button class="btn fill" id="qzN">'+(Q.i<N-1?'Next question ▶':'See my score ▶')+'</button></div>';
+ return h+'</div>';}
+function qzShow(Q){$('panel').innerHTML=qzHtml(Q);
+ each('.qzb',function(b){b.onclick=function(){if(Q.pick!==null)return;var q=Q.L[Q.i];Q.pick=+b.getAttribute('data-k');var ok=Q.pick===q.a;if(ok){Q.score++;SFX.good();}else SFX.bad();Q.hist[Q.i]=ok;qzShow(Q);if(ok)burst($('qzN'),25);};});
+ var x;if((x=$('qzN')))x.onclick=function(){if(Q.i<Q.L.length-1){Q.i++;Q.pick=null;qzShow(Q);}else{Q.done=true;if(Q.exit)exResult(Q);renderSteps();qzShow(Q);if(Q.exit){exSend(Q);}var pc=Q.score/Q.L.length;if(pc>=.6){rain(Q.exit?260:120);SFX.fan();}}};
+ if((x=$('qzR')))x.onclick=function(){if(Q.exit){Q.last=Q.player;Q.player=null;Q.ord=null;Q.done=false;qzShow(Q);return;}qzStart(Q);renderSteps();qzShow(Q);};
+ if((x=$('exRetry')))x.onclick=function(){exSend(Q);};
+ if((x=$('exGo'))){var nm=$('exName'),cl=$('exCls'),start=function(){var v=nm.value.trim().replace(/\s+/g,' '),c=cl.value,er=$('exErr');nm.classList.remove('no');cl.classList.remove('no');if(v.length<3||v.indexOf(' ')<0){er.textContent='Please type your full name (first and last).';nm.classList.add('no');nm.focus();return;}if(!c){er.textContent='Please choose your class.';cl.classList.add('no');cl.focus();return;}Q.player={name:v,cls:c};qzStart(Q);renderSteps();qzShow(Q);};x.onclick=start;nm.onkeydown=function(e){if(e.key==='Enter')start();};}}
+/* ================= Neutralization Lab (Chapter 18 Section 4) ================= */
+var KW=1e-14;
+function lg(x){return Math.log(x)/Math.LN10;}
+function f2(v){return (Math.round(v*100)/100).toFixed(2);}
+function mix3(a,b,t){t=clamp(t,0,1);return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];}
+function rgb(c,a){return 'rgba('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+','+(a==null?1:a)+')';}
+/* universal indicator colours */
+var UNI=[[0,[205,30,40]],[2,[232,80,40]],[4,[240,160,40]],[5.5,[238,214,60]],[7,[90,170,70]],[8.5,[40,150,150]],[10,[45,95,195]],[12,[95,55,170]],[14,[110,40,130]]];
+function uniC(p){for(var i=1;i<UNI.length;i++)if(p<=UNI[i][0]){var a=UNI[i-1],b=UNI[i];return mix3(a[1],b[1],(p-a[0])/(b[0]-a[0]));}return UNI[UNI.length-1][1];}
+/* solve the charge balance for pH: g(H) = (positive) − (negative), falls as pH rises */
+function solvePH(g){var lo=-1,hi=15;for(var k=0;k<60;k++){var m=(lo+hi)/2,H=Math.pow(10,-m);if(g(H,KW/H)>0)lo=m;else hi=m;}return (lo+hi)/2;}
+/* acid with excess d mol/L of H+ (negative = excess OH−) */
+function pHex(d){var H=(d+Math.sqrt(d*d+4*KW))/2;return -lg(H);}
+
+/* ---------- glassware ---------- */
+function flaskPath(x,y,s){ctx.beginPath();ctx.moveTo(x-13*s,y-115*s);ctx.lineTo(x-13*s,y-72*s);ctx.lineTo(x-68*s,y-6*s);ctx.quadraticCurveTo(x-72*s,y,x-62*s,y);ctx.lineTo(x+62*s,y);ctx.quadraticCurveTo(x+72*s,y,x+68*s,y-6*s);ctx.lineTo(x+13*s,y-72*s);ctx.lineTo(x+13*s,y-115*s);}
+function flask(x,y,s,level,col,alpha){ctx.save();flaskPath(x,y,s);ctx.clip();ctx.fillStyle='#eef4fb';ctx.fillRect(x-80*s,y-level*s,160*s,level*s);if(col){ctx.fillStyle=rgb(col,alpha==null?1:alpha);ctx.fillRect(x-80*s,y-level*s,160*s,level*s);}ctx.restore();
+ flaskPath(x,y,s);ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.stroke();seg(x-16*s,y-115*s,x+16*s,y-115*s,'#7f8ea6',4);}
+function beakerPath(x,y,w,h){ctx.beginPath();ctx.moveTo(x-w/2,y-h);ctx.lineTo(x-w/2,y-8);ctx.quadraticCurveTo(x-w/2,y,x-w/2+8,y);ctx.lineTo(x+w/2-8,y);ctx.quadraticCurveTo(x+w/2,y,x+w/2,y-8);ctx.lineTo(x+w/2,y-h);}
+function beaker(x,y,w,h,level,col,alpha){ctx.save();beakerPath(x,y,w,h);ctx.clip();ctx.fillStyle='#eef4fb';ctx.fillRect(x-w,y-level,w*2,level);if(col){ctx.fillStyle=rgb(col,alpha==null?1:alpha);ctx.fillRect(x-w,y-level,w*2,level);}ctx.restore();
+ beakerPath(x,y,w,h);ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.stroke();seg(x-w/2-6,y-h,x-w/2,y-h+6,'#7f8ea6',3);}
+function meter(x,y,val,lab,col){rr(x-70,y,140,74,12);ctx.fillStyle='#3b3550';ctx.fill();rr(x-58,y+10,116,40,6);ctx.fillStyle='#eaf6e8';ctx.fill();txt(val,x,y+31,{s:26,c:col||INK});txt(lab,x,y+63,{s:13,c:'#fff',w:500});}
+/* ion bubble */
+var ION={H:['H⁺','#e2708a'],Cl:['Cl⁻','#2e9e5b'],Na:['Na⁺','#8a4fbf'],OH:['OH⁻','#2b59c3'],K:['K⁺','#8a4fbf'],NO3:['NO₃⁻','#2e9e5b']};
+function ionDraw(k,x,y,r){var I=ION[k];r=r||18;ctx.fillStyle=I[1];ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();var g=ctx.createRadialGradient(x-r*.4,y-r*.4,2,x,y,r);g.addColorStop(0,'rgba(255,255,255,.5)');g.addColorStop(.7,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();txt(I[0],x,y+1,{s:Math.round(r*.8),c:'#fff'});}
+function waterDraw(x,y,s,a){s=s||1;ctx.save();ctx.translate(x,y);ctx.rotate(a||0);[[-.8,.62],[.8,.62]].forEach(function(h){ctx.fillStyle='#eef1f6';ctx.strokeStyle='#8a94a8';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(h[0]*13*s,h[1]*13*s,7*s,0,7);ctx.fill();ctx.stroke();});ctx.fillStyle=RED;ctx.beginPath();ctx.arc(0,0,11*s,0,7);ctx.fill();ctx.restore();}
+
+/* ================= Tab 0: the antacid warm-up ================= */
+var PHOTO=new Image();PHOTO.src='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAACCKADAAQAAAABAAABWgAAAAD/7QA4UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAAA4QklNBCUAAAAAABDUHYzZjwCyBOmACZjs+EJ+/8AAEQgBWgIIAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICBAICBAUEBAQFBwUFBQUHCQcHBwcHCQsJCQkJCQkLCwsLCwsLCw0NDQ0NDQ8PDw8PEREREREREREREf/bAEMBAwMDBAQEBwQEBxIMCgwSEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEv/dAAQAIf/aAAwDAQACEQMRAD8A/QTUb0X9x5ka4571SMW8fMBUqBeMVOMY4rslVm92ZRhFIijhq9GgHFRqDn1qyikVKdijRt2yPpV5UyeKzoVINbEYGBW9N6ESARimmMGrFJWhJVMfel2c5FWCM0YqSkV2TPAoSPaalaiPOallJjTFxUsKYqQ9KfGADSsCY/yg1NeDAziri06RgRTSJuU40wuKhdOatoetRyfezTsO5AI8nmpgg4NNyKcGyPSkAoAp445pgPNOzmhAOxk008UZNFUAVEwFS00jvUtjTIfrSjsaUjtTl9KhoZJjNMZM1YQcVIyDFNK4rlHaRVWUHNae0c1RnXnipktCkzPK5PNN71M1QMQeKyegbseDjr60jSYqHccVEzjBFQ5DsSPJVYsaaWFRM+eKE7jsLnJoz6VHu549KdmkwA5pQM9aC1LnjpQgE28nNLjBxTGOM5qvNeWtuN8rqoHqapK4uZFo4FJXHaj458N6aM3Nygx71xFz8ZNCab7Pp2Zm7bea2jh6stomUqsF1PZ6aWUdTivnnUfizcpEZE2xr155Nc3/AMJj4h122+1WlziM9wMUoqDbi5rT5/kJ1H0R9Qy6hZwZMsirj1NY8/ivQYCVkuEz9a+NtX1LWJHKXF3KpPHOQK4jUbHXdrTLIZVwSSpNa0qeGnLkjVTfYylVqL7J9/xeJ9LuP+PeRW+hq6mrwMeRX5tWmu6rZSAwzyLj3r0TR/ip4hsQBK4lUdmrZ4Cf2RRxD6n3Yl3BJ91qkOG5FfNfhv4qHV5Vt3tpGc9TGM/yr2iyuNQlthcxo4U9j1rlqUJw0aNo1Ys6dl61Ey5rIGsOhxKn1q6moW0vfB96xasacyZKwGeaZtHQ1NlXGVOaQj0pXKb6FUr0phABxU54qPHagRCVHSoygqc4xxTCMigCsV5qMjFWWyKjK560AVyoNJsX1/lUpAFNwPWgD//Q/QBYyKsIhqZUq1HFurqUCLkCR1aSM1KIwOlTbe1PlFcVFq/Gc1VUYODVhDzxWsdBPUsikpqnIp1WTYKTIoNMJpMaQMe4pEPzVGWOcUAnNQxlvOacjYNQA8U4Gm2BoBumKRm4qEPxzSlhigXKPQ4zTJTzSI3NJKadxkefSlz2qInFJu4xU3AnU44qQN61WzjgU8NQmOxZ60UwHmnZFMQtNJ9KCaYWoAXrSjrTN2OlOFS2NlyMjFTkcVTQ4NWCRjApoQwgc1nz4q6TzxWbcnmpmNFR2xVR39KfI2Kps3NYM0RIW4qu7YpS3FV3bmobARm5qJpO9QT3MNuhkndUUDksQK8q8TfGLwT4d3JNdpI4/hj+Y1UYTl8KJlOMd2es+aBSPdwxLukYAe5r4l8R/tPykNHoNsFH9+Q4/Svn7xJ8bfF+rk/ab5kU/wAMXyiu6ll1Wdm9DmliorY/TDV/iD4X0RS19dxpjsSDXjmu/tKeF7EtHpga4bkDb0r854vGkLTk6kGuNx5LsSa6R7WPVLXzrIyWpbhTINygnpyK7o5bCHxO5i8ROTsmfR+uftH+Jr3cNORIFPcnJrzPUvif4q1bP2u8fB7KcVwtlrFv4RZINb0ZdUYgFpI3JJHfC120tt8GfGUZm0rUH0a/kwBbTcBT9D61CqwoSXPRaXc7KeA9uv3dZX+ZzFx4hmlObiZmPck5q9oPi25sLo3FijT4HzhAW4/CqNz8FfHFvcxTXDpPp7/M81qRI6p2O0f0rs/D/hrw7okzaX4L8Si31BjiSG+jCrJnthsH9arE5xQguWjq/PQ68LkFaTvXdl5NMjT4iaFLIspdreRT0cZX8RXpGh/GzQbe1Wy1MwSxg5JX5ST2rzvxdbwWb/Y/iToCiEAFtT0z7oB6E/1rh9e+C1hd6Ydb8A6zHeJjcYJWCsB6ZOOa8vD1MuU3o4N6tJ6P5G+JyPFpfu5cy89H/l+J6B4g+L8dxft9mMQgJ+VQN361lW3ibW7mZ7+wdNrrt2A54+lfJd7Je6bevp95t82M/NsYMPzFWrTW761l320rI2exryc44UrY2osXgMW1Jaq+y9LWZ1ZTm2DwMnRx2EUu7/4Gx9JA6vLMdsbFzyRis+71LUdOObyKRMjgkECuK0X4qaxZBYr4LMo4z0b869s0T4p+HNYgS11RUkGcGOdR09mrkoZln+VaZlS54/zJXX4a/ge1Vy3h/NLSwEvZyfS9vwf+Zh+EPiHqOk6mjWF2truPLMARX1v4b+MniC3ts3MUV7DjJkhI3Y+hr5u1DwF4I8Rbrq1l+ws7fIB8yY+orj9R+HnjzwkFvPD1z9ttz8x8hieB6ivocFxHl+N2lZ/18/vR8/juFcbhnen7y8t/69D9F9J+KHgfW1FteN5E56pMNh/Wus/szTdQHmabMOmcHp+dfk03xAvp70x+MLdniGMRrlSCO+ete1eHfippthMv/CMavLa8Kot7jLxk/jyB+Nes8LSqx5oaryPnp+1pS5ais/M+7p9P1OwOSDj1HIpkWqyx/LIN3vXxl41+NfxyMXk6YLdYHXIltl8wkDvz0ryXw7+0J490G4xqxF4hOWWUYb865Z5ZO3NA0VbufptFf28+BnafQ1a6ivlPwl+0V4J1/bb6ozWE54xJ90n2Ne96drVrfxLPpdwkyHkFWBFcE6U4O01Y2jUT2OuxxmmH1rNi1HtMPxq8s8UgwhFQ0XdAR3pjCpsYyaZ25pDK+3nNOwP8/wD6qdgUce9Aj//R/RkIBViMUEYp8eB1rtMiUAA4p22gAdacckUABqZMVAKkB7CmmBaWncVCp9Kfx1NaXAcelJxSE9qXdxSAaV5qE8GrJNVnB61EtgHhu1Abmoh70uTUc47FtW4pc1XBxUgPFUpXFYlU/NzT5DkVGoyc1PIvFO4FBjnntSA5oYY4pqjv2rOT1Gh4JxT1NMxQDiknYZcDccUbqr7h1pC3ORWnMTYslqbkVW3ijzB0pc47MsFh2pN3pVfdjijeKXMOxfjcVY3Ag4rMV6n84L96mnclosM38qyrh+eKmnu4YUMkrBR78V5l4j+J/hHRAwmuBK4/5Zx/MatUqlR2grg5xjuzs3Oeayr/AFKzsIjNeSpGg5JYgV8neMv2kr1Ea28PQrDnPzt8z/kK+d7u5+L3xHuC1jZ6jehzwdjLH+uBXbTyqb1quxlLEPaKPs/xN8d/BmgbkimNzIv8MXP614D4l/ai1WXcmkRJbr0DNy1cBb/s/wDj+4Uf8JNfaboin/n6uF3/APfK5rx/xt8Evit4Zgn1RLN9R02IFlvrM+ZEyjktgc4rrhg8LF92YOdWW5qeKvjH4j1pmF/eyMrfwhsD8hXlMniq7ui32eN5D6qC38ql+HfiH4SItzafFSzvZ1myIrq0fBiHunev0v8AgkPBn/CoJ7f4XWsupNBHIIZ5bZIpnc5K5L8MQe9azap6KJkknuz8rrfxhYwaht8QRTND0KR/K3613Ueg+BfHLt/wiOsfYrgqStre/Lk+gavsey+GXjf4g6ANI+Pvh/SNLDlsasJI4rpR2widT+OK+TPid8CvDWj+KLTw58HdVk8S3Mu4y2safvIQv8RcfL1renUi9L2Y+V9DyrXvAnjnwyDPqVnI0C8+fEN8Zz33Cug8N6F47bTJNb0O7TZGu5oRJuf/AL4roE8QfFT4ZMmia2tzaQplRa38R8ts+7cH867zRvGngDxfcLa63Ypot1s4u7Z/Ljz0yQMZ/GtrStdq5DfdHnWjfEiHTDs1mydLvBWS5T7/AP3yeK7KCHw145TddeTdID/ABFc8e3Q/hW1NbfbNOnlTTIfEdhC7g3dqvlyEjhc55I9xXlFv4S0zVEa40S/SzvVPFncExOuPRmxn2rZRi1cW2x2dja+M/B1+58B61LC6DcbS9O3CjoPn4PHpXQ6j8fPCGq6KumeOfD5u9SjQo80JRArf3lYHOa+evHFt40tr0QeLPtDugAVnO5cY4ww4rhTIRjfzXLVyfDV3zzX3afeejh81xdBcsJfefQMvx+8XpanSPD7JHZhQqreIJ5MD/a6fpXk99qWra1cyanqFwzSSN8+w7FP/AAFcCuZjkVTmM5r1v4efDPWfHMJvkIgtVbb5hGSxHUAV52PeU5LhXisVaMI9Xrv2OmlWzDMq3sabbb6LRHQ/BP4VwfE7xQ+l3Vz9nt4U8yQr99vYV9/P+z38L9K0kWs9lEyRr80rn5uO5NfO3hr4Sz+Dr6PWdInuEuI/4wcA+xA6iveI/iLqMMJi1qDzAByy85/A1/PPGnGc8wxilltefs0tErws+/nf8D7DAcMYqjSu1Fy663PFfE/wu+Ek6y2egmYTqCFeLcVDe5PBr5am8M3enXE1tfsYDCxClwQGHtX6IWXxA8P6nlf9Vt4+dABx9K4rx34l0BoVjS0i1FmGGUgYVe5B9a5co4qzunWWHqe0lF95N2/r1MqdfK8JzVsVKDS0ast/vufEuneItd0K6AtZ32AcZyR+Ve6+FfjjbQW0dlqtsIyGw1zbkhsd8r0Nej6T4U+FvjTCeWYZcYaNm2Ee+O9Vde/Z00QRkaHKySHkc5H419jgOJssqVOTM6ThLbnStL59H9x6MqkqkFVyiupRevK3ePyfT7zoph4J+JEaGya1nHVlAEdwfz4rzrxP8BbdLoxeHLoLLjd5E/yt+B6GvEPEfhLxL4FvP9KDIqn5ZY844/lXW+G/jh4g0oC01tV1G2AxtlwWA9Vbrmvt8NgcQ4fWspre0i+zs/mn1/qxwVczwtR/V81o8j81dfJr+vMsLP8AEL4XyyWeowvskTZhyWXH+yecVe07XvBXieGCz8QqYJN+Xfpkn/a71u6j8edKvbBtMgtgLYrjbdr5rK3cqe1eCa9qml3lwsmmRle7nG0H6CvXy/NMbPELDV8NLX7VrJet9DyM0yTL6WGeLwuKjf8Alum36WOm8WaR4e0u4aPSLzzjvP7tfmAXt8w4qnoPi7xH4ZnWbRL2WDafuhjtP1U8Vn+GvDXiPxZeLYeG7Ka7kPGI1JUfU9B+NfW/gb9lO5by77x7dBBnP2S3OT9GfoPwr6TEToU42rM+TSbehe+E3x58SeI9Xg8PazZm6Mhx58Kn5fdh2FfXxBXpkVk+HfCXh3wlZCx8O2kVqg4JQfMfq3U1vMrE8CvmMTOlKd6UbI6YKSWrES7niJGcj0NXYr2OU7D8prN46VnSylHGB75rJQbLUmjrCOM1HiiB2eFX9ql3PWTTubLVH//S/SRlpoOKlYZ5qLGDmu0yLAp1RqadmlzAO9qUHFR5PWjPc0nICyjVN0qpG9ThsjNWpXAkozg1GM96WquA8nIqIgGnZ4x7UnbNSAgHHNJinUVHKNMQelToD3pqgd6sIKajYTY9I8HirDRkr+FCDnNWSvyVpYDEkX5sVGBnirEuAear7gDmspLXUBzdKYTjmlZgKrs/FQykiTeBmo2cVCX7VEz96lsZOXxTgxqqGZzheafI6QIZJ2CKBklqNQdkTF8Uq/McLya8U8XfHX4f+FGa2Nx9tuFyPKt/mwfdugr548SftCeLfEUbW+kBdNgbI/d8yEe7Hp+Fc1XGUKbtKV35FRpzlqkfYfivx74T8F25m8Q38MBH8BYbj9AOa+Ztf/av0yV3tfCls0uB/rpuB+A618V+J/DGpapctqUN5LNOxJb7Q5cn6MelcHa3aaPdiDxCjW2TgPjg++R1r28srZfiLJz17PQ5a8K8d1p5H1dq/wAYta8QsTqN620/8s1O0D8q4K+8TLKjDkjnkVwf/Evu1EulziQEZzVj7PcrD82MYPNfVwpwjG0UcWvU0tI+LOvfD2aWbQoLSZpeQ11AsrIfVSeRS2H7UXxxPiW2a21SItPIIVgmREthuOPm6bR75rzPUIJ53Kcv747Vkx6C0wIdQVPUNWVSjCV20Jtn2t4g1zT9C1az1b40ab4R8u9bBvbeV7tlfr80Snp79K971PxlpGp/Dk33hq11HWtGaPy/J0KFIUZDwQMneF9cCvy9i0KygydiZx6Vr6Nq+seE5Gn8MajdaZITkm0lZF+pXlT+VcUsG90yvaanslr4f+GHxO1iHwRF4D1Tw7E7BIr61jknnVieTMD8oX1JzR8X/APxQ/Zp061j0TxPd3GjXsot4ordzHPGxGR+75491rT+E37S2qaHqE1l8atW1i9tXYeRd2jIERfSVETf+INfQOrfEvSNfv49Q+Dd/wCDLqTb8s+t3MrXaH/ckUlfwNZP2lOdmtB3jJanx/8AD/8AaP8AFHgjxK114wD+JY5VWNLfUOLiE/8ATIMuMn3GT619l+EvFVl8SJnu73wlrskEx3IJ9PSDys/3LhChwKxdctPhLqEP9v8A7TOreHm1qHBtJtEmljnjHUbcfMzZ6YBrwi78JftQ/Fayvtc+GWt6ne+Fo5Gj05Ly6W2u5o04OVAVj3wWIJFEuSo7pcv5Ao20R9lfEHSNO1zwHJ8PtRFjaR3EbQxS61cLPPHnoyKm5mZe3I+tfD3i/wDZJ/sPwv5vgrUdV13UI1yIo9OkEMmOwft9TXnP7N03xM0b4yXUmiR6dNq1rutby38QXKxuuD83ltIWcMCOSoNfevxh1HwNrkEN38R/iE/hS4hTbJZ6NqCujHucbQ5P+cVSVShNRjIE017x+XN3ovxb+HD/AG3UrDVdFI6u0bohx6nG0119v8YvDfieNLT4n6cLpIMeVNaKFmJ6Hc/B468V+nPwwtbfQ9Bki8J2/ijxhZ3qArPrbIlqynuhudnyn8a+XfHf7I+ieJ/FuoeKdX1/QvB63IBg0m2lE4VwOS7EoAWPUICB2rqp4qE21UVhOCto7Hk+m6Ret5Unw81D+3dPuIpJPseqLtjjXbyWlOdpHQA4NeQ6lpHgvWrU3N3bXGgX33Fjk2i3bHGVLkfL3Jz9KZ4m+CHxq+F5k8Qpp109hCxMep2Q823kUdHOM8Hr8wosP2gfEN7pI8PeNLWDWbJ1CuZlUS8HIKkLgEfSu1Rdr03cl3W6OO1jwN4h0hTexxG6sScR3kCkxSD1U4zj3xXqPwl+MaeB4v7E1eMtbb90cgGShPXI7iu80DSvB3iV1vPgtr0ul3Ekn/ID1CQbGCKC+ASxwT0IGPpXJeJ7Pw1fXP2X4raXcaBqE58iG9sov9ELA8MSOGLdOPrmvFzrJsHnWFlgcdG8X23T6M7cDmFbBVVXovX9OzPqHSfjtb6vAloyRMsjEK8JDgADgtjkfiKdf67aT56c1+efivwJrXg63n17Srvz7GGVIvtKloWLvyAEbBb3K5FclB4+8ZQfLFqM+B2Y7uPxr8rzLwWrVZqeCxacV0kn+lz7jK+NcJRv9aou/wDdt/wD78u7hYpTJaNtJ6jsaxbrUpliMk+0L/eJxgfjXx3D4+8ZT8yX0mO+AB/SpZtW1LUWDX08s3++xI/LpXZlvhjmuHajXxEOVerf5L8zzeIsdwtmidVYWaqPqmo39fiT+4+jT4r0WV90dwgKnqDjke9b9v8AG/VPDtqY7G5W7A+7HIN3P+91Ar5cjNdT4e8J+JvFd4tj4bsbi9lY4AhQt+Z6CvsJ8B5bOKjiZcyXdL8z85weX1MJXVXDV5R8k/z/AOGPb/EXx+/4SXRm0++0iIztx5pkyoGOeMV88mQszMvBJPA7Z9K+s/C37InjG+23fjG5i0yLqYk/ezY+g+Ufia+mPCXwO+G/g91ktLAXdwvPn3n7xs+oX7o/KuzA4TJclUo4CFr9E21+J9Ni8xxuLhGGIldR226nwN4K+DvxC8dsG0WwcQN1uJ/3cQ98nGfwr7D8Cfsl+G9IKXvja5OoyjBNvFlIQfQn7zfpX1dZq2wIoCgDgDgAewrU8snH0pYjOK1S6h7qPLe+pk6NoejaDZrp+g2sVpCowEiUKPxPU/jWsIGkNTxxYAY4q2NzMET9K8mU5Td5M64PQy3g8sZb1qqxIUkZ5NbbwSYCueQc1SltZCCSBgnjFOCXU2toYkzkLsxjPWs9opGdRFkeua3mtnDDd26U6OBQ/A5JrqS0JLsSbIVX2peakLADim+YPSuO5tY//9P9JQQaYwqNQ+cmpCSQa673MrCq3YUu4npUWMDApxPOc1A7EnPemEkcUhakyB1oHykqOKso/ArODYNWo2GM0X7BYthsDmlB4zUG7NKeKrmFYlzzTt1QBvegHtS5h2JdxpwNRA04kHpRcLEqnHWp1bBqorYNTK+aFITRqRkYqxnK1nxtVnd8tbJiKFxgGs5jyKu3Lc8day2esZPUaRKz5quW7U1nJ5BqEtWbkXYkJ/OrJgEXzXBxnnaOtUkbEg+tdIfLuBtbr6042YpOxgyzsMrAu3jivzi+Omu/GRNWnstdZ7WzZ28hEyIXTsdy9T6gmv0umsSpOOfSsTU9IsdVs20/V7eO4t5BhkkUMp/Poa5cbh51ocsZWHSmoyu0fi1aayqzLDqCG3kzgbhw1eg2chKDcRz3r6y+IX7L9ndxyX/gl+xJs5j+kb9vofzr4z1bw94k8HXslrPFKjRk7raRcPn2J/pXy9WhUoP31b8j0o1FJaM663WO5uUgkkSIOwUu5IVfc4BOK9gsPhrolz4dkl8UCzeGWUJFK8mA4bgFCN3XtxmvnPStZOpK3mQSRMhw28YBPfB712ei+I9S0KZZNPm2KriQxsN8ZI9UbjPvjNVh8RCnO80TOEmvdZ1/iD9nWHwv4nXSvDlyZy8Qme0THnKhGeFOM12GleHPBFtpxSztTqF+pCmG8kEQHrlRj8s1q+Evi/C8l9e63Nt1i7Xy7e6bAijTGAq/KSCT3bgV0dl4N0vXtRh8J3EkB1KdWup1jZ3uUHB3rMpaMjn+IivVx9bF42goYTFSj5J29E3v+JywhCnK9SCPO9eXwHeWrW/iLRpNMaCEuLm0QhhzgAoeG/P8a8h8Q/DTxBaaedc0KJ7+xGTviX94o9Wj5P4jIr1ya41OzTUbWxkTxFo9idt1gYljXJHzL0bHqprKs7+KPHiTwLfzgwP5stgXxuVf4QWBIUddpIz6ivzSnxBxFw7iLc7cW9pNypv0e8W+97dzvqYbDYmOq18tz4/u9T2s6KQCOoPWuUvdZaNSckAdTX3XqPhrwX8YZrqHVdOe1v4fKB1LS1DLmYZXzlUspI74JI7kV8qfFD4FeP8A4dJLfywjU9MB/wCPu0BdVH/TRByh/T3r9Y4c8TMpzKrHB4x+wrvpJrlf+GWz9HZ+R4uJymtSTnD3o/1uctqfw++ItppI12+0q7t7aRQ6GVdjurdCiNhnB/2Qa5DwJ4ls/AXjaHxZqWmx6tJaOCsE0jQFHXryoPI6YIrvfBP7Q3jrwbD/AGdNN/amnE5e2umfzAB2juEImTGOF3FfavpKz0b4RfGbT0fxDaWelaldWjXNrb6ZKGvAOpMhVf3vYsPLZ/ev0Oc5Q0qxvF9Ueckn5MW8/b30eW+bV7r4f6c86RhLe4eSN5UP+0xiJCjrxX1ToKQfEbwcfGGq+PNR1+NofO/snw00VrjIz5KqoMzMOnJUn0FflZ4u+CXi7wx4Zj8a2i/2ho0k/wBlFzHHJDIJf7rQSqsoH+1twfWvHdM1e+8OarB4h0CZrS8tn8yOaLGVYeoIIP0Ip/UaVWKdB/1+g3KcXaR+lOp6RHqtrc+Hfhx8CdQke53K+o6y8qTZb+MykswOec7hXz3qn7FXxq0HQp9e1ZNHtZMll0972P7QwP8ACpzgkehOTX0B8J7P9sb9pbSYNa1PxedB8O/cN1biOOaVV4OyOMb8+7Mor6A8PaT8Lfg14gt7Twz4a8TeN9XaQJd67JbS37Q+rLLL8gwf4Ysn3rD20qD5YtX+/wDF6FL3ldo+OP2YPH3i3wVrUvgXxv4wk8LZOy30rXLN5raQN0Akdk8sH0DY9K+lNQ+CE+qeJzNqfwm8P65HN+9XV7HVGgtpQe5jkIIJ64ANZ/7XH7Ovx5+Nd7a+IPDV7bappq4aDS54Usrm23Dnc8vzP7guMf3a8v8Aht8Mv23P2fdNk1TQ/sl5psI3y6LPfQ3AdR1EaByynH9w/gaqXs6kfawmlJ9P6sKzi7JaH2tf67D4E8IDw1qep+FvA9ikJhSBJvtbRKwwQqN5SE/ifxr8y/H/AIb/AGLNE0O4svDXiHXdV1nLOt3bwh4C5JOCpVE2k+j8dq8c+N3xG0b4n+KG1mDwnZ+Gr5HZbw28ru8rjht6sFVSD6Ae9ePkKQNvX1FdmFwMoR5nJq5EpMqtI8bZRiCpypHBGOh46GvRdX+N3xN1rRY/Deo6gk1hGAqQvbQFVwMZGYzhsfxDn3rz51LMF+9k/jXovhH4M/E/x64/4RfQ7y4Tr5xQpEB7u+FH516bjSiuarb5metzyDy2Y7WJO37oJ4GfT0rSt7WTIO3ivvfwb+wX4zvSlz4z1Sz05DgtDBm5m9xkYQf99V9YeD/2R/g14SVZ57OXV51xl758rkekabV/PNedi+IMDQVlLmfl/VjWFCcnsfk74W8HeIvElyth4csLm9lbA2QRs5/QcV9ZeCP2N/iVrTJN4le30eAjJEreZN/3wmcH6kV+nGm6bp+j2wsdGt4bSEcCO3RY1/JQM1sxQluTn618viuKqk3y0IWXd6nXDCRWsmfM/gn9kn4WeF1S51eOfWZ1wS10dsWfaNf6k19I2Gl6do1oLHRrWGzhXgRwIsa4+igZrbt7Z/uk1aaJdvzdq8StjK9fWrNs6YU4x2RxtzC5J4+n1rMGnTKfMkUde/NdjNCTnbjHr1qkY5dq+XypBOT/APXpQVyaq0KcEKxct3rUWIuQhGM9KsWS3JAaNOACORxg/wA6tKREuwqCCPTH5GumMbo4uTUzhbBX2kgjv3qZYFA+U/d9e+fSrfz7QFABHU5pCW4B6dcCpdjppUm+glvEVkLYB44yPzqy9qpHCjP0ojA6dfrV1cMNoOaWqZtKFjlbqHYxyMVnEgMcV0OpKua558bq6ZytC5ktZWGswqLNLRgVx3Nj/9T9HweKUNUAY4pQwxjFdBJITzURJpS2KjLc0MCagk9qjByc0Z9ahiE3c1YRxjFVCc1IrChMdtC6GpdwquGOKAeadwsTlwKdu4qsWxQHHai4WLKvg04NxxVXfyKUOetFx2LOealR/WqW+nq+etK4rGsslWlY7ay42Iq2vzCtFLQRFP3NZTnFaVwRjFZDtUSKSGlu1Qk01n5zUZfis2xkgfDD611cK/JweorjlWSVtsalj6AZrs7WKTCiQbeBnPWnT1ZEi9CecMM0ksUeMgVcC26r15qrIm7kHPFdKWljIx3hQH5eDXK+KPBXhnxnZfYvEdqlwMYSTpInurjkfy9q7CReQO1V/mzhelclSnGScWaRk1qfAnxG/Zv8TeHVfUvCJbVbMAs0YGJ4wP8AZH3xjuv5V8yybonKNlWUkEHIIPoQelfs0uQMivGPiZ8DvCnxDhe9RVsNTxlbuJR85/6aKMbvr1+teBi8oWs6P3HdSxWlpn5kiZkIIYgjniuqtPiJ41snMtrqEquVEbS4TzWT+6ZdvmYxx96rvjn4XeMvh7cmPxBbHyGbEdzH80Mn0bsfY4NcD8y4ArwXKrRly6pnbyxkr7n0tovinT/iFqttpEWqv4fimKxrp1tbReXuVctI07YDZwTliWycAGsbxbN8PL2eLSPBqanPqkEmwahDBh5DnoUURhh6fLn3NeCbejA4x0x2r1HwB8VfEHgfUJrn7RcTCS3aGJmkZ/Jc9JFRm2sR6NxXYsZTrx9jiYqz3bV9PS9l8jB0XH3oHUa5quo+ENSbwX8RYhMgRJRPBuUr5gyC4GCjjv8ArTPDVl4r0EjVPBd3FNaHfvtpJDMJkP8AE6gAE+gjAPPINdFYKi+IdPvfixr+pRJf4niiuIFSKZQePM5KojdM7DxXPXWmaMfHNxp3wy1ZVvbq5bydPELizY9RHHK3U+jYUH1r5XNOEIqNSeWWSk9actU/lfRs3p4nVKp9+p5V428B/Cf4lwtqVnFN4Z16SZoNttDJNaTSDruRFzHk5HRSP7tfJ3ir4feN/hNrVrqOu2K7EdZrW4ZTLaT46HcuM/QkGvvHVNWs/Eay6bf240/xFYu4gO5YW85QVIMoQ5+hr0z4c6N4x1HTJvC3i21tb/RZMKsOozLJLsPLkhBJuYsTt5QAYxipybj3M+G6bp1PepxdnSqS95L/AKdyfRdE7kYjLqWJd9n3X6nxx8Lv2pPGf9t/2J4q+wSW15+6t7iVzZRWLdjlBhlJ7SEj3xXY638MrD4s+I7ex1fw6fDSfvPtPiqzntpLKY4O15I42SBY+nMZLnuDW58Xf2K3/ea58IpCerNpU7fpDIevsrfnXx7o/wADvixruoPpWleGtRklicxyKbdlVGHXczAKPzr9y4V4tyTiKj9ayqtyyS96L0lH1V9fXVHgYnB18NLkqK66GZpXjLxz8GfF2o2Xw58RSReTO8DXemybra5CnAkCsCrA9iVzW3eftGfH7U+b3xhrDey3Hlj8kC17p4a/YX+M+s7X1t9P0iM9RPMJXA/3YQ/5HFfQ3hf/AIJ+eCLErN4x1y81Bhy0VpGtumf95t7foK+nr5rllN3nJN+Sv/wDnWHqvpY/NS8+JXxJ1AldQ8R6xNns99Oc/hvxU2i+H/iH44uhbaJbapqkjHonnTH8ck1+1Phv9m74IeDsSaX4dtpZB0mvc3L5HfDkr/47XuenQw2duLOxjjt4gMCOFRGgHsqgD9K8uvxTh4aYejf10/K5awb+0z8aPDP7GHxm1tVuNXt7fR4m6tfSjzPf92m5/wAxX0L4W/Yh8F2DJJ4t1a61Bx96O1UW8f8A3025iPwFfojdW6lctyfeuZkgHmgc56AV5dXiPG1dItR9P6Y3QhFHlnhH4M/CzwWi/wDCPaFaJIuMTTp58ufXdLuwfpivW7aSXIQthRwB0A+lXo7N7dts6HOM1MtuZASqhT1FeZUrVarvUk2Sn5DItu4FR8w7VoraLKP7oNZwD7cbwGOOvv8AWtG1M7SeU3DA446VzrWVmjeLsiN4IbZwQDn1q7ZadPcMN2V3HA46+vFXGgVTuwGbBGT/ADrVsZbhXDBzuHfjjPWpnBKVjaMtB8Wg3vlAxqz8nJXt7fWqcljIMqwfzEPIOCa7K3uLiIh42OffmnXoE0ouGUAkfMF4/wAmtFy9BXZxMlhEIfOA5B+UDms26soXfaj8HnpyK7hoRsOOO3v61j3kG3LHGPXvzXRF9DSKuc0sRyApwFGD9fepTnhSeMVZkjBJP8qqSYQ4PetVqU6GugpXjI7etTR26uNzDtk0QRM+0HnvWnMir8qZHHNaU4nbCkorUotgqAOMU5ODih8DgVVkm8tTjrTnG6IxC925V1D5gQO1c2Vycmt2aUvEW/WsjAFKq/dUTyaN3JsrFaZhqmI4pmBXNY6T/9X9ElfNO3GqitxT9xJ47Vs2TYnLUgNR7uM0bqm4JEu71pN1REikLUiiQkUByKg3HrRu7UAXPMNKJB+NVC3HWlDkU7gWWbvSBsmoC3vRu5xUtgWQ3TNODnNVg3NPDdKVwLO6nKTVXIqVDTuBoI2aux89+1Z0bGrykAVcRWG3I2jrWLIcjiti4O5TVC0sp9QvEs4PvOevYAdzUy1YbCaZpd1rFybW1KggbiXOBitCXwrqdpc+VeLiMcl15Bx2FW7WCKxAEZ+cE5bpmt601C7I8otu3HnNXGEXpJEOb6GfC0FsgjgAUe1S+ejnDVPNZR3iNLZ/fXqg6YrCO9GKtkEdquUnEhamm6nb8lQLIVba3502GbHDc1akhV13LUXvqh2GHEnWoPIH5U9cxnBq2AGGan4lpuNaFWKLcPcdac9uwyCMVaKbV3r27VoRlLiPnsMcVKaloM4vVNPsdStH0/VIUuIJRh45FDKw9wa+NPiP+zIcyav8O2yMFmsJDz7+U56/7p/Ovuy609gm9eRWA6sDkdu1cOKwcKytURtSrSg7xPx31DS7/Sbl7HU7eS2mQ4ZJVKsCPY1SjiechIUZ/ZQT/Kv161Sz07U08vVbaG6HTE8ayY+m4Gsq3sdM04BdMtLe3A6eTEif+ggV4v8AYjv8enodf11JfCfnX4d8PfEvUbWOytNHm1G0i/1UV3AzxoG67WyrKPYNivePCfgH4w6ehfRNO0Dw9KRj7SE8y4UHrtJeYqfoBX1P5srtiRifTNTxoTyTXZTwCp687b/r5nPLE8zsonyrbfsuw3dw974r1uS4llcySmGLlmJyTvc5yT3217P4e+HfhvwvAsFs11c7PutdS7iP++Qv65r0wxBhnIqtJAjNtHX0NYV8qwVbStRjL1V/zNo1aj6mc9y0a4iUIP8AZAH/ANeqyyzzkCRi31JNbsGmSXcggt03N0xxzV6bwte2AEl1tB67AwJwa6qGDjRhbD00l5JIUpX0bMmGJsVfW3+X5u9X00l3PlqwBPT0qSXTXi5nJAA5A7EVtGMlqzCT0MOaAZ45qaFYY1z+FXpYlVA6LwevqKy7fFzK5VTsRckE963hZvlMHIsTmJgOM/hVW3h05ZS9w5RwRtAGc+vWnSXG0kjAwPy9q4nVNRkSQuvarp2U7JHNXldHrEceiyMoDyOCecjqPfrzVq50a0ngM+nZDJ95SMnb3IryXS9fdXXfkjNeuabdi4hDoScg5CmvRi09GjzJ1JpnEXNosYa527zGON3fHoO9S6I/2xnuWULgk7ewPtXV3Nv5u6SIEZIOMd6owwrH5pwd2DnPf8qx9laSaOqlVu9R8MayAk1PEgRxisu3uCjkEcVe+0rIwVfzrKVOTlojp9vTiveZ1VmFIGadO6ySD+VZlrckRhSDz3q2pLOR74pqk1qy4Voz+EthAyHAzVC7twV6dehHTp3FbEY2gAdKJVDKWxnHWqubwdmcM6BSQMc8ZrEusxvjPbj611N0mJGHTFcfqz4mCetdNNaHqwiuVNmtpyfuzKecCrWwNycepFQafhLbp1qXO3knJrZKxoyu64H41XktfMBZuBV+JGlbLdOtFzJgYHasakruyOera1mcldARN5I6VTOKs3J824JHOKhx2ApVXqeZGKTdiEj09KbtNWdlJs9qzKuf/9b9A1bjFSq1UlbirCvxVgWc8GkJxyaRcEUMRQAwtzTdwppPamZIpNgSZ6DNGecio855oJz1qQJN3FKDUB459aeDgUATZ7mjdUWc0tAEwOOaeretQ5IFOBz19aAJwf51KhzVdTxmpQRzQBoxtzV5eayoye1aMbcVUWATY2fhXTeBjbC8uVk+80RVSf1xXMP8w56VoabO0NvmMBWR9wbucjpWkHaaZE1eLQhBWZ19GI/I1o2x2RySHsvH1rLDl5MnqTmtFG22MzfSri9WR0K8Fw8MwkTqOa3ri2GsRGeAATKMlR/EP8a5FHO4Cul0+/Nk8VyM4VsHHvSi09GDTRiAFCavW0mPkPeug8RWEL/8TezxslPzgdAT3/GuVUEVlJOErMad0X5YhwRTITj5T3qeJvMTBqF12Nipk7e8hrsW0Kq+H5BpVYwzAp91jSKN6Z70Md8TRsdvcfUVFVWtNAnpY0cjt09DWbc6alwTsIVj3PapLO43oM+nNXpOcZ7DIrR+/ANjzfVLS4tpSsykDpmudaC6fiLp/hXq2oTrLC0c8YfH8eeR7Vz0a2DoA42bc8+tcfs23a5Ep26HIwWspODz9a14Y5FUjABrbK27AqgQgEHJ4qPdapH8xBwD09KboeZVKPNLyMWJZWm8vn3qGYxocMCWGc1rIiqpYdStU5YFc5b0/Ol7NJXZ6tGKcn2K0d9cxcWwCDqD1NVTNeSOWneRuOOeh961oLQcDFXWttg29M1Lk3GyHPki9ijZXNyVVXO7ByM9q7R7qG6tRI6r5i53fT1NcuI44+RxUolYxHbxk81nByTscdWz2LEsCzK2TkgYCjj8qowWiQo4HVsAirUfmdR2qSJDy3XPNdVGCTuzjmzn7u2XB/WuLvrAyLI+QCRgZr0a8jIFc28QfIQZx61tGNtTKFN1J8p59JbXFsqyAZxya7/wlqEjfLjIJ2/41U1W1hWwQr949am0e1NtEBFnJYN7nPGPaumEerMsbThHRHoELowzGWA6YOMfnS+WGdsYORjNY8JjQGL+EYAOenFbtv8ANuHcYNaxR58XaVjLi09mm2xjJNdPYaHbRHfMAx9+mamtIliBfHzHvWnHkrkj/wDXW0IpHJUbbGzRQJFkADsPrWaUKfMgHWtGbJAQj3rMbK9ODyDTnFPoaYduNmmWEcE8HPt7VakKpGSD9aoWgAG8euaqatqEcMZhU5LdfavMcfesfSYeMqlrGDeziSQsp61yN4vnSeZgtjoBwK1Zp2lOxOnc1ctoI2X5gOBXZBWR2YyrKnZJaFSwmXyAjcEVOXQMADk+lVtQ051Uy2xIOORUWlxEvmTOR61NSTiiqGK9otDb+5EPfrWTezCNCT2rSuHAH41y2ozGUmNPWs46smtKxQjbcWc85NTBCakigKrirQiAHNKTu7nIiltxTse1W2QKM4pmT6fpSKVj/9f7yRs1bQ1QQ1cjPH400wLq4Ip5XgmoUPrUxPrTArt0JqLdk8VI9QY5qWBJnjAo471GcjFBJApXAeT2FLk5qLNSZ6ik2Aozk8VIcnpTFzzmpAe1AD1Xin7CMGmBjUqsSOaaCwhBFKCalIGKZtobAsxtzV1WxWaGqTf3BpXAvu4xkVq2KRyadK3VlYYNc55gxyat6ZdBJzFydw6D261UJWkKS0LcTkOK1kbdZzr6AGsab93PtUHGcrXY2WkyW9u1xe8Bx932qpVVTu5EWucnbxM+XHT1rTEoS3dME/WtM+V0jXA7UG2hcHI/KuN4x9i3C5e0O++2afcaTIAW2FkrBMTduDViGCSwvEv7bnYeQfQ9a1btIHnFxb8JJzg9j3FdEK0a0PNEcvKzFiZlIxxV6VQ6BxUNxD5UuBUsTgja3INNae7IfoMiYq2KsYw2MZz2PrVWT5WBXpVsgtGJB2qo6pwZL3uUY3NvdmMjAbnANbedy/KeRWFeLIgWYDg9/rWpbuWjDZzkc0qeiaAy9QIJJT7uMfUmuQvCexJAGBt68da7HUh1jPVuR74rhr6R94cYDAdD71jUWoWT0JdzSRxkfMBycHn8an3bRgHjvVFHycIOowR0zUhYlN5OcEA8dqWp1UEr2RrRgeWQCSeDU8cAY9MnFVLZxtI+gFbFuGbkcCh7HdF2uCxBcHFQ3JAA71amJGADzioXjGATUxWhCoubRiyu2MYNSxhvLDDHHX1/KtPyUcgUPbFThCetVGC3RvPBe6UkYrwCVA5NX4wdxyOMCs11Kufl+uau27cEk59vrXRGJ42JoypalyW181MjrXG38L2ed2Rmu5s5vm2t+FJrGnm4tGZB8wBoScZWZjh60U7nlqL9unitieM9j1rt3tNpVABhRjiuX8K2zSaqwcH93kc9K9Gktxzxzmu7poebjK3NVZz7IkQyABnt2yK27JTtAbrgVg3D7GwT36YyK3NPz5YppanJFPmuzaQnPtWjCAcdfwrNRuM/lWlAxC7vatUc9TcrzZLHbn0qi4MfOetXJCxPHGariPzDlvWoqT5Vc68NSc5JIybi8eBdi9a5+WGSfc7HJPNdrcWUc6ZwOK5qdTAxR+K4YS1ufY4RwiuVGLHGIn2mrDDbhk4xS3BBPP4VQS63ZR+o610qXVHVVpQnG0zUW7jeHce3WqFtNGGJXuawLiaR5NsfQ9a1dO0+Z8eZlVqKjueJSpKjOXKy3K7zEogqBbJU5bk9zW8tukKbVpjAGovZaGktdWYrQgHiozH2HpWq6A1XaMCoT7kWM1kNM2H2q46elR7D6Uwsf//Q+6x1wKtRtxzVENnpVlCRyKLlNGkh4p+CTmqqt6VZR80XJGuDzVfHarDk9qrDrQwEz60dfzo60mM1LAWnGkX29adgg5FIaHg561MvvUKjjFPHXBouDJRjNKCRUW4KMVH5wHBouPQtFmPJqVST9KgLRRKGlYZPRai+0Hdgnv0rSNNvc8+tj4U3aKuW3bGTVWW5MY5BqxuB4fjNP8tGZVyDu4FW6K7nL/ac7/CYjalGTgHmp7DURFdK6nGTjPpmq2t6bshaeHAZBnjpXnP9sTxyjHbkiuOs3Sep6OGxMa6aWjPrbw5pi6ldJqMwykCgLnoW/wDrVray5efy16A8D3p/w9liu/CcF5Hx5pLf0qK8BN5jvuP8qwr1OZtm0VbQ59gc5xUi5zinOBDKu/gZP8qawwqyhsAjIxXI+xpYlC+tNz8rJ/wIfhSvMQsXmYGRyfftWraQwPqEUUi/6xSpB7EjjFdOFl+8Ue5E9FcxpsSRB+4qgr4IIq+UaKSS2fqjEVkyAg4HrXfU7kItSMMA571ftTuiaM/WsVUIOT0rZsSTJj1FKnJuVxyRSvMGAq+cdRirOmHdF9K0Ba75NvI+lX49OaHkgAHnFO/LMXQw70Aru6NggNiuKvIZFG6TaOOM/wA8etenzWm+PIAzXK6tp8hUhhwMYGM8VM3qCR5yrNG5bJGCA3qTT/tJTGRywPJq5e2LIm3GC3J+tZjI8eN+3HTFSb0pJS1Na2lKSqhztwf88V0tk4wQc8etcZbg/a16ockZ6jHvW2l0I5THnI9aGtDt3SNyZssKJHXYKx5rpSRg9aU3wKAN09KqmtDuw8Nma9vIpPI57VNvy39T61j21wCeKvI2TuHHOMU+Wx2SiupaeNZlIPBWqOwxyENjJHGPatFcgbjjntUd0ODJ/L0remzz8XRUoPQgtjkg9MV11sPPgwfSuMs5A0hTvjIrs9HfMZ3enNXWs4XPjpJ0sS6ZgaXpqQX88yjGTWxcwiOFpewqSzdf3rdixqlqkjeQ0WRzzmtaTvFM86cnKs0eaajcOJSEPAySB6eldHpl4Fhj3kAv0+lcxdbfPXHJz0PerUrJF5UG7DBapzsexSwiqaHpERVjuU5Bq888MEReVgBiuCtJr7ZgSc/Sq2q6NqOpW+DM34cUKsmaLh+tJ8zeh1H9tWcs4hidT3/Ct5GiaLcp614nbaZLZS+Z8xPA59BXX2mtSRIIj9K5aknLc7fqSoLQ65rtIyUY5+lclrl9GF35waz7u+mlYlazWglu3+QFqmKLp6O4x9QDIdnUiqVrBczyFgDz1NbcWjIhMkpyw6DtWnGoQbVXHFb3SVjapVlJFG1sI4sPJgt61rKxAAWmBQTzT/4RUt3OUcznAqPd29aQnIqJjUsLikntUDc08n1qFuQakRE2Ogpm2hj8tQ7hVagf/9H7kBLcmp0NVlPepEbnFQWaKEY5FWk6cVQQ/nV1GxmqTJY5uelQnpUrcc1ASaGITtxSUZ3cml6VLZVkOBHQU4jNLFHJI4WMbiTwB3rtNP0KOLEt2NzenYVNxNpHN2mnXd0cxqQPU10Nv4ejADXLZ9hXSKoU4AwPSpAjkcDii66kOTexlJpFgg4QH3Ncj4hgtIsm0UKUBOfeu0vJWjUr/KvPdcuIba2e8vXEUUYLMzHAAHvXn4nGqn7sNWVGm5LU8nXW76e4IkPKt8w+ldRb6ixYCQEt1GK+TdC+NGm6l4+vkWMmxEm2JwOWx1P419v/AAjn8M+LdeJsiJVii3uh7buBXZh8XzQ5mzwJUb1vZ2Ky3EpQBwRkd6GnRCCxwE6V9CX/AMN9O1DdLav5ZHIB6V57qHw81a3DFEEqe3NaPF26HU8t7SPGtf8AE1vDbmORxjHX19q8ltb83s7OvAz0r3jVvAVpdHGoWvzD6iuRb4b2toGawMkeTnnkVxYitKq7rY6cHhJUZNyZ9DfBLVYrvwm2nZy9rKQR32tyDXb6lbbJy3UMcivmTwHeat4F8QLNKDJaz/u5gOwPRse1fVjXNpqFt5kThlPIIrJS/mPQcbvQ4+ZNnDdKpsAV2DoB1qXVbqO1BLkccVx0mupJIIgfvMFGPc1hWqRj1NI05PodRNKqMJXK8DHPTFV115ILqGVPmKMv410d/wCGFvrcG2OTj7p9fauCu9B1Gwl+ZTwc81rGMotSiZtLqdpq7xS6mbqA/LMob8e9YcylWJ981a6ojHt2pJ1DLXsS1vcxStYqKoxWtYD9/wA1lR5xzxWpaY80EetZweo2byKBNn1rTU5GDWWGw4PtWhEcjmio/eBItxwrIMECszVNMEiZbn3H9a1oMg+tWWG7hhXPUk7jPHNSsCEKMASOc9a4qSFfMyxOB0yMc/SvaNcshG3nKuEx2ryzVLcRS7l/ibPFdFFqWhnUly+8YsJAcOB7Yq0Q3mE4waYyuu2SNeT0zVaKZ2uTHJ1J47VrKFj0cFWjU0uTXEhjIJJ59Kq3F0sSAk/Mexro47ZJwA3pXNa9oN75f2uzy4UElR6Uoo9unS5GmXLHUIgNx/HNdLbTqY1IPGPyryawvZn3CUbTwgGOhrsrO5LIJG4TO0H198U2dFRJHdRyZ5NSu25ee4rOgk3Ek96syudpP4UQdjhxVSMYO5TsiFlzXSLfpp2nvcSH+EgVzcbpbjB5JrM1OC81IBGysY449KKtZNciPkJ0/aV3WZ12iXiyaasj/wARJzTtSUyRkR9+gzzWboVqY7MQDotdRaWLTZ3EADv6U4YiKicP1SSqtnn0tgQwYArznp/Wsy50q4vLgyxkjHQ16dqFgkShV/iPB9qgl+xWMR3kA0nUutD2KPu2PMZ9dfQLlLe9jLIRyw6iuzsfEGlX8GbaVenQ8GuF8Q6e2r3ZmLbU6DjJqnYeHHhkDR5PuRgUQbPco4twjqdjcyrkhT8uc1nRW0tw37pSefwrUtNPjRQZzuPpWupjRQEGAPSrbRx4is6jKMOkxqN05yR2FW9scQIRQMelKzkioS/JqdTmTsRvk5NM209+OaaM1SCT0G4NKaUnFRsasm+g3JFRsRSls0wn0qWSMbvUJYj8alY5FRN0oSAgLCkytPI7+1MwfQ09QP/S+422qB605COtRM+45p6HvWdyy4p4q2hwM96z1fHWrKHIxVJiZbLmoeAealUqetOZQRxQKxAOoFPCljg03HOKuwhE+ZuMVD8gbUdWztPAlpbSakyXI+Yp8mfXvXqTeF4clstXiVnqqWU6TwH50IIrv4viNhCskRJHUZwf1rGXtVtE554ijfSR139jWsGTjJrKu4DgqvHFfPPxG/aV1fwjG403w1dXJAOJXcCP9Oa6T4c+IfF/jjwZD4x8XNFam9BeK0twQEQnjLHkmvNqVJyfLrc6KaUlzJ6HR6xfWlp+7H7yXsq8n/61ee6l4ePichddGYM5FuPun/e9a9BW3sYuUAJ/WjfGD8oArm+qzm7zdvJG6nFKyOKsfA/hi0QJa6bbIOn+rX/Cuu8M6Tb+GNQbUdGhjhZwFkCLgMBzg1cVwcVp2SvPOsEfJc4FdPs7JWM1a97HZn4j6Hp8Zi1gtbFv4iCV/MVsW/ifQr63D2V1FIG5BDdfzrw7xDJdW0hDD5QSG46GuNuhbXcflTLxj+Hj+WKirVr09NGaQhCXkfQeqahE5PIxj6159qV7ADlAowT0rxifStVQ/wDEp1O4gPZS25fyNYFzfeLbE4vtTjkU8AeVlj+Vc0atWo2lTZ3UcJzfA7nf6xr0bTR2ShWeSRUH4nFdLq2l6nbReVYyv5Q52oSCPqO9fOF5rU+manb67eyGaO2kEjxqmGIHp9K+mfA/jTQfG0SXeh3SXC5/eIp+dT6MvUYrvwMJLmVQ9yhlaUHOcTzyWW9jcxTF8j+8T/Wsy7N/FIl7prr5sRDqj9CR2NfTk2k6TrE8v2yJHVBxnj9a8u8ReEdJs2DWEkqludp+YCuyrhYvWxMKHvcqNPwj8Z9EvZhpetk6feLgGOfhGP8AsP0Ir3nTtRsr87iUkTbkZwQa+M9T8PLOn2e8EU6dQrD9axbKw1rw5cj/AIRq/ubEgg+WH82I+2x+1czjKHmceIyhSbdPQ+pr9VW7mRBhQ52gVSfBCgVWiupZLZTdHdKVG84xlu5x9aUzKAD6V6q+E+dcbOwhAB4qzaOFfNY0l7GATmo01KMSBQazjuHKdm067wM4NalvMrLnNeVjXo7nWTp0LZaNfm9ia9Cgk2ooHNZ1JrmHyNLU6q1YECr3asizfIHtWqKwm7sloztVhMtlIuM4GRXh3iS5htYhcyEKAep7Gveb7m2fJwNp/lXy349vNtp5CEdee546GtaDtIPZe0XKdJps8V5FlCDgA/nVvUNMhuYcp8rqPlYdq8t0PWJLVHnmYleFUdCO5z/nivSNP1m31CEFDg46V6SaZ51SjUoyvHoVtNvpEufsV58rAcHsRXexNEIg/BzwPQ15jr11Hbw7zw2OPWotA8TCQfZLs8HvWclys+my7HOpTSqmzqui2805uoQEbOemQaqW8DQy/vRgqCdg557fT8a3riYbVkQ5X1qO2IkdmdiRj+orOW10d+JmoxvFl60glwzbSF4wTyWJ5qybSedtq1rwyweW2MnsOP61oW9zawr+8ZRWUZOx4OIqOpo9jNtNELcy/nVm/toLW1YHHTrVx9f05AVRi7AdFGa5LULq41JyWDBM8KBUpa3ORQsU7K/kgbCHPNbiaxNGT1GT3rJg06cAYAX61oLp8S/NMxb26Vr7NPcZI9/dXsnyH7vT2FNFtFy0uXY9Sak/dRrtQAD2qLz8Vdik7DG8tecfpVcyZ4xV+Jo3Q7hVZ0UciqUdDRTfUrhmOAKkXgUKv60uOaLCcrjSaaeTgU8im4xVJCuyP7vekPoKkIBppHaqsFyJs0VJgimHHamIiIqIgYqUj04qNunak0BEQMZzUeCep7VIQSTzUWKIgMJYcUbmpG470zd9aYz/0/tkH1qVGPAqv71KMY4rIsshueasKxBzVLBarK8E96AJY7kvL5SKeOrHpV6JJJnEaDJNVozkiup020YabPdp97aQDVQjzOxz4it7KDkYMzLB+7iO5xwx9PpVKZ5PJPmHbngHryau2Nlc3BEijCjq54H/ANetuPSI5E3YMoXk+g/Ct5ThDQ8hQr4h80tjnd7wEI9wGAGOnf1qGa8Mj/M4J6Z9q6wW1sBkovHTNI9lZyrh41PrWDxK6I2jlj3cjznVrm2ubd45irLjGCc1c+H3j7Ro1/4QCWRY5oIvMhQnGYye30NaureE9PuoXa3BRyO1fnn8c9N8YeDfH+meKbISG2VGg82LIKkHOGx3rz8ZXt7yidWFw06U0r6M/TqQShsp8w9qVPMPGK+LPBHx51OS1ji1CUSgDAbv+Ir6J8OeM9Q16IS220R93I4/D1rjp4ulPSO56kqEo6s9YiVywBrf0C9soNdhtZ3Ad8hM92rA02w1O+QSAHaf4mGM/QVvJ4ZuMiX+JTkEcHNatVGrxRkrdTvvEGiafqUZdsJJjk9j9a8K1nwvJZSEx8Dt3H4GvQtRGv8AljzMuFGMryfxrzLXNZ1TTImlkJKdz6fX0orSsveRdLeyZR0jS5ptSEc4wqoSfywK8v8AE+l3unztFIpDQkhgOcg8hh9a7Pwr8QtNufEv9k3hWNpkxG3qw7fjXpviDw7Ya9arvwsgX5JR1HsfUVeEcJUnys+qwNG1Pm6nx7dkXURjcHJ/HivDvEHhXWdG1T+3/CV3Np16hyJbdiuf94Dg/jX1T4n8G6lozmSWIxoT8sg5jb6Ht9DXnVzavys69R1PenKmz2sPiXA4Twv+1t8X/BKtYeLbO31mD7rSgeXNge44r2Sw/a8+HniQJHqi3OlzEAbZo9yD/gS15HqnhqwvC+5Bz1Nec6r8PYdxaNQQenFL2tWKtc7VTwlV3tZn3PH4t0bUIhLp19FIrfMCCOQfTNdH4dsINcnkvnbctsA21ecn3x6V8O+ENNuNIT7Pdk+SDgZ7f/Wr7R+Cus6LYzS2r7THKm6QlgAAPWunCtVKijU2Pm83r1cPCVOK9GehXOprGEUcFzmsvWPElrpenyXdw4VQMZPqe1cB4j8W6Vc69N/Y0jPbRnbH6cdce1clqkkuv7YZ8+WpyF9/WtqlTlukfNQo3Sckak3jme7bZaA7SfvGh/G8OnqYlk8y5ccDsPqazrDQYoDmr914TsryMsi7X65H9K5ueVjdwhtYXwtqF4L43LEtKzbmJ719CaTrBuYwH4JHIPrXzXp8VzpF2ILscdFf1+vvXr+lXgcKenuKqNmzV0VUjpue86bcq6qQTg966ASDAzj8PSvKbC5lChlbFO1LUr4RFYsHjjsankbehlLL5PY2PGXiSHT9PeKEgyOQOvQd6+ar5nu5jJOQQ3oegrtLnSHmcyXDMxY56n8qoy2sNu2MKvTgc11U42OqjglAwbfTQYVZ1C8lsDpj/wCvWcklzb3ZkhO0Z4A9q6udmjVsHk8+tUrWweds4z64rqi7HnYqmitPJPf4afHTvS2dtHDLvOM9h2rrYtDVkwVb8TVpNDkVuEGPXNTKoZUUolC1u5TGIzz7VpQb+rGrkelsoy5VT6DmrosLZeWy1Z9DWdRtWK0Mr52xgk4xx0q/FaKctcHcT2qdGjjQogCj2oDc0WOSSLMYjjACKKma62ngDNNgZc4IzUdzGpfC01HQzY03ZIxnmoTcueDTRDjmk8vnBqkmIRmbtSYJPNS7QBmkJVRuPSqsBYhU7aRiAQtPTAqNs7qtDuNHqaYSOuaefpTOB2xRYLjCT2oyc4JpTgU085phcOaTvzRnnFMLZ6UDFJOKi9qUk0zJ7dKAY0kd6jORwacf7wphxn0pX6CTGNx0qIknpUh61GRmnYohPvTMD3qVvamfN6UhH//U+1VYcVKrZxVbODUqnn0rG5ZZX1PrUqkA1WWrKcD1zQBp2yBzXo2gbItOnaZMquCD2yeorzy1YqeleraXbfbvDDLBy245HckUudxV0Y1KamrS2ONup55XXyQoUNyvovtSWcjKfskON6ksD04PbPemujxuY5BgjjBpqHJ9e9cvW7NEklZE8k4jxGRyTjIGf8ipphHGAysrKwHI5qmyKxGc4HPtTX8xztztXHJHX6UXsIvyRtDgtgqwyCDkGvnn4pWVrq+lXSsoIVldcjupr13VdQEcBigOxQOW7Y9q8G8ca4lvpkzqcDbtTPVmbgV5+MrpKyOvC0HUmoo8T03wRpGuanBavFhpCMlPlOB16V+i/gH4d2mlaZBPfRhVVB5UHYDsW96+e/gH4MGveJ49avkxFYxb3HZnboD/ADr7jLZbH5VphKC/iNGmYJ0p+xvsRKqqAEAGOw4qQgn/AApg4GKdnNdifc84VhjIrjPFGi291bPcBA2Bh1xwwPWuwL9c1BcKHgfd02mlJJqzBOzuj8n/AI9i88AarJfaWp8qOP7RG24ggdQAexB4q38A/wBunSvEt1b+D/iPBJZTtiOG/XMkTZ4xKAMqf9rpXrH7SPg+w8V6ZbWV0zxglg7J1KA9K+evDfw08O6JALfQrRIQOrYyx9yx5r52E5YXETdPqfX4Cu/ZRlc/U3XtQ0+/0qC1s2iuYSobKkMrbupHavnrX/CmmySma0BiUEnHUfgDXifh2fxT4bYDSp3WMHJiJ3IfwPT8K9Ut/Ft7eRj7bbbG7snK/ka9aOPjP4lY9KhKmlZnIX+g+UpS3MbFeSSSM+tY8tqkbfPtUEZ+Y8V6BqEUl8hWBchiOOhri9Y8LeIJoGdIMqBxzV+1hbRm0pQir8xxes3sAtzFblWJ+VQvT8adpVlM8YRWIBGG2nGR6GuTkW9TUmsrqPy2hO0r7+teo6DD8i8dqIS5pXZ42Nq8z7m5pNl5YVFGMV21pbADkc1TsrZAoNdNaxBcVun0PKlIs21sMdK3Le3UDiooFArVjGegqjGTM+/0eG/hKOvJFc9bJqGjyhJOYx0J6jHrXokYyKle1inG11yK0jHW6HCu4sq6b4htVA87KnGenFadzq1vcJviJ579KzP7EsyVZcrt6YPH5U6XRoZASWbnjGeK1UTuhmMl0M281KMDaWUfjXNtercPmBTIw46cV1ieHrJDuAH41cXTIIxhe1WjKrjpS6nJ2+nS3DZu/u9kH9a6q32wjbGoH0qwLcDipViAbjmrTZ5tSpzPUQSSdamS5YYSryojxbSBkd6g8lR0q2jKLGB5HPNPG8jFSBAB1pwH4UuUbZEAc1KMAmlxxSg9cU7EMmi5NSPktUUZAxUpGTVLYlkTDHIzUfBIzUjEdRxURYZFMkfwTgU4UwNzzSZ5oJZZByPwphqPdjr6UhbOPpVXEOJppI6UwvzTGcClcpaAabkYPekLds1GT3qrlNkhIPAqIt600tzTSc9aVxCs7Y44qPd0oJNMyCcVICluKaTk5pm7FNLelA0hSepNMJB70xic0zd3qygPNJimkj9Kj4oA/9X7P4xjvUgx0qsOvHSpVPORXO2a2LaHPNW0OBxVFeTxV1PzqHKw7GhExzXrPw4voHnm0m4OPMG+P6jrivIot5H7sFvoCalX+17aVbizilV0O5WUEEGspT7jVPmPpbUfCtvdjLBWPY9DXHXPhBIT8ob8DmsLRvi7d2xWz8T2zLgY84Arn69q66fxtodza+fE7EegXJ/Ssedte6aLA4hrmjG68jlJ9HS3yCPzNcxqknlofLGSPwFXNY8faUNywQXMp/657R+ZNeSa34q8RalmLTLRbdWPEkp3N+Q4rKanJWSN6WWYmTs429TL8Ta1HZRtPfyBEHT6+gHc1401rfeJdVj1LUFaK0hJMMR+8x/vMPX0Hau7l8NTzXX9oavK0sijOW5/Idqp6pe6fpFqbm6kVI8dWIyf90dTWKwrXvzPfweGhh7dWfVvwM0+O28IzXyLtaadgc/7PGK9fI/iz0r53/Zk+IWjeMdG1TwzZnZPp0wcRsfmaKUcPj03AivoeRSrbTwfauym7wTR81mcWsXUT7jdwxg0oPGB0qMHjmoy2znk1d7HCifPXNZ+pXAhs3deuMCrxYctnpXmvjrxRa6Jp7XE7AMciNO5b6egpTmoRbY1Ft6Hzb8XLtZ7w2kZz5KbTj++xzXO6Fofl20e9SWI5rqvDugyeNL2S8Lq6xPuck9XPIBr0YeHLi0wgiPHcdK8ONN1Zurbc9mNZU4KmmcRbaHEFAcd+RWvDo0ZOFGMV1sGkvkeYK1EsVjGVHNdKw76ieMfc5+20SNVzjmtO/higsGjAxuGK1XIh6/kK858SeIoYi0MZDSngKOQv41raFNXMZV51Ha54b4v06KbxXJJGOqIDj1HWuk0mw8pFGO1UbaJtS1R7o8qny59T3ruLSBV6daqjd6s6HN8qRdtoiEAUZIroLWPcoyCPasuFhnaa3rXOABXXHU55SNCOAgCtWFPWqcYxjua0FOK1jFGDkW4wBxVpcjiqkbDOTU4kA61tGxmWQoIyaQ8cDrTA4pGYHmrHzDiwxUZY44phYYpuapEuRJ1NSKQDzVUE55qTcOuapEblmAv5Z3+p/KpFbnBqnC7EsD6nH0pxfAHNMZdD4p28Y/GqYcY5p+8VQExyeP5UoxUO7H3aXfwc0hMsIwBqfJ4PeqKsQ34VLu4zVIkeX4qEnnOe9JvGKiYkjFBJOp4OaMgmod+aduzzTAmZs8VHvqPcTkdBUW7oKLisixuPeo2YdD+VMzmoy3OKBku7HFNLY9qi3cc00nHuaAQ9i3X+dIWppIb6imE9zQMeXANRFuaQnPfrTTgcZoGLu9ajLHNISKiPHWnsIkbpz0xUe7NMY45NISKYhxJPANNw3rTMnGRTN0lAz//1vsYHIFTxjP51CmMjsPWuj0HRZNXvRbqcKPmdvRR1rlNSOw0+6vCRCOF+8x6D8a6eDTbO36/vW9T0/AVeuHhjH2W0XbEnAA7+5qIMOgrKUtbIhy7FpJBEhKjGBwFFXba/KRAzoCx5OGwQP1FY5abf5RXCn7zA4ZR7davtcyrx95MYAcAnH161DV9RXL80tncIFkTcD1D4P64FeU+MbbU9GtWvfDRRX5IjfOxyP4TjBGexFd2ZDnIrlfF12I7AR/xFgRn2rmqxsnJaM6cPialKXNBnzf4Z/af8K6zNLp+pwTWN3C5jmhkYNh0OCBwOM13kXxIsNRJi0e2mu2PIWM5Pv2OB+NfKmhfs0X3i/4oar4/1q5e10F7rzIYovlmuHwNwVs8JkHJxk9q+z9N0vTNDsxp+iwJawIBhUHP1Y9SfrXZhY1akFKpoehmHEuGox5aUeaf4I4TULb4kasp/s+O204OMB5XLOB9Bn+YrzG++BnirVi1xfa7GznoFiYqPXkvX08qu0fJJBHX1pqCPoeo6CuuWDpyVpHztTibHyd4NR+R80fDz4U/EH4TeO4/iF4c1mK6mVPJktZFaOOaFsFkfBOTkcHHBr9ENF+K3hfXBHFqRNhdMBuSbgbvQN0Pt0rwUxBR8xzznrwKwtf0uC9smLIGIU5BHBHvWTwipxtTOWWbV601Kvq+59qosUyhoXVgehzUhtwgLSkY9a/FfxD8SPjD8KfF6aR4Vv767026Ia1g3lypJwYwDzwcY5r9BfA1l42fQoNX+JFxI19MgcWRfKwg8gOR1b1HQV58aznJwjHVfcelBJxU77nvGu+ILeyt3FmDPL/CqdM+56V8reN/CvxA8ZzSTxT21oSCI2l3SbT2+VcdPrXrsmoGTzl+YGMDGAO/oOK1Gkj8sxFVcBQVkA2tnvn1rKpRVV++3b8DaMuTZHy58Mfg38RvhoLh4fE63j3UzTyiS3wpdv8AgR47V9EW3i7xRpVuE1OyjuQBzJAduf8AgJz/ADrQKlTiQY71Gx5FNYaMLum7FSqub95GDJ8Z/CayfZr+OW1l/uyrj8j0NMuPidos6n7GQwPTnFc5468I2Gs6Y8siDd3I6/Ue4r4quNI8eaZqsunwXEEUSN8rKhYlex+YkZx7VxVqmIpys9Ub06VKa0PsXV/GU1wjskixx45wcAfU15W99JrczQ6YxK5+absPXb6n36VxOkeHJrpVl1u5lu2BztY4TP8AujAr1jS47e3AjVQAPwrSnBz1kVZR2NKwtIrK3WC3U4A/H8a3beGRiM0sIjJHHatqLaADXfGmhOfUmitAcE1rQqEXHfNQBuAB/kVKH4+lbJLoYNsvqy9qtRueRWXGwUkg1OJCMmtUS2aokHY1KJM89+1ZwkyevapFk71VxGgJMdakEgNUVcU7fjp9apMloslhjNNZgTxUZfPQVEx461SESbif4sU8P6VVLA09WGMY/GqQi2GAGR3pxOeDVdWB96du4yapMCfcPSnBiar7t1IHHQGnuMueZjjvSbyOarlhS7uc0yGWg4xUm/I5qiG4ye9PyelAExO4c0gY1X3Yo35zg0AOUuWzuwAMFalDZ71XLfMc0B8dDTuBY3nn0pm5evSot2T1oyaq6EkSg01jk8frUZfim7qTGPLDHtS/Sod3HNJvHbFMCR844qIZBwSaUkgcUzORgUAOz3ppYd+aaWxgUhK5BoACxwMcmo2Y9DTc803d2NV0AGYHimEnoD+VNLYOBUZcL70IQ9mPUcUzefU1FupdwphY/9f7Rt0DOB+lev8AgyzA0m5dB+8bjP4V5fYxIHBAwSefevZfAhVrh7Bjt81cr/vD/EVwt30NXscY6ushVuq9aiiuNPuNyXDlE3BN+3I3fnXqmueFllfzMGJz3HINcPceEZfmX5Dghsjjmsm9bGehXlilEDR+ekyr8pDZLqPY8H+dUi6nCYxtGAK0zo9yuQzAHqTnJqpLZtEpJP4mm5JIRmXE6Wy+ZMeR0FcFcW9z4i1aKwPAlJz/ALEY+8fqegrodQlYEIgz/tN/So/C15ZJ4nj05m3TzROQPTGCc+lcsa0Z1o0/M5cXXcINQRDrPlQTiwgASGACONB0wKxTzkAnnoTzXV+JtJuIL1rqMbo3O7PofSuVXfj5ug7f1r6JrU+fTvqT71EZIbH4U1vl5x78VDkHgDNJ5kx+5wO5J7UXC5L5pUckew9KztUu1tbF5ZjgYPXuTT5rhIFMshAH864PXdTF2QZCVRTxHnljWVWooq7Kjqza+Fng2x8R/EBNc1JFkXR4DNGpGQJZT8p/AAmvoW8uDLcu7dSTivEP2cfEVvc+MvEGhTEec8UFyPZRlCPwr33V9Oks7hnx8jHINeRCXNHmj1Po8N/CizDnUshMZCv2JGasuwdVwCDtG5Sc8+xqLAHJpHUTDGSOM8HFUup0E1q6zROZF2SIM7SeoPcH+lDKxjEjDIOQD24qsZFQiJQS2M47fnTln+yRPuOFfkg9AfUe9K9twM7WbhYNMlL91IHuTXy34lEY1dQOpQA17V4r1yNYTJN8qL91e7GvnmSaXVdc552rub8TwK8/EVFOSijrw8bXZ2GnRhY9xFdHarg78c1QsLU7eeK6GGMLwK6IKysaSZp2mcDNbML8Baw4PU961ImIA210RMZtGykuBirAfuazYyB1q2rDitUZlsSY/Gp0k5Iqnu4KjpTsr16Zqokl8NtFSrIOPyrPDYHNPV+RVgaiuO34VLvAAArOSToDTzJt5qkxF7zPWmlsnjvVbeDyaCxPSqTE0WfMznjNLvwcmqwfg5pd5xzVJiLobB4p+4Ee9Ukk6DFSbu4NUgLG/wDKl3ntVcvzRu4yaEwLKsFyRSg1UVwc8VIH5p3Jdi1njilEgIGar7/Smbhu9aoRaMg60wODzUO8E0m7mgCcscZHal3dTVffg4pBJyaALJbNIXqLce1BegCXINJu3cioSeB+dIGA5pp9wJmx3pM54FRFvpSZHJqgJCxBzSbjmmFx+VIXGOKAHlsdKh64puc5PSm549KAHH2OPrTdxzk01iCAKjPftTAfu9OKicqAcimk8YFNzuFNAKCpHHFL+NRHbnnjFJvHrTA//9D7hsZACM13Ol3r2s0dxAcPGQwNeYW823k9q37a/ZRwa8+cepsj6k0zxTpuoxKl2whl6EN0P0NX5bW1lBdFRge4AP8AKvnOz1WORNr8mtMagyf6t2X6EisZc7egnBHq17aQpk7QPwxXm+t3umWgPnzID6KdzfkKxJ52nO2R3f2JNc5qVxZWJwEBfrgdqlYerU0iY1qlKkrzZiajfXd85SyUxpn77gbvwFU9JNroN9FqCEGQOC7nlm7Hmi5vJZWB4A68VVZiwGwV1U8sjB8zlqeVWx8ZXUYncXnjrSVldHR/KY5PykisaTWfBl5zHOkLHghm2/zrnDgRYXnnHNYuq+HtM1eAxTxKSwxnHrXqOTtseWqcVszuZItKI3pOGXsQw6Vg3utaNZKyiVD75yfyFfDPxS8JeIvApl1fwvdTxRxfPLb7iybO7IO30ryXRPjHrFyyqUmuSf8AnmrHr9cCuGeNjF8rVio4WtJ+7qffGr+KoZMx2ffPzP2/CvN7zUGnuQsRae4k+6oOTn19hXm+gTeLPESiWZRZxt3b5n2n26CvcvDGh2mnAbPmkP3pG5Y1xVq3tNj1MNgJOzqaI6T4T6T/AMIP4ni8RXTbprk7Llu21uw9hX6ALZW9/bB49rq4BAPPX0NfGtjb28ihZRn1r2Twn4p1DQYhayg3FuPu8/Mo9j6VhTfIrHseyVkonoV34Wt8khXT8MisSXQBESQzH8K7+z8W6BfxAiYRt3WTIIqO91LSyNwuIv8AvoVbqpai5ZdjzKWwSMgAHGO/FcVrtz9lQ7RvYDjPSu31rxBo1uCDOHbHRMsf0rxzXNTvNUzHp0DIp48yT09hXPUqNqyNI029WeOeKdSuZ5+cyzPkRoP88D3qz4b8Ptp8HnXR3zSHc59/T8K6+08MC2c3EnzSOfmduSa2V05V4P5UqVB35mdLqJKyMlMAYXmrkMEjnOOK0RaqoIUVdRFUcV1xh3M3MgigxweOK0I024pgK4zj9alRia1SIbuTqR0qQDnNQKaXc3aqEWgevFOz2JqsWOCKbvPQmgTLm804Nng1U3fNk0u7HIppsLF5W2/jU3mFhzWcrk8Z6U4uSdq5FWncVjRD54NPDcHNUkkPc5p6vwQau4i4W4OaQM2cA8VW3cZHFAf1phYvK2eD2p4YZGTVIORjHpShhkOfwNWmSXd2KUMG6GqoYkUhfHQii4Fst6Uu4k1TEnPNSCQdqpMTRa3kdaXdgZqr5nFG4YzTTJLO+mlz+tQhtwGKM07gThs80obnNVwQDingimBMGxx0p4JY1WyuMEUIccfzoAs7iODSFulQeZzzSBs4osBIT2oDcY71GWpCSVpoCQtk5NJux/hUW7HSjcDyTVAPLdCDTC3am7+lMLUAG45O6gyDnP61Ec5z/KoyY2Uow4PBBoAm3ZOaax5qJAiLtToO1IXwSCKoTA9fwophbPNJu+lMLs//0frtJBkd6tJMR0rODEcVYU4GBXK0amtFcMASDjFX4r2YkbSfSsJMnOa6jw9bC41BA4zjn2pRp3aRnUnyRcn0LuoXMmmWgQnM0q5/3R7VxzvLNzJyB375rovFEyDU3hbBcAfgK5LhW+cn2FeioqKsj5qpVdSTlJjhk9O361FyBuyfm60jtIMKAMe9PjIfJXoD0oMmiX92wIbOB0xTAGMZIJ49aAQc7eOaikuxFG0kuAADSuNK7PLfiDDFKyRy4JdSrDHBFfMOk6NbW128UaABXIGB717f4w13zppLhxx91c9zXlfh6Jr3VpdnKhufrXhY60pnt5ZfU9V0W2SOFdo7Cu0syUOR0FY9hbFEAHaumt4OBnp/Os0rHrqJ0un3DYB9+a7zT9T2AK35151ajbyK3YJsDI/CtIx0B+R6dHewN8xxSyTQP2H/ANeuAiuHUnBPFXVvnxyTQqSFzM6CSSENlVFZ8s30xWa1w7naeKhaTcQB1HrVqCWwXZZkkDEAVDv3cd6j57nNNOxeRxmqETHBHJ6U7J6dMVApOSAakJOcnGaAJQ2RzUysOuKohlxUwfkYqkBZUn1xSls4xUAOfwqLzCQc0JgWxIaaGbmqvmEjjtTy3cHFFwLIfBwTUgc561RVjvxUwbj8KVwLiucYpQxzkmqwOBwaA1WnYGXd5707emcVTEh5GKduAHNXckt+YcECnCTIxVMykDigNziquIvhzjFSB+56VQDd6eshBxTTBoveZkcUu/mqyvnrzS5ycnmquJosbietKCO1VsnOc0ob1NMRaEhBpd4yOagDZFOzVIROrEHNOLiqwOeM08NtNMViYNgfMcU7fjgVAy5HNK0gbA2hcDqO9UgZP5gJ4oDHPJzVbeM4FAbB/DNMRaBzzSk1ArE80byelNMCbeAeaQuBUW7HXrTcgA0ICctzzTSwFRbu+aMjp1qgHFvSmeZk+lNbHaombnJoAn3AdKrtjGRn2pcjvUZZT1oAYRht2aUMVyPakbBGBwaj5HWmgJDIAM0zzDULSbjjFJkUwP/S+sE5we1Tpwc1UV8kAfjVpD0NczNWzTgG444rtfDuI79N3Ab5a4eBtpyfwrq7OQgB1+8MH8qcXyyTOesuaLj3N3xboMlz/pNouJV4bPcV5U8UkUn7wFSPWvqWz+za1YrcqQH2gNjrmuZ1bwvHMpDosn869Fq+p8tJuDcWeB4BOCc5PWkwF+9xk9a9LbwzbQ/N5IGO2a56+soYDyqrzwBzWb0D2iSOSkeO3Ys7cYz9a8x8Va4qWxM52Ip4Hcmu61stGS8QGfVv6V4P4ojYk5BkcnCr1J+lYVZ6OxrT99nmHiPVbi7kM7DPO2NF55PT8a9L8DeGZdPsFacfvJPmc+5pvhjwG4ul1bWAN45jj7Ln1969ehgCLhB27V5M4tyuz6XCUnThruQW1rHEB3rQSMk7VqRLSRsEjrWrFa7cGmoNnXfQggjI61pRI1WI4129Pzq2qAemK1UbCbK6gipAefpTyqgnHeo8badgJAQev50dcc0wjuOlKvNKwD+RQ4DLxTcAdPWhWyM0MBysSMYx2oDZqMsQenBp49M0gFBp2e35UwjHU0xmyMA4ppgTh2+lDEnrxTVbgUwjnmkBKHAHPWlyM81CeRkmjPGRQVcs+4pAx3dahD5z70ZwaCS1v6GgPzmoAw+tKHzyKsCfzD+dP8wjrzVEtkinh+TigRaBOcg0/ezHAqsGYkk07fg81SYWLSsR361NuHBNVN/enBxjFWJoubqk34H41TDDpThx371aEWA+Gp+7PFVw+eFqXeB1poVidff6VIGHHNVw3rRuA61QmTg+9PycYqruO7rUoOR+NUmBMrMBg0u4VAWo3MM0CaJNxJp24AZJ4qHfu4NIdp+VulMSROGAOAaUMaov8rrs4z1qVZDnDDnPFNA0WsilL8VVL9xxQDkHPNMRPk8gUhf0qucFifWnZIHWqQEuTTS4JANQ59DTc0wJnYKOKiyBz0pgbPFNJGSaaAdv5yOKjd+cmmtjsfypm/1poBJGzUeRTmIJ5NJ8vt+VAH//0/qZDghulWoyapj1qdWx9K5zVo1YHwcGt61uMDOa5JJBkkZq1HcEHFMzlG56jpWsXFk/mWz7T3B6Guwj8YW7rtvUKHuV5FeIQ3xjIINayaruAUntVxqSitDhr4KFV3kj0i+13SJELxyc+mK8+1TVrCR8xo7nthahN3GV5xVV7lSvbmh1JM5lldO+rZxmq2up6i/7mIQp0DOcn8qy7fwlb27GaY75D/Eea7mW4ydpqq7BsmsZK+56FDDU6fwIxU02FByKtJaxryB2qzkcil6YFRyo60QrGAcDjFTBTkY4FKT0NKBxzU2KsOXin78cYqEnPFG449qLDH55IpHbimnuKaSSOfxpAS5xxRk5B7U1cYyKTdg0mgJSfSkBGMGoRuL788GnD0p2Ac2QCP1oDA/NUZz93PTrSKSMjOaljHsc8ikALHLUpOO30pvyk5NILDt5IwvA9KfuyMVGAcUi8Him0CRNjjJqILg7s+3tS5PSmjAzihCJAcdaCwzkVEWJODShl6EUWAk3dx3pSemKiPHShece1NbDuTZ4zilzxmos4FJuP0xTQizv4yRS5Hf0qrljxUm7P1oAsI3AqUHIxWfFKZBuIxzjFWg5FVF6g9CyD61KCOpqoH5604P2rQVi4rLzUm5ccVTDDHFShh2qkySfJHJNOzyKr55GaUPgAVYmixvPGaeHxVXzCetKW2jjmqQi0TwTTskkmq4ckUpcYzQBYJz0ppPPNV9zBuemKdvBxTQEuQR81G4Hr2qDOcUF14BqhND95an78giq+CeRxTQ2AaBNFrfnIppODUOT1NBYZ61QiTdRnHeot1M8wg4pgWC9RMCT9ajzg5pjEgHGapASj5ARTGJ+lRliaaxI/KmMC4HB9Kb5w9KTPem70oEf/9T6gQ9M1KCKrxdaeOprnNScMQKlD881Xpy0AXPMI6U8TMMDNUQTx+NT9xQ9hWLYlfGc0vnnFVz0FMXpmpGkT+Yc0Byc1EOhqT+E/WkO1h/3uKATnmo89fpTqCh+e4o39qaOlRS/eFLrYCcnPNLknjpTf4aVv8aTVgFVseuacWBqP+H8qDUtWYDiSKTIJznrS4FRr96kBLkAYFJuqMnnFMJOce9AIm3cEnv0pDtByOtIf9X+FRN3+lBZMGOcdqdnIxTU7fSleglDcnOKdkY460z+JcU6gbFU9c0pbHSmN0FNkoF0HsRmkByKYaB1/CgeyuP6jJpASKQdM0L978KA3HFjnn1pWOcmoT1FSL0NAeYqHPTmn5Oc1Vj6mpMmgLE25R0p6yHGKiAFP/wpoklVnHFS7iOKrpkhc1LH1NaATBzUgk7iqo609etWS0WPMOfwpwOTVc/e/CpV6U0KwpaQybR0qRX7U1eX59KVOv41SEyUnjgigH0qCXgcVIvQ1QiXzOcCmg7aiPWlPQfSmBLvJpnU5PajuPpTSTimgH7xjH5UpYNUA/rSN0piLDN/DTGJPSosnj6VFKTkfSrRJMZNo5+lCn1qFeVyalP3aAK7XDrKUkHy9mqVX3d81XfleaRPu1SAnZznNHmA9aRulQDpTAlLcdabuHrSMBx9KbgVQH//2Q==';
+var AW={n:0,tabs:[],acid:0.010,vol:0.200,per:0.010/3,seen:false};
+function awDissolved(){var s=0;AW.tabs.forEach(function(t){s+=t.d;});return s;}
+function awPH(){return Math.min(10.3,pHex((AW.acid-AW.per*awDissolved())/AW.vol));}
+function awFrame(dt){clear();var bx=545,by=420,bw=230,bh=250;
+ AW.tabs.forEach(function(t){if(t.y<by-14){t.vy+=900*dt;t.y=Math.min(by-14,t.y+t.vy*dt);}else{t.d=Math.min(1,t.d+dt*.5);}});
+ var p=awPH();if(p>=6.5&&!AW.seen){AW.seen=true;awRule();}
+ if(PHOTO.complete&&PHOTO.naturalWidth){ctx.save();rr(20,20,340,226,14);ctx.clip();ctx.drawImage(PHOTO,20,20,340,226);ctx.restore();rr(20,20,340,226,14);ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();}
+ txt('Antacid tablets: a base you can swallow',190,266,{s:17});txt('Photo: Midnightcomm, CC BY 2.5, Wikimedia Commons',190,288,{s:12,c:MUTED,w:500});
+ panel(20,305,340,180);txt('Active ingredient',190,330,{s:16,c:MUTED,w:500});txt('magnesium hydroxide',190,360,{s:22,c:BLUE});txt('Mg(OH)₂',190,394,{s:30,c:BLUE});
+ txt('(some brands use Al(OH)₃ or CaCO₃)',190,428,{s:14,c:MUTED,w:500});txt('Stomach acid: hydrochloric acid, HCl',190,462,{s:16,c:RED});
+ txt('Your stomach (too much HCl)',bx,32,{s:20});
+ beaker(bx,by,bw,bh,190,uniC(p),.7);
+ AW.tabs.forEach(function(t){var r=16*(1-t.d*.85);if(r<1.5)return;ctx.fillStyle='#f4f1e8';ctx.strokeStyle='#b9b3a0';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(t.x,t.y,r*1.5,r*.8,0,0,7);ctx.fill();ctx.stroke();
+  if(t.d>0&&t.d<1){for(var k=0;k<5;k++){var a=k*1.26+T*2;ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.arc(t.x+Math.cos(a)*(r*2+6),t.y-6-Math.abs(Math.sin(a*1.7+T*3))*20,2.5,0,7);ctx.fill();}}});
+ meter(bx+165,92,f2(p),'pH meter',p<6.5?RED:(p<=7.5?GREEN:BLUE));
+ txt('universal indicator',bx,by+20,{s:14,c:MUTED,w:500});if(AW.seen)txt('Mg(OH)₂ + 2HCl → MgCl₂ + 2H₂O',bx+40,by+50,{s:20,c:PLUM});
+ var lab=p<3?'very acidic: heartburn!':(p<6.5?'still acidic':(p<=7.5?'neutral: the acid is neutralized':'basic: too many tablets'));pill(lab,bx,70,p<6.5?RED:(p<=7.5?GREEN:BLUE),'#fff',17);
+ setReads([['Tablets added',AW.n],['pH',f2(p)],['Stomach is',p<6.5?'acidic':(p<=7.5?'neutral':'basic'),1]]);}
+function awRule(){setRule(AW.seen?['The base in the tablet <b>neutralizes</b> the acid: the pH rises toward 7','Mg(OH)₂ + 2HCl → MgCl₂ + 2H₂O','<b>acid + base → salt + water</b>: this is a <b>neutralization reaction</b>','Too many tablets make the stomach basic: a real dose only lowers the acid level']:['Drop in tablets one at a time and watch the pH meter and the colour.']);}
+var AQ=[{q:'Heartburn is caused by too much…',o:['hydrochloric acid in the stomach','base in the stomach','water in the stomach','salt in the stomach'],a:0,w:'Stomach acid is mainly HCl.'},
+ {q:'Mg(OH)₂ in an antacid is…',o:['a base that neutralizes the acid','an acid that adds more H⁺','a salt with no effect','an indicator'],a:0,w:'It supplies OH⁻, which reacts with H⁺.'},
+ {q:'What are the products of Mg(OH)₂ + 2HCl?',o:['MgCl₂ + 2H₂O: a salt and water','MgH₂ + Cl₂O','Mg + 2HCl + O₂','only water'],a:0,w:'Acid + base → salt + water.'}];
+var T0={name:'Antacid warm-up',c:PLUM,steps:['Cure the heartburn','Quiz me'],
+ title:function(i){return ['Warm-up: how does an antacid work?','Quiz: the antacid'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<button class="btn fill" id="awT">Drop in a tablet</button><button class="btn" id="awR">Start again</button>';
+   $('awT').onclick=function(){if(AW.n>=5)return;AW.n++;AW.tabs.push({x:545+(AW.n-3)*34,y:40,vy:0,d:0});tone(500,0,.06);};$('awR').onclick=function(){AW.n=0;AW.tabs=[];AW.seen=false;awRule();};
+   awRule();setQ('Heartburn happens when the stomach makes <b>too much hydrochloric acid</b>. An antacid tablet contains a <b>base</b>, magnesium hydroxide. <b>Predict:</b> what happens to the pH as you drop in tablets? What new substances form?');}
+  else{$('readcard').style.display='none';seqPanel(AQ);setQ('Think about what the base does to the acid.','Explain');setRule(['Base + acid → salt + water','The antacid raises the stomach pH']);}},
+ frame:function(dt){T+=dt;awFrame(stepI===0?dt:0);}};
+
+/* ================= Tab 1: from word equation to net ionic ================= */
+var EQ1=new KAnim({a:['acid',RED],b:['base',BLUE],s:['salt',PLUM],w:['water',TEAL],p1:['+',MUTED],ar:['→',MUTED],p2:['+',MUTED],
+  a2:['hydrochloric acid',RED],b2:['sodium hydroxide',BLUE],s2:['sodium chloride',PLUM],w2:['water',TEAL],
+  a3:['HCl',RED],b3:['NaOH',BLUE],s3:['NaCl',PLUM],w3:['H₂O',TEAL],a4:['2HCl',RED],b4:['Mg(OH)₂',BLUE],s4:['MgCl₂',PLUM],w4:['2H₂O',TEAL]},
+ [{row:['a','p1','b','ar','s','p2','w'],note:'Every neutralization: acid + base → salt + water',note2:'start with the words'},
+  {row:['a2','p1','b2','ar','s2','p2','w2'],size:30,hl:['s2'],note:'hydrochloric acid + sodium hydroxide → sodium chloride + water',note2:'the salt = metal from the base + non-metal part of the acid'},
+  {row:['a3','p1','b3','ar','s3','p2','w3'],size:58,note:'HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)',note2:'the formula equation'},
+  {row:['b4','p1','a4','ar','s4','p2','w4'],size:50,hl:['s4'],note:'The antacid: Mg(OH)₂ + 2HCl → MgCl₂ + 2H₂O',note2:'Mg²⁺ from the base + Cl⁻ from the acid → MgCl₂'}],'Step 1: the word equation');
+var EQ2=new KAnim({h:['H⁺',RED],cl:['Cl⁻',GREEN],na:['Na⁺',PLUM],oh:['OH⁻',BLUE],na2:['Na⁺',PLUM],cl2:['Cl⁻',GREEN],w:['H₂O',TEAL],w2:['2H₂O',TEAL],h3:['H₃O⁺',RED],
+  q1:['+',MUTED],q2:['+',MUTED],q3:['+',MUTED],q4:['+',MUTED],q5:['+',MUTED],ar:['→',MUTED],hcl:['HCl',RED],naoh:['NaOH',BLUE],nacl:['NaCl',PLUM]},
+ [{row:['hcl','q1','naoh','ar','nacl','q4','w'],size:52,note:'Formula equation: HCl + NaOH → NaCl + H₂O',note2:'strong acids, strong bases and soluble salts are really ions in water'},
+  {row:['h','q1','cl','q2','na','q3','oh','ar','na2','q4','cl2','q5','w'],size:40,note:'Complete ionic equation: split every (aq) compound into its ions',note2:'water stays as a molecule'},
+  {row:['h','q1','cl','q2','na','q3','oh','ar','na2','q4','cl2','q5','w'],size:40,hl:['na','na2','cl','cl2'],note:'Na⁺ and Cl⁻ are on BOTH sides: they do nothing',note2:'they are spectator ions'},
+  {row:['h','q1','cl','q2','na','q3','oh','ar','na2','q4','cl2','q5','w'],size:40,strike:['na','na2','cl','cl2'],note:'Cross out the spectator ions',note2:'what is left?'},
+  {row:['h','q3','oh','ar','w'],size:64,hl:['h','oh'],note:'Net ionic equation: H⁺(aq) + OH⁻(aq) → H₂O(l)',note2:'this is the neutralization reaction: it is the same for every strong acid + strong base',c2:RED},
+  {row:['h3','q3','oh','ar','w2'],size:60,note:'Written with hydronium: H₃O⁺ + OH⁻ → 2H₂O',note2:'same reaction: H₃O⁺ is H⁺ attached to water'}],'Cancel the spectator ions');
+/* particles: two beakers that dissolve, then mix */
+var PS={ph:0,t:0,p:[]};
+function psReset(){PS.ph=0;PS.t=0;PS.p=[];for(var i=0;i<5;i++){var x=95+(i%3)*80,y=230+Math.floor(i/3)*90;PS.p.push({k:'H',x:x,y:y,b:PS.p.length+1});PS.p.push({k:'Cl',x:x+30,y:y,b:PS.p.length-1});
+  PS.p.push({k:'Na',x:x+400,y:y,b:PS.p.length+1});PS.p.push({k:'OH',x:x+430,y:y,b:PS.p.length-1});}
+ PS.p.forEach(function(q){q.vx=(Math.random()-.5)*50;q.vy=(Math.random()-.5)*50;q.a=Math.random()*6.3;});}
+function psFrame(dt){clear();if(!PS.p.length)psReset();PS.t+=dt;var ph=PS.ph;
+ var L={x0:40,x1:360,y0:150,y1:400},R={x0:440,x1:760,y0:150,y1:400},B={x0:90,x1:710,y0:120,y1:400};
+ if(ph<2){beaker(200,410,320,280,250,null);beaker(600,410,320,280,250,null);txt('HCl(aq)',200,30,{s:26,c:RED});txt('NaOH(aq)',600,30,{s:26,c:BLUE});txt(ph?'100% ions':'molecules (press Dissolve)',200,60,{s:15,c:MUTED,w:500});txt(ph?'100% ions':'molecules (press Dissolve)',600,60,{s:15,c:MUTED,w:500});}
+ else{beaker(400,410,640,300,270,null);txt('Mixed: HCl(aq) + NaOH(aq)',400,30,{s:26});}
+ PS.p.forEach(function(q,i){if(q.dead)return;var box=ph>=2?B:((q.k==='H'||q.k==='Cl')?L:R);
+  if(ph===0&&q.b!=null&&q.b<i){var o=PS.p[q.b];q.a=o.a;q.x=o.x+Math.cos(o.a)*30;q.y=o.y+Math.sin(o.a)*30;return;}
+  if(ph===0)q.a+=dt*.8;
+  if(ph>=2&&q.k==='H'&&!q.water&&q.t!=null&&PS.t>1){var o=PS.p[q.t],dx=o.x-q.x,dy=o.y-q.y,d=Math.hypot(dx,dy);q.vx+=dx/d*160*dt;q.vy+=dy/d*160*dt;o.vx-=dx/d*160*dt;o.vy-=dy/d*160*dt;
+   if(d<30){q.water=true;o.dead=true;q.x=(q.x+o.x)/2;q.y=(q.y+o.y)/2;q.vx*=.2;q.vy*=.2;tone(880,0,.05,'sine',.08);}}
+  var sp=Math.hypot(q.vx,q.vy),mx=q.water?40:90;if(sp>mx){q.vx*=mx/sp;q.vy*=mx/sp;}
+  q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.x<box.x0+28||q.x>box.x1-28)q.vx*=-1;if(q.y<box.y0+28||q.y>box.y1-28)q.vy*=-1;q.x=clamp(q.x,box.x0+28,box.x1-28);q.y=clamp(q.y,box.y0+28,box.y1-28);});
+ PS.p.forEach(function(q){if(q.dead)return;if(q.water)waterDraw(q.x,q.y,1.2,q.a+T*.5);else ionDraw(q.k,q.x,q.y,q.k==='H'||q.k==='Na'?17:20);
+  if(ph===2&&PS.t>3.5&&(q.k==='Na'||q.k==='Cl')){ctx.strokeStyle='rgba(232,150,42,.95)';ctx.lineWidth=3;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(q.x,q.y,27,0,7);ctx.stroke();ctx.setLineDash([]);}});
+ panel(30,420,740,66);fitTxt(['HCl and NaOH in water: press "Dissolve"','Strong acid and strong base: 100% ions · H⁺ + Cl⁻ and Na⁺ + OH⁻','H⁺ and OH⁻ meet and make H₂O · Na⁺ and Cl⁻ just float around'][ph],400,444,20,INK,600,720);
+ fitTxt(['','Now mix the two solutions','Na⁺ and Cl⁻ are spectator ions (circled): what is left is H⁺ + OH⁻ → H₂O'][ph]||' ',400,470,16,ph===2?ORANGE:MUTED,500,720);}
+function psMix(){PS.ph=2;PS.t=0;var Hs=[],Os=[];PS.p.forEach(function(q,i){q.x=lerp(130,670,Math.random());q.y=lerp(160,370,Math.random());q.vx=(Math.random()-.5)*60;q.vy=(Math.random()-.5)*60;if(q.k==='H')Hs.push(i);if(q.k==='OH')Os.push(i);});Hs.forEach(function(h,k){PS.p[h].t=Os[k];});}
+/* the H⁺ ions move to their own spot (x2,y2 used as the H position after dissolving) */
+/* your turn: click the spectators */
+var YT={r:0,sel:{},ok:false};
+var YR=[{f:'HNO₃(aq) + KOH(aq) → KNO₃(aq) + H₂O(l)',ions:[['H⁺',0],['+'],['NO₃⁻',1],['+'],['K⁺',1],['+'],['OH⁻',0],['→'],['K⁺',1],['+'],['NO₃⁻',1],['+'],['H₂O',0]],net:'H⁺(aq) + OH⁻(aq) → H₂O(l)',sp:'K⁺ and NO₃⁻'},
+ {f:'H₂SO₄(aq) + 2NaOH(aq) → Na₂SO₄(aq) + 2H₂O(l)',ions:[['2H⁺',0],['+'],['SO₄²⁻',1],['+'],['2Na⁺',1],['+'],['2OH⁻',0],['→'],['2Na⁺',1],['+'],['SO₄²⁻',1],['+'],['2H₂O',0]],net:'2H⁺ + 2OH⁻ → 2H₂O, so H⁺(aq) + OH⁻(aq) → H₂O(l)',sp:'Na⁺ and SO₄²⁻'},
+ {f:'2HBr(aq) + Ca(OH)₂(aq) → CaBr₂(aq) + 2H₂O(l)',ions:[['2H⁺',0],['+'],['2Br⁻',1],['+'],['Ca²⁺',1],['+'],['2OH⁻',0],['→'],['Ca²⁺',1],['+'],['2Br⁻',1],['+'],['2H₂O',0]],net:'2H⁺ + 2OH⁻ → 2H₂O, so H⁺(aq) + OH⁻(aq) → H₂O(l)',sp:'Ca²⁺ and Br⁻'}];
+function ytLayout(){var R=YR[YT.r],size=26,gap=10,items=R.ions.map(function(t){return {t:t,w:tw(t[0],size)+(t.length>1?26:4)};}),W=items.reduce(function(a,b){return a+b.w+gap;},-gap),x=400-W/2;items.forEach(function(it){it.x=x;x+=it.w+gap;});return items;}
+function ytShow(){var R=YR[YT.r];$('panel').innerHTML='<div id="ytF"></div>';}
+function ytCheck(){var R=YR[YT.r],bad=0,miss=0;R.ions.forEach(function(t,i){if(t.length<2)return;if(t[1]&&!YT.sel[i])miss++;if(!t[1]&&YT.sel[i])bad++;});
+ if(!bad&&!miss){YT.ok=true;SFX.good();$('ytF').innerHTML='<div class="fb ok"><b>Correct!</b> The spectators are '+R.sp+'. Net ionic: <b>'+R.net+'</b>. Always the same neutralization reaction!</div>';burst($('cv'),30);renderSteps();}
+ else{SFX.bad();$('ytF').innerHTML='<div class="fb no"><b>Not quite.</b> '+(bad?'You crossed out an ion that changes (H⁺ and OH⁻ become water). ':'')+(miss?'Some ions appear on both sides unchanged: find them all.':'')+'</div>';}}
+function ytClick(x,y){if(YT.ok||y<290||y>350)return;var it=ytLayout();for(var i=0;i<it.length;i++){var o=it[i];if(o.t.length>1&&x>=o.x&&x<=o.x+o.w){YT.sel[i]=!YT.sel[i];tone(600,0,.04);return;}}}
+function ytFrame(){clear();var R=YR[YT.r];txt('Your turn: click the spectator ions',400,36,{s:24});txt('Formula equation',400,84,{s:15,c:MUTED,w:500});fitTxt(R.f,400,116,30,INK,600,720);
+ txt('↓ complete ionic equation ↓',400,178,{s:17,c:MUTED,w:500});txt(YT.ok?'Spectators: '+R.sp:'Which ions are on BOTH sides, unchanged? Click them.',400,240,{s:21,c:YT.ok?ORANGE:INK});
+ ytLayout().forEach(function(o,i){if(o.t.length<2){txt(o.t[0],o.x+o.w/2,320,{s:26,c:MUTED});return;}var sel=YT.sel[i];rr(o.x,296,o.w,48,12);ctx.fillStyle=sel?'#fdeeee':'#fff';ctx.fill();ctx.strokeStyle=sel?RED:LINE;ctx.lineWidth=2.5;ctx.stroke();txt(o.t[0],o.x+o.w/2,321,{s:26,c:sel?MUTED:INK});if(sel)seg(o.x+8,334,o.x+o.w-8,308,RED,4);});
+ if(YT.ok){rr(110,370,580,100,18);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();txt('H⁺(aq) + OH⁻(aq) → H₂O(l)',400,408,{s:36,c:RED});txt('the net ionic equation of every strong acid + strong base',400,448,{s:16,c:MUTED,w:500});}
+ else txt('Then press Check.',400,400,{s:18,c:MUTED,w:500});}
+var EQQ=[{q:'Which ions are spectators when HCl reacts with KOH?',o:['K⁺ and Cl⁻','H⁺ and OH⁻','H⁺ and Cl⁻','K⁺ and OH⁻'],a:0,w:'They appear unchanged on both sides.'},
+ {q:'The net ionic equation for any strong acid + strong base is…',o:['H⁺(aq) + OH⁻(aq) → H₂O(l)','Na⁺ + Cl⁻ → NaCl','HCl + NaOH → NaCl + H₂O','H₂O → H⁺ + OH⁻'],a:0,w:'Only H⁺ and OH⁻ really react.'},
+ {q:'Which salt forms from KOH and HNO₃?',o:['KNO₃','KH','HNO₂','KOH₃'],a:0,w:'K⁺ from the base + NO₃⁻ from the acid.'},
+ {q:'In a complete ionic equation, which substance is NOT split into ions?',o:['H₂O(l)','NaOH(aq)','HCl(aq)','NaCl(aq)'],a:0,w:'Water is a molecule; strong acids, bases and soluble salts are ions.'}];
+var T1={name:'Equations',c:BLUE,click:function(x,y){if(stepI===3)ytClick(x,y);},steps:['Word equation','Ions separate','Cancel spectators','Your turn','Quiz me'],
+ title:function(i){return ['Start simple: the word equation','What really happens: the ions separate','Cancel the spectator ions','Your turn: find the spectators','Quiz: neutralization equations'][i];},
+ enter:function(i){if(i===0){$('readcard').style.display='none';EQ1.reset();animControls(EQ1);setQ('Every neutralization follows the same pattern in words. Press <b>Next</b> to go from words to formulas.');setRule(['<b>acid + base → salt + water</b>','The <b>salt</b> = the cation (metal) from the base + the anion from the acid']);}
+  else if(i===1){psReset();$('controls').innerHTML='<button class="btn fill" id="psD">Dissolve</button><button class="btn fill" id="psM" disabled>Mix the two solutions</button><button class="btn" id="psR">Start again</button>';
+   $('psD').onclick=function(){if(PS.ph)return;PS.ph=1;PS.p.forEach(function(q){q.b=null;q.vx=(Math.random()-.5)*90;q.vy=(Math.random()-.5)*90;});$('psM').disabled=false;this.disabled=true;};
+   $('psM').onclick=function(){psMix();this.disabled=true;};$('psR').onclick=function(){T1.enter(1);};
+   setQ('HCl is a strong acid and NaOH is a strong base: in water they exist as <b>ions</b>. <b>Predict:</b> when you mix them, which ions react and which do nothing?');
+   setRule(['In water: HCl → H⁺ + Cl⁻ and NaOH → Na⁺ + OH⁻','When mixed, <b>H⁺ + OH⁻ → H₂O</b>','<b>Na⁺</b> and <b>Cl⁻</b> do not change: they are <b>spectator ions</b>']);}
+  else if(i===2){$('readcard').style.display='none';EQ2.reset();animControls(EQ2);setQ('Write every ion, then cross out the ions that appear on <b>both</b> sides. Press <b>Next</b>.');setRule(['Complete ionic equation: all ions written separately','Spectator ions: on both sides, unchanged: cross them out','What is left is always <b>H⁺ + OH⁻ → H₂O</b> (or H₃O⁺ + OH⁻ → 2H₂O)']);}
+  else if(i===3){$('controls').innerHTML=segHtml('ytR',YR.map(function(r){return r.f.split('→')[0].replace(/\(aq\)/g,'').trim();}),YT.r)+'<button class="btn fill" id="ytC">Check</button><button class="btn" id="ytX">Clear</button>';segBind('ytR',function(k){YT.r=k;YT.sel={};YT.ok=false;ytShow();});$('ytC').onclick=function(){if(!YT.ok)ytCheck();};$('ytX').onclick=function(){YT.sel={};YT.ok=false;ytShow();};ytShow();
+   setQ('Find the spectator ions in each reaction. Is the net ionic equation always the same?');setRule(['Spectator ions: the same ion on both sides, unchanged','Net ionic for strong acid + strong base: <b>H⁺(aq) + OH⁻(aq) → H₂O(l)</b>']);}
+  else{$('readcard').style.display='none';seqPanel(EQQ);setQ('Which ions really react?','Explain');setRule(['acid + base → salt + water','Net ionic: H⁺ + OH⁻ → H₂O']);}},
+ frame:function(dt){T+=dt;if(stepI===0)EQ1.draw(dt);else if(stepI===1){psFrame(dt);setReads([['Stage',['molecules','ions','mixed'][PS.ph]],['Water formed',PS.p.filter(function(q){return q.water;}).length],['Spectators','Na⁺, Cl⁻',1]]);}
+  else if(stepI===2)EQ2.draw(dt);else if(stepI===3){ytFrame();setReads([['Reaction',(YT.r+1)+' of 3'],['Solved',YT.ok?'yes':'not yet']]);}else{EQ2.i=EQ2.S.length-2;EQ2.u=1;EQ2.draw(0);}}};
+
+/* ================= Tab 2: titration: purpose, apparatus, procedure ================= */
+var PU={v:0};
+function puFrame(){clear();var Veq=25,v=PU.v,nH=Math.max(0,Veq-v),nOH=Math.max(0,v-Veq);
+ txt('Unknown acid',190,30,{s:22,c:RED});txt('25.00 mL of HCl · concentration = ?',190,58,{s:16,c:MUTED,w:500});
+ txt('Known base (titrant)',590,30,{s:22,c:BLUE});txt('NaOH · 0.100 mol/L',590,58,{s:16,c:MUTED,w:500});
+ flask(190,390,1.9,70,uniC(pHex((Veq-v)*0.1/(25+v)/1)),.55);
+ var seed=7;function rn(){seed=(seed*9301+49297)%233280;return seed/233280;}
+ var nh=Math.round(nH/25*12),noh=Math.round(nOH/25*12),nw=Math.round(Math.min(v,Veq)/25*12);
+ for(var i=0;i<12;i++){var x=120+rn()*140,y=290+rn()*80,x2=120+rn()*140,y2=290+rn()*80;if(i<nh)ionDraw('H',x,y,12);if(i<nw)waterDraw(x2,y2,.7,i);if(i<noh)ionDraw('OH',120+rn()*140,290+rn()*80,12);}
+ var bx=430,bw=320;panel(bx,100,bw,250);txt('Moles in the flask',bx+bw/2,124,{s:18});
+ [['H⁺ left',nH/25,RED],['OH⁻ added',Math.min(v,40)/40*1.6/1,BLUE]].forEach(function(r,k){});
+ var y1=170;txt('H⁺ from the acid (left)',bx+20,y1,{s:15,a:'left'});rr(bx+20,y1+12,280,22,8);ctx.fillStyle='#eef2f8';ctx.fill();rr(bx+20,y1+12,280*nH/25,22,8);ctx.fillStyle=RED;ctx.fill();
+ var y2=240;txt('OH⁻ added from the burette',bx+20,y2,{s:15,a:'left'});rr(bx+20,y2+12,280,22,8);ctx.fillStyle='#eef2f8';ctx.fill();rr(bx+20,y2+12,280*Math.min(v,40)/40,22,8);ctx.fillStyle=BLUE;ctx.fill();seg(bx+20+280*25/40,y2+6,bx+20+280*25/40,y2+40,INK,2,[4,3]);
+ txt('mL of NaOH added: '+v.toFixed(1),bx+bw/2,318,{s:20,c:BLUE});
+ var eq=Math.abs(v-Veq)<.05;panel(40,420,720,64);
+ fitTxt(eq?'EQUIVALENCE POINT: moles of OH⁻ added = moles of H⁺ in the acid':(v<Veq?'Still acid left: H⁺ reacts with every OH⁻ that is added':'Past the equivalence point: extra OH⁻ makes the solution basic'),400,442,20,eq?GREEN:INK,600,700);
+ fitTxt('Purpose of titration: use a solution of KNOWN concentration to find the UNKNOWN concentration',400,468,15,MUTED,500,700);}
+var APP=[{n:'Burette',d:'Holds the titrant (known solution). Read the volume added to ±0.05 mL; the 0 mark is at the top.',x:205,y:40,w:40,h:270},
+ {n:'Stand and clamp',d:'Holds the burette upright and steady.',x:110,y:40,w:80,h:410},
+ {n:'Conical flask',d:'Holds the measured volume of the unknown. Its shape lets you swirl without spilling.',x:160,y:330,w:130,h:110},
+ {n:'White tile',d:'Under the flask so the colour change is easy to see.',x:130,y:440,w:190,h:24},
+ {n:'Pipette and filler',d:'Measures exactly 25.00 mL of the unknown into the flask. Never pipette by mouth.',x:330,y:110,w:200,h:60},
+ {n:'Funnel',d:'Used only to fill the burette, then removed before the titration.',x:340,y:220,w:70,h:80},
+ {n:'Indicator',d:'2–3 drops change colour at the end point (e.g. phenolphthalein: colourless → pink).',x:430,y:210,w:70,h:100},
+ {n:'Beaker',d:'Holds the titrant before you pour it into the burette.',x:330,y:340,w:110,h:100}];
+var AP={pick:-1,seen:{}};
+function burette(x,top,bot,level,col){rr(x-10,top,20,bot-top,4);ctx.fillStyle='#f7fafd';ctx.fill();if(level!=null){ctx.fillStyle=rgb(col||[200,220,245],.85);ctx.fillRect(x-8,level,16,bot-level);}rr(x-10,top,20,bot-top,4);ctx.strokeStyle='#7f8ea6';ctx.lineWidth=2.5;ctx.stroke();
+ for(var k=0;k<=10;k++){var yy=top+10+(bot-top-20)*k/10;seg(x-10,yy,x-2,yy,'#7f8ea6',1.5);}
+ rr(x-12,bot,24,10,3);ctx.fillStyle='#7f8ea6';ctx.fill();rr(x+8,bot+2,16,6,2);ctx.fillStyle='#e8962a';ctx.fill();seg(x,bot+10,x,bot+30,'#7f8ea6',4);}
+function apFrame(){clear();
+ seg(150,40,150,450,'#8a94a8',8);rr(100,448,190,14,4);ctx.fillStyle='#8a94a8';ctx.fill();seg(150,120,205,120,'#8a94a8',6);rr(194,110,22,20,4);ctx.fillStyle='#6b7385';ctx.fill();
+ burette(225,50,300,90,[200,220,245]);
+ rr(130,440,190,22,4);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=2;ctx.stroke();
+ flask(225,440,.95,40,null);
+ /* pipette */
+ seg(345,140,520,140,'#7f8ea6',4);ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(430,140,26,11,0,0,7);ctx.stroke();seg(468,134,468,146,RED,2);ctx.fillStyle='#d8434a';rr(500,128,34,24,10);ctx.fill();txt('25.00 mL',430,118,{s:12,c:MUTED,w:500});
+ /* funnel */
+ ctx.strokeStyle='#7f8ea6';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(345,232);ctx.lineTo(405,232);ctx.lineTo(380,265);ctx.lineTo(380,295);ctx.moveTo(370,295);ctx.lineTo(370,265);ctx.lineTo(345,232);ctx.stroke();
+ /* indicator bottle */
+ rr(442,240,46,64,8);ctx.fillStyle='#f3e9f7';ctx.fill();ctx.strokeStyle='#7f8ea6';ctx.stroke();rr(452,222,26,20,4);ctx.fillStyle='#3b3550';ctx.fill();txt('ind.',465,276,{s:13,c:PLUM});
+ beaker(385,440,100,90,55,[200,220,245],.85);txt('NaOH',385,415,{s:13,c:BLUE});
+ APP.forEach(function(a,i){if(AP.seen[i]||AP.pick===i){ctx.strokeStyle=AP.pick===i?ORANGE:'rgba(46,158,91,.6)';ctx.lineWidth=AP.pick===i?3.5:2;ctx.setLineDash(AP.pick===i?[]:[5,4]);rr(a.x,a.y,a.w,a.h,10);ctx.stroke();ctx.setLineDash([]);}});
+ panel(560,30,220,440);var c=Object.keys(AP.seen).length;txt('Click each piece',670,60,{s:18});txt(c+' of '+APP.length+' found',670,86,{s:15,c:MUTED,w:500});
+ if(AP.pick>=0){var a=APP[AP.pick];txt(a.n,670,130,{s:22,c:ORANGE});wrapTxt(a.d,670,170,190,24,17);}
+ else wrapTxt('Click on the apparatus in the picture to learn its name and job.',670,170,190,24,17);}
+function wrapTxt(s,x,y,w,lh,size){var words=s.split(' '),line='',yy=y;words.forEach(function(wd){var t=line?line+' '+wd:wd;if(tw(t,size)>w&&line){txt(line,x,yy,{s:size,w:500});line=wd;yy+=lh;}else line=t;});if(line)txt(line,x,yy,{s:size,w:500});}
+var PROC=['Rinse the burette with a little NaOH, then fill it using a funnel; remove the funnel','Record the initial burette reading (eye level, bottom of the meniscus)','Use a pipette to put 25.00 mL of the unknown acid into a conical flask','Add 2–3 drops of indicator to the flask','Put the flask on a white tile under the burette','Open the tap and add NaOH while swirling the flask','Near the end point, add the NaOH drop by drop until the colour change stays','Record the final reading: volume used = final − initial; repeat for close results'];
+var PR={done:[],order:null,wrong:-1};
+function prShow(){if(!PR.order)PR.order=shuffle(PROC.map(function(_,i){return i;}));var left=PR.order.filter(function(i){return PR.done.indexOf(i)<0;});
+ $('panel').innerHTML=(left.length?'<div class="small">Click the <b>next</b> step:</div><div class="opts one">'+left.map(function(i){return '<button class="qb'+(PR.wrong===i?' wrong':'')+'" data-p="'+i+'"><span>'+PROC[i]+'</span></button>';}).join('')+'</div>':'<div class="fb ok"><b>All 8 steps in order!</b> Now try it yourself in the next tab.</div>')+'<div class="stepbar"><button class="btn" id="prR">Start again</button></div>';
+ each('[data-p]',function(b){b.onclick=function(){var i=+b.getAttribute('data-p');if(i===PR.done.length){PR.done.push(i);PR.wrong=-1;SFX.good();if(PR.done.length===PROC.length){burst($('panel'),40);renderSteps();}}else{PR.wrong=i;SFX.bad();}prShow();};});
+ $('prR').onclick=function(){PR.done=[];PR.order=null;PR.wrong=-1;prShow();renderSteps();};}
+function prFrame(){clear();txt('Titration procedure',400,34,{s:24});PROC.forEach(function(s,i){var y=72+i*50,d=i<PR.done.length;rr(40,y,720,42,12);ctx.fillStyle=d?'#e8f6ee':'#f3f6fb';ctx.fill();ctx.strokeStyle=d?GREEN:LINE;ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle=d?GREEN:LINE;ctx.beginPath();ctx.arc(66,y+21,14,0,7);ctx.fill();txt(String(i+1),66,y+22,{s:16,c:'#fff'});if(d)fitTxt(s,410,y+22,16,INK,500,650);else txt('?',410,y+22,{s:18,c:MUTED});});}
+var TIQ=[{q:'The purpose of a titration is to…',o:['find the unknown concentration of a solution','make a salt','measure the mass of an acid','change the colour of a solution'],a:0,w:'A known solution is used to find an unknown concentration.'},
+ {q:'At the equivalence point…',o:['moles of H⁺ from the acid = moles of OH⁻ from the base','the pH is always 7','the burette is empty','the indicator is added'],a:0,w:'That is the definition; the pH depends on the salt formed.'},
+ {q:'Which piece measures exactly 25.00 mL of the unknown?',o:['a pipette','a beaker','a funnel','a conical flask'],a:0,w:'Pipettes deliver one exact volume.'},
+ {q:'Why add the titrant drop by drop near the end?',o:['One drop can pass the end point','To save the indicator','The burette is blocked','To heat the flask'],a:0,w:'Near the equivalence point the pH jumps with a tiny volume.'}];
+var T2={name:'Titration',c:TEAL,steps:['The purpose','Apparatus','Procedure','Quiz me'],mark:function(i){if(i===2)return PR.done.length===PROC.length?'✓':3;if(i===1)return Object.keys(AP.seen).length===APP.length?'✓':2;return i===3&&TIQ.every(function(M){return M.p!=null;})?'✓':i+1;},
+ title:function(i){return ['Why titrate? To find an unknown concentration','The titration apparatus','Put the procedure in order','Quiz: titration'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">NaOH added <input type="range" id="puV" min="0" max="40" step="0.5" value="'+PU.v+'"><output id="puO">'+PU.v.toFixed(1)+' mL</output></div>';
+   $('puV').oninput=function(){PU.v=+this.value;$('puO').textContent=PU.v.toFixed(1)+' mL';};
+   setQ('We know the base\'s concentration but <b>not</b> the acid\'s. Add NaOH with the slider. <b>Predict:</b> at what point have we added exactly enough base?');
+   setRule(['<b>Titration</b>: react a known volume of the unknown with a solution of <b>known</b> concentration (the <b>titrant</b>)','<b>Equivalence point</b>: moles of OH⁻ added = moles of H⁺ in the acid','The volume needed tells us the unknown concentration']);}
+  else if(i===1){setQ('Click each piece of apparatus to learn its name and job.');setRule(['Burette: titrant · pipette: exact volume of unknown','Conical flask on a white tile · a few drops of indicator','The funnel is removed before you start']);}
+  else if(i===2){prShow();setQ('Put the steps of a titration in the right order.');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
+  else{$('readcard').style.display='none';seqPanel(TIQ);setQ('Think about the job of each step.','Explain');setRule(['Titration finds an unknown concentration','Equivalence: mol H⁺ = mol OH⁻']);}},
+ click:function(x,y){if(stepI!==1)return;for(var i=0;i<APP.length;i++){var a=APP[i];if(x>=a.x&&x<=a.x+a.w&&y>=a.y&&y<=a.y+a.h&&!(i===1&&x>190)){AP.pick=i;if(!AP.seen[i]){AP.seen[i]=1;tone(660,0,.07);if(Object.keys(AP.seen).length===APP.length){SFX.good();renderSteps();}}return;}}},
+ frame:function(dt){T+=dt;if(stepI===0){puFrame();setReads([['NaOH added',PU.v.toFixed(1)+' mL'],['Equivalence at','25.0 mL'],['Flask is',PU.v<24.95?'acidic':(PU.v<=25.05?'neutral':'basic'),1]]);}
+  else if(stepI===1){apFrame();setReads([['Found',Object.keys(AP.seen).length+' of '+APP.length]]);}else if(stepI===2){prFrame();setReads([['Steps in order',PR.done.length+' of 8']]);}else puFrame();}};
+
+/* ================= Tab 3: do the titration ================= */
+var TT={};
+function ttNew(){TT.Ca=Math.round((0.0800+Math.random()*0.0600)*10000)/10000;TT.Va=25.00;TT.Cb=0.1000;TT.Veq=TT.Ca*TT.Va/TT.Cb;TT.r0=Math.round((0.20+Math.random()*1.2)*20)/20;TT.v=0;TT.pour=false;TT.drops=[];TT.flash=0;TT.state='go';TT.hist=[[0,ttPH(0)]];TT.msg='';TT.vEnd=null;TT.calc=null;}
+function ttPH(v){return pHex((TT.Ca*TT.Va-TT.Cb*v)/(TT.Va+v));}
+function ttPink(p){var f=1/(1+Math.pow(10,9.1-p));return clamp(f*.32+Math.max(0,p-10.2)*.32,0,.85);}
+function ttAdd(dv){if(TT.state==='over'&&TT.v>TT.Veq+3)return;var before=TT.v;TT.v=Math.min(48,TT.v+dv);var p=ttPH(TT.v);TT.hist.push([TT.v,p]);
+ var gap=TT.Veq-TT.v;if(gap>0&&gap<3)TT.flash=Math.max(TT.flash,.35+2.2*clamp(1-gap/3,0,1));
+ if(TT.v>TT.Veq+0.10&&TT.state==='go'){TT.state='over';TT.pour=false;SFX.bad();TT.msg='over';ttMsg();}}
+function ttMsg(){var p=$('ttMsg');if(!p)return;var h='';
+ if(TT.msg==='early')h='<div class="fb no"><b>Not yet.</b> The pink disappears when you swirl: there is still acid in the flask. Keep adding, slowly.</div>';
+ else if(TT.msg==='over')h='<div class="fb no"><b>Too far!</b> The flask is dark pink: you passed the end point and added more base than needed. The result would be too high. Press <b>Start again</b> and add drop by drop near the end.</div>';
+ else if(TT.msg==='good')h='<div class="fb ok"><b>Perfect end point!</b> The faint pink stays. Read the final burette reading, then go to <b>Calculate</b>.</div>';
+ p.innerHTML=h;}
+function ttControls(){$('controls').innerHTML='<button class="btn hold" id="ttP">Hold to pour</button><button class="btn fill" id="ttD">Add 1 drop</button><button class="btn" id="ttE">I see the end point</button><button class="btn" id="ttS">Start again</button><button class="btn" id="ttN">New unknown</button><div class="ctl">pH probe '+segHtml('ttG',['Off','On'],TT.graph?1:0)+'</div>';
+ var hb=$('ttP');function dn(e){e.preventDefault();if(TT.state==='good')return;TT.pour=true;hb.classList.add('down');}function up(){TT.pour=false;hb.classList.remove('down');}
+ hb.addEventListener('pointerdown',dn);hb.addEventListener('pointerup',up);hb.addEventListener('pointerleave',up);hb.addEventListener('pointercancel',up);
+ $('ttD').onclick=function(){if(TT.state==='good')return;TT.drops.push({y:0,dv:.05});tone(1200,0,.03,'sine',.06);};
+ $('ttE').onclick=function(){if(TT.state==='over'){TT.msg='over';}else if(TT.v<TT.Veq){TT.msg='early';SFX.bad();}else{TT.msg='good';TT.state='good';TT.vEnd=TT.v;SFX.good();burst($('ttE'),40);renderSteps();}ttMsg();};
+ $('ttS').onclick=function(){var c=TT.Ca,r=TT.r0,g=TT.graph;ttNew();TT.Ca=c;TT.Veq=c*TT.Va/TT.Cb;TT.r0=r;TT.graph=g;TT.hist=[[0,ttPH(0)]];$('panel').innerHTML='<div id="ttMsg"></div>';};
+ $('ttN').onclick=function(){var g=TT.graph;ttNew();TT.graph=g;$('panel').innerHTML='<div id="ttMsg"></div>';};
+ segBind('ttG',function(k){TT.graph=k===1;});}
+function ttFrame(dt){clear();if(TT.Ca==null)ttNew();
+ if(TT.pour&&TT.state!=='good'){ttAdd(dt*1.4);if(Math.random()<.5)TT.drops.push({y:0,dv:0,vis:1});}
+ TT.drops.forEach(function(d){d.y+=dt*260;if(d.y>60&&!d.done){d.done=true;if(d.dv)ttAdd(d.dv);}});TT.drops=TT.drops.filter(function(d){return d.y<70;});
+ TT.flash=Math.max(0,TT.flash-dt);
+ var bx=220,top=40,bot=330,read=TT.r0+TT.v,lvl=top+10+(bot-top-20)*read/50;
+ seg(130,30,130,470,'#8a94a8',8);rr(80,462,200,12,4);ctx.fillStyle='#8a94a8';ctx.fill();seg(130,110,bx-14,110,'#8a94a8',6);
+ burette(bx,top,bot,lvl,[214,230,250]);txt('NaOH 0.1000 mol/L',bx,22,{s:14,c:BLUE});
+ TT.drops.forEach(function(d){ctx.fillStyle='rgba(120,170,230,.9)';ctx.beginPath();ctx.arc(bx,bot+32+d.y,3.5,0,7);ctx.fill();});
+ if(TT.pour){seg(bx,bot+30,bx,bot+92,'rgba(120,170,230,.8)',3);}
+ var p=ttPH(TT.v),pk=ttPink(p);rr(120,456,200,10,3);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=1.5;ctx.stroke();
+ flask(bx,456,1.05,52,[222,40,140],pk);
+ if(TT.flash>0&&TT.state==='go'){ctx.save();flaskPath(bx,456,1.05);ctx.clip();var g=ctx.createRadialGradient(bx,404,4,bx,420,60);g.addColorStop(0,'rgba(222,40,140,'+(Math.min(.6,TT.flash*.5))+')');g.addColorStop(1,'rgba(222,40,140,0)');ctx.fillStyle=g;ctx.fillRect(bx-80,380,160,80);ctx.restore();}
+ txt('25.00 mL HCl + phenolphthalein',bx,476+10,{s:13,c:MUTED,w:500});
+ /* zoomed burette scale */
+ var zx=330,zy=40,zw=150,zh=200;panel(zx,zy,zw,zh);ctx.save();rr(zx+4,zy+4,zw-8,zh-8,10);ctx.clip();var c0=read,ppm=60;
+ ctx.fillStyle='rgba(214,230,250,.95)';ctx.fillRect(zx+40,zy+zh/2,70,zh);ctx.strokeStyle='#5a6780';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(zx+40,zy+zh/2-2);ctx.quadraticCurveTo(zx+75,zy+zh/2+12,zx+110,zy+zh/2-2);ctx.stroke();
+ for(var t=Math.floor((c0-1.8)*10);t<=Math.ceil((c0+1.8)*10);t++){if(t<0)continue;var yy=zy+zh/2+(t/10-c0)*ppm,mj=t%10===0;seg(zx+40,yy,zx+40+(mj?34:(t%5===0?24:14)),yy,INK,mj?2.5:1.3);if(mj)txt(String(t/10),zx+20,yy,{s:16});}
+ seg(zx+40,zy,zx+40,zy+zh,'#7f8ea6',2);seg(zx+110,zy,zx+110,zy+zh,'#7f8ea6',2);ctx.restore();txt('burette close-up',zx+zw/2,zy+zh+18,{s:13,c:MUTED,w:500});
+ /* graph or notes */
+ var gx=510,gy=40,gw=260,gh=200;
+ if(TT.graph){panel(gx-10,gy-10,gw+20,gh+50);seg(gx+20,gy+gh,gx+gw,gy+gh,INK,2);seg(gx+20,gy,gx+20,gy+gh,INK,2);txt('pH',gx+2,gy-2,{s:13});[0,7,14].forEach(function(q){txt(String(q),gx+8,gy+gh-gh*q/14,{s:12,c:MUTED});});[0,25,50].forEach(function(q){txt(String(q),gx+20+(gw-20)*q/50,gy+gh+12,{s:12,c:MUTED});});txt('mL NaOH',gx+gw-30,gy+gh+28,{s:13});
+  [7].forEach(function(q){seg(gx+20,gy+gh-gh*q/14,gx+gw,gy+gh-gh*q/14,LINE,1,[4,4]);});ctx.strokeStyle=PLUM;ctx.lineWidth=3;ctx.beginPath();TT.hist.forEach(function(h,k){var x=gx+20+(gw-20)*h[0]/50,y=gy+gh-gh*clamp(h[1],0,14)/14;if(!k)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();txt('pH = '+f2(p),gx+70,gy+14,{s:16,c:PLUM});}
+ else{panel(gx-10,gy-10,gw+20,gh+50);wrapTxt('Watch the flask: phenolphthalein is colourless in acid and turns pink in base.',gx+gw/2,gy+24,gw-10,24,16);wrapTxt('Pour fast at first. When the pink flashes last longer, use single drops.',gx+gw/2,gy+130,gw-10,24,16);}
+ panel(330,300,450,186);txt('Your readings',555,326,{s:18});txt('Initial reading: '+TT.r0.toFixed(2)+' mL',555,362,{s:20,c:INK});
+ txt(TT.state==='good'?'Final reading: read the close-up':'Final reading: ?',555,398,{s:18,c:TT.state==='good'?GREEN:MUTED});
+ txt(TT.state==='over'?'Passed the end point: start again':(TT.state==='good'?'End point reached: go to Calculate':(TT.Veq-TT.v<1.5&&TT.v>TT.Veq-3?'Close! Drop by drop now':'Keep adding and swirling')),555,440,{s:18,c:TT.state==='over'?RED:(TT.state==='good'?GREEN:(TT.Veq-TT.v<1.5?ORANGE:MUTED))});
+ setReads([['Initial reading',TT.r0.toFixed(2)+' mL'],['Flask colour',pk<.04?'colourless':(pk<.4?'faint pink':'dark pink')],['Status',TT.state==='go'?'titrating':(TT.state==='good'?'end point ✓':'overshot'),1]]);}
+/* calculate from the student's own titration */
+function tcShow(){if(TT.state!=='good'){$('panel').innerHTML='<div class="fb no">First finish a titration with a <b>perfect end point</b> in step 1.</div>';return;}
+ var fin=Math.round((TT.r0+TT.vEnd)*100)/100,V=Math.round(TT.vEnd*100)/100,mol=TT.Cb*V/1000,M=mol/(TT.Va/1000);
+ var F=[{lab:'Final reading =',want:fin,unit:'mL',tol:.004,why:'Read the close-up at the bottom of the meniscus.'},{lab:'Volume of NaOH used = final − initial =',want:V,unit:'mL',tol:.004,why:'Final reading − initial reading.'},
+  {lab:'mol NaOH = M × V =',want:mol,unit:'mol',ex:1,tol:.012,why:'0.1000 mol/L × volume in litres (mL ÷ 1000).'},{lab:'mol HCl (ratio 1 : 1) =',want:mol,unit:'mol',ex:1,tol:.012,why:'HCl + NaOH → NaCl + H₂O: same number of moles.'},{lab:'[HCl] = mol ÷ 0.02500 L =',want:M,unit:'mol/L',tol:.012,why:'Divide the moles of HCl by 0.02500 L.'}];
+ $('panel').innerHTML='<div class="task">Initial reading <b>'+TT.r0.toFixed(2)+' mL</b> · HCl volume <b>25.00 mL</b> · NaOH <b>0.1000 mol/L</b></div>'+F.map(function(f,k){return fieldHtml(f,k,'tc');}).join('')+'<div class="stepbar"><button class="btn fill" id="tcC">Check</button></div><div id="tcF"></div>';
+ $('tcC').onclick=function(){var errs=F.map(function(f,k){return fieldCheck(f,k,'tc');}),bad=errs.filter(Boolean);
+  if(!bad.length){SFX.good();burst($('tcC'),40);var err=Math.abs(M-TT.Ca)/TT.Ca*100;$('tcF').innerHTML='<div class="fb ok"><b>Correct!</b> Your [HCl] = '+M.toPrecision(4)+' mol/L. The teacher\'s bottle was '+TT.Ca.toFixed(4)+' mol/L: you were '+(err<.5?'spot on':err.toFixed(1)+'% off (one drop too many)')+'.</div>';TT.calc=true;renderSteps();}
+  else{SFX.bad();$('tcF').innerHTML='<div class="fb no"><b>Check the red boxes.</b><ul>'+errs.map(function(e,k){return e?'<li>'+F[k].lab.replace(/ =$/,'')+': '+e+'</li>':'';}).join('')+'</ul></div>';}};}
+var T3={name:'Try a titration',c:CORAL,calc:function(i){return i===1;},steps:['Titrate','Calculate'],mark:function(i){if(i===0)return TT.state==='good'?'✓':1;return TT.calc?'✓':2;},
+ title:function(i){return ['Your turn: titrate the unknown HCl','Calculate the unknown concentration'][i];},
+ enter:function(i){if(TT.Ca==null)ttNew();if(i===0){ttControls();$('panel').innerHTML='<div id="ttMsg"></div>';ttMsg();
+   setQ('Find the end point: the <b>first faint pink that stays</b>. Hold the pour button at first, then add <b>single drops</b> near the end. If the flask turns dark pink, you went too far.');
+   setRule(['Pour quickly at first; near the end the pink flashes last longer','Then add <b>drop by drop</b>: one drop can turn the flask pink','<b>End point</b> = the indicator changes colour; it should match the equivalence point','Too much base: dark pink, a wrong (too large) volume']);}
+  else{tcShow();setQ('Use your own readings. Volume used = final − initial, then moles of NaOH → moles of HCl → concentration.');setRule(['mol NaOH = M<sub>B</sub> × V<sub>B</sub> (V in litres)','HCl : NaOH = 1 : 1','M<sub>A</sub> = mol HCl ÷ V<sub>A</sub>']);}},
+ frame:function(dt){T+=dt;ttFrame(stepI===0?dt:0);}};
+
+/* ================= Tab 4: choosing an indicator ================= */
+var IND=[{n:'Methyl orange',lo:3.1,hi:4.4,a:[214,48,49],b:[240,200,40]},{n:'Methyl red',lo:4.4,hi:6.2,a:[214,40,60],b:[240,205,40]},{n:'Bromthymol blue',lo:6.0,hi:7.6,a:[235,205,40],b:[40,90,200]},{n:'Phenolphthalein',lo:8.2,hi:10.0,a:[246,246,250],b:[220,40,150]}];
+var TIT=[{n:'Strong acid + strong base',d:'HCl titrated with NaOH',eq:7.00,steep:[3.7,10.3],best:[1,2,3],
+  ph:function(v){return pHex((0.1*25-0.1*v)/(25+v));}},
+ {n:'Weak acid + strong base',d:'CH₃COOH titrated with NaOH',eq:8.72,steep:[7.1,10.3],best:[3],
+  ph:function(v){var Ka=1.8e-5,Vt=25+v,Na=0.1*v/Vt,CT=0.1*25/Vt;return solvePH(function(H,OH){return H+Na-OH-CT*Ka/(Ka+H);});}},
+ {n:'Strong acid + weak base',d:'NH₃ titrated with HCl',eq:5.28,steep:[3.7,6.85],best:[1],
+  ph:function(v){var Ka=5.6e-10,Vt=25+v,Cl=0.1*v/Vt,CB=0.1*25/Vt;return solvePH(function(H,OH){return H+CB*H/(H+Ka)-OH-Cl;});}}];
+TIT.forEach(function(t){t.pts=[];for(var v=0;v<=50.001;v+=v<22||v>28?0.5:0.05)t.pts.push([v,t.ph(v)]);});
+var IC={t:0,ind:2,pick:[-1,-1,-1]};
+function icFrame(){clear();var t=TIT[IC.t],I=IND[IC.ind],gx=80,gy=40,gw=440,gh=360;
+ panel(gx-50,gy-20,gw+70,gh+80);seg(gx,gy+gh,gx+gw,gy+gh,INK,2);seg(gx,gy,gx,gy+gh,INK,2);
+ for(var q=0;q<=14;q+=2){var y=gy+gh-gh*q/14;seg(gx-6,y,gx,y,INK,2);txt(String(q),gx-20,y,{s:14,c:MUTED});}
+ for(var v=0;v<=50;v+=10){var x=gx+gw*v/50;seg(x,gy+gh,x,gy+gh+6,INK,2);txt(String(v),x,gy+gh+20,{s:14,c:MUTED});}
+ txt('pH',gx-38,gy+6,{s:15});txt('volume of titrant added (mL)',gx+gw/2,gy+gh+44,{s:15,c:MUTED,w:500});
+ var y0=gy+gh-gh*I.hi/14,y1=gy+gh-gh*I.lo/14,g=ctx.createLinearGradient(0,y1,0,y0);g.addColorStop(0,rgb(I.a,.55));g.addColorStop(1,rgb(I.b,.55));ctx.fillStyle=g;ctx.fillRect(gx+1,y0,gw,y1-y0);
+ txt(I.n+' changes here ('+I.lo+'–'+I.hi+')',gx+10,y0-12,{s:14,a:'left'});
+ var s0=gy+gh-gh*t.steep[1]/14,s1=gy+gh-gh*t.steep[0]/14;ctx.strokeStyle='rgba(24,35,58,.5)';ctx.setLineDash([5,5]);ctx.lineWidth=2;ctx.strokeRect(gx+gw*24.5/50,s0,gw*1/50,s1-s0);ctx.setLineDash([]);
+ ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();t.pts.forEach(function(p,k){var x=gx+gw*p[0]/50,y=gy+gh-gh*clamp(p[1],0,14)/14;if(!k)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();
+ var ex=gx+gw*25/50,ey=gy+gh-gh*t.eq/14;dotc(ex,ey,9,RED);txt('equivalence point, pH '+t.eq.toFixed(2),ex+16,ey+(t.eq>7?26:-22),{s:15,c:RED,a:'left'});
+ var ok=I.lo>=t.steep[0]&&I.hi<=t.steep[1];
+ panel(570,20,210,440);txt(t.n,675,52,{s:16});txt(t.d,675,76,{s:14,c:MUTED,w:500});txt('Steep part:',675,120,{s:16,c:MUTED,w:500});txt('pH '+t.steep[0]+' to '+t.steep[1],675,146,{s:20});
+ txt('Indicator range:',675,196,{s:16,c:MUTED,w:500});txt('pH '+I.lo+' to '+I.hi,675,222,{s:20});
+ rr(600,250,150,50,12);var gg=ctx.createLinearGradient(600,0,750,0);gg.addColorStop(0,rgb(I.a));gg.addColorStop(1,rgb(I.b));ctx.fillStyle=gg;ctx.fill();ctx.strokeStyle=LINE;ctx.stroke();txt('acid colour → base colour',675,318,{s:13,c:MUTED,w:500});
+ pill(ok?'✓ good choice':'✗ changes outside the jump',675,370,ok?GREEN:RED,'#fff',15);
+ wrapTxt(ok?'The whole colour change happens inside the steep jump, right at the equivalence point.':'The colour would change before or after the equivalence point.',675,410,180,20,14);}
+function icPick(){var t=IC.t;$('panel').innerHTML='<div class="task">Choose the best indicator for: <b>'+TIT[t].n+'</b> ('+TIT[t].d+')</div><div class="opts">'+IND.map(function(I,k){var p=IC.pick[t],cls=p<0?'':(TIT[t].best.indexOf(k)>=0&&p===k?' right':(p===k?' wrong':''));return '<button class="qb'+cls+'" data-k="'+k+'"><span class="L">'+'ABCD'.charAt(k)+'</span><span>'+I.n+' (pH '+I.lo+'–'+I.hi+')</span></button>';}).join('')+'</div><div id="icF"></div>';
+ each('[data-k]',function(b){b.onclick=function(){var k=+b.getAttribute('data-k');IC.pick[t]=k;IC.ind=k;var ok=TIT[t].best.indexOf(k)>=0;if(ok)SFX.good();else SFX.bad();icPick();
+  $('icF').innerHTML='<div class="fb '+(ok?'ok':'no')+'">'+(ok?'<b>Yes!</b> Its range ('+IND[k].lo+'–'+IND[k].hi+') sits inside the steep part (pH '+TIT[t].steep[0]+'–'+TIT[t].steep[1]+').'+(t===0?' Bromthymol blue changes right at pH 7.':''):'<b>Not this one.</b> Its range ('+IND[k].lo+'–'+IND[k].hi+') is not inside the steep part (pH '+TIT[t].steep[0]+'–'+TIT[t].steep[1]+'). Try again.')+'</div>';};});}
+var ICQ=[{q:'For a weak acid titrated with a strong base (equivalence pH 8.7), the best indicator is…',o:['phenolphthalein (8.2–10.0)','methyl orange (3.1–4.4)','methyl red (4.4–6.2)','bromthymol blue (6.0–7.6)'],a:0,w:'Its range sits inside the steep part around pH 8.7.'},
+ {q:'The end point is…',o:['when the indicator changes colour','when mol H⁺ = mol OH⁻','when the burette is empty','always at pH 7'],a:0,w:'The equivalence point is mol H⁺ = mol OH⁻; a good indicator makes them match.'},
+ {q:'Why is the equivalence point of NH₃ + HCl below pH 7?',o:['The salt NH₄Cl is acidic','HCl is weak','NH₃ is a strong base','There is extra NaOH'],a:0,w:'NH₄⁺ gives H₃O⁺ to water (salt hydrolysis, tab 7).'}];
+var T4={name:'Indicators',c:AMBER,steps:['Titration curves','Choose the indicator','Quiz me'],
+ title:function(i){return ['Titration curves and indicator ranges','Pick the right indicator','Quiz: indicators'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">'+segHtml('icT',TIT.map(function(t){return t.n;}),IC.t)+'</div><div class="ctl">Indicator '+segHtml('icI',IND.map(function(I){return I.n;}),IC.ind)+'</div>';segBind('icT',function(k){IC.t=k;});segBind('icI',function(k){IC.ind=k;});
+   setQ('Each curve has a <b>steep jump</b> around the equivalence point. Try each indicator on each curve. <b>Which indicators change colour inside the jump?</b>');
+   setRule(['The equivalence point is <b>not always pH 7</b>: strong + strong 7 · weak acid + strong base above 7 · strong acid + weak base below 7','Choose an indicator whose colour-change range lies <b>inside the steep part</b>, around the equivalence pH','Then the <b>end point</b> (colour change) = the <b>equivalence point</b>']);}
+  else if(i===1){$('controls').innerHTML='<div class="ctl">'+segHtml('icT2',TIT.map(function(t){return t.n;}),IC.t)+'</div>';segBind('icT2',function(k){IC.t=k;IC.ind=IC.pick[k]>=0?IC.pick[k]:IC.ind;icPick();});icPick();
+   setQ('For each titration, choose the indicator whose colour change sits inside the steep jump.');setRule(['Strong + strong: bromthymol blue (also methyl red or phenolphthalein)','Weak acid + strong base: phenolphthalein','Strong acid + weak base: methyl red']);}
+  else{$('readcard').style.display='none';seqPanel(ICQ);setQ('Match the indicator range to the equivalence pH.','Explain');setRule(['Indicator range inside the steep jump','End point = equivalence point']);}},
+ frame:function(){icFrame();var t=TIT[IC.t];setReads([['Titration',t.n,1],['Equivalence pH',t.eq.toFixed(2)],['Indicator',IND[IC.ind].n]]);}};
+
+/* ================= Tab 5: titration calculations ================= */
+var RE={k:0};
+var REF=[{n:'M<sub>A</sub> (find the acid)',t:['M','A','=','M','B','×','V','B','×','ratio','÷','V','A']},{n:'V<sub>B</sub> (find the volume)',t:['V','B','=','M','A','×','V','A','÷','(','M','B','×','ratio',')']},{n:'M<sub>B</sub> (find the base)',t:['M','B','=','M','A','×','V','A','÷','(','V','B','×','ratio',')']}];
+function richTxt(s,x,y,size,col){var parts=s.split(/([A-Za-z]+_[A-Za-z]+)/),W=0,sub=Math.round(size*.62);function wd(p){if(/_/.test(p)){var q=p.split('_');return tw(q[0],size)+tw(q[1],sub)+2;}return tw(p,size);}parts.forEach(function(p){W+=wd(p);});var cx=x-W/2;parts.forEach(function(p){if(!p)return;if(/_/.test(p)){var q=p.split('_');txt(q[0],cx,y,{s:size,c:col,a:'left'});var w0=tw(q[0],size);txt(q[1],cx+w0+1,y+size*.3,{s:sub,c:col,a:'left'});}else txt(p,cx,y,{s:size,c:col,a:'left'});cx+=wd(p);});}
+function keFrame(){clear();txt('Molarity from titration data',400,32,{s:24});
+ var bx=[40,290,540];[['① moles of base','mol B = M_B × V_B',BLUE],['② mole ratio','from the balanced equation',PLUM],['③ molarity of acid','M_A = mol A ÷ V_A',RED]].forEach(function(b,i){rr(bx[i],60,220,110,16);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=b[2];ctx.lineWidth=3;ctx.stroke();txt(b[0],bx[i]+110,88,{s:18,c:b[2]});richTxt(b[1],bx[i]+110,128,i===1?16:20,INK);if(i<2)arrow(bx[i]+225,115,bx[i]+246,115,MUTED,3);});
+ txt('M = molarity (mol/L) · V = volume in litres (mL ÷ 1000) · ratio = mol acid per mol base',400,196,{s:15,c:MUTED,w:500});
+ txt('Put it together and rearrange:',400,240,{s:18});
+ var R=[['M_A','=','M_B × V_B × ratio','÷','V_A'],['V_B','=','M_A × V_A','÷','(M_B × ratio)'],['M_B','=','M_A × V_A','÷','(V_B × ratio)']][RE.k];
+ rr(110,262,580,120,18);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=3;ctx.stroke();
+ richTxt(R[0],210,322,42,[RED,BLUE,BLUE][RE.k]);txt('=',270,322,{s:40});richTxt(R[2],470,296,32,INK);seg(300,322,640,322,INK,3);richTxt(R[4],470,350,32,INK);
+ txt('ratio: HCl + NaOH 1 : 1 → ratio = 1 · H₂SO₄ + 2NaOH → 1 mol acid per 2 mol base → ratio = ½',400,410,{s:15,c:PLUM});
+ panel(60,426,680,64);fitTxt('Quick example: 10.00 mL of 0.100 M NaOH neutralizes 20.00 mL of HCl (1 : 1)',400,446,17,INK,600,660);fitTxt('(0.100 mol/L)(0.01000 L) = 1.00 × 10⁻³ mol  →  1.00 × 10⁻³ mol ÷ 0.02000 L = 0.0500 mol/L',400,472,17,BLUE,600,660);}
+/* worked practice problems: knowns first, then step by step */
+var PB=[{name:'Methanoic acid',text:'18.28 mL of a standard solution of 0.1000 M NaOH neutralizes 25.00 mL of methanoic acid (HCOOH). What is the molarity of the acid?',eq:'HCOOH + NaOH → HCOONa + H₂O (1 : 1)',
+  steps:[{h:'Identify the knowns',f:[{lab:'V<sub>B</sub> =',want:18.28,unit:'mL'},{lab:'M<sub>B</sub> =',want:0.1000,unit:'mol/L'},{lab:'V<sub>A</sub> =',want:25.00,unit:'mL'}]},
+   {h:'Change the volumes to litres (÷ 1000)',f:[{lab:'V<sub>B</sub> =',want:0.01828,unit:'L',why:'18.28 mL ÷ 1000'},{lab:'V<sub>A</sub> =',want:0.02500,unit:'L',why:'25.00 mL ÷ 1000'}]},
+   {h:'Moles of NaOH = M<sub>B</sub> × V<sub>B</sub>',f:[{lab:'mol NaOH =',want:1.828e-3,unit:'mol',ex:1}]},
+   {h:'Mole ratio 1 : 1 → moles of HCOOH',f:[{lab:'mol HCOOH =',want:1.828e-3,unit:'mol',ex:1}]},
+   {h:'M<sub>A</sub> = mol HCOOH ÷ V<sub>A</sub>',f:[{lab:'M<sub>A</sub> =',want:7.312e-2,unit:'mol/L',ex:1}]}]},
+ {name:'Sulfuric acid',text:'32.40 mL of 0.1000 M NaOH neutralizes 25.00 mL of sulfuric acid (H₂SO₄). What is the molarity of the acid?',eq:'H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O (1 mol acid : 2 mol base)',
+  steps:[{h:'Identify the knowns',f:[{lab:'V<sub>B</sub> =',want:32.40,unit:'mL'},{lab:'M<sub>B</sub> =',want:0.1000,unit:'mol/L'},{lab:'V<sub>A</sub> =',want:25.00,unit:'mL'}]},
+   {h:'Change the volumes to litres (÷ 1000)',f:[{lab:'V<sub>B</sub> =',want:0.03240,unit:'L'},{lab:'V<sub>A</sub> =',want:0.02500,unit:'L'}]},
+   {h:'Moles of NaOH = M<sub>B</sub> × V<sub>B</sub>',f:[{lab:'mol NaOH =',want:3.240e-3,unit:'mol',ex:1}]},
+   {h:'Mole ratio: 1 mol H₂SO₄ for every 2 mol NaOH (÷ 2)',f:[{lab:'mol H₂SO₄ =',want:1.620e-3,unit:'mol',ex:1,alt:[[3.240e-3,'Use the ratio: divide the moles of NaOH by 2.']]}]},
+   {h:'M<sub>A</sub> = mol H₂SO₄ ÷ V<sub>A</sub>',f:[{lab:'M<sub>A</sub> =',want:6.480e-2,unit:'mol/L',ex:1,alt:[[0.1296,'You forgot the 1 : 2 ratio.']]}]}]},
+ {name:'Find the volume',text:'What volume of 0.1500 M NaOH is needed to neutralize 20.00 mL of 0.1200 M HCl?',eq:'HCl + NaOH → NaCl + H₂O (1 : 1)',
+  steps:[{h:'Identify the knowns',f:[{lab:'M<sub>B</sub> =',want:0.1500,unit:'mol/L'},{lab:'M<sub>A</sub> =',want:0.1200,unit:'mol/L'},{lab:'V<sub>A</sub> =',want:20.00,unit:'mL'}]},
+   {h:'Moles of HCl = M<sub>A</sub> × V<sub>A</sub> (V in litres)',f:[{lab:'mol HCl =',want:2.400e-3,unit:'mol',ex:1,alt:[[2.4,'Change 20.00 mL to litres first.']]}]},
+   {h:'Mole ratio 1 : 1 → moles of NaOH',f:[{lab:'mol NaOH =',want:2.400e-3,unit:'mol',ex:1}]},
+   {h:'Rearrange: V<sub>B</sub> = mol NaOH ÷ M<sub>B</sub>',f:[{lab:'V<sub>B</sub> =',want:0.01600,unit:'L'}]},
+   {h:'Change to millilitres (× 1000)',f:[{lab:'V<sub>B</sub> =',want:16.00,unit:'mL'}]}]}];
+var PBS=PB.map(function(){return {k:0,done:false};});
+function pbShow(n){var P=PB[n],S=PBS[n],h='<div class="task"><b>Problem '+(n+1)+': '+P.name+'.</b> '+P.text+'<div class="small" style="margin-top:4px">'+P.eq+'</div></div>';
+ P.steps.forEach(function(st,i){if(i>S.k)return;var cur=i===S.k&&!S.done;h+='<div class="st'+(cur?' cur':'')+'"><div class="sh"><span class="n">'+(i+1)+'</span>'+st.h+'</div>'+(cur?st.f.map(function(f,k){return fieldHtml(f,k,'p'+n+'s'+i);}).join('')+'<div class="stepbar"><button class="btn fill" id="pbC">Check</button><button class="btn" id="pbH">Hint</button></div><div class="hintbox" id="pbHB">'+(st.f[0].why||'Use the values from the question and the step above.')+'</div><div id="pbF"></div>':'<div class="ln">'+st.f.map(function(f){return f.lab+' <span class="ansb">'+(f.ex?sciT(f.want,3):f.want.toPrecision(4))+' '+f.unit+'</span>';}).join(' &nbsp; ')+'</div>')+'</div>';});
+ if(S.done)h+='<div class="fb ok"><b>Solved!</b> '+(n<PB.length-1?'Go on to Problem '+(n+2)+'.':'Great work: you can find M<sub>A</sub>, M<sub>B</sub> or V<sub>B</sub>.')+'</div>';
+ $('panel').innerHTML=h+'<div class="stepbar"><button class="btn" id="pbR">Start again</button></div>';
+ var c=$('pbC');if(c){c.onclick=function(){var st=P.steps[S.k],errs=st.f.map(function(f,k){return fieldCheck(f,k,'p'+n+'s'+S.k);}),bad=errs.filter(Boolean);if(!bad.length){SFX.good();if(S.k<P.steps.length-1)S.k++;else{S.done=true;renderSteps();burst($('panel'),40);}pbShow(n);}else{SFX.bad();$('pbF').innerHTML='<div class="fb no">'+bad[0]+'</div>';}};
+  $('pbH').onclick=function(){$('pbHB').classList.toggle('on');};}
+ $('pbR').onclick=function(){S.k=0;S.done=false;renderSteps();pbShow(n);};}
+function pbFrame(n){clear();var P=PB[n],S=PBS[n];txt('Problem '+(n+1)+': '+P.name,400,34,{s:24});
+ var lines=[];var words=P.text.split(' '),line='';words.forEach(function(w){var t=line?line+' '+w:w;if(tw(t,19)>700){lines.push(line);line=w;}else line=t;});lines.push(line);lines.forEach(function(l,i){txt(l,400,76+i*28,{s:19,w:500});});
+ txt(P.eq,400,90+lines.length*28,{s:17,c:PLUM});
+ var y=150+lines.length*28;['① knowns','② litres','③ mol base','④ ratio','⑤ answer'].forEach(function(s,i){var x=90+i*155,d=i<S.k||S.done,c=i===S.k&&!S.done;rr(x-62,y,124,54,14);ctx.fillStyle=d?'#e8f6ee':(c?'#fff4d6':'#f3f6fb');ctx.fill();ctx.strokeStyle=d?GREEN:(c?AMBER:LINE);ctx.lineWidth=2.5;ctx.stroke();txt(n===2?['① knowns','② mol acid','③ ratio','④ V in L','⑤ V in mL'][i]:s,x,y+27,{s:16,c:d?GREEN:INK});});
+ var yy=y+90;P.steps.forEach(function(st,i){if(i>=S.k&&!S.done)return;var line=st.f.map(function(f){return f.lab.replace(/<sub>(.*?)<\/sub>/g,'_$1')+' '+(f.ex?sciT(f.want,3):f.want.toPrecision(4))+' '+f.unit;}).join('     ');richTxt(line,400,yy,20,i===P.steps.length-1?GREEN:INK);yy+=34;});
+ if(!S.done&&S.k===0)txt('Type the answers below the picture, then press Check.',400,yy+6,{s:17,c:MUTED,w:500});}
+var T5={name:'Calculations',c:'#2e7d9e',calc:function(i){return i>0;},steps:['Key equation','Problem 1','Problem 2','Problem 3'],mark:function(i){return i>0&&PBS[i-1].done?'✓':i+1;},
+ title:function(i){return ['Key equation: molarity from titration data','Problem 1: '+PB[0].name,'Problem 2: '+PB[1].name,'Problem 3: '+PB[2].name][i];},
+ enter:function(i){$('readcard').style.display='none';if(i===0){$('controls').innerHTML='<div class="ctl">Rearrange to find '+segHtml('reK',['M<sub>A</sub>','V<sub>B</sub>','M<sub>B</sub>'],RE.k)+'</div>';segBind('reK',function(k){RE.k=k;});
+   setQ('Three steps: moles of base → mole ratio → molarity of acid. Use the buttons to rearrange the formula for the unknown you need.');setRule(['mol B = M<sub>B</sub> × V<sub>B</sub>','Use the <b>mole ratio</b> from the balanced equation','M<sub>A</sub> = mol A ÷ V<sub>A</sub>; volumes in <b>litres</b>']);}
+  else{pbShow(i-1);setQ('Start by writing the knowns from the question. Use the calculator if you need it.');setRule(['Volumes in litres: mL ÷ 1000','mol = M × V','Check the mole ratio (H₂SO₄ : NaOH = 1 : 2)']);}},
+ frame:function(){if(stepI===0)keFrame();else pbFrame(stepI-1);}};
+
+/* ================= Tab 6: salt hydrolysis ================= */
+var SALT=[{f:'NaCl',n:'sodium chloride',a:'HCl (strong)',b:'NaOH (strong)',pH:7.00,ion:null,eq:'No ion reacts with water',type:'neutral'},
+ {f:'KF',n:'potassium fluoride',a:'HF (weak)',b:'KOH (strong)',pH:8.10,ion:'F⁻',eq:'F⁻ + H₂O ⇌ HF + OH⁻',type:'basic'},
+ {f:'CH₃COONa',n:'sodium acetate',a:'CH₃COOH (weak)',b:'NaOH (strong)',pH:8.87,ion:'CH₃COO⁻',eq:'CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻',type:'basic'},
+ {f:'NH₄Cl',n:'ammonium chloride',a:'HCl (strong)',b:'NH₃ (weak)',pH:5.13,ion:'NH₄⁺',eq:'NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺',type:'acidic'},
+ {f:'NaNO₃',n:'sodium nitrate',a:'HNO₃ (strong)',b:'NaOH (strong)',pH:7.00,ion:null,eq:'No ion reacts with water',type:'neutral'}];
+var SH={k:1,tested:{}};
+function btbC(p){return p<=6?[236,206,46]:(p<6.8?mix3([236,206,46],[70,170,80],(p-6)/.8):mix3([70,170,80],[45,95,200],(p-6.8)/.8));}
+function shFrame(){clear();var S=SALT[SH.k];
+ SALT.forEach(function(s,i){var x=95+i*152,t=SH.tested[i],y=380;ctx.save();ctx.beginPath();ctx.moveTo(x-26,150);ctx.lineTo(x-26,y-26);ctx.arc(x,y-26,26,Math.PI,0,true);ctx.lineTo(x+26,150);ctx.clip();ctx.fillStyle=rgb(t?btbC(s.pH):[228,236,246],t?.8:1);ctx.fillRect(x-30,200,60,y);ctx.restore();
+  ctx.strokeStyle=i===SH.k?ORANGE:'#7f8ea6';ctx.lineWidth=i===SH.k?4:3;ctx.beginPath();ctx.moveTo(x-26,150);ctx.lineTo(x-26,y-26);ctx.arc(x,y-26,26,Math.PI,0,true);ctx.lineTo(x+26,150);ctx.stroke();
+  txt(s.f,x,128,{s:20});txt(t?s.type:'?',x,404,{s:16,c:t?(s.type==='acidic'?'#b8860b':(s.type==='basic'?BLUE:GREEN)):MUTED});if(t)txt('pH '+f2(s.pH),x,426,{s:13,c:MUTED,w:500});});
+ txt('0.10 M salt solutions + bromthymol blue (yellow = acidic, green = neutral, blue = basic)',400,30,{s:16,c:MUTED,w:500});
+ panel(40,46,720,62);fitTxt(S.f+' comes from '+S.a+' + '+S.b,400,68,19,INK,600,700);fitTxt(SH.tested[SH.k]?S.eq:'Press "Test" to add the indicator',400,94,18,S.ion?(S.type==='acidic'?'#b8860b':BLUE):GREEN,600,700);
+ panel(40,446,720,40);fitTxt(SH.tested[SH.k]?(S.type==='neutral'?'Strong acid + strong base: neither ion reacts with water → neutral':(S.type==='basic'?'Weak acid + strong base: the anion takes H⁺ from water → OH⁻ forms → basic':'Strong acid + weak base: the cation gives H⁺ to water → H₃O⁺ forms → acidic')):'Predict first: acidic, basic or neutral?',400,466,16,INK,500,700);}
+var SHQ=[{q:'Is a solution of NH₄NO₃ acidic, basic or neutral?',o:['Acidic: NH₄⁺ gives H⁺ to water','Basic: NO₃⁻ takes H⁺','Neutral','Basic: NH₄⁺ makes OH⁻'],a:0,w:'Strong acid (HNO₃) + weak base (NH₃).'},
+ {q:'Potassium sulfate, K₂SO₄, gives a solution that is…',o:['neutral','acidic','basic','impossible to tell'],a:0,w:'Strong acid + strong base.'},
+ {q:'Why is a solution of KF basic?',o:['F⁻ takes H⁺ from water, forming OH⁻','K⁺ gives H⁺ to water','KF is an acid','F⁻ is a spectator ion'],a:0,w:'F⁻ + H₂O ⇌ HF + OH⁻.'}];
+var T6={name:'Salt hydrolysis',c:'#b8860b',steps:['Test the salts','Quiz me'],
+ title:function(i){return ['Salt hydrolysis: not every salt is neutral','Quiz: salt hydrolysis'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">Salt '+segHtml('shK',SALT.map(function(s){return s.f;}),SH.k)+'</div><button class="btn fill" id="shT">Test</button><button class="btn" id="shR">Empty the tubes</button>';
+   segBind('shK',function(k){SH.k=k;});$('shT').onclick=function(){SH.tested[SH.k]=1;tone(620,0,.07);if(Object.keys(SH.tested).length===SALT.length)renderSteps();};$('shR').onclick=function(){SH.tested={};};
+   setQ('A salt forms in every neutralization. <b>Predict:</b> is every salt solution neutral? Look at which acid and base each salt came from, then test it.');
+   setRule(['<b>Salt hydrolysis</b>: an ion of the salt takes H⁺ from water or gives H⁺ to water','Strong acid + strong base → <b>neutral</b> (NaCl, NaNO₃)','Weak acid + strong base → <b>basic</b> (KF, CH₃COONa)','Strong acid + weak base → <b>acidic</b> (NH₄Cl)']);}
+  else{$('readcard').style.display='none';seqPanel(SHQ);setQ('Which parent acid or base is weak?','Explain');setRule(['The "weak" parent decides: weak acid → basic salt; weak base → acidic salt']);}},
+ frame:function(){shFrame();var S=SALT[SH.k],t=SH.tested[SH.k];setReads([['Salt',S.f],['pH',t?f2(S.pH):'?'],['Ion that reacts',t?(S.ion||'none'):'?'],['Solution',t?S.type:'?']]);}};
+
+/* ================= Tab 7: buffers ================= */
+var BUF=[{n:'HF / F⁻',ha:'HF',a:'F⁻',pKa:3.20},{n:'CH₃COOH / CH₃COO⁻',ha:'CH₃COOH',a:'CH₃COO⁻',pKa:4.74},{n:'NH₄⁺ / NH₃',ha:'NH₄⁺',a:'NH₃',pKa:9.25}];
+var BF={k:0,c:0.10,add:0,hist:[]};
+function bfPH(){var B=BUF[BF.k],ha=BF.c+BF.add,a=BF.c-BF.add,Ka=Math.pow(10,-B.pKa);if(a<-1e-9)return pHex(BF.add-BF.c);if(ha<-1e-9)return pHex(BF.add+BF.c);if(a<1e-9){return solvePH(function(H,OH){return H-OH-ha*Ka/(Ka+H);});}if(ha<1e-9){return solvePH(function(H,OH){return H+a*H/(H+Ka)-OH;});}return B.pKa+lg(a/ha);}
+function wPH(){return pHex(BF.add);}
+function bfFrame(){clear();var pw=wPH(),pb=bfPH(),B=BUF[BF.k];
+ [[200,'Pure water (1.0 L)',pw,7.00],[600,'Buffer: '+B.n+' (1.0 L, '+BF.c.toFixed(2)+' M each)',pb,B.pKa]].forEach(function(s,i){beaker(s[0],330,220,220,170,uniC(s[2]),.65);fitTxt(s[1],s[0],34,19,INK,600,360);meter(s[0],60,f2(s[2]),'pH',INK);var d=s[2]-s[3];txt('change: '+(d>=0?'+':'')+d.toFixed(2),s[0],356,{s:20,c:Math.abs(d)>1?RED:GREEN});});
+ if(BF.k>=0){var x=600,y=230;txt(B.ha,x-55,y,{s:22,c:RED});txt(B.a,x+55,y,{s:22,c:BLUE});txt('⇌',x,y,{s:22,c:MUTED});}
+ panel(40,380,720,106);var a=BF.add;
+ fitTxt(a>0?'Added H⁺ is used up by the conjugate base: H⁺ + '+B.a+' → '+B.ha:(a<0?'Added OH⁻ is used up by the weak acid: OH⁻ + '+B.ha+' → '+B.a+' + H₂O':'Add a little acid or base to both beakers and compare'),400,408,19,INK,600,700);
+ fitTxt(Math.abs(a)>=BF.c-1e-9?'The buffer is used up: its capacity is exceeded, so the pH changes a lot':'Water has nothing to react with the added H⁺ or OH⁻, so its pH jumps',400,440,16,Math.abs(a)>=BF.c-1e-9?RED:MUTED,500,700);
+ fitTxt('Added so far: '+(a>0?(a.toFixed(2)+' mol HCl'):(a<0?((-a).toFixed(2)+' mol NaOH'):'nothing')),400,468,15,MUTED,500,700);}
+var BQ2=[{q:'A buffer is…',o:['a solution that resists pH change when a little acid or base is added','a solution with pH exactly 7','a strong acid','any salt solution'],a:0,w:'It contains a weak acid and its conjugate base (or a weak base and its conjugate acid).'},
+ {q:'In an HF / F⁻ buffer, added H⁺ reacts with…',o:['F⁻, forming HF','HF, forming H₂F⁺','water only','OH⁻ from the buffer'],a:0,w:'H⁺ + F⁻ → HF.'},
+ {q:'Which pair would make a buffer with a pH near 9.4?',o:['NH₃ and NH₄Cl','HCl and NaCl','NaOH and NaCl','HF and HCl'],a:0,w:'pKa of NH₄⁺ = 9.25, close to 9.4.'},
+ {q:'Buffer capacity is larger when…',o:['the concentrations of the weak acid and its conjugate base are higher','the solution is diluted','a strong acid is used','the pH is 7'],a:0,w:'More buffer particles can absorb more acid or base.'}];
+var T7={name:'Buffers',c:GREEN,steps:['Add acid or base','Quiz me'],
+ title:function(i){return ['Buffers resist changes in pH','Quiz: buffers'][i];},
+ enter:function(i){if(i===0){$('controls').innerHTML='<button class="btn fill" id="bfA">Add 0.01 mol HCl</button><button class="btn fill" id="bfB">Add 0.01 mol NaOH</button><button class="btn" id="bfR">Reset</button><div class="ctl">Buffer '+segHtml('bfK',BUF.map(function(b){return b.n;}),BF.k)+'</div><div class="ctl">Capacity '+segHtml('bfC',['0.10 M (more)','0.02 M (less)'],BF.c>0.05?0:1)+'</div>';
+   $('bfA').onclick=function(){BF.add=Math.round((BF.add+0.01)*100)/100;tone(520,0,.06);};$('bfB').onclick=function(){BF.add=Math.round((BF.add-0.01)*100)/100;tone(700,0,.06);};$('bfR').onclick=function(){BF.add=0;};
+   segBind('bfK',function(k){BF.k=k;BF.add=0;});segBind('bfC',function(k){BF.c=k?0.02:0.10;BF.add=0;});
+   setQ('Add the same amount of acid (or base) to pure water and to a buffer. <b>Predict:</b> which pH changes more? Then lower the buffer concentration and try again.');
+   setRule(['A <b>buffer</b> resists changes in pH when <b>limited</b> amounts of acid or base are added','Buffer = weak acid + its conjugate base (or weak base + its conjugate acid), e.g. HF / F⁻','Added H⁺: H⁺ + F⁻ → HF · added OH⁻: OH⁻ + HF → F⁻ + H₂O','<b>Buffer capacity</b>: higher concentrations absorb more acid or base; best buffer pH ≈ pK<sub>a</sub>']);}
+  else{$('readcard').style.display='none';seqPanel(BQ2);setQ('Which particle in the buffer reacts with the added acid or base?','Explain');setRule(['Weak acid + conjugate base','Capacity grows with concentration']);}},
+ frame:function(){bfFrame();setReads([['Water pH',f2(wPH())],['Buffer pH',f2(bfPH())],['Added',BF.add>0?BF.add.toFixed(2)+' mol HCl':(BF.add<0?(-BF.add).toFixed(2)+' mol NaOH':'nothing'),1]]);}};
+T0.mark=function(i){return i===1&&AQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T1.mark=function(i){if(i===3)return YT.ok?'✓':4;return i===4&&EQQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T4.mark=function(i){if(i===1)return IC.pick.every(function(p,t){return TIT[t].best.indexOf(p)>=0;})?'✓':2;return i===2&&ICQ.every(function(M){return M.p!=null;})?'✓':i+1;};
+T6.mark=function(i){if(i===0)return Object.keys(SH.tested).length===SALT.length?'✓':1;return SHQ.every(function(M){return M.p!=null;})?'✓':2;};
+T7.mark=function(i){return i===1&&BQ2.every(function(M){return M.p!=null;})?'✓':i+1;};
+
+/* ================= Exit ticket ================= */
+var QZX=mkQ([{q:'What are the products of a neutralization reaction?',o:['a salt and water','an acid and a base','hydrogen gas and a salt','only water'],a:0,w:'Acid + base → salt + water.'},
+ {q:'The net ionic equation for HCl + NaOH is…',o:['H⁺(aq) + OH⁻(aq) → H₂O(l)','Na⁺ + Cl⁻ → NaCl','HCl + NaOH → NaCl + H₂O','H₂O → H⁺ + OH⁻'],a:0,w:'Na⁺ and Cl⁻ are spectators.'},
+ {q:'Which ions are spectators when HNO₃ reacts with KOH?',o:['K⁺ and NO₃⁻','H⁺ and OH⁻','H⁺ and NO₃⁻','K⁺ and OH⁻'],a:0,w:'They are unchanged on both sides.'},
+ {q:'The purpose of a titration is to…',o:['find the concentration of an unknown solution','make an indicator','measure the mass of a salt','heat a solution'],a:0,w:'A known solution is used to find the unknown.'},
+ {q:'What is the difference between the equivalence point and the end point?',o:['Equivalence: mol H⁺ = mol OH⁻; end point: the indicator changes colour','They are always at pH 7','The end point comes first, always','There is no difference at all'],a:0,w:'A good indicator makes them match.'},
+ {q:'25.00 mL of HCl needs 20.00 mL of 0.1000 M NaOH. What is [HCl]?',o:['0.08000 mol/L','0.1250 mol/L','0.002000 mol/L','0.5000 mol/L'],a:0,w:'(0.1000)(0.02000) = 2.000 × 10⁻³ mol ÷ 0.02500 L.'},
+ {q:'Which indicator is best for a weak acid titrated with a strong base?',o:['phenolphthalein (8.2–10.0)','methyl orange (3.1–4.4)','methyl red (4.4–6.2)','any indicator works'],a:0,w:'The equivalence point is above pH 7.'},
+ {q:'Near the end point you should add the titrant…',o:['drop by drop','as fast as possible','all at once','only after the colour turns dark'],a:0,w:'One drop can pass the end point.'},
+ {q:'Is a solution of KF acidic, basic or neutral?',o:['Basic: F⁻ takes H⁺ from water, forming OH⁻','Acidic','Neutral','Acidic: K⁺ gives H⁺ to water'],a:0,w:'Weak acid (HF) + strong base (KOH).'},
+ {q:'Which mixture is a buffer?',o:['CH₃COOH and CH₃COONa','HCl and NaCl','NaOH and water','HNO₃ and KNO₃'],a:0,w:'A weak acid and its conjugate base.'}],true);
+var TX={name:'Exit ticket',c:'#3b3550',steps:['Exit ticket'],mark:function(){return QZX.done?'✓':1;},title:function(){return 'Exit ticket: Neutralization';},
+ enter:function(){$('readcard').style.display='none';qzShow(QZX);setQ('Think about equations, titration, indicators, salts and buffers.','Exit ticket');setRule(['acid + base → salt + water','H⁺ + OH⁻ → H₂O','M<sub>A</sub> = M<sub>B</sub> × V<sub>B</sub> × ratio ÷ V<sub>A</sub>']);},
+ frame:function(dt){clear();txt('H⁺(aq) + OH⁻(aq) → H₂O(l)',400,200,{s:48,c:RED});txt('acid + base → salt + water',400,280,{s:28,c:MUTED});}};
+[AQ,EQQ,TIQ,ICQ,SHQ,BQ2].forEach(mixL);
+
+/* ---- sound button ---- */
+function spk(on){return '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9 H7 L12 5 V19 L7 15 H3 Z" fill="#18233a"/>'+(on?'<path d="M15.5 9 C17.5 11 17.5 13 15.5 15 M18 6.5 C21.5 10 21.5 14 18 17.5" fill="none" stroke="#18233a" stroke-width="2" stroke-linecap="round"/>':'<path d="M15.5 9 L21.5 15 M21.5 9 L15.5 15" stroke="#d8434a" stroke-width="2.4" stroke-linecap="round"/>')+'</svg>';}
+(function(){var t=document.createElement('div');t.id='tools';t.innerHTML='<button class="tb" id="tMute" title="Sound on or off" aria-label="Sound on or off">'+spk(true)+'</button>';document.body.appendChild(t);$('tMute').onclick=function(){MUTE=!MUTE;this.innerHTML=spk(!MUTE);};})();
+/* ---------- shell ---------- */
+var TAB=[T0,T1,T2,T3,T4,T5,T6,T7,TX],tabI=0,stepI=0,HASH=['antacid','equations','titration','try-a-titration','indicators','calculations','salt-hydrolysis','buffers','exit-ticket'];
+function renderTabs(){$('tabs').innerHTML=TAB.map(function(t,i){return '<button class="tab'+(i===tabI?' on':'')+'" style="--c:'+t.c+'" data-i="'+i+'"><i></i>'+(i+1)+'. <span>'+t.name+'</span></button>';}).join('');Array.prototype.forEach.call($('tabs').children,function(b){b.onclick=function(){go(+b.dataset.i,0);};});}
+function renderSteps(){var t=TAB[tabI];$('steps').innerHTML=t.steps.map(function(l,i){var mk=t.mark?t.mark(i):i+1;return '<button class="step'+(i===stepI?' on':'')+(mk==='✓'?' done':'')+'" data-i="'+i+'"><b>'+mk+'</b><span>'+l+'</span></button>';}).join('');Array.prototype.forEach.call($('steps').children,function(b){b.onclick=function(){go(tabI,+b.dataset.i);};});}
+function go(t,s){tabI=t;stepI=s||0;document.documentElement.style.setProperty('--accent',TAB[t].c);$('cv').style.display='';$('readcard').style.display='';$('controls').innerHTML='';$('panel').innerHTML='';renderTabs();renderSteps();$('stitle').innerHTML=TAB[t].title(stepI);lastReads='';TAB[t].enter(stepI);calcShow(!!(TAB[t].calc&&TAB[t].calc(stepI)));try{history.replaceState(null,'','#'+HASH[t]);}catch(e){}}
+var hi=HASH.indexOf(location.hash.slice(1));go(hi>=0?hi:0,0);
+/* ---- exit ticket timer: 15 minutes from Start; a student who runs over can still finish ---- */
+var XT={secs:900,tick:-1,buzz:0};
+function xStart(){return QZX.player&&!QZX.done&&QZX.started?QZX.started:0;}
+(function(){var c=document.createElement('div');c.id='xChip';c.innerHTML='<div><span>Exit ticket</span><br><b id="xTime"></b></div><button class="btn" id="xBack">Back to the exit ticket</button>';document.body.appendChild(c);$('xBack').onclick=function(){go(TAB.indexOf(TX),0);window.scrollTo(0,0);};})();
+function xTick(){var c=$('xChip'),st=xStart();if(!st){c.style.display='none';return;}c.style.display='flex';$('xBack').style.display=tabI===TAB.indexOf(TX)?'none':'';
+ var left=XT.secs-(Date.now()-st)/1000;if(left>=0){var sec=Math.ceil(left);$('xTime').textContent=Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' left';c.className=left<=60?'warn':'';if(sec<=10&&sec>0&&sec!==XT.tick){XT.tick=sec;tone(1100,0,.05,'square',.04);}}
+ else{var o=Math.round(-left);$('xTime').textContent='Time’s up +'+Math.floor(o/60)+':'+('0'+o%60).slice(-2);c.className='over';if(XT.buzz!==st){XT.buzz=st;tone(150,0,.7,'sawtooth',.07);}}}
+xTick();setInterval(xTick,250);
+var last=performance.now();
+function loop(now){var dt=Math.min(.05,(now-last)/1000);last=now;try{TAB[tabI].frame(dt);}catch(err){console.error(err);}requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+})();
+</script>
+<script src="student-visits.js"></script>
+<script src="live-results.js" data-game="Neutralization Lab" data-chapter="18"></script>
+<!-- visit counter (GoatCounter) -->
+<script>window.goatcounter={allow_frame:true,path:function(p){return location.pathname.replace(/\/index\.html$/,"/");}};</script>
+<script data-goatcounter="https://studywithmsmirna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
