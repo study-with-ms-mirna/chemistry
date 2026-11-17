@@ -533,7 +533,7 @@ function wrapTxt(s,x,y,w,lh,size){var words=s.split(' '),line='',yy=y;words.forE
 var PROC=['Rinse the burette with a little NaOH, then fill it using a funnel. Remove the funnel.','Record the initial burette reading at eye level, at the bottom of the meniscus.','Use a pipette to put exactly 25.00 mL of the unknown acid into a conical flask.','Add 2–3 drops of indicator (phenolphthalein) to the flask.','Put the flask on a white tile under the burette.','Open the tap and add NaOH while swirling the flask.','Near the end point, add NaOH drop by drop until the faint pink stays.','Record the final reading. Volume used = final − initial. Repeat until results agree.'];
 var PSH=['Rinse and fill the burette','Read the initial volume','Pipette 25.00 mL of acid into the flask','Add 2–3 drops of indicator','Put the flask on a white tile','Open the tap and swirl','Add drop by drop near the end','Read the final volume'];
 var PWHY=['Rinsing with NaOH stops leftover water from diluting it.','Read at eye level, at the bottom of the curved surface.','The volume of the unknown must be exact, so we use a pipette.','Phenolphthalein is colourless in acid.','The white tile makes the first faint pink easy to see.','Swirling mixes the base in. Pink flashes disappear while acid is left.','One extra drop can pass the end point, so go slowly.','24.60 mL of NaOH was used. Repeat until two results agree.'];
-var PS={k:0,t:0,seen:{0:1}};
+var PRC={k:0,t:0,seen:{0:1}};
 var PINK=[236,72,153],NAOH=[200,220,245],V0=0.50,V1=25.10;
 function pby(v){return 100+v*4.2;}
 function pStand(){seg(150,60,150,452,'#8a94a8',8);rr(100,448,190,14,4);ctx.fillStyle='#8a94a8';ctx.fill();seg(150,160,205,160,'#8a94a8',6);rr(194,150,22,20,4);ctx.fillStyle='#6b7385';ctx.fill();}
@@ -556,7 +556,7 @@ function pMag(v,cx,cy,label){var r=88,sx=cx+10;seg(237,pby(v),cx-r*.95,cy+10,'#9
  seg(cx-r,ym,cx+r,ym,RED,2,[6,4]);ctx.restore();ctx.strokeStyle=INK;ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
  seg(cx+r*.7,cy+r*.7,cx+r*1.0,cy+r*1.0,INK,9);pEye(cx-r-24,ym);
  rr(cx-95,cy+r+18,190,34,12);ctx.fillStyle='#fff4d6';ctx.fill();ctx.strokeStyle=AMBER;ctx.lineWidth=2.5;ctx.stroke();txt(label+' = '+v.toFixed(2)+' mL',cx,cy+r+36,{s:17,c:INK});}
-function pScene(k,t){var T2t=PS.T||0;
+function pScene(k,t){var T2t=PRC.T||0;
  if(k===0){pStand();var fill=clamp(t/.8,0,1),lvl=pby(50)-(pby(50)-pby(0)+6)*fill;burette(225,90,320,fill>0?lvl:null,NAOH);
   var fy=50-(t>.85?(t-.85)/.15*30:0);ctx.globalAlpha=t>.85?clamp(1-(t-.85)/.15,0,1):1;pFunnel(225,fy);ctx.globalAlpha=1;
   if(t<.82){ctx.save();ctx.translate(330,34);ctx.rotate(-1.25);beaker(0,0,46,42,26,NAOH,.85);ctx.restore();ctx.strokeStyle=rgb(NAOH,1);ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(281,44);ctx.quadraticCurveTo(240,40,230,62);ctx.stroke();txt('NaOH',372,70,{s:15,c:BLUE});}
@@ -579,12 +579,12 @@ function pScene(k,t){var T2t=PS.T||0;
   if(q>=nd){txt('faint pink stays',330,340,{s:18,c:'#d63384',a:'left'});txt('= end point',330,364,{s:16,c:INK,a:'left'});}}
  else{pStand();burette(225,90,320,pby(V1),NAOH);pTile(225,false);pFlask(225,40+V1*.4,.24);pMag(V1,420,170,'Final reading');
   if(t>.4){rr(300,375,240,58,12);ctx.fillStyle='#e8f6ee';ctx.fill();ctx.strokeStyle=GREEN;ctx.lineWidth=2;ctx.stroke();txt('Volume used',420,392,{s:14,c:MUTED,w:500});txt('25.10 − 0.50 = 24.60 mL',420,415,{s:17,c:GREEN});}}}
-function psFrame(dt){PS.T=(PS.T||0)+dt;PS.t=Math.min(1,PS.t+dt/3.6);clear();pScene(PS.k,PS.t);
- panel(560,30,220,440);txt('Step '+(PS.k+1)+' of 8',670,58,{s:15,c:MUTED,w:500});
- for(var i=0;i<8;i++){ctx.fillStyle=i===PS.k?TEAL:(PS.seen[i]?'#9fd6d2':'#dde5f0');ctx.beginPath();ctx.arc(600+i*20,82,6,0,7);ctx.fill();}
- wrapTxt(PSH[PS.k],670,120,190,26,20);wrapTxt(PROC[PS.k],670,200,195,23,15);wrapTxt('Why? '+PWHY[PS.k],670,360,195,22,14);}
-function psControls(){$('controls').innerHTML='<button class="btn" id="psB">◀ Back</button><button class="btn fill" id="psN">Next step ▶</button><button class="btn" id="psR">Play again</button>';
- $('psB').onclick=function(){if(PS.k>0){PS.k--;PS.t=0;}};$('psN').onclick=function(){if(PS.k<7){PS.k++;PS.t=0;PS.seen[PS.k]=1;if(PS.k===7)renderSteps();}};$('psR').onclick=function(){PS.t=0;};}
+function prcFrame(dt){PRC.T=(PRC.T||0)+dt;PRC.t=Math.min(1,PRC.t+dt/3.6);clear();pScene(PRC.k,PRC.t);
+ panel(560,30,220,440);txt('Step '+(PRC.k+1)+' of 8',670,58,{s:15,c:MUTED,w:500});
+ for(var i=0;i<8;i++){ctx.fillStyle=i===PRC.k?TEAL:(PRC.seen[i]?'#9fd6d2':'#dde5f0');ctx.beginPath();ctx.arc(600+i*20,82,6,0,7);ctx.fill();}
+ wrapTxt(PSH[PRC.k],670,120,190,26,20);wrapTxt(PROC[PRC.k],670,200,195,23,15);wrapTxt('Why? '+PWHY[PRC.k],670,360,195,22,14);}
+function prcControls(){$('controls').innerHTML='<button class="btn" id="prcB">◀ Back</button><button class="btn fill" id="prcN">Next step ▶</button><button class="btn" id="prcR">Play again</button>';
+ $('prcB').onclick=function(){if(PRC.k>0){PRC.k--;PRC.t=0;}};$('prcN').onclick=function(){if(PRC.k<7){PRC.k++;PRC.t=0;PRC.seen[PRC.k]=1;if(PRC.k===7)renderSteps();}};$('prcR').onclick=function(){PRC.t=0;};}
 /* ---- What comes next? ---- */
 var PQ={k:0,opts:null,wrong:-1,ok:false};
 function pqShow(){if(PQ.k>=7){$('panel').innerHTML='<div class="fb ok"><b>All 7 correct!</b> You know the whole procedure. Now try it yourself in the next tab.</div><div class="stepbar"><button class="btn" id="pqR">Start again</button></div>';$('pqR').onclick=function(){PQ.k=0;PQ.opts=null;PQ.ok=false;PQ.wrong=-1;pqShow();renderSteps();};return;}
@@ -592,25 +592,25 @@ function pqShow(){if(PQ.k>=7){$('panel').innerHTML='<div class="fb ok"><b>All 7 
  $('panel').innerHTML='<div class="small">Question '+(PQ.k+1)+' of 7: the picture shows <b>'+PSH[PQ.k].toLowerCase()+'</b>. What comes <b>next</b>?</div><div class="opts one">'+PQ.opts.map(function(i){return '<button class="qb'+(PQ.ok&&i===PQ.k+1?' right':'')+(PQ.wrong===i?' wrong':'')+'" data-q="'+i+'"><span>'+PSH[i]+'</span></button>';}).join('')+'</div>'+(PQ.ok?'<div class="fb ok"><b>Yes!</b> '+PWHY[PQ.k+1]+'</div><div class="stepbar"><button class="btn fill" id="pqN">Next question ▶</button></div>':(PQ.wrong>=0?'<div class="fb no">Not that one. Look at the picture: what do we need to do before that?</div>':''));
  each('[data-q]',function(b){b.onclick=function(){if(PQ.ok)return;var i=+b.getAttribute('data-q');if(i===PQ.k+1){PQ.ok=true;PQ.wrong=-1;SFX.good();}else{PQ.wrong=i;SFX.bad();}pqShow();};});
  if(PQ.ok)$('pqN').onclick=function(){PQ.k++;PQ.opts=null;PQ.ok=false;PQ.wrong=-1;if(PQ.k>=7){burst($('panel'),40);renderSteps();}pqShow();};}
-function pqFrame(dt){PS.T=(PS.T||0)+dt;clear();var k=Math.min(PQ.k,7);pScene(k,1);panel(560,30,220,440);txt(PQ.k>=7?'Done!':'This picture:',670,64,{s:16,c:MUTED,w:500});wrapTxt(PSH[k],670,104,190,26,20);
+function pqFrame(dt){PRC.T=(PRC.T||0)+dt;clear();var k=Math.min(PQ.k,7);pScene(k,1);panel(560,30,220,440);txt(PQ.k>=7?'Done!':'This picture:',670,64,{s:16,c:MUTED,w:500});wrapTxt(PSH[k],670,104,190,26,20);
  if(PQ.k<7){txt('What comes next?',670,220,{s:20,c:TEAL});wrapTxt('Choose in the panel below the picture.',670,256,190,22,15);if(PQ.ok){txt('Next:',670,330,{s:15,c:MUTED,w:500});wrapTxt(PSH[PQ.k+1],670,360,190,24,18);}}}
 var TIQ=[{q:'The purpose of a titration is to…',o:['find the unknown concentration of a solution','make a salt','measure the mass of an acid','change the colour of a solution'],a:0,w:'A known solution is used to find an unknown concentration.'},
  {q:'At the equivalence point…',o:['moles of H⁺ from the acid = moles of OH⁻ from the base','the pH is always 7','the burette is empty','the indicator is added'],a:0,w:'That is the definition; the pH depends on the salt formed.'},
  {q:'Which piece measures exactly 25.00 mL of the unknown?',o:['a pipette','a beaker','a funnel','a conical flask'],a:0,w:'Pipettes deliver one exact volume.'},
  {q:'Why add the titrant drop by drop near the end?',o:['One drop can pass the end point','To save the indicator','The burette is blocked','To heat the flask'],a:0,w:'Near the equivalence point the pH jumps with a tiny volume.'}];
-var T2={name:'Titration',c:TEAL,steps:['The purpose','Apparatus','Procedure','What comes next?','Quiz me'],mark:function(i){if(i===2)return Object.keys(PS.seen).length===8?'✓':3;if(i===3)return PQ.k>=7?'✓':4;if(i===1)return Object.keys(AP.seen).length===APP.length?'✓':2;return i===4&&TIQ.every(function(M){return M.p!=null;})?'✓':i+1;},
+var T2={name:'Titration',c:TEAL,steps:['The purpose','Apparatus','Procedure','What comes next?','Quiz me'],mark:function(i){if(i===2)return Object.keys(PRC.seen).length===8?'✓':3;if(i===3)return PQ.k>=7?'✓':4;if(i===1)return Object.keys(AP.seen).length===APP.length?'✓':2;return i===4&&TIQ.every(function(M){return M.p!=null;})?'✓':i+1;},
  title:function(i){return ['Why titrate? To find an unknown concentration','The titration apparatus','The procedure, step by step','What comes next?','Quiz: titration'][i];},
  enter:function(i){if(i===0){$('controls').innerHTML='<div class="ctl">NaOH added <input type="range" id="puV" min="0" max="40" step="0.5" value="'+PU.v+'"><output id="puO">'+PU.v.toFixed(1)+' mL</output></div>';
    $('puV').oninput=function(){PU.v=+this.value;$('puO').textContent=PU.v.toFixed(1)+' mL';};
    setQ('We know the base\'s concentration but <b>not</b> the acid\'s. Add NaOH with the slider. <b>Predict:</b> at what point have we added exactly enough base?');
    setRule(['<b>Titration</b>: react a known volume of the unknown with a solution of <b>known</b> concentration (the <b>titrant</b>)','<b>Equivalence point</b>: moles of OH⁻ added = moles of H⁺ in the acid','The volume needed tells us the unknown concentration']);}
   else if(i===1){setQ('Click each piece of apparatus to learn its name and job.');setRule(['Burette: titrant · pipette: exact volume of unknown','Conical flask on a white tile · a few drops of indicator','The funnel is removed before you start']);}
-  else if(i===2){psControls();setQ('Watch each step of a titration with the apparatus. Press <b>Next step</b> when you are ready.');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
+  else if(i===2){prcControls();setQ('Watch each step of a titration with the apparatus. Press <b>Next step</b> when you are ready.');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
   else if(i===3){pqShow();setQ('Look at the picture. Which step comes <b>next</b>?');setRule(['Rinse and fill the burette, read it, pipette the unknown, add indicator','Add titrant while swirling; drop by drop near the end','Volume used = final reading − initial reading']);}
   else{$('readcard').style.display='none';seqPanel(TIQ);setQ('Think about the job of each step.','Explain');setRule(['Titration finds an unknown concentration','Equivalence: mol H⁺ = mol OH⁻']);}},
  click:function(x,y){if(stepI!==1)return;for(var i=0;i<APP.length;i++){var a=APP[i];if(x>=a.x&&x<=a.x+a.w&&y>=a.y&&y<=a.y+a.h&&!(i===1&&x>190)){AP.pick=i;if(!AP.seen[i]){AP.seen[i]=1;tone(660,0,.07);if(Object.keys(AP.seen).length===APP.length){SFX.good();renderSteps();}}return;}}},
  frame:function(dt){T+=dt;if(stepI===0){puFrame();setReads([['NaOH added',PU.v.toFixed(1)+' mL'],['Equivalence at','25.0 mL'],['Flask is',PU.v<24.95?'acidic':(PU.v<=25.05?'neutral':'basic'),1]]);}
-  else if(stepI===1){apFrame();setReads([['Found',Object.keys(AP.seen).length+' of '+APP.length]]);}else if(stepI===2){psFrame(dt);setReads([['Step',(PS.k+1)+' of 8'],['Steps seen',Object.keys(PS.seen).length+' of 8']]);}else if(stepI===3){pqFrame(dt);setReads([['Correct',Math.min(PQ.k,7)+' of 7']]);}else puFrame();}};
+  else if(stepI===1){apFrame();setReads([['Found',Object.keys(AP.seen).length+' of '+APP.length]]);}else if(stepI===2){prcFrame(dt);setReads([['Step',(PRC.k+1)+' of 8'],['Steps seen',Object.keys(PRC.seen).length+' of 8']]);}else if(stepI===3){pqFrame(dt);setReads([['Correct',Math.min(PQ.k,7)+' of 7']]);}else puFrame();}};
 
 /* ================= Tab 3: do the titration ================= */
 var TT={};
